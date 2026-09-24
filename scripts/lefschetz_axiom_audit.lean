@@ -477,3 +477,8 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.sectionCohomologyShift_restrict_eq_zero
 #print axioms AlgebraicGeometry.ComplexPoint.supportSheafSection_restrict_eq_zero
 #print axioms AlgebraicGeometry.ComplexPoint.coneSupportSection_restrict_eq_zero
+#print axioms AlgebraicGeometry.ComplexPoint.restrictedOverlapSection
+#print axioms AlgebraicGeometry.ComplexPoint.restrictedFrameFactorisation
+#print axioms AlgebraicGeometry.ComplexPoint.restrictedOverlapUnitHom
+#print axioms AlgebraicGeometry.ComplexPoint.restrictedSection_integerOne
+#print axioms AlgebraicGeometry.ComplexPoint.restrictedConstantMap_eq_constHomOfSection

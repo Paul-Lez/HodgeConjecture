@@ -178,4 +178,182 @@ lemma restrictedConeSection_comp_relativeConeMap :
         E.middle) ≫ q) htrail
   simpa only [Category.assoc] using hp
 
+/-! ### The literal overlap section on an arbitrary restricted open
+
+The target of the restricted factorisation is the pullback to `U` of the
+pushforward from `Ω`.  Its section on `U` is therefore obtained from a
+section on `U ⊓ Ω` by the raw presheaf map, followed by the harmless equality
+identifying the image of `⊤ : Opens U` with `U`. -/
+
+def restrictedOverlapSection
+    (Ω U : Opens (TopCat.of (ComplexPoint X)))
+    (w : (holomorphicUnitSheaf X d).obj.obj (op (U ⊓ Ω))) :
+    ((restrictToOpen X U).obj ((openRestrictionFunctor Ω).obj
+      (holomorphicUnitSheaf X d))).obj.obj (op ⊤) := by
+  dsimp [restrictToOpen, Topology.IsOpenEmbedding.sheafPullback,
+    Functor.sheafPushforwardContinuous]
+  let z := (TopCat.Sheaf.supportedOutsideIntersectionIso
+    (TopCat.of (ComplexPoint X)) Ω U (holomorphicUnitSheaf X d)).inv w
+  let e := eqToIso (congrArg op (TopCat.Sheaf.openRestrictionImage_top
+    (TopCat.of (ComplexPoint X)) U))
+  exact ((openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d)).obj.map e.inv z
+
+def restrictedFrameFactorisation
+    (Ω U : Opens (TopCat.of (ComplexPoint X)))
+    (ℓU : E.middle.obj.obj (op U))
+    (ℓΩ : E.middle.obj.obj (op Ω))
+    (hℓΩ : E.projection.hom.app (op Ω) ℓΩ =
+      (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
+        HolomorphicUnitExtension.integerOneSection) :
+    ((restrictToOpen X U).obj (𝓒(↧(ComplexPoint X); ℤ))) ⟶
+      ((restrictToOpen X U).obj ((openRestrictionFunctor Ω).obj
+        (holomorphicUnitSheaf X d))) :=
+  E.restrictedSection U ℓU ≫
+    (restrictToOpen X U).map (E.restrictionFactorisation Ω ℓΩ hℓΩ)
+
+def restrictedOverlapUnitHom
+    (Ω U : Opens (TopCat.of (ComplexPoint X)))
+    (w : (holomorphicUnitSheaf X d).obj.obj (op (U ⊓ Ω))) :
+    ((restrictToOpen X U).obj (𝓒(↧(ComplexPoint X); ℤ))) ⟶
+      ((restrictToOpen X U).obj ((openRestrictionFunctor Ω).obj
+        (holomorphicUnitSheaf X d))) :=
+  TopCat.Sheaf.openSheafRestrictionToConstant (TopCat.of (ComplexPoint X)) U
+      (AddCommGrpCat.of ℤ) ≫
+    TopCat.Sheaf.constHomOfSection
+      ((restrictToOpen X U).obj ((openRestrictionFunctor Ω).obj
+        (holomorphicUnitSheaf X d)))
+      (restrictedOverlapSection X d Ω U w)
+
+lemma restrictedSection_integerOne
+    (U : Opens (TopCat.of (ComplexPoint X)))
+    (ℓU : E.middle.obj.obj (op U)) :
+    let einv : 𝓒[↧U; AddCommGrpCat.of ℤ] ⟶
+        (restrictToOpen X U).obj (𝓒(↧(ComplexPoint X); ℤ)) :=
+      TopCat.Sheaf.constantToOpenSheafRestriction (TopCat.of (ComplexPoint X)) U
+        (AddCommGrpCat.of ℤ)
+    let oneS := einv.hom.app (op ⊤) (TopCat.Sheaf.integerOne (Y := TopCat.of U))
+    let eu : E.middle.obj.obj (op U) ≅
+        ((restrictToOpen X U).obj E.middle).obj.obj (op ⊤) :=
+      E.middle.obj.mapIso (eqToIso (congrArg op
+        (TopCat.Sheaf.openRestrictionImage_top (TopCat.of (ComplexPoint X)) U))).symm
+    (E.restrictedSection U ℓU).hom.app (op ⊤) oneS = eu.hom ℓU := by
+  dsimp only
+  unfold HolomorphicUnitExtension.restrictedSection
+  rw [Adjunction.homEquiv_counit]
+  change ((openRestrictionAdjunction U).counit.app ((restrictToOpen X U).obj E.middle)).hom.app
+      (op ⊤)
+      (((restrictToOpen X U).map (E.liftHom U ℓU)).hom.app (op ⊤)
+        (((TopCat.Sheaf.constantToOpenSheafRestriction (TopCat.of (ComplexPoint X)) U
+          (AddCommGrpCat.of ℤ)).hom.app (op ⊤)) TopCat.Sheaf.integerOne)) = _
+  have hc := congrArg (fun f => f.app (op ⊤))
+    (TopCat.Sheaf.toSheafify_constantToOpenSheafRestriction
+      (TopCat.of (ComplexPoint X)) U (AddCommGrpCat.of ℤ))
+  have hone := congrArg (fun f => f (1 : ℤ)) hc
+  dsimp [TopCat.Sheaf.integerOne] at hone
+  have hlift : (E.liftHom U ℓU).hom.app
+      (op (U.isOpenEmbedding.isOpenMap.functor.obj ⊤))
+      (((CategoryTheory.toSheafify (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+        (TopCat.Sheaf.integerConstantPresheaf (TopCat.of (ComplexPoint X)))).app
+          (op (U.isOpenEmbedding.isOpenMap.functor.obj ⊤))) (1 : ℤ)) =
+    ((openRestrictionFunctor U).obj E.middle).obj.map
+      (homOfLE (le_top : U.isOpenEmbedding.isOpenMap.functor.obj ⊤ ≤ ⊤)).op
+      ((openRestrictionTopEval U).inv.app E.middle ℓU) := by
+    rw [HolomorphicUnitExtension.liftHom]
+    have hc2 := congrArg (fun f => f.app
+      (op (U.isOpenEmbedding.isOpenMap.functor.obj ⊤)))
+      (TopCat.Sheaf.toSheafify_constHomOfSection
+        ((openRestrictionFunctor U).obj E.middle)
+        ((openRestrictionTopEval U).inv.app E.middle ℓU))
+    have hc2' := congrArg (fun f => f (1 : ℤ)) hc2
+    dsimp [TopCat.Sheaf.constPresheafHomOfSection] at hc2'
+    change (AddCommGrpCat.Hom.hom
+        ((TopCat.Sheaf.constHomOfSection ((openRestrictionFunctor U).obj E.middle)
+          ((openRestrictionTopEval U).inv.app E.middle ℓU)).hom.app
+          (op (U.isOpenEmbedding.isOpenMap.functor.obj ⊤))))
+        ((AddCommGrpCat.Hom.hom
+          ((CategoryTheory.toSheafify (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+            (TopCat.Sheaf.integerConstantPresheaf (TopCat.of (ComplexPoint X)))).app
+            (op (U.isOpenEmbedding.isOpenMap.functor.obj ⊤)))) (1 : ℤ)) =
+      1 • (AddCommGrpCat.Hom.hom (((openRestrictionFunctor U).obj E.middle).obj.map
+        (homOfLE (le_top : U.isOpenEmbedding.isOpenMap.functor.obj ⊤ ≤ ⊤)).op))
+        ((openRestrictionTopEval U).inv.app E.middle ℓU) at hc2'
+    simpa only [one_smul, AddCommGrpCat.Hom.hom] using hc2'
+  change ((openRestrictionAdjunction U).counit.app ((restrictToOpen X U).obj E.middle)).hom.app
+      (op ⊤)
+      ((E.liftHom U ℓU).hom.app
+        (op (U.isOpenEmbedding.isOpenMap.functor.obj ⊤))
+        ((ConcreteCategory.hom ((TopCat.Sheaf.constantToOpenSheafRestriction
+          (TopCat.of (ComplexPoint X)) U (AddCommGrpCat.of ℤ)).hom.app (op ⊤)))
+          ((ConcreteCategory.hom ((CategoryTheory.toSheafify
+            (Opens.grothendieckTopology (TopCat.of U))
+            (TopCat.Sheaf.integerConstantPresheaf (TopCat.of U))).app (op ⊤))) (1 : ℤ)))) = _
+  have harg :
+      ((ConcreteCategory.hom ((TopCat.Sheaf.constantToOpenSheafRestriction
+        (TopCat.of (ComplexPoint X)) U (AddCommGrpCat.of ℤ)).hom.app (op ⊤)))
+        ((ConcreteCategory.hom ((CategoryTheory.toSheafify
+          (Opens.grothendieckTopology (TopCat.of U))
+          (TopCat.Sheaf.integerConstantPresheaf (TopCat.of U))).app (op ⊤))) (1 : ℤ))) =
+      ((CategoryTheory.toSheafify (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+        (TopCat.Sheaf.integerConstantPresheaf (TopCat.of (ComplexPoint X)))).app
+          (op (U.isOpenEmbedding.isOpenMap.functor.obj ⊤))) (1 : ℤ) := by
+    exact hone
+  rw [harg]
+  have hcounit :
+      ((openRestrictionAdjunction U).counit.app ((restrictToOpen X U).obj E.middle)).hom.app
+          (op ⊤)
+        (((openRestrictionFunctor U).obj E.middle).obj.map
+          (homOfLE (le_top : U.isOpenEmbedding.isOpenMap.functor.obj ⊤ ≤ ⊤)).op
+          ((openRestrictionTopEval U).inv.app E.middle ℓU)) =
+      (E.middle.obj.mapIso (eqToIso (congrArg op
+        (TopCat.Sheaf.openRestrictionImage_top (TopCat.of (ComplexPoint X)) U))).symm).hom ℓU := by
+    dsimp [openRestrictionAdjunction, TopCat.Sheaf.openSheafRestrictionAdjunction,
+      TopCat.Sheaf.openSheafRestrictionCounit, openRestrictionTopEval,
+      TopCat.Sheaf.openRestrictionPushforwardTopEvaluationIso, restrictToOpen,
+      Topology.IsOpenEmbedding.sheafPullback, Functor.sheafPushforwardContinuous,
+      openRestrictionFunctor, TopCat.Sheaf.openRestrictionPushforward,
+      TopCat.Sheaf.pushforward]
+    change E.middle.obj.map _ (E.middle.obj.map _ (E.middle.obj.map _ ℓU)) =
+      E.middle.obj.map _ ℓU
+    change (E.middle.obj.map _ ≫ E.middle.obj.map _ ≫ E.middle.obj.map _) ℓU =
+      (E.middle.obj.map _) ℓU
+    rw [← E.middle.obj.map_comp, ← E.middle.obj.map_comp]
+    congr 1
+  exact (congrArg (fun z =>
+    ((openRestrictionAdjunction U).counit.app ((restrictToOpen X U).obj E.middle)).hom.app
+      (op ⊤) z) hlift).trans hcounit
+
+lemma restrictedConstantMap_eq_constHomOfSection
+    {U : Opens (TopCat.of (ComplexPoint X))}
+    (F : TopCat.Sheaf AddCommGrpCat (TopCat.of U))
+    (s : (restrictToOpen X U).obj (𝓒(↧(ComplexPoint X); ℤ)) ⟶ F) :
+    s = TopCat.Sheaf.openSheafRestrictionToConstant (TopCat.of (ComplexPoint X)) U
+      (AddCommGrpCat.of ℤ) ≫
+      TopCat.Sheaf.constHomOfSection F
+        ((s.hom.app (op ⊤))
+          ((TopCat.Sheaf.constantToOpenSheafRestriction (TopCat.of (ComplexPoint X)) U
+            (AddCommGrpCat.of ℤ)).hom.app (op ⊤)
+            (TopCat.Sheaf.integerOne (Y := TopCat.of U)))) := by
+  let e : ((restrictToOpen X U).obj (𝓒(↧(ComplexPoint X); ℤ))) ≅
+      𝓒[↧U; AddCommGrpCat.of ℤ] :=
+    { hom := TopCat.Sheaf.openSheafRestrictionToConstant (TopCat.of (ComplexPoint X)) U
+        (AddCommGrpCat.of ℤ)
+      inv := TopCat.Sheaf.constantToOpenSheafRestriction (TopCat.of (ComplexPoint X)) U
+        (AddCommGrpCat.of ℤ)
+      hom_inv_id := TopCat.Sheaf.openSheafRestrictionToConstant_constantToOpen
+        (TopCat.of (ComplexPoint X)) U (AddCommGrpCat.of ℤ)
+      inv_hom_id := TopCat.Sheaf.constantToOpen_openSheafRestrictionToConstant
+        (TopCat.of (ComplexPoint X)) U (AddCommGrpCat.of ℤ) }
+  let : IsIso e.inv := e.isIso_inv
+  apply (cancel_epi e.inv).1
+  have hs : e.inv ≫ s = TopCat.Sheaf.constHomOfSection F
+      ((e.inv ≫ s).hom.app (op ⊤)
+        (TopCat.Sheaf.integerOne (Y := TopCat.of U))) := by
+    have h := TopCat.Sheaf.constHomOfSection_comp
+      (TopCat.Sheaf.integerOne (Y := TopCat.of U)) (e.inv ≫ s)
+    rw [TopCat.Sheaf.constHomOfSection_integerOne, Category.id_comp] at h
+    exact h
+  rw [hs]
+  rw [← Category.assoc, e.inv_hom_id]
+  congr 1
+
 end AlgebraicGeometry.ComplexPoint
