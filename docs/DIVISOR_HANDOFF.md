@@ -3,7 +3,7 @@
 ## Current implementation status (2026-09-24)
 
 Validation: main `9aba2ec` is merged, `lake build` passes (5295 jobs),
-and the comparison audit checks 361 distinct declarations with only `propext`,
+and the comparison audit checks 363 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -25,8 +25,7 @@ analytic normal coordinate on restricted charts. It also proves the positive win
 identity for the compatible Cartier frame difference and an exact sheaf-map
 comparison with the existing global support normalization. Two steps remain:
 
-- Use that derivative to discharge the input of the canonical winding-chart constructor
-  and assemble the generic chart cover.
+- Assemble the generic chart cover from the canonical derivative and winding-chart constructor.
 - Compute restriction of the original complement comparison to a chart and identify
   its supported class with the component coclass.
 
@@ -44,11 +43,12 @@ maximal ideal but not its square has nonzero analytic derivative. It applies to
 sections on arbitrary Zariski opens through the actual stalk and coordinate maps.
 `CartierLocalDerivativePointJet.lean` applies this to the actual component equation
 on an ambient open subscheme, including the stalk comparison for its pullback.
+It also specializes the result to the canonical smooth-locus component lift.
 
 `ChernWindingGenericChartCanonical.lean` constructs the actual component winding chart
 from the nonzero ambient derivative. Its carrier lies in any supplied neighborhood,
-and it retains the canonical coclass normalization. Discharging its derivative input
-and assembling the generic chart cover remain in progress.
+and it retains the canonical coclass normalization. Assembling the generic chart cover
+remains in progress.
 
 `FlasquePushforwardQuasiIso.lean` proves that direct image preserves comparisons between
 bounded-below flasque complexes. `SupportSheafConeQuasiIso.lean` applies it to the fixed

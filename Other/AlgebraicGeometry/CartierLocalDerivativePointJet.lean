@@ -210,4 +210,111 @@ theorem fderiv_ne_zero_of_component_equation
     (openInclusion_stalk_germ_eq X U f.opens zM hyU f.equation)
   simpa only [regularPointJet] using hjet
 
+/-- The derivative statement specialized to the smooth component lift used by the canonical chart.
+The two membership hypotheses are precisely the open and principal shrink conditions. -/
+theorem fderiv_ne_zero_of_smooth_locus_component_equation
+    (c : Scheme.CartierData X.left) (x : X.left) {i : c.ι} (d : ℕ)
+    [SmoothOfRelativeDimension d X.hom] (f : c.LocalForm i x)
+    (hx : coheight x = 1) (s : Γ(X.left, f.opens))
+    (hs : s ∉ (f.isAffineOpen.primeIdealOf ⟨x, f.mem⟩).asIdeal)
+    (hEq :
+      (f.isAffineOpen.primeIdealOf ⟨x, f.mem⟩).asIdeal.map
+          (algebraMap (Γ(X.left, f.opens)) (Localization.Away s)) =
+        (Ideal.span {f.equation}).map
+          (algebraMap (Γ(X.left, f.opens)) (Localization.Away s)))
+    (z : ComplexPoint (cycleComponentSmoothLocusOver X x))
+    (hy : (cycleComponentSmoothLocusAmbientOpen X x).ι
+      (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z).underlying ∈ f.opens)
+    (hys : (cycleComponentSmoothLocusAmbientOpen X x).ι
+      (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z).underlying ∈
+        X.left.basicOpen s) :
+    fderiv ℂ (fun w ↦ Point.evaluate
+        ((cycleComponentSmoothLocusAmbientOpen X x).ι ⁻¹ᵁ f.opens)
+        ((cycleComponentSmoothLocusAmbientOpen X x).ι.app f.opens f.equation)
+        ((localChart (cycleComponentSmoothLocusAmbientOpenOver X x) d
+          (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z)).symm w))
+      (localChart (cycleComponentSmoothLocusAmbientOpenOver X x) d
+        (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z)
+        (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z)) ≠ 0 := by
+  let U := cycleComponentSmoothLocusAmbientOpen X x
+  let k : cycleComponentSmoothLocusOver X x ⟶
+      Over.mk (cycleComponentι X.left x ≫ X.hom) :=
+    Over.homMk ((cycleComponentι X.left x ≫ X.hom).smoothLocus.ι)
+  let zC := Point.map k z
+  have hzC : zC.underlying ∈ (cycleComponentι X.left x ≫ X.hom).smoothLocus := by
+    change (cycleComponentι X.left x ≫ X.hom).smoothLocus.ι z.underlying ∈ _
+    exact z.underlying.property
+  have hmap : Point.map (openInclusion X U)
+      (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z) =
+      Point.map (Over.homMk (cycleComponentι X.left x) rfl) zC := by
+    change Point.map (openInclusion X U)
+        (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z) =
+      Point.map (Over.homMk (cycleComponentι X.left x) rfl) (Point.map k z)
+    rw [← Point.map_comp_apply, ← Point.map_comp_apply]
+    apply congrArg (fun g => Point.map g z)
+    apply Over.OverMorphism.ext
+    change cycleComponentSmoothLocusClosedLift X x ≫ U.ι =
+      (cycleComponentι X.left x ≫ X.hom).smoothLocus.ι ≫ cycleComponentι X.left x
+    exact cycleComponentSmoothLocusClosedLift_ι X x
+  have hpoint : U.ι (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z).underlying =
+      cycleComponentι X.left x zC.underlying := by
+    have hp := congrArg Point.underlying hmap
+    change U.ι (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z).underlying =
+      cycleComponentι X.left x zC.underlying at hp
+    exact hp
+  have hyC : cycleComponentι X.left x zC.underlying ∈ f.opens := by
+    rw [← hpoint]
+    exact hy
+  have hysC : cycleComponentι X.left x zC.underlying ∈ X.left.basicOpen s := by
+    rw [← hpoint]
+    exact hys
+  have h := fderiv_ne_zero_of_component_equation X c x d f hx s hs hEq U
+    (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z) zC hzC hyC hysC hmap
+    (by simpa [U] using hy)
+  simpa [U, k, zC] using h
+
+/-- The same specialization with the membership conditions stated for the ambient complex point.
+This is convenient when the chart neighbourhood has already been shrunk inside the two analytic
+opens. -/
+theorem fderiv_ne_zero_of_smooth_locus_component_equation_of_ambient_membership
+    (c : Scheme.CartierData X.left) (x : X.left) {i : c.ι} (d : ℕ)
+    [SmoothOfRelativeDimension d X.hom] (f : c.LocalForm i x)
+    (hx : coheight x = 1) (s : Γ(X.left, f.opens))
+    (hs : s ∉ (f.isAffineOpen.primeIdealOf ⟨x, f.mem⟩).asIdeal)
+    (hEq :
+      (f.isAffineOpen.primeIdealOf ⟨x, f.mem⟩).asIdeal.map
+          (algebraMap (Γ(X.left, f.opens)) (Localization.Away s)) =
+        (Ideal.span {f.equation}).map
+          (algebraMap (Γ(X.left, f.opens)) (Localization.Away s)))
+    (z : ComplexPoint (cycleComponentSmoothLocusOver X x))
+    (hy : Point.map (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x))
+      (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z) ∈
+        analyticOpen X f.opens)
+    (hys : Point.map (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x))
+      (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z) ∈
+        analyticOpen X (X.left.basicOpen s)) :
+    fderiv ℂ (fun w ↦ Point.evaluate
+        ((cycleComponentSmoothLocusAmbientOpen X x).ι ⁻¹ᵁ f.opens)
+        ((cycleComponentSmoothLocusAmbientOpen X x).ι.app f.opens f.equation)
+        ((localChart (cycleComponentSmoothLocusAmbientOpenOver X x) d
+          (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z)).symm w))
+      (localChart (cycleComponentSmoothLocusAmbientOpenOver X x) d
+        (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z)
+        (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z)) ≠ 0 := by
+  have hy' : (cycleComponentSmoothLocusAmbientOpen X x).ι
+      (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z).underlying ∈ f.opens := by
+    change Point.underlying
+      (Point.map (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x))
+        (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z)) ∈ f.opens at hy
+    exact hy
+  have hys' : (cycleComponentSmoothLocusAmbientOpen X x).ι
+      (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z).underlying ∈
+        X.left.basicOpen s := by
+    change Point.underlying
+      (Point.map (openInclusion X (cycleComponentSmoothLocusAmbientOpen X x))
+        (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z)) ∈
+      X.left.basicOpen s at hys
+    exact hys
+  exact fderiv_ne_zero_of_smooth_locus_component_equation X c x d f hx s hs hEq z hy' hys'
+
 end AlgebraicGeometry.ComplexPoint.Affine
