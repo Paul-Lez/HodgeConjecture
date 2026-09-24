@@ -6,6 +6,7 @@ import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTransport
 import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTop
 import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftOnOpen
+import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftOpenOne
 import Other.AlgebraicTopology.Sheaf.CohomologySectionArbitraryDegreeVanishing
 import Other.AlgebraicGeometry.RelativeChernLocalBoundary
 import Other.AlgebraicGeometry.RelativeChernOriginalRestriction
@@ -660,3 +661,5 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.supportSheafSection_shift_eq_normalized_winding_on_open
 
 #print axioms TopCat.Sheaf.sectionCohomologyShift_onOpen_homology_one
+
+#print axioms TopCat.Sheaf.sectionCohomologyToSheafSection_shift_openRestriction_one
