@@ -303,6 +303,7 @@ public import Other.AlgebraicGeometry.ChernWindingRawRepresentative
 public import Other.AlgebraicGeometry.ChernWindingStandardTriangle
 public import Other.AlgebraicGeometry.ChernWindingSupportedBoundary
 public import Other.AlgebraicGeometry.ChernWindingSupportNaturality
+public import Other.AlgebraicGeometry.ChernRelativeSupportGenericUnit
 public import Other.AlgebraicGeometry.ChernWindingUnitClass
 public import Other.AlgebraicGeometry.ClosedSupportCodimensionVanishing
 public import Other.AlgebraicGeometry.ClosedSupportCoheightDimension
