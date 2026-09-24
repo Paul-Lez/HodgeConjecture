@@ -311,6 +311,7 @@ public import Other.AlgebraicGeometry.ChernWindingSupportNaturality
 public import Other.AlgebraicGeometry.ChernRelativeSupportGenericUnit
 public import Other.AlgebraicGeometry.ChernRelativeClosedSupportSection
 public import Other.AlgebraicGeometry.ChernRelativeClosedSupportUnit
+public import Other.AlgebraicGeometry.ChernOriginalRawAmbientTransport
 public import Other.AlgebraicGeometry.ChernWindingUnitClass
 public import Other.AlgebraicGeometry.ClosedSupportCodimensionVanishing
 public import Other.AlgebraicGeometry.ClosedSupportCoheightDimension

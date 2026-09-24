@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5337 jobs),
-and the comparison audit checks 462 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5338 jobs),
+and the comparison audit checks 463 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -78,6 +78,8 @@ the shifted original boundary cycle with the actual raw winding cycle of the neg
 frame difference. `OriginalChernRawWindingSection.lean` passes this equality to the
 cohomology-sheaf section on the restricted space. Transport to the original ambient
 section and its supported normalization remain.
+`ChernOriginalRawAmbientTransport.lean` identifies the original raw cone map with
+the direct ambient map after the prescribed top-evaluation isomorphism.
 
 `CohomologySectionShiftTransport.lean` and `CohomologySectionShiftTop.lean` prove that
 the original section normalization commutes with the prescribed global cohomology shift.

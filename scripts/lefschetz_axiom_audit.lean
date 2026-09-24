@@ -20,6 +20,7 @@ import Other.AlgebraicGeometry.ChernWindingSupportNaturality
 import Other.AlgebraicGeometry.ChernRelativeSupportGenericUnit
 import Other.AlgebraicGeometry.ChernRelativeClosedSupportSection
 import Other.AlgebraicGeometry.ChernRelativeClosedSupportUnit
+import Other.AlgebraicGeometry.ChernOriginalRawAmbientTransport
 import Other.AlgebraicTopology.CohomologySheafSectionDerivedVanishing
 import Other.AlgebraicGeometry.CocycleGlobalSectionNaturality
 import Other.AlgebraicGeometry.CartierWindingChartVanishing
@@ -663,3 +664,5 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms TopCat.Sheaf.sectionCohomologyShift_onOpen_homology_one
 
 #print axioms TopCat.Sheaf.sectionCohomologyToSheafSection_shift_openRestriction_one
+
+#print axioms AlgebraicGeometry.ComplexPoint.originalLocalRawToAmbientCone_comp_restriction_eq
