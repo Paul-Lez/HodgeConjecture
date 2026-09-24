@@ -410,6 +410,7 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.Affine.localizedPointJetAlgHom
 #print axioms AlgebraicGeometry.ComplexPoint.Affine.localizedPointJetDerivation
 #print axioms AlgebraicGeometry.ComplexPoint.Affine.localizedPointJetAlgHom_comp
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.localizedPointJetDerivation_coordinate
 #print axioms Complex.continuousOn_normalQuotient
 #print axioms Complex.exists_ball_analytic_normalQuotient_factor
 #print axioms CategoryTheory.Functor.mapHomologyShift_eq_zero_of_mapDerivedCategory_eq_zero

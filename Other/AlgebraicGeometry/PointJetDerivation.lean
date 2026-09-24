@@ -515,6 +515,66 @@ lemma localizedPointJetAlgHom_comp (z : ComplexPoint X)
   let : q.IsPrime := RingHom.ker_isPrime (residueAlgHom X d D z hz).toRingHom
   apply IsLocalization.lift_comp
 
+lemma localizedPointJetDerivation_coordinate (z : ComplexPoint X) (i : Fin d) :
+    let D := ComplexPoint.localEtaleCoordinates X d z
+    let hz : z.underlying ∈ D.neighborhood := D.mem
+    let q := RingHom.ker (residueAlgHom X d D z hz).toRingHom
+    letI : q.IsPrime := RingHom.ker_isPrime (residueAlgHom X d D z hz).toRingHom
+    letI : IsCentralScalar ℂ (PointJet d) :=
+      { op_smul_eq_smul := by
+          intro c m
+          ext j
+          simp }
+    letI : CommRing (TrivSqZeroExt ℂ (PointJet d)) := inferInstance
+    letI : Algebra ℂ (TrivSqZeroExt ℂ (PointJet d)) := inferInstance
+    letI : Module (Localization.AtPrime q) (PointJet d) := by
+      let u :=
+        (TrivSqZeroExt.fstHom ℂ ℂ (PointJet d)).comp
+          (localizedPointJetAlgHom X d D z hz)
+      exact Module.compHom (PointJet d) u.toRingHom
+    letI : IsScalarTower ℂ (Localization.AtPrime q) (PointJet d) := by
+      let u :=
+        (TrivSqZeroExt.fstHom ℂ ℂ (PointJet d)).comp
+          (localizedPointJetAlgHom X d D z hz)
+      constructor
+      intro c a v
+      change u (c • a) • v = c • u a • v
+      rw [map_smul]
+      simp only [smul_eq_mul, smul_smul]
+    localizedPointJetDerivation X d D z hz
+      (algebraMap (localSectionRing X d D) (Localization.AtPrime q)
+        (D.coordinateRingHomOnOpen (MvPolynomial.X i))) =
+      ContinuousLinearMap.proj i := by
+  dsimp
+  let D := ComplexPoint.localEtaleCoordinates X d z
+  let hz : z.underlying ∈ D.neighborhood := D.mem
+  let q := RingHom.ker (residueAlgHom X d D z hz).toRingHom
+  let : q.IsPrime := RingHom.ker_isPrime (residueAlgHom X d D z hz).toRingHom
+  let : IsCentralScalar ℂ (PointJet d) :=
+    { op_smul_eq_smul := by
+        intro c m
+        ext j
+        simp }
+  let : CommRing (TrivSqZeroExt ℂ (PointJet d)) := inferInstance
+  let : Algebra ℂ (TrivSqZeroExt ℂ (PointJet d)) := inferInstance
+  let g := localizedPointJetAlgHom X d D z hz
+  have hg := localizedPointJetAlgHom_comp X d D z hz
+  have hxi := congrArg
+    (fun k : localSectionRing X d D →+* TrivSqZeroExt ℂ (PointJet d) ↦
+      k (D.coordinateRingHomOnOpen (MvPolynomial.X i))) hg
+  let y : TrivSqZeroExt ℂ (PointJet d) :=
+    g (algebraMap (localSectionRing X d D) (Localization.AtPrime q)
+      (D.coordinateRingHomOnOpen (MvPolynomial.X i)))
+  change TrivSqZeroExt.snd y = _
+  have hy : y = pointJetExtAlgHom X d D z hz
+      (D.coordinateRingHomOnOpen (MvPolynomial.X i)) := by
+    change g (algebraMap (localSectionRing X d D) (Localization.AtPrime q)
+      (D.coordinateRingHomOnOpen (MvPolynomial.X i))) = _ at hxi
+    exact hxi
+  rw [hy]
+  change pointJet X d D z hz (D.coordinateRingHomOnOpen (MvPolynomial.X i)) = _
+  exact regularPointJet_ambientCoordinateSection X d z i
+
 end Affine
 
 end AlgebraicGeometry.ComplexPoint

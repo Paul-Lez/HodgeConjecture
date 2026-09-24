@@ -3,7 +3,7 @@
 ## Current implementation status (2026-09-24)
 
 Validation: main `9aba2ec` is merged, `lake build` passes (5284 jobs),
-and the comparison audit checks 321 distinct declarations with only `propext`,
+and the comparison audit checks 322 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -34,6 +34,7 @@ comparison with the existing global support normalization. Three steps remain:
 nonzero first-order classes. It also gives the criterion from surjectivity and equal finite
 dimensions. `PointJetDerivation.lean` constructs the actual analytic first jet, its
 value-and-derivative algebra map, and its extension to the local coordinate ring.
+The localized derivation sends the selected chart coordinates to the derivative projections.
 Applying the detection criterion to the component stalk remains in progress.
 
 The conditional winding-chart constructor retains the inclusion of its final carrier
