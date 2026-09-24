@@ -118,7 +118,7 @@ theorem continuousOn_normalQuotient
     exact hq.continuousWithinAt
 
 /-- Analytic functions admit continuous division by a simple normal coordinate on a zero-plane. -/
-theorem analyticOnNhd_normalQuotient
+theorem continuousOn_normalQuotient_of_analyticOnNhd
     {f : E × ℂ → ℂ} {V : Set (E × ℂ)} (hV : IsOpen V)
     (hzero : ∀ p ∈ V, p.2 = 0 → f p = 0)
     (hf : AnalyticOnNhd ℂ f V) :
@@ -166,7 +166,7 @@ theorem exists_ball_analytic_normalQuotient_factor
     ∃ r : ℝ, 0 < r ∧ Metric.ball p r ⊆ V ∧
       (∀ y ∈ Metric.ball p r, normalQuotient f y ≠ 0) ∧
       (∀ y ∈ Metric.ball p r, f y = y.2 * normalQuotient f y) :=
-  exists_ball_normalQuotient_factor hV hzero (analyticOnNhd_normalQuotient hV hzero hf)
+  exists_ball_normalQuotient_factor hV hzero (continuousOn_normalQuotient_of_analyticOnNhd hV hzero hf)
     hp hpz hk
 
 end Complex

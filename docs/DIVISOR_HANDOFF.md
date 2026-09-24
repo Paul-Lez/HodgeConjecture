@@ -3,8 +3,8 @@
 For an integral, smooth, projective complex scheme `X`,
 `AlgebraicGeometry.ComplexPoint.hasDivisorClassOfCartierData` in
 `Other/AlgebraicGeometry/ChernRelativeFinalAssembly.lean` proves the uniform
-divisor–Chern identity. The full build passes (5344 jobs), and the comparison
-audit checks 472 distinct declarations with only `propext`, `Classical.choice`,
+divisor–Chern identity. The full build passes (5343 jobs), and the comparison
+audit checks 471 distinct declarations with only `propext`, `Classical.choice`,
 and `Quot.sound`. The independent correctness and code-quality review is pending.
 
 The proved proposition is the existing definition

@@ -278,7 +278,6 @@ public import Other.AlgebraicGeometry.ChernClassRestrictionVanishing
 public import Other.AlgebraicGeometry.ChernLocalModel
 public import Other.AlgebraicGeometry.ChernLocalModelWinding
 public import Other.AlgebraicGeometry.ChernRelativeChartFormula
-public import Other.AlgebraicGeometry.ChernRelativeChartFormulaGenericLocal
 public import Other.AlgebraicGeometry.ChernRelativeChartFormulaSplitting
 public import Other.AlgebraicGeometry.ChernRelativeClass
 public import Other.AlgebraicGeometry.ChernRelativeClassGeneric

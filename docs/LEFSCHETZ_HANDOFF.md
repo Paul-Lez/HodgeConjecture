@@ -22,8 +22,8 @@ cycle-class definitions.
 
 ## PR split
 
-Validation after the split: main `1b509d2` is merged, `lake build` passes (5233 jobs),
-and the comparison audit checks 275 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5343 jobs),
+and the comparison audit checks 471 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9) contains the analytic construction,
@@ -32,7 +32,8 @@ contains the GAGA development and is stacked on PR9. The general algebraization 
 `GAGAStatement.lean`; `GAGAtoLefschetz.lean` supplies its specialization to unit-sheaf extensions.
 
 The divisor–Chern comparison takes an algebraic line bundle and its analytic identification as
-inputs. It does not require a GAGA theorem. Its exact target and remaining proof steps are in
+inputs. The uniform comparison is proved without GAGA by
+`hasDivisorClassOfCartierData` in `ChernRelativeFinalAssembly.lean`; its proof route is in
 [DIVISOR_HANDOFF.md](DIVISOR_HANDOFF.md).
 
 The comparison audit is `scripts/lefschetz_axiom_audit.lean`; the GAGA audit is
@@ -61,6 +62,7 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 | `Other/AlgebraicGeometry/AnalytificationModules.lean` | `moduleAnalytification`, its adjunction and `moduleAnalytificationUnitIso`. |
 | [PR41 GAGA work](https://github.com/Paul-Lez/HodgeConjecture/pull/41) | Holomorphic stalks are local; `analytificationToAlgebraic`. |
 | `Other/LinearAlgebra/RationalDenominators.lean`, `Other/Algebra/Homology/RationalCochainDenominators.lean` | Denominator clearing for finitely generated abelian groups and for homology. |
+| `Other/AlgebraicGeometry/ChernRelativeFinalAssembly.lean` | `hasDivisorClassOfCartierData`: the uniform divisor–Chern identity. |
 | `Other/AlgebraicGeometry/LefschetzOneOneReduction.lean` | The remaining obligations as explicit propositions, and `RationalLefschetzOneOne.of_obligations`. |
 
 ## Remaining obligations
@@ -117,7 +119,11 @@ states, for a single smooth projective integral complex variety `X`:
    `InvertibleSheafRationalSection.lean`, `CartierDataOfTrivializingCover.lean`), and
    `hasDivisorOfAlgebraicModel_of_divisorClass` (`DivisorObligations.lean`) reduces the obligation
    to `HasDivisorClassOfSomeCartierData X`: the constructed class of the divisor of some Cartier
-   datum representing `L` is the rational first Chern class of `E`. This comparison is scoped in
+   datum representing `L` is the rational first Chern class of `E`.
+   **Obligation (3) is discharged.** `hasDivisorClassOfCartierData` in
+   `ChernRelativeFinalAssembly.lean` proves the stronger uniform comparison.
+   Apply `hasDivisorClassOfSomeCartierData_of_cartierData`, then
+   `hasDivisorOfAlgebraicModel_of_divisorClass`. See
    [DIVISOR_HANDOFF.md](DIVISOR_HANDOFF.md).
 
 `RationalLefschetzOneOne.of_obligations` proves the target from (1) and
@@ -128,8 +134,7 @@ states, for a single smooth projective integral complex variety `X`:
 classes are stable under integer scaling, integral Hodge classes lift to unit-sheaf extensions,
 and the resulting integral divisor is divided by the denominator.
 
-Each of (1)–(3) is a substantial formalisation project in its own right; none is a matter of
-elaboration or of connecting existing lemmas.
+Only obligation (2), algebraization by GAGA, remains among these three inputs.
 
 ## Verification
 

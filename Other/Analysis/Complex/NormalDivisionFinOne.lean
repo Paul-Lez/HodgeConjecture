@@ -87,7 +87,7 @@ theorem exists_nhds_normalQuotientFinOne_factor
   have hqcont : ContinuousOn (normalQuotientFinOne f) U := by
     have hqscalar : ContinuousOn (normalQuotient (f ∘ lift))
         (Metric.ball (push p) r) :=
-      (analyticOnNhd_normalQuotient hV' hzero' hf').mono hball
+      (continuousOn_normalQuotient_of_analyticOnNhd hV' hzero' hf').mono hball
     have hcomp := hqscalar.comp push.continuous.continuousOn (by
       intro y hy
       change push y ∈ Metric.ball (push p) r at hy
