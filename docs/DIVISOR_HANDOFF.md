@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5294 jobs),
-and the comparison audit checks 359 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5295 jobs),
+and the comparison audit checks 361 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -27,8 +27,8 @@ comparison with the existing global support normalization. Two steps remain:
 
 - Use that derivative to discharge the input of the canonical winding-chart constructor
   and assemble the generic chart cover.
-- Apply normalized local vanishing to the Cartier frame and compute restriction
-  of the original complement comparison to a chart.
+- Compute restriction of the original complement comparison to a chart and identify
+  its supported class with the component coclass.
 
 `CotangentDetection.lean` proves that an injective residue-valued cotangent map detects
 nonzero first-order classes. It also gives the criterion from surjectivity and equal finite
@@ -63,7 +63,9 @@ the original section normalization commutes with the prescribed global cohomolog
 for a cocycle in any degree when its shifted chain map vanishes after derived restriction.
 `SupportSheafConeLocalVanishing.lean` carries this through the actual sheaf-to-cone map,
 shift, and sign: the original normalized support section vanishes on any open where
-the original derived class vanishes. Its application to the Cartier frame remains.
+the original derived class vanishes. `CartierWindingChartNormalizedVanishing.lean`
+applies this to the regular Cartier frame and proves that the normalized local relative
+Chern section equals positive winding of the Cartier unit.
 
 `RelativeChernOriginalRestriction.lean` constructs the chain map induced by a local
 frame and proves that it splits the restricted inclusion cone's map to the constant

@@ -232,6 +232,7 @@ public import Other.AlgebraicGeometry.BettiScalarNaturality
 public import Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 public import Other.AlgebraicGeometry.BettiSupportedOrdinaryConeComparison
 public import Other.AlgebraicGeometry.CartierChernLocalWinding
+public import Other.AlgebraicGeometry.CartierWindingChartNormalizedVanishing
 public import Other.AlgebraicGeometry.CartierDataOfTrivializingCover
 public import Other.AlgebraicGeometry.CartierFrameLift
 public import Other.AlgebraicGeometry.CartierLocalComponentKernel
