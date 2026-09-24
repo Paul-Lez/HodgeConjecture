@@ -229,6 +229,7 @@ public import Other.Algebra.Homology.PrecompFactorization
 public import Other.Algebra.Homology.RationalCochainDenominators
 public import Other.Algebra.Homology.SingleCocycleFactorization
 public import Other.AlgebraicGeometry.ActualSingularSupportBoundary
+public import Other.AlgebraicGeometry.ActualSingularSupportBoundaryOnOpen
 public import Other.AlgebraicGeometry.AnalyticSectionOfAlgebraic
 public import Other.AlgebraicGeometry.AnalyticSheafCohomologyExt
 public import Other.AlgebraicGeometry.AnalytificationGenerates

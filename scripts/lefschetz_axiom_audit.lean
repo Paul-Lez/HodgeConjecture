@@ -1,3 +1,4 @@
+import Other.AlgebraicGeometry.ActualSingularSupportBoundaryOnOpen
 import Other.AlgebraicTopology.Sheaf.CohomologyIntegerOpenRestriction
 import Other.AlgebraicTopology.Sheaf.CohomologySectionDerivedTransport
 import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
@@ -605,3 +606,5 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 
 #print axioms TopCat.Sheaf.constantToOpen_integerOne
 #print axioms TopCat.Sheaf.integerConstant_h0_restriction
+
+#print axioms AlgebraicGeometry.ComplexPoint.actualSingularSupportBoundary_comp_injective_on_open
