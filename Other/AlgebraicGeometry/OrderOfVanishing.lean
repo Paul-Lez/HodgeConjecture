@@ -1,5 +1,6 @@
 /-
 Copyright 2026 The Formal Conjectures Authors.
+Copyright (c) 2026 The Tau Ceti contributors. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,7 +50,6 @@ theorem Scheme.ord_support_finite [IsIntegral X] [IsNoetherian X]
     NoetherianSpace.exists_finite_set_isClosed_irreducible
       (show IsClosed Z from U.isOpen.isClosed_compl)
   let : Finite S := hSfinite
-  let : PartialOrder X := specializationOrder X
   let g : S → X := fun T ↦ (hSirred T.1 T.2).genericPoint
   apply (Set.finite_range g).subset
   intro x hx
@@ -68,33 +68,26 @@ theorem Scheme.ord_support_finite [IsIntegral X] [IsNoetherian X]
   let T' : S := ⟨T, hTS⟩
   refine ⟨T', ?_⟩
   let y : X := g T'
-  have hyclosure : closure ({y} : Set X) = T :=
-    (hSirred T hTS).closure_genericPoint (hSclosed T hTS)
-  have hyx : y ⤳ x := by
-    rw [specializes_iff_mem_closure, hyclosure]
-    exact hxT
-  have hxy : x ≤ y := hyx
+  -- Adapted from Tau Ceti's `WeilDivisor/Scheme/Principal.lean` at commit `a4e184f1`.
+  have hyGeneric : IsGenericPoint y T :=
+    (hSirred T hTS).isGenericPoint_genericPoint (hSclosed T hTS)
   change y = x
-  apply le_antisymm
-  · by_contra hnyx
-    have hxy_ne : x ≠ y := fun h ↦ hnyx (h ▸ le_rfl)
-    have hxylt : x < y := lt_of_le_of_ne hxy hxy_ne
-    have hycodim_le : coheight y ≤ 0 :=
-      ((Order.coheight_eq_coe_add_one_iff (x := x) (n := 0)).mp hxcodim).2.2 y hxylt
-    have hycodim : coheight y = 0 := bot_unique hycodim_le
-    have hymax : IsMax y := Order.coheight_eq_zero.mp hycodim
-    have hytop : y = (⊤ : X) := hymax.eq_of_le (le_top : y ≤ (⊤ : X))
-    have hTuniv : T = Set.univ := by
-      rw [← hyclosure, hytop]
-      exact genericPoint_closure X
-    have hTZ : T ⊆ Z := by
-      intro z hz
-      rw [hZ]
-      exact Set.mem_sUnion_of_mem hz hTS
-    obtain ⟨z, hzU⟩ := hUne
-    have hzT : z ∈ T := by rw [hTuniv]; trivial
-    exact hTZ hzT hzU
-  · exact hxy
+  by_contra hne
+  have hxylt : x < y := by
+    refine ⟨hyGeneric.specializes hxT, ?_⟩
+    intro hyx
+    exact hne (Inseparable.eq <| inseparable_iff_specializes_and.mpr
+      ⟨hyGeneric.specializes hxT, hyx⟩)
+  have hyMax : IsMax y :=
+    Order.coheight_eq_zero.mp <|
+      Order.lt_one_iff.mp <| (Order.coheight_eq_coe_iff.mp hxcodim).2.2 y hxylt
+  have hyGenericX : y = genericPoint X :=
+    Inseparable.eq <| inseparable_iff_specializes_and.mpr
+      ⟨hyMax (genericPoint_specializes y), genericPoint_specializes y⟩
+  have hTZ : T ⊆ Z := hZ ▸ Set.subset_sUnion_of_mem hTS
+  have hηU : genericPoint X ∈ U :=
+    (genericPoint_spec X).mem_open_set_iff U.isOpen |>.mpr (by simpa using hUne)
+  exact hTZ (hyGenericX.symm ▸ hyGeneric.mem) hηU
 
 /-- The order-of-vanishing function is locally finitely supported, hence defines an algebraic
 cycle without an additional finiteness hypothesis. -/

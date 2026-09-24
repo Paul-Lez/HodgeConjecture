@@ -110,32 +110,20 @@ theorem generates_unitIsoSection {U : S.Opens}
     (e : SheafOfModules.unit (S.ringCatSheaf.over U) ≅ L.over U) :
     Generates (unitIsoSection e) := by
   intro V h
-  have hbij : Function.Bijective (e.hom.val.app (op (Over.mk (homOfLE h)))) :=
-    ConcreteCategory.bijective_of_isIso
-      ((SheafOfModules.evaluation (R := S.ringCatSheaf.over U) (op (Over.mk (homOfLE h)))).map
-        e.hom)
+  have hbij := ConcreteCategory.bijective_of_isIso
+    ((SheafOfModules.evaluation (R := S.ringCatSheaf.over U)
+      (op (Over.mk (homOfLE h)))).map e.hom)
   have hmu : Over.mk (homOfLE h) ⟶ Over.mk (𝟙 U) := Over.homMk (homOfLE h) (by simp)
   have hone : e.hom.val.app (op (Over.mk (homOfLE h))) (1 : Γ(S, V)) =
-      resSection L h (unitIsoSection e) := by
-    have hnat := PresheafOfModules.naturality_apply e.hom.val hmu.op (1 : Γ(S, U))
-    have h1 : (SheafOfModules.unit (S.ringCatSheaf.over U)).val.map hmu.op (1 : Γ(S, U)) =
-        (1 : Γ(S, V)) := PresheafOfModules.unit_map_one _ hmu.op
-    rw [h1] at hnat
-    exact hnat
-  have hsmul : ∀ r : Γ(S, V), e.hom.val.app (op (Over.mk (homOfLE h))) r =
-      r • resSection L h (unitIsoSection e) := by
-    intro r
-    have hlin := (e.hom.val.app (op (Over.mk (homOfLE h)))).hom.map_smul r (1 : Γ(S, V))
-    rw [← hone]
-    refine Eq.trans ?_ hlin
-    congr 1
-    exact (mul_one r).symm
+      resSection L h (unitIsoSection e) :=
+    (PresheafOfModules.sections_property ((L.over U).unitHomEquiv e.hom) hmu.op).symm
   have hfun : (fun r : Γ(S, V) ↦ r • resSection L h (unitIsoSection e)) =
       ⇑(ConcreteCategory.hom (e.hom.val.app (op (Over.mk (homOfLE h))))) := by
     funext r
-    exact (hsmul r).symm
-  rw [hfun]
-  exact hbij
+    rw [← hone]
+    exact ((e.hom.val.app (op (Over.mk (homOfLE h)))).hom.map_smul r (1 : Γ(S, V))).symm.trans
+      (congrArg _ (mul_one r))
+  rwa [hfun]
 
 /-- An open cover of a scheme together with a generating section of `L` on each member. -/
 structure TrivializingCover (L : S.Modules) where
