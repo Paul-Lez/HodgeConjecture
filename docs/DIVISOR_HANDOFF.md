@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5291 jobs),
-and the comparison audit checks 338 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5292 jobs),
+and the comparison audit checks 342 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -25,7 +25,7 @@ analytic normal coordinate on restricted charts. It also proves the positive win
 identity for the compatible Cartier frame difference and an exact sheaf-map
 comparison with the existing global support normalization. Three steps remain:
 
-- Identify the algebraic cotangent class with the analytic derivative.
+- Apply the germ-to-derivative comparison to the actual component equation.
 - Use that derivative to discharge the input of the canonical winding-chart constructor
   and assemble the generic chart cover.
 - Prove local vanishing under the prescribed normalization and compute restriction
@@ -40,6 +40,10 @@ The localized derivation sends the selected chart coordinates to the derivative 
 the local regularity and dimension from the selected coordinates. It also identifies
 the evaluation kernel with the corresponding scheme-point prime. Applying this to
 the actual component equation germ remains in progress.
+
+`PointJetSectionGerm.lean` proves that a regular section whose germ lies in the
+maximal ideal but not its square has nonzero analytic derivative. It applies to
+sections on arbitrary Zariski opens through the actual stalk and coordinate maps.
 
 `ChernWindingGenericChartCanonical.lean` constructs the actual component winding chart
 from the nonzero ambient derivative. Its carrier lies in any supplied neighborhood,

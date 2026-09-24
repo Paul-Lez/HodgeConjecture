@@ -26,6 +26,7 @@ import Other.RingTheory.RegularLocalEquation
 import Other.RingTheory.CotangentDetection
 import Other.AlgebraicGeometry.PointJetDerivation
 import Other.AlgebraicGeometry.PointJetDetection
+import Other.AlgebraicGeometry.PointJetSectionGerm
 import Other.AlgebraicTopology.Sheaf.CohomologyShiftDerivedVanishing
 import Other.AlgebraicGeometry.ClosedImmersion.HolomorphicChartsAnalytic
 /- Representative axiom checks for the incomplete Lefschetz development.
@@ -463,3 +464,7 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms TopCat.Sheaf.sectionCohomology_integerCocycleGlobalSection_ofHom_shift_onOpen_eq_zero
 #print axioms AlgebraicGeometry.ComplexPoint.restrictedConeSection_comp_coneToInteger
 #print axioms AlgebraicGeometry.ComplexPoint.restrictedConeSection_comp_relativeConeMap
+#print axioms RingEquiv.mem_maximalIdeal_pow_iff
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.ambientSection_germ_stalkIso
+#print axioms AlgebraicGeometry.ComplexPoint.regularPointJet_eq_of_germ_eq
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.regularPointJet_ne_zero_of_germ_mem_maximalIdeal_of_not_mem_square
