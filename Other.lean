@@ -244,6 +244,7 @@ public import Other.AlgebraicGeometry.ChernComponentLocalIsolation
 public import Other.AlgebraicGeometry.ChernComponentSectionExtraction
 public import Other.AlgebraicGeometry.ChernComponentSheafIsolation
 public import Other.AlgebraicGeometry.ChernComponentNormalizationRestriction
+public import Other.AlgebraicGeometry.ChernComponentRecovery
 public import Other.AlgebraicGeometry.CartierDataOfTrivializingCover
 public import Other.AlgebraicGeometry.CartierFrameLift
 public import Other.AlgebraicGeometry.CartierLocalComponentKernel

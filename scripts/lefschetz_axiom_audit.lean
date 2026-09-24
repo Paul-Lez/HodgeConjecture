@@ -19,6 +19,7 @@ import Other.AlgebraicGeometry.ChernComponentLocalIsolation
 import Other.AlgebraicGeometry.ChernComponentSectionExtraction
 import Other.AlgebraicGeometry.ChernComponentSheafIsolation
 import Other.AlgebraicGeometry.ChernComponentNormalizationRestriction
+import Other.AlgebraicGeometry.ChernComponentRecovery
 import Other.AlgebraicGeometry.CartierLocalIdeal
 import Other.AlgebraicGeometry.CartierLocalDerivative
 import Other.AlgebraicGeometry.CartierLocalDerivativePointJet
@@ -557,3 +558,5 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.restrict_coneToInteger_inv_comp_factors_eq_restrictedConeSection
 
 #print axioms AlgebraicGeometry.ComplexPoint.normalizedComponentSection_restrict
+
+#print axioms AlgebraicGeometry.ComplexPoint.ChernWindingChart.normalizedClass_restrict_eq_divisor_smul_of_original
