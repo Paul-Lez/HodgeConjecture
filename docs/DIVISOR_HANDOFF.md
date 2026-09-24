@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5285 jobs),
-and the comparison audit checks 325 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5286 jobs),
+and the comparison audit checks 327 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -26,7 +26,8 @@ identity for the compatible Cartier frame difference and an exact sheaf-map
 comparison with the existing global support normalization. Three steps remain:
 
 - Identify the algebraic cotangent class with the analytic derivative.
-- Construct the normalized winding charts from that nonzero derivative.
+- Use that derivative to discharge the input of the canonical winding-chart constructor
+  and assemble the generic chart cover.
 - Prove local normalization of the actual Chern class, including restriction of the
   original complement comparison and its shift and sign conventions.
 
@@ -37,9 +38,10 @@ value-and-derivative algebra map, and its extension to the local coordinate ring
 The localized derivation sends the selected chart coordinates to the derivative projections.
 Applying the detection criterion to the component stalk remains in progress.
 
-The conditional winding-chart constructor retains the inclusion of its final carrier
-in the supplied flattened neighborhood. The actual component-chart constructor remains
-in progress.
+`ChernWindingGenericChartCanonical.lean` constructs the actual component winding chart
+from the nonzero ambient derivative. Its carrier lies in any supplied neighborhood,
+and it retains the canonical coclass normalization. Discharging its derivative input
+and assembling the generic chart cover remain in progress.
 
 `FlasquePushforwardQuasiIso.lean` proves that direct image preserves comparisons between
 bounded-below flasque complexes. `SupportSheafConeQuasiIso.lean` applies it to the fixed
