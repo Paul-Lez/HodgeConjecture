@@ -39,6 +39,7 @@ public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeComparison
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeQuasiIso
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeLocalVanishing
+public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeSectionTransport
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomology
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSingularGlobal
@@ -132,6 +133,7 @@ public import Other.AlgebraicTopology.Sheaf.CohomologyOpenRestriction
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTransport
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTop
+public import Other.AlgebraicTopology.Sheaf.CohomologySectionTransport
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionArbitraryDegreeVanishing
 public import Other.AlgebraicTopology.Sheaf.FlasquePushforwardQuasiIso
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionRestriction

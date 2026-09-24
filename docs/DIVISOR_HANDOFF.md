@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5300 jobs),
-and the comparison audit checks 380 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5302 jobs),
+and the comparison audit checks 385 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -58,6 +58,9 @@ complement resolution and proves that the actual support sheaf-to-cone map is a
 quasi-isomorphism. `SupportSheafConeNormalization.lean` proves that its global-section
 map is a quasi-isomorphism and factors the original support equivalence through its
 inverse on homology, the prescribed shift, and the final minus sign.
+`SupportSheafConeSectionTransport.lean` computes the original normalized support section
+from its local cone-cohomology section through that inverse, shift, and sign.
+The actual Chern boundary section still has to be identified.
 
 `CohomologySectionShiftTransport.lean` and `CohomologySectionShiftTop.lean` prove that
 the original section normalization commutes with the prescribed global cohomology shift.
