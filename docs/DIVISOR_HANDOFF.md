@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5293 jobs),
-and the comparison audit checks 355 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5294 jobs),
+and the comparison audit checks 359 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -23,9 +23,8 @@ The current work proves generic ideal generation in the actual component stalk,
 a nonzero cotangent class for the local equation, and continuous division by a simple
 analytic normal coordinate on restricted charts. It also proves the positive winding
 identity for the compatible Cartier frame difference and an exact sheaf-map
-comparison with the existing global support normalization. Three steps remain:
+comparison with the existing global support normalization. Two steps remain:
 
-- Apply the germ-to-derivative comparison to the actual component equation.
 - Use that derivative to discharge the input of the canonical winding-chart constructor
   and assemble the generic chart cover.
 - Apply normalized local vanishing to the Cartier frame and compute restriction
@@ -38,12 +37,13 @@ value-and-derivative algebra map, and its extension to the local coordinate ring
 The localized derivation sends the selected chart coordinates to the derivative projections.
 `PointJetDetection.lean` proves that it detects nonzero first-order classes, deriving
 the local regularity and dimension from the selected coordinates. It also identifies
-the evaluation kernel with the corresponding scheme-point prime. Applying this to
-the actual component equation germ remains in progress.
+the evaluation kernel with the corresponding scheme-point prime.
 
 `PointJetSectionGerm.lean` proves that a regular section whose germ lies in the
 maximal ideal but not its square has nonzero analytic derivative. It applies to
 sections on arbitrary Zariski opens through the actual stalk and coordinate maps.
+`CartierLocalDerivativePointJet.lean` applies this to the actual component equation
+on an ambient open subscheme, including the stalk comparison for its pullback.
 
 `ChernWindingGenericChartCanonical.lean` constructs the actual component winding chart
 from the nonzero ambient derivative. Its carrier lies in any supplied neighborhood,

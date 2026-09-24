@@ -236,6 +236,7 @@ public import Other.AlgebraicGeometry.CartierDataOfTrivializingCover
 public import Other.AlgebraicGeometry.CartierFrameLift
 public import Other.AlgebraicGeometry.CartierLocalComponentKernel
 public import Other.AlgebraicGeometry.CartierLocalDerivative
+public import Other.AlgebraicGeometry.CartierLocalDerivativePointJet
 public import Other.AlgebraicGeometry.CartierLocalForm
 public import Other.AlgebraicGeometry.CartierLocalFormUnit
 public import Other.AlgebraicGeometry.CartierLocalIdeal

@@ -10,6 +10,7 @@ import Other.AlgebraicGeometry.CartierWindingChartVanishing
 import Other.AlgebraicGeometry.CartierChernLocalWinding
 import Other.AlgebraicGeometry.CartierLocalIdeal
 import Other.AlgebraicGeometry.CartierLocalDerivative
+import Other.AlgebraicGeometry.CartierLocalDerivativePointJet
 import Other.AlgebraicGeometry.ChernWindingGenericChartAssembly
 import Other.AlgebraicGeometry.ChernWindingGenericChartConditional
 import Other.AlgebraicGeometry.ChernWindingGenericChartCanonical
@@ -482,3 +483,7 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.restrictedOverlapUnitHom
 #print axioms AlgebraicGeometry.ComplexPoint.restrictedSection_integerOne
 #print axioms AlgebraicGeometry.ComplexPoint.restrictedConstantMap_eq_constHomOfSection
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.openInclusion_stalk_germ_eq
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.regularPointJet_ne_zero_of_open_restriction_of_germ
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.regularPointJet_ne_zero_of_component_equation
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.fderiv_ne_zero_of_component_equation
