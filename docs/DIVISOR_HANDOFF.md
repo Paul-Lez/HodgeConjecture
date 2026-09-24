@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5284 jobs),
-and the comparison audit checks 322 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5285 jobs),
+and the comparison audit checks 325 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -44,8 +44,10 @@ in progress.
 `FlasquePushforwardQuasiIso.lean` proves that direct image preserves comparisons between
 bounded-below flasque complexes. `SupportSheafConeQuasiIso.lean` applies it to the fixed
 complement resolution and proves that the actual support sheaf-to-cone map is a
-quasi-isomorphism. Its global-section map is already identified. The induced homology
-equivalence must still be matched with the original normalization and its final minus sign.
+quasi-isomorphism. `SupportSheafConeNormalization.lean` proves that its global-section
+map is a quasi-isomorphism and factors the original support equivalence through its
+inverse on homology, the prescribed shift, and the final minus sign. Local vanishing
+under that normalization remains in progress.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.
