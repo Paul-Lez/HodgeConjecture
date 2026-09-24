@@ -462,3 +462,4 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms TopCat.Sheaf.globalSections_homology_cocycle_rightUnshift
 #print axioms TopCat.Sheaf.sectionCohomology_integerCocycleGlobalSection_ofHom_shift_onOpen_eq_zero
 #print axioms AlgebraicGeometry.ComplexPoint.restrictedConeSection_comp_coneToInteger
+#print axioms AlgebraicGeometry.ComplexPoint.restrictedConeSection_comp_relativeConeMap
