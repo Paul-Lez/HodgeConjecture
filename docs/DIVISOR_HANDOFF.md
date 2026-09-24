@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5320 jobs),
-and the comparison audit checks 427 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5321 jobs),
+and the comparison audit checks 428 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -131,6 +131,9 @@ Their outputs supply the local premise of `hasChernLocalModel_of_original_local_
 winding classes. Compatibility with the fixed supported-injective normalization remains.
 `ActualSingularSupportBoundaryOnOpen.lean` identifies the canonical local singular
 boundary with its image in the supported injective complex on every open set.
+`ActualSingularSupportWindingOnOpen.lean` computes its image under the fixed local
+normalization as the positive winding class. The original Chern section must still
+be identified with this boundary through its inverse cone map, shift, and sign.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.
