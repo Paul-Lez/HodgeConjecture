@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5311 jobs),
-and the comparison audit checks 407 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5313 jobs),
+and the comparison audit checks 409 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -24,11 +24,9 @@ a nonzero cotangent class for the local equation, and continuous division by a s
 analytic normal coordinate on restricted charts. It also proves the positive winding
 identity for the compatible Cartier frame difference and an exact sheaf-map
 comparison with the existing global support normalization. Normalized generic winding
-charts are now constructed inside any supplied neighborhood. Two steps remain:
-
-- Compute restriction of the original complement comparison to a chart through the fixed
-  support normalization.
-- Identify the component multiplicities and assemble the uniform divisor–Chern identity.
+charts are now constructed inside any supplied neighborhood. The remaining calculation must
+identify the original restricted Chern boundary with winding through the fixed support
+normalization. Component recovery and global assembly are proved conditional on that local formula.
 
 `CotangentDetection.lean` proves that an injective residue-valued cotangent map detects
 nonzero first-order classes. It also gives the criterion from surjectivity and equal finite
@@ -65,7 +63,7 @@ The actual Chern boundary section still has to be identified.
 to the prescribed local section, retaining the homology and shift comparisons.
 `SupportAmbientSectionDerivedSquare.lean` applies this to the original supported class
 through a genuine K-injective cocycle representative. The original Chern boundary square
-and its evaluation as raw winding remain.
+is now proved; its transport to the ambient cone and evaluation as raw winding remain.
 
 `CohomologySectionShiftTransport.lean` and `CohomologySectionShiftTop.lean` prove that
 the original section normalization commutes with the prescribed global cohomology shift.
@@ -93,6 +91,9 @@ cohomology sheaf is an isomorphism on any open where the supports agree.
 component normalization with the local cohomology-sheaf comparison.
 `ChernComponentRecovery.lean` recovers the selected component multiplicity from the
 original local supported-class formula, which remains to be proved.
+`ChernRelativeChartFormulaAssembly.lean` derives `HasChernLocalModel` from that formula
+for compatible Cartier lifts and constructed generic charts. It chooses charts inside
+the local frame cover and glues their component coefficients.
 
 `RelativeChernOriginalRestriction.lean` constructs the chain map induced by a local
 frame and proves that it splits the restricted inclusion cone's map to the constant
@@ -103,8 +104,9 @@ the literal overlap section and the restricted frame's value on integer `1` are 
 with the overlap-unit map evaluated on the negative frame difference.
 `RelativeChernOriginalBoundary.lean` applies this to the restricted cone map, and
 `RelativeChernOriginalDerivedBoundary.lean` identifies the inverse cone-to-integer map
-after derived restriction. Applying the original comparison boundary square and computing
-the normalized local section remain.
+after derived restriction. `RelativeChernOriginalDerivedBoundarySquare.lean` applies the
+original comparison boundary square and expresses the restricted Chern class as the
+boundary of the negative local frame difference. Computing its normalized local section remains.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.
@@ -121,11 +123,9 @@ This status supersedes the older universal chart-formula sketches below. In
 particular, `HasRelativeChernChartFormula` and
 `HasRelativeChernChartFormulaGeneric` are retained compatibility interfaces, not
 valid obligations to discharge: they allowed arbitrary complement frames and did
-not relate the extension to the Cartier datum. Use
-`HasRelativeChernChartFormulaExists`, which includes those relations and chooses a
-compatible frame. Its reduction now proves the uniform target via
-`hasDivisorClassOfCartierData_of_chartFormulaExists`; its normalized-chart hypothesis
-is now proved, while the class comparison remains.
+not relate the extension to the Cartier datum. The current assembly uses
+`hasChernLocalModel_of_original_local_section`, whose local premise retains compatible
+Cartier lift data and uses the winding map of a constructed generic chart.
 
 The current worktree additionally proves:
 

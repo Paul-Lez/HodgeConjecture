@@ -8,6 +8,7 @@ import Other.AlgebraicGeometry.RelativeChernOriginalRestriction
 import Other.AlgebraicGeometry.RelativeChernOriginalFrameFactorisation
 import Other.AlgebraicGeometry.RelativeChernOriginalBoundary
 import Other.AlgebraicGeometry.RelativeChernOriginalDerivedBoundary
+import Other.AlgebraicGeometry.RelativeChernOriginalDerivedBoundarySquare
 import Other.AlgebraicTopology.CohomologySheafSectionDerivedVanishing
 import Other.AlgebraicGeometry.CocycleGlobalSectionNaturality
 import Other.AlgebraicGeometry.CartierWindingChartVanishing
@@ -20,6 +21,7 @@ import Other.AlgebraicGeometry.ChernComponentSectionExtraction
 import Other.AlgebraicGeometry.ChernComponentSheafIsolation
 import Other.AlgebraicGeometry.ChernComponentNormalizationRestriction
 import Other.AlgebraicGeometry.ChernComponentRecovery
+import Other.AlgebraicGeometry.ChernRelativeChartFormulaAssembly
 import Other.AlgebraicGeometry.CartierLocalIdeal
 import Other.AlgebraicGeometry.CartierLocalDerivative
 import Other.AlgebraicGeometry.CartierLocalDerivativePointJet
@@ -560,3 +562,7 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.normalizedComponentSection_restrict
 
 #print axioms AlgebraicGeometry.ComplexPoint.ChernWindingChart.normalizedClass_restrict_eq_divisor_smul_of_original
+
+#print axioms AlgebraicGeometry.ComplexPoint.hasChernLocalModel_of_original_local_section
+
+#print axioms AlgebraicGeometry.ComplexPoint.restrict_original_relativeChernClass_derived_boundary
