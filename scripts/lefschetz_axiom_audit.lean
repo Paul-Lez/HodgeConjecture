@@ -1,3 +1,4 @@
+import Other.AlgebraicTopology.Sheaf.CohomologyIntegerOpenRestriction
 import Other.AlgebraicTopology.Sheaf.CohomologySectionDerivedTransport
 import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTransport
@@ -601,3 +602,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.restrict_original_relativeChernClass_support_section
 
 #print axioms ChernWinding.windingRelativeClass_supportMap
+
+#print axioms TopCat.Sheaf.constantToOpen_integerOne
+#print axioms TopCat.Sheaf.integerConstant_h0_restriction

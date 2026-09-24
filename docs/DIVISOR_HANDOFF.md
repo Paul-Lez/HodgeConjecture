@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5318 jobs),
-and the comparison audit checks 424 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5319 jobs),
+and the comparison audit checks 426 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -69,6 +69,8 @@ input and the actual local boundary map.
 `RelativeChernOriginalSupportSection.lean` computes the original supported section
 through the prescribed inverse, shift, and minus sign. Its identification with
 positive winding remains.
+`CohomologyIntegerOpenRestriction.lean` identifies the restricted canonical integer
+input with the local integer cocycle through the prescribed homology comparison.
 `OriginalChernRawWinding.lean` computes the actual local chain map on the restricted
 integer-one section as the literal raw winding cochain through the fixed complement
 resolution and ambient cone maps. Passing this calculation to the normalized supported
@@ -120,9 +122,10 @@ original comparison boundary square and expresses the restricted Chern class as 
 boundary of the negative local frame difference. Identifying its normalized local section
 with winding remains.
 
-The remaining calculation has three parallel tasks: restrict the canonical integer
-input, identify the local boundary class with normalized winding, and prove that
-normalized winding commutes with support enlargement from a component to the bad locus.
+The remaining calculation has three parallel tasks: pass the local cochain calculation
+to the ambient boundary class, identify its supported normalization with positive winding,
+and prove that normalized winding commutes with support enlargement from a component
+to the bad locus.
 Their outputs supply the local premise of `hasChernLocalModel_of_original_local_section`.
 `ChernWindingSupportNaturality.lean` proves the support-map identity for relative
 winding classes. Compatibility with the fixed supported-injective normalization remains.
