@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5309 jobs),
-and the comparison audit checks 405 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5310 jobs),
+and the comparison audit checks 406 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -89,6 +89,8 @@ is an isomorphism on the chosen chart, both on section complexes and their cohom
 on that chart and extracts the selected component from the actual supported sum.
 `ChernComponentSheafIsolation.lean` proves that the enlargement map on sections of the
 cohomology sheaf is an isomorphism on any open where the supports agree.
+`ChernComponentNormalizationRestriction.lean` identifies restriction of the prescribed
+component normalization with the local cohomology-sheaf comparison.
 
 `RelativeChernOriginalRestriction.lean` constructs the chain map induced by a local
 frame and proves that it splits the restricted inclusion cone's map to the constant

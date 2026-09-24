@@ -18,6 +18,7 @@ import Other.AlgebraicGeometry.ChernRelativeCanonicalLift
 import Other.AlgebraicGeometry.ChernComponentLocalIsolation
 import Other.AlgebraicGeometry.ChernComponentSectionExtraction
 import Other.AlgebraicGeometry.ChernComponentSheafIsolation
+import Other.AlgebraicGeometry.ChernComponentNormalizationRestriction
 import Other.AlgebraicGeometry.CartierLocalIdeal
 import Other.AlgebraicGeometry.CartierLocalDerivative
 import Other.AlgebraicGeometry.CartierLocalDerivativePointJet
@@ -554,3 +555,5 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 
 #print axioms AlgebraicGeometry.ComplexPoint.restrictedConeSection_comp_relativeConeMap_eq_overlapUnitHom
 #print axioms AlgebraicGeometry.ComplexPoint.restrict_coneToInteger_inv_comp_factors_eq_restrictedConeSection
+
+#print axioms AlgebraicGeometry.ComplexPoint.normalizedComponentSection_restrict
