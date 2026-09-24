@@ -218,6 +218,40 @@ lemma nestedSequence_exact {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mon
     (Ext.contravariantSequence (pairNestedShortComplex_shortExact (J := J) f g) F n₀ n₁ h).Exact :=
   Ext.contravariantSequence_exact _ _ _ _ _
 
+/-- Restriction is an isomorphism when the two outer terms of the nested sequence vanish. -/
+theorem isIso_restrict_of_isZero {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mono g]
+    (n : ℕ) (h₀ : IsZero (AddCommGrpCat.of (relH F n g)))
+    (h₁ : IsZero (AddCommGrpCat.of (relH F (n + 1) g))) :
+    IsIso (AddCommGrpCat.ofHom
+      (restrict F (f ≫ g) f (𝟙 _) g (by simp) n)) := by
+  let S := Ext.contravariantSequence
+    (pairNestedShortComplex_shortExact (J := J) f g) F n (n + 1) (by omega)
+  have hS := nestedSequence_exact F f g n (n + 1) (by omega)
+  let q := AddCommGrpCat.ofHom (restrict F (f ≫ g) f (𝟙 _) g (by simp) n)
+  have hmono : Mono q := by
+    change Mono (S.map' 1 2 (by omega) (by omega))
+    exact (hS.exact 0).mono_g (h₀.eq_zero_of_src _)
+  have hepi : Epi q := by
+    change Epi (S.map' 1 2 (by omega) (by omega))
+    exact (hS.exact 1).epi_f (h₁.eq_zero_of_tgt _)
+  exact isIso_of_mono_of_epi q
+
+/-- The restriction equivalence supplied by the nested localization sequence. -/
+def restrictEquivOfIsZero {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mono g]
+    (n : ℕ) (h₀ : IsZero (AddCommGrpCat.of (relH F n g)))
+    (h₁ : IsZero (AddCommGrpCat.of (relH F (n + 1) g))) :
+    relH F n (f ≫ g) ≃+ relH F n f := by
+  letI := isIso_restrict_of_isZero F f g n h₀ h₁
+  exact (asIso (AddCommGrpCat.ofHom
+    (restrict F (f ≫ g) f (𝟙 _) g (by simp) n))).addCommGroupIsoToAddEquiv
+
+@[simp]
+theorem restrictEquivOfIsZero_apply {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mono g]
+    (n : ℕ) (h₀ : IsZero (AddCommGrpCat.of (relH F n g)))
+    (h₁ : IsZero (AddCommGrpCat.of (relH F (n + 1) g))) (x : relH F n (f ≫ g)) :
+    restrictEquivOfIsZero F f g n h₀ h₁ x = restrict F (f ≫ g) f (𝟙 _) g (by simp) n x := by
+  rfl
+
 end relH
 
 section Terminal

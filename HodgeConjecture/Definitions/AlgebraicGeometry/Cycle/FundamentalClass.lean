@@ -9,7 +9,6 @@ import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.WithSupport
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SupportExtension
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
-public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCohomologySheafComparison
 /-!
 # Sheaf cycle classes in arbitrary codimension
 
@@ -35,21 +34,6 @@ variable (X : Over (Spec ↧ℂ))
 
 local instance cycleComponentSheafClassAnalyticTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
-/-- Let `X` be a smooth integral projective scheme over `ℂ` and `S ⊆ X(ℂ)` closed. For a natural
-number `n`, this identifies the degree-`n` cohomology sheaf of `Γ_S(I^•)` with the
-sheafification of `V ↦ H^n(V, V \ S; ℚ)`. Here `ℚ → I^•` is an injective resolution and `Γ_S`
-takes sections vanishing off `S`. -/
-def complexSupportInjectiveCohomologySheafIsoRelative
-    (S : Closeds (ComplexPoint X)) (n : ℕ) :
-    -- The `n`-th cohomology sheaf of `RΓ_S(ℚ)`.
-    (complexSupportInjectiveComplex X S).homology (n : ℤ) ≅
-      𝓗_[S]^n(TopCat.of (ComplexPoint X); ℚ) :=
-  letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
-  (asIso (HomologicalComplex.homologyMap
-    (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).symm ≪≫
-      supportedSingularCohomologySheafIsoRelative
-        (TopCat.of (ComplexPoint X)) S S.isClosed n
 
 section
 
@@ -79,32 +63,13 @@ def cycleComponentSmoothSupportLowestSectionCohomologyEquiv :
         (2 * p)
         (homOfLE (cycleComponentSupportComplement_le_smoothAmbientOpen X x)) ≃+
       CycleComponentSmoothCoclassSections X x p := by
-  let T := TopCat.of (ComplexPoint X)
   let Z := cycleComponentAnalyticClosedSupport X x
   let U := cycleComponentSmoothSupportAmbientOpen X x
   let h := cycleComponentSupportComplement_le_smoothAmbientOpen X x
   let hW : U ⊓ Z.compl = Z.compl := inf_eq_right.mpr h
-  let F := (TopCat.Sheaf.constantFunctor T).obj (AddCommGrpCat.of ℚ)
   let n : ℕ := 2 * p
-  let bridge := @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology T Z.compl U Z.compl
-    hW (analyticHasExt X) F (ambientRationalInjectiveComplex X)
-    (ambientRationalInjectiveComplex_isKInjective X)
-    (ambientRationalInjectiveSingleAugmentation X)
-    (ambientRationalInjectiveSingleAugmentation_quasiIso X) n
-  let lowest :
-      ((((TopCat.Sheaf.supportEvaluation T U).mapHomologicalComplex ℤᵘᵖ).obj
-        (((TopCat.Sheaf.sheafSectionsSupportedOutside T Z.compl).mapHomologicalComplex ℤᵘᵖ).obj
-          (ambientRationalInjectiveComplex X))).homology (n : ℤ)) ≅
-        (TopCat.Sheaf.supportEvaluation T U).obj
-          ((complexSupportInjectiveComplex X Z).homology (n : ℤ)) := by
-    change _ ≅
-      ((complexSupportInjectiveComplex X Z).homology (n : ℤ)).presheaf.obj (op U)
-    exact cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx
-  let sheaf := (TopCat.Sheaf.supportEvaluation T U).mapIso
-    (complexSupportInjectiveCohomologySheafIsoRelative X Z n)
-  change CategoryTheory.Sheaf.relH F n (homOfLE h) ≃+
-    (TopCat.Sheaf.supportEvaluation T U).obj (𝓗_[Z]^n(T; ℚ))
-  exact bridge.trans (lowest.addCommGroupIsoToAddEquiv.trans sheaf.addCommGroupIsoToAddEquiv)
+  exact rationalSupportAddEquivSupportedInjectiveSheafSection X Z U Z.compl hW n
+    (cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx)
 
 /-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
 integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_sing(ℂ)`, and
@@ -115,7 +80,7 @@ singular locus make the map invertible. -/
 def cycleComponentSupportedClassNormalizationIso :
     CycleComponentSupportedCohomology X x p ≃+ CycleComponentSmoothCoclassSections X x p :=
   cycleComponentSupportExtensionIso X x hx |>.trans <|
-    cycleComponentSmoothSupportLowestSectionCohomologyEquiv X x hx
+    cycleComponentSmoothSupportLowestSectionCohomologyEquiv (p := p) X x hx
 
 /-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
 integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_sing(ℂ)`, and
