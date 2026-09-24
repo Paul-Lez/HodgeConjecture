@@ -229,3 +229,4 @@ public import Other.Mathlib.Topology.Category.TopCat.Basic
 public import Other.AlgebraicTopology.Support.ClosedSupportSheaf
 public import Other.AlgebraicGeometry.CartierDataRepresents
 public import Other.AlgebraicGeometry.IntegralCohomology
+public import Other.AlgebraicGeometry.DivisorClassCompatibility
