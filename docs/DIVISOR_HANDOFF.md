@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5338 jobs),
-and the comparison audit checks 463 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5340 jobs),
+and the comparison audit checks 468 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -79,7 +79,9 @@ frame difference. `OriginalChernRawWindingSection.lean` passes this equality to 
 cohomology-sheaf section on the restricted space. Transport to the original ambient
 section and its supported normalization remain.
 `ChernOriginalRawAmbientTransport.lean` identifies the original raw cone map with
-the direct ambient map after the prescribed top-evaluation isomorphism.
+the direct ambient map after the prescribed top-evaluation isomorphism. It also
+identifies the direct map's cohomology-sheaf section over the given open with the
+original section transported from the top open of the restricted space.
 
 `CohomologySectionShiftTransport.lean` and `CohomologySectionShiftTop.lean` prove that
 the original section normalization commutes with the prescribed global cohomology shift.
@@ -152,8 +154,12 @@ normalization as the positive winding class. `SupportSheafConeBoundaryOnOpen.lea
 proves that the fixed inverse cone map and shift send a local ambient cone boundary
 to its supported section. `SupportSheafConeWindingOnOpen.lean` computes its normalized
 image as positive winding and compares the natural and ambient complement maps on
-local homology. The remaining comparison must use the original open-complement map,
-retain the double-complement restriction, and combine the two negative signs.
+local homology. `OriginalChernRawWindingOnOpen.lean` compares the original complement
+map with this canonical map on raw winding classes.
+`OriginalChernRawWindingNormalizationOnOpen.lean` proves that the signed original raw
+boundary is the inverse normalization of positive winding, retaining the actual
+double-complement restriction. Its input must still be identified with the original
+Chern section and used in the global assembly.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.

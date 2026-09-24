@@ -7,6 +7,7 @@ module
 public import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWindingClassMap
 public import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWindingLocalMap
 public import Other.AlgebraicGeometry.RationalSupportConeBoundaryComparison
+public import Other.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite HomologicalComplex
 open AlgebraicTopology.Singular
@@ -78,5 +79,67 @@ lemma originalLocalRawToAmbientCone_comp_restriction_eq :
   exact (Category.assoc (a ≫ b ≫ p) l k).trans
     ((Category.assoc a (b ≫ p) (l ≫ k)).trans
       ((congrArg (fun q => a ≫ q) (Category.assoc b p (l ≫ k))).trans hr'))
+
+/-- The direct ambient raw map gives the same section on `U` as restricting the
+original raw section from the top open of the restricted space. -/
+lemma originalLocalRawToAmbientCone_direct_section_eq_restricted_original
+    (z : ((openRawSingularCochainComplex ℚ (TopCat.of (ComplexPoint X)) (U ⊓ Ω)).extend
+      ComplexShape.embeddingUpNat).homology 1) :
+    let Y := TopCat.of (ComplexPoint X)
+    let C := CochainComplex.mappingCone (ambientRationalInjectiveRestriction X
+      ((Ω : Set (ComplexPoint X))ᶜ) Ω.isOpen.isClosed_compl)
+    let R := (TopCat.Sheaf.supportEvaluation Y U).mapHomologicalComplex (.up ℤ)
+    let r := originalLocalRawToAmbientCone X Ω U
+    let rDirect := openRawToSupportedSingularOutside Y Ω U ≫
+      R.map (naturalSingularOutsideResolutionComparisonOnOpen X Ω) ≫
+      R.map (CochainComplex.mappingCone.inr
+        (ambientRationalInjectiveRestriction X ((Ω : Set (ComplexPoint X))ᶜ)
+          Ω.isOpen.isClosed_compl))
+    (ConcreteCategory.hom
+      (TopCat.Sheaf.sectionCohomologyToSheafSection Y C 1 U))
+        ((HomologicalComplex.homologyMap rDirect 1).hom z) =
+      ConcreteCategory.hom
+        (TopCat.Sheaf.sectionCohomologyToSheafSection Y C 1
+            (U.isOpenEmbedding.functor.obj ⊤) ≫
+          (TopCat.Sheaf.openRestrictionTopSectionsIso Y U).hom.app (C.homology 1))
+        ((HomologicalComplex.homologyMap r 1).hom z) := by
+  dsimp only
+  let Y := TopCat.of (ComplexPoint X)
+  let C := CochainComplex.mappingCone (ambientRationalInjectiveRestriction X
+    ((Ω : Set (ComplexPoint X))ᶜ) Ω.isOpen.isClosed_compl)
+  let R := (TopCat.Sheaf.supportEvaluation Y U).mapHomologicalComplex (.up ℤ)
+  let r := originalLocalRawToAmbientCone X Ω U
+  let rDirect := openRawToSupportedSingularOutside Y Ω U ≫
+    R.map (naturalSingularOutsideResolutionComparisonOnOpen X Ω) ≫
+    R.map (CochainComplex.mappingCone.inr
+      (ambientRationalInjectiveRestriction X ((Ω : Set (ComplexPoint X))ᶜ)
+        Ω.isOpen.isClosed_compl))
+  let e := TopCat.Sheaf.openRestrictionTopSectionComplexIso Y U C
+  have hraw := originalLocalRawToAmbientCone_comp_restriction_eq X Ω U
+  dsimp only at hraw
+  have he :
+      ((NatIso.mapHomologicalComplex
+        (TopCat.Sheaf.openRestrictionPushforwardTopEvaluationIso Y U) (.up ℤ)).app C).hom =
+        e.hom := by
+    rfl
+  rw [he] at hraw
+  have hmap :
+      HomologicalComplex.homologyMap rDirect 1 =
+        HomologicalComplex.homologyMap r 1 ≫
+          HomologicalComplex.homologyMap e.hom 1 := by
+    dsimp only [rDirect, r, e, R] at hraw ⊢
+    rw [← hraw, HomologicalComplex.homologyMap_comp]
+  have hsection := TopCat.Sheaf.openRestrictionTopSectionComplexIso_homology_section
+    Y C U 1
+  have hcat :
+      HomologicalComplex.homologyMap rDirect 1 ≫
+          TopCat.Sheaf.sectionCohomologyToSheafSection Y C 1 U =
+        HomologicalComplex.homologyMap r 1 ≫
+          (TopCat.Sheaf.sectionCohomologyToSheafSection Y C 1
+            (U.isOpenEmbedding.functor.obj ⊤) ≫
+            (TopCat.Sheaf.openRestrictionTopSectionsIso Y U).hom.app (C.homology 1)) := by
+    rw [hmap, Category.assoc, hsection]
+  have hv := ConcreteCategory.congr_hom hcat z
+  exact hv
 
 end AlgebraicGeometry.ComplexPoint
