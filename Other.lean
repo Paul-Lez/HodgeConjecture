@@ -49,6 +49,7 @@ public import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWindingClassMap
 public import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWindingSection
 public import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWindingOnOpen
 public import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWindingNormalizationOnOpen
+public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeRestrictionNaturality
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomology
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSingularGlobal

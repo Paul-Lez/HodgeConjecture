@@ -56,6 +56,7 @@ import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWindingClassMap
 import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWindingSection
 import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWindingOnOpen
 import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWindingNormalizationOnOpen
+import Other.AlgebraicGeometry.Cohomology.SupportSheafConeRestrictionNaturality
 import Other.AlgebraicTopology.Sheaf.FlasquePushforwardQuasiIso
 import Other.AlgebraicGeometry.ChernRelativeChartFormulaGenericLocal
 import Other.Analysis.Complex.NormalDivision
@@ -675,3 +676,5 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.originalRawAmbientSection_shift_inv_eq_winding_on_open
 
 #print axioms AlgebraicGeometry.ComplexPoint.originalLocalRawToAmbientCone_direct_section_eq_restricted_original
+
+#print axioms AlgebraicGeometry.ComplexPoint.supportSheafSection_shift_restrict_naturality

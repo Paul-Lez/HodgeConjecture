@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5340 jobs),
-and the comparison audit checks 468 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5341 jobs),
+and the comparison audit checks 469 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -160,6 +160,8 @@ map with this canonical map on raw winding classes.
 boundary is the inverse normalization of positive winding, retaining the actual
 double-complement restriction. Its input must still be identified with the original
 Chern section and used in the global assembly.
+`SupportSheafConeRestrictionNaturality.lean` proves that the fixed signed inverse
+and shift commute with restriction of the ambient cone section.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.
