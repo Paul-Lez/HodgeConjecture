@@ -293,6 +293,27 @@ lemma mem_hodgePiece_iff [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ)
       α ∈ hodgeFiltration X p n ∧ deRhamConj X n α ∈ hodgeFiltration X q n :=
   Iff.rfl
 
+/-- Conjugation exchanges the two indices of a Hodge piece. -/
+@[simp]
+lemma deRhamConj_mem_hodgePiece_iff [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ)
+    (α : H_dR^n(X)) :
+    deRhamConj X n α ∈ hodgePiece X p q n ↔ α ∈ hodgePiece X q p n := by
+  simp only [mem_hodgePiece_iff, deRhamConj_involutive X n α, and_comm]
+
+/-- The preimage of a Hodge piece under conjugation has the two indices exchanged. -/
+@[simp]
+lemma hodgePiece_comap_deRhamConj [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
+    (hodgePiece X p q n).comap (deRhamConjSemilinear X n) = hodgePiece X q p n := by
+  ext α
+  exact deRhamConj_mem_hodgePiece_iff X p q n α
+
+/-- The complex conjugate of the `(p,q)` Hodge piece is the `(q,p)` Hodge piece. -/
+@[simp]
+lemma hodgePiece_map_deRhamConj [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
+    (hodgePiece X p q n).map (deRhamConjSemilinear X n) = hodgePiece X q p n := by
+  rw [← hodgePiece_comap_deRhamConj X q p n]
+  exact Submodule.map_comap_eq_of_surjective (deRhamConj_involutive X n).surjective _
+
 /-- Above the complex dimension the Hodge pieces vanish, because `F^p` already does. -/
 lemma hodgePiece_eq_bot_of_lt [IsIntegral X.left] [Smooth X.hom]
     {p : ℤ} (hp : (dim X.left : ℤ) < p) (q n : ℤ) :
