@@ -5,7 +5,8 @@ For an integral, smooth, projective complex scheme `X`,
 `Other/AlgebraicGeometry/ChernRelativeFinalAssembly.lean` proves the uniform
 divisor–Chern identity. The full build passes (5343 jobs), and the comparison
 audit checks 471 distinct declarations with only `propext`, `Classical.choice`,
-and `Quot.sound`. The independent correctness and code-quality review is pending.
+and `Quot.sound`. Independent Astra high review of `470063f1` passed both
+mathematical correctness and mathlib-level code quality with no blocking findings.
 
 The proved proposition is the existing definition
 
@@ -72,6 +73,6 @@ python3 scripts/check_import_layers.py
 git diff --check
 ```
 
-The comparison audit includes the full uniform theorem and should report only
-`propext`, `Classical.choice`, and `Quot.sound`. The remaining completion step is
-independent review. Other Lefschetz and GAGA obligations are tracked separately.
+The comparison audit includes the full uniform theorem and reports only
+`propext`, `Classical.choice`, and `Quot.sound`. The divisor–Chern comparison is
+complete; GAGA algebraization remains a separate input to the Lefschetz application.
