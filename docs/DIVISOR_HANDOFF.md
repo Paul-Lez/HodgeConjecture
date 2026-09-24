@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5306 jobs),
-and the comparison audit checks 402 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5307 jobs),
+and the comparison audit checks 403 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -63,7 +63,9 @@ from its local cone-cohomology section through that inverse, shift, and sign.
 The actual Chern boundary section still has to be identified.
 `CohomologySectionDerivedTransport.lean` transports an exact derived restriction square
 to the prescribed local section, retaining the homology and shift comparisons.
-Its application to the original Chern class and raw winding remains.
+`SupportAmbientSectionDerivedSquare.lean` applies this to the original supported class
+through a genuine K-injective cocycle representative. The original Chern boundary square
+and its evaluation as raw winding remain.
 
 `CohomologySectionShiftTransport.lean` and `CohomologySectionShiftTop.lean` prove that
 the original section normalization commutes with the prescribed global cohomology shift.

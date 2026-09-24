@@ -29,6 +29,7 @@ import Other.AlgebraicGeometry.Cohomology.SupportSheafConeQuasiIso
 import Other.AlgebraicGeometry.Cohomology.SupportSheafConeNormalization
 import Other.AlgebraicGeometry.Cohomology.SupportSheafConeLocalVanishing
 import Other.AlgebraicGeometry.Cohomology.SupportSheafConeSectionTransport
+import Other.AlgebraicGeometry.Cohomology.SupportAmbientSectionDerivedSquare
 import Other.AlgebraicTopology.Sheaf.FlasquePushforwardQuasiIso
 import Other.AlgebraicGeometry.ChernRelativeChartFormulaGenericLocal
 import Other.Analysis.Complex.NormalDivision
@@ -546,3 +547,5 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.supportedInjectiveComplexMap_restrict_isIso
 #print axioms AlgebraicGeometry.ComplexPoint.supportedInjectiveHomologySheafMap_restrict_isIso
 #print axioms AlgebraicGeometry.ComplexPoint.supportedInjectiveHomologySheafMap_app_isIso
+
+#print axioms AlgebraicGeometry.ComplexPoint.supportAmbientSection_restrict_eq_of_derived_square

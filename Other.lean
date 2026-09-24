@@ -41,6 +41,7 @@ public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeQuasiIso
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeLocalVanishing
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeSectionTransport
+public import Other.AlgebraicGeometry.Cohomology.SupportAmbientSectionDerivedSquare
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomology
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSingularGlobal
