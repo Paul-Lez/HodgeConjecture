@@ -37,6 +37,7 @@ import Other.AlgebraicGeometry.Cohomology.SupportSheafConeNormalization
 import Other.AlgebraicGeometry.Cohomology.SupportSheafConeLocalVanishing
 import Other.AlgebraicGeometry.Cohomology.SupportSheafConeSectionTransport
 import Other.AlgebraicGeometry.Cohomology.SupportAmbientSectionDerivedSquare
+import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWinding
 import Other.AlgebraicTopology.Sheaf.FlasquePushforwardQuasiIso
 import Other.AlgebraicGeometry.ChernRelativeChartFormulaGenericLocal
 import Other.Analysis.Complex.NormalDivision
@@ -569,3 +570,21 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.restrict_original_relativeChernClass_derived_boundary
 
 #print axioms AlgebraicGeometry.ComplexPoint.ChernWindingChart.compatible_frame_restriction
+
+#print axioms AlgebraicGeometry.ComplexPoint.originalLocalBoundaryMap
+
+#print axioms AlgebraicGeometry.ComplexPoint.restrictedOverlapUnitHom_integerOne_apply
+
+#print axioms AlgebraicGeometry.ComplexPoint.originalLocalBoundaryMap_prefix_integerOne_apply
+
+#print axioms AlgebraicGeometry.ComplexPoint.originalLocalBoundaryMap_f_zero_on_constant
+
+#print axioms AlgebraicGeometry.ComplexPoint.restrictedSingularOneCocycle_equivHomShift_f_one
+
+#print axioms AlgebraicGeometry.ComplexPoint.originalLocalBoundaryMap_restrictedSingle_inverse
+
+#print axioms AlgebraicGeometry.ComplexPoint.originalLocalBoundaryMap_beta_integerOne_raw
+
+#print axioms AlgebraicGeometry.ComplexPoint.originalLocalBoundaryMap_f_zero_raw
+
+#print axioms AlgebraicGeometry.ComplexPoint.originalLocalBoundaryMap_integerOne_raw_winding
