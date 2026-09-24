@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5316 jobs),
-and the comparison audit checks 422 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5317 jobs),
+and the comparison audit checks 423 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -66,6 +66,9 @@ through a genuine K-injective cocycle representative. The original Chern boundar
 is now proved. `RelativeChernOriginalAmbientDerivedBoundary.lean` transports it to
 the ambient cone and computes the original local section from the canonical integer
 input and the actual local boundary map.
+`RelativeChernOriginalSupportSection.lean` computes the original supported section
+through the prescribed inverse, shift, and minus sign. Its identification with
+positive winding remains.
 `OriginalChernRawWinding.lean` computes the actual local chain map on the restricted
 integer-one section as the literal raw winding cochain through the fixed complement
 resolution and ambient cone maps. Passing this calculation to the normalized supported
