@@ -344,6 +344,7 @@ public import Other.AlgebraicGeometry.RelativeChernFrameRestriction
 public import Other.AlgebraicGeometry.RelativeChernFrameVariation
 public import Other.AlgebraicGeometry.RelativeChernFrameWinding
 public import Other.AlgebraicGeometry.RelativeChernLocalBoundary
+public import Other.AlgebraicGeometry.RelativeChernOriginalRestriction
 public import Other.AlgebraicGeometry.RelativeChernSectionBoundary
 public import Other.AlgebraicGeometry.SheafHomOfLocalStalkMaps
 public import Other.AlgebraicGeometry.SupportEnlargementCodimTwo
