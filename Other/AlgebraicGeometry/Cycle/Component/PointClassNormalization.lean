@@ -159,7 +159,7 @@ theorem cycleComponentSupportedInjectiveClass_point_normalization
       (analyticComponentPointSupportedInjectiveCoclass X x d z)
   symm
   apply cycleComponentSupportedInjectiveClass_unique X x hx a
-  set_option maxHeartbeats 10000000 in
+  set_option maxHeartbeats 800000 in
   have hnorm :
       (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a =
         (complexSupportInjectiveCohomologySheafIsoRelative X
@@ -198,16 +198,17 @@ theorem cycleComponentSupportedInjectiveClass_point_normalization
           (homOfLE (show Z.compl ≤ U from
             (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
           (homOfLE (show Z.compl ≤ Z.compl from le_rfl)) (homOfLE (show U ≤ ⊤ from le_top))
-          (by apply Subsingleton.elim) n a := by
+            (by apply Subsingleton.elim) n a := by
       rw [hcycle]
     rw [hcycle']
-    dsimp [cycleComponentSmoothSupportLowestSectionCohomologyEquiv]
-    let bridge :=
-      @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology T Z.compl U Z.compl hW
-        (analyticHasExt X) F (ambientRationalInjectiveComplex X)
-        (ambientRationalInjectiveComplex_isKInjective X)
-        (ambientRationalInjectiveSingleAugmentation X)
-        (ambientRationalInjectiveSingleAugmentation_quasiIso X) n
+    change (rationalSupportAddEquivSupportedInjectiveSheafSection X Z U Z.compl hW n
+      (cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx))
+        ((CategoryTheory.Sheaf.relH.restrict F (homOfLE (show Z.compl ≤ ⊤ from le_top))
+          (homOfLE (show Z.compl ≤ U from
+            (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
+          (homOfLE (show Z.compl ≤ Z.compl from le_rfl))
+          (homOfLE (show U ≤ ⊤ from le_top)) (by apply Subsingleton.elim) n) a) = _
+    rw [rationalSupportAddEquivSupportedInjectiveSheafSection_apply]
     have hbridge :=
       @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology_restrict T Z.compl
         (⊤ : Opens T) Z.compl Z.compl U Z.compl (top_inf_eq _) hW le_rfl le_top le_rfl
@@ -215,49 +216,20 @@ theorem cycleComponentSupportedInjectiveClass_point_normalization
         (ambientRationalInjectiveComplex_isKInjective X)
         (ambientRationalInjectiveSingleAugmentation X)
         (ambientRationalInjectiveSingleAugmentation_quasiIso X) n a
-    let lowest :
-        ((((TopCat.Sheaf.supportEvaluation T U).mapHomologicalComplex ℤᵘᵖ).obj
-          (((TopCat.Sheaf.sheafSectionsSupportedOutside T Z.compl).mapHomologicalComplex ℤᵘᵖ).obj
-            (ambientRationalInjectiveComplex X))).homology (n : ℤ)) ≅
-          (TopCat.Sheaf.supportEvaluation T U).obj
-            ((complexSupportInjectiveComplex X Z).homology (n : ℤ)) := by
-      change _ ≅
-        ((complexSupportInjectiveComplex X Z).homology (n : ℤ)).presheaf.obj (op U)
-      exact cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx
-    let sheaf := (TopCat.Sheaf.supportEvaluation T U).mapIso
-      (complexSupportInjectiveCohomologySheafIsoRelative X Z n)
-    have h := congrArg
-      (fun z =>
-        (lowest.addCommGroupIsoToAddEquiv.trans sheaf.addCommGroupIsoToAddEquiv) z)
-      hbridge
-    change
-      sheaf.addCommGroupIsoToAddEquiv.toAddMonoidHom
-          (lowest.addCommGroupIsoToAddEquiv.toAddMonoidHom
-            (bridge ((CategoryTheory.Sheaf.relH.restrict F
-              (homOfLE (show Z.compl ≤ ⊤ from le_top))
-              (homOfLE (show Z.compl ≤ U from
-                (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
-              (homOfLE (show Z.compl ≤ Z.compl from le_rfl))
-              (homOfLE (show U ≤ ⊤ from le_top))
-              (by apply Subsingleton.elim) n) a))) = _
-    convert h using 1 <;> simp only [AddEquiv.trans_apply]
-    · rfl
-    · have hsupport :
+    erw [hbridge]
+    have hsupport :
           TopCat.Sheaf.supportedSectionsRestriction T
               (show Z.compl ≤ Z.compl from le_rfl)
               (show U ≤ (⊤ : Opens T) from le_top)
               (ambientRationalInjectiveComplex X) =
             cycleComponentSupportSectionRestriction X x := by
-        dsimp [TopCat.Sheaf.supportedSectionsRestriction,
-          cycleComponentSupportSectionRestriction, complexSupportInjectiveComplex]
-        rw [TopCat.Sheaf.sheafSectionsSupportedOutsideMap_refl]
-        simp [T, Z]
-      rw [hsupport]
-      dsimp [lowest, sheaf, bridge,
-        cycleComponentSupportSectionRestriction, cycleComponentSmoothRestrictedInjectiveComplex,
-        complexSupportInjectiveComplex]
-      simp [TopCat.Sheaf.supportEvaluation, T, Z, U, n]
+      rw [TopCat.Sheaf.supportedSectionsRestriction_refl]
       rfl
+    rw [hsupport]
+    dsimp [cycleComponentSupportSectionRestriction, cycleComponentSmoothRestrictedInjectiveComplex,
+      complexSupportInjectiveComplex, rationalSupportAddEquivSupportedInjectiveHomology]
+    simp [TopCat.Sheaf.supportEvaluation, T, Z, U, n]
+    rfl
   rw [hnorm,
     cycleComponentSmoothSupportLowestSectionCohomologyComplexIso,
     TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso_hom]

@@ -19,6 +19,8 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.CohomologyFlasque
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportedSingularModel
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularCohomologySheafComparison
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
@@ -33,7 +35,8 @@ injective resolution of `ℚ`, or of the sheafified singular cochains.
 
 @[expose] public noncomputable section
 
-open CategoryTheory Limits TopologicalSpace
+open CategoryTheory Limits TopologicalSpace Opposite
+open AlgebraicTopology.Singular
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -75,6 +78,77 @@ def rationalSupportAddEquivSupportedInjectiveHomology (n : ℕ) :
     (ambientRationalInjectiveComplex_isKInjective X)
     (ambientRationalInjectiveSingleAugmentation X)
     (ambientRationalInjectiveSingleAugmentation_quasiIso X) n
+
+section Rational
+
+variable [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+
+/-- The cohomology sheaf of the supported injective complex is the relative cohomology sheaf. -/
+def complexSupportInjectiveCohomologySheafIsoRelative
+    (S : Closeds (ComplexPoint X)) (n : ℕ) :
+    (complexSupportInjectiveComplex X S).homology (n : ℤ) ≅
+      𝓗_[S]^n(TopCat.of (ComplexPoint X); ℚ) :=
+  letI : ∀ V : Opens (ComplexPoint X), ParacompactSpace V := openParacompactSpace X
+  (asIso (HomologicalComplex.homologyMap
+    (complexSupportedSingularToAmbientInjective X S.compl) (n : ℤ))).symm ≪≫
+      supportedSingularCohomologySheafIsoRelative
+        (TopCat.of (ComplexPoint X)) S S.isClosed n
+
+set_option maxHeartbeats 800000 in
+/-- Supported Ext on an open is canonically the corresponding cohomology-sheaf section group. -/
+def rationalSupportAddEquivSupportedInjectiveHomologyOnOpen
+    (S : Closeds (ComplexPoint X)) (V W : Opens (ComplexPoint X))
+    (hW : V ⊓ S.compl = W) (n : ℕ) :
+    CategoryTheory.Sheaf.relH
+        ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
+        n (homOfLE (hW ▸ inf_le_left : W ≤ V)) ≃+
+      ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
+        ℤᵘᵖ).obj
+        (complexSupportInjectiveComplex X S)).homology n) :=
+  @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology (TopCat.of (ComplexPoint X)) S.compl V W
+    hW (analyticHasExt X) _ (ambientRationalInjectiveComplex X)
+    (ambientRationalInjectiveComplex_isKInjective X)
+    (ambientRationalInjectiveSingleAugmentation X)
+    (ambientRationalInjectiveSingleAugmentation_quasiIso X) n
+
+set_option maxHeartbeats 800000 in
+/-- Supported Ext on an open is canonically the corresponding cohomology-sheaf section group. -/
+def rationalSupportAddEquivSupportedInjectiveSheafSection
+    (S : Closeds (ComplexPoint X)) (V W : Opens (ComplexPoint X))
+    (hW : V ⊓ S.compl = W) (n : ℕ)
+    (lowest :
+      ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
+        ℤᵘᵖ).obj
+        (complexSupportInjectiveComplex X S)).homology (n : ℤ)) ≅
+      ((complexSupportInjectiveComplex X S).homology (n : ℤ)).presheaf.obj (op V)) :
+    CategoryTheory.Sheaf.relH
+        ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
+        n (homOfLE (hW ▸ inf_le_left : W ≤ V)) ≃+
+      (𝓗_[S]^n(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj (op V) := by
+  let T := TopCat.of (ComplexPoint X)
+  let bridge := rationalSupportAddEquivSupportedInjectiveHomologyOnOpen X S V W hW n
+  let sheaf := (TopCat.Sheaf.supportEvaluation T V).mapIso
+    (complexSupportInjectiveCohomologySheafIsoRelative X S n)
+  exact bridge.trans (lowest.addCommGroupIsoToAddEquiv.trans sheaf.addCommGroupIsoToAddEquiv)
+
+@[simp]
+theorem rationalSupportAddEquivSupportedInjectiveSheafSection_apply
+    (S : Closeds (ComplexPoint X)) (V W : Opens (ComplexPoint X))
+    (hW : V ⊓ S.compl = W) (n : ℕ)
+    (lowest :
+      ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
+        ℤᵘᵖ).obj (complexSupportInjectiveComplex X S)).homology (n : ℤ)) ≅
+      ((complexSupportInjectiveComplex X S).homology (n : ℤ)).presheaf.obj (op V))
+    (z : CategoryTheory.Sheaf.relH
+      ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
+      n (homOfLE (hW ▸ inf_le_left : W ≤ V))) :
+    rationalSupportAddEquivSupportedInjectiveSheafSection X S V W hW n lowest z =
+      (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.app (op V)
+        (lowest.hom
+          (rationalSupportAddEquivSupportedInjectiveHomologyOnOpen X S V W hW n z)) := by
+  rfl
+
+end Rational
 
 section Singular
 

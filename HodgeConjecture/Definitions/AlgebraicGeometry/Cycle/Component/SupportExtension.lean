@@ -177,37 +177,6 @@ theorem cycleComponentSupportSectionRestriction_homology_isIso :
   rw [← he]
   infer_instance
 
-/-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
-integral subvariety with generic point `x`. Restriction to `U = X(ℂ) \ Z_sing(ℂ)` gives this
-isomorphism `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) ≅ H^{2p}_{Z(ℂ) ∩ U}(U; ℚ)`. Its inverse extends a class
-uniquely across the singular locus, whose supported cohomology vanishes in degrees `2p` and
-`2p+1`. -/
-def cycleComponentSupportExtensionComplexIso :
-    -- `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ)`.
-    ((((TopCat.Sheaf.supportEvaluation
-      -- `X(ℂ)`.
-      (TopCat.of (ComplexPoint X))
-      -- Global sections.
-      ⊤).mapHomologicalComplex ℤᵘᵖ).obj
-      -- `RΓ_{Z(ℂ)}(ℚ)`.
-      (complexSupportInjectiveComplex X
-        -- `Z(ℂ)`, as a closed subset of `X(ℂ)`.
-        (cycleComponentAnalyticClosedSupport X x))).homology
-      -- Degree `2p`.
-      (2 * (p : ℤ))) ≅
-    -- `H^{2p}_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ); ℚ)`.
-    ((((TopCat.Sheaf.supportEvaluation
-      -- `X(ℂ)`.
-      (TopCat.of (ComplexPoint X))
-      -- Sections over the open `X(ℂ) \ Z_sing(ℂ)`.
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
-        -- `RΓ_{Z(ℂ)}(ℚ)`.
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
-          -- Degree `2p`.
-          (2 * (p : ℤ))) :=
-  letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
-  asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
-
 include hx in
 /-- The singular-boundary supported Ext groups vanish below degree `2(p + 1)`. -/
 theorem cycleComponentSingularBoundaryRelH_isZero_of_lt (n : ℕ)
@@ -241,32 +210,17 @@ def cycleComponentSupportExtensionIso :
         ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
         (2 * p)
         (homOfLE (cycleComponentSupportComplement_le_smoothAmbientOpen X x)) := by
-    let T := TopCat.of (ComplexPoint X)
-    let Z := cycleComponentAnalyticClosedSupport X x
-    let U := cycleComponentSmoothSupportAmbientOpen X x
-    let f : Z.compl ⟶ U := homOfLE (cycleComponentSupportComplement_le_smoothAmbientOpen X x)
-    let g : U ⟶ ⊤ := homOfLE le_top
-    let F := (TopCat.Sheaf.constantFunctor T).obj (AddCommGrpCat.of ℚ)
-    let n : ℕ := 2 * p
-    let S := Ext.contravariantSequence
-      (CategoryTheory.Sheaf.pairNestedShortComplex_shortExact f g) F n (n + 1) (by omega)
-    have hS := CategoryTheory.Sheaf.relH.nestedSequence_exact F f g n (n + 1) (by omega)
-    have hz0 : IsZero (S.obj' 0) := by
-      change IsZero (AddCommGrpCat.of (CategoryTheory.Sheaf.relH F n g))
-      exact cycleComponentSingularBoundaryRelH_isZero_of_lt X x hx n (by omega)
-    have hz3 : IsZero (S.obj' 3) := by
-      change IsZero (AddCommGrpCat.of (CategoryTheory.Sheaf.relH F (n + 1) g))
-      exact cycleComponentSingularBoundaryRelH_isZero_of_lt X x hx (n + 1) (by omega)
-    let q := AddCommGrpCat.ofHom (CategoryTheory.Sheaf.relH.restrict F
-      (homOfLE (show Z.compl ≤ ⊤ from le_top)) f (𝟙 _) g (by simp [f, g]) n)
-    have hmono : Mono q := by
-      change Mono (S.map' 1 2 (by omega) (by omega))
-      exact (hS.exact 0).mono_g (hz0.eq_zero_of_src _)
-    have hepi : Epi q := by
-      change Epi (S.map' 1 2 (by omega) (by omega))
-      exact (hS.exact 1).epi_f (hz3.eq_zero_of_tgt _)
-    letI : IsIso q := isIso_of_mono_of_epi _
-    let e := (asIso q).addCommGroupIsoToAddEquiv
-    exact e
+  let T := TopCat.of (ComplexPoint X)
+  let Z := cycleComponentAnalyticClosedSupport X x
+  let U := cycleComponentSmoothSupportAmbientOpen X x
+  let f : Z.compl ⟶ U := homOfLE (cycleComponentSupportComplement_le_smoothAmbientOpen X x)
+  let g : U ⟶ ⊤ := homOfLE le_top
+  let F := (TopCat.Sheaf.constantFunctor T).obj (AddCommGrpCat.of ℚ)
+  let n : ℕ := 2 * p
+  simpa [f, g] using CategoryTheory.Sheaf.relH.restrictEquivOfIsZero F f g n
+    (by
+      exact cycleComponentSingularBoundaryRelH_isZero_of_lt X x hx n (by omega))
+    (by
+      exact cycleComponentSingularBoundaryRelH_isZero_of_lt X x hx (n + 1) (by omega))
 
 end AlgebraicGeometry.ComplexPoint
