@@ -17,6 +17,7 @@ import Other.Analysis.Complex.NormalDivisionChart
 import Other.Analysis.Complex.NormalDivisionFinOne
 import Other.RingTheory.RegularLocalEquation
 import Other.RingTheory.CotangentDetection
+import Other.AlgebraicGeometry.PointJetDerivation
 import Other.AlgebraicTopology.Sheaf.CohomologyShiftDerivedVanishing
 import Other.AlgebraicGeometry.ClosedImmersion.HolomorphicChartsAnalytic
 /- Representative axiom checks for the incomplete Lefschetz development.
@@ -400,6 +401,15 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms Derivation.cotangentMap_toCotangent
 #print axioms Derivation.ne_zero_of_mem_maximalIdeal_of_not_mem_square_of_injective
 #print axioms Derivation.ne_zero_of_mem_maximalIdeal_of_not_mem_square
+#print axioms AlgebraicGeometry.ComplexPoint.regularPointJet_add
+#print axioms AlgebraicGeometry.ComplexPoint.regularPointJet_mul
+#print axioms AlgebraicGeometry.ComplexPoint.regularPointJet_ambientCoordinateSection
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.ambientSection_evaluate
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.pointJetDerivation
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.pointJetExtAlgHom
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.localizedPointJetAlgHom
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.localizedPointJetDerivation
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.localizedPointJetAlgHom_comp
 #print axioms Complex.continuousOn_normalQuotient
 #print axioms Complex.exists_ball_analytic_normalQuotient_factor
 #print axioms CategoryTheory.Functor.mapHomologyShift_eq_zero_of_mapDerivedCategory_eq_zero

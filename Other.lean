@@ -327,6 +327,7 @@ public import Other.AlgebraicGeometry.LefschetzOneOneReduction
 public import Other.AlgebraicGeometry.OpenRestrictionDerivedFactorization
 public import Other.AlgebraicGeometry.OpenRestrictionLocalSheaf
 public import Other.AlgebraicGeometry.OrderOfVanishing
+public import Other.AlgebraicGeometry.PointJetDerivation
 public import Other.AlgebraicGeometry.ProjectiveFiniteHomology
 public import Other.AlgebraicGeometry.RationalSupportBoundaryRelative
 public import Other.AlgebraicGeometry.RationalSupportConeBoundaryComparison
