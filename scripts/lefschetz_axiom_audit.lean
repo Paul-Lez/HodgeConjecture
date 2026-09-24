@@ -658,3 +658,5 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.normalizedWindingUnit_supportMap_doubleComplement
 #print axioms AlgebraicGeometry.ComplexPoint.naturalOutside_homologyMap_eq_ambient_on_open
 #print axioms AlgebraicGeometry.ComplexPoint.supportSheafSection_shift_eq_normalized_winding_on_open
+
+#print axioms TopCat.Sheaf.sectionCohomologyShift_onOpen_homology_one
