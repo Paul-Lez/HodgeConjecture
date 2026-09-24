@@ -35,6 +35,7 @@ import Other.AlgebraicGeometry.ChernComponentSheafIsolation
 import Other.AlgebraicGeometry.ChernComponentNormalizationRestriction
 import Other.AlgebraicGeometry.ChernComponentRecovery
 import Other.AlgebraicGeometry.ChernRelativeChartFormulaAssembly
+import Other.AlgebraicGeometry.ChernRelativeFinalAssembly
 import Other.AlgebraicGeometry.CartierLocalIdeal
 import Other.AlgebraicGeometry.CartierLocalDerivative
 import Other.AlgebraicGeometry.CartierLocalDerivativePointJet
@@ -684,3 +685,5 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.originalLocalBoundaryMap_ambient_section_eq_restricted_shift
 
 #print axioms AlgebraicGeometry.ComplexPoint.originalLocalBoundaryMap_ambient_section_eq_raw_winding
+
+#print axioms AlgebraicGeometry.ComplexPoint.hasDivisorClassOfCartierData
