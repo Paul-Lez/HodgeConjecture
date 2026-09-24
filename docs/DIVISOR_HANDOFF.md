@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5333 jobs),
-and the comparison audit checks 455 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5334 jobs),
+and the comparison audit checks 457 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -129,8 +129,10 @@ with winding remains.
 
 The remaining calculation has two parallel comparisons: pass the local cycle identity
 to the original ambient cohomology section, and identify its supported normalization
-with positive winding. A third task transports the original class to its closed-support
-presentation and combines both comparisons with the existing global assembly.
+with positive winding. `ChernRelativeClosedSupportSection.lean` transports the
+original class to its closed-support presentation through support enlargement along
+the double-complement equality. Its winding formula must still be assembled with
+the two comparisons and the existing global assembly.
 Their outputs supply the local premise of `hasChernLocalModel_of_original_local_section`.
 `ChernRelativeSupportNormalized.lean` proves that actual winding classes commute with
 support enlargement through the fixed supported-injective normalization.
