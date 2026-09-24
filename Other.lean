@@ -138,6 +138,7 @@ public import Other.AlgebraicTopology.Sheaf.CohomologyIntegerOpenRestriction
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTransport
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTop
+public import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftOnOpen
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionTransport
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionDerivedTransport
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionArbitraryDegreeVanishing

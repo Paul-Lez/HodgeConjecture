@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5329 jobs),
-and the comparison audit checks 448 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5330 jobs),
+and the comparison audit checks 449 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -79,6 +79,8 @@ frame difference. Transport to the original supported section and its normalizat
 
 `CohomologySectionShiftTransport.lean` and `CohomologySectionShiftTop.lean` prove that
 the original section normalization commutes with the prescribed global cohomology shift.
+`CohomologySectionShiftOnOpen.lean` identifies the evaluated shift on every open
+with the section functor's shift comparison followed by the usual homology shift.
 `CohomologySectionArbitraryDegreeVanishing.lean` uses this to prove local vanishing
 for a cocycle in any degree when its shifted chain map vanishes after derived restriction.
 `SupportSheafConeLocalVanishing.lean` carries this through the actual sheaf-to-cone map,
