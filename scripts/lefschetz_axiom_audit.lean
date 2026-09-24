@@ -1,3 +1,6 @@
+import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
+import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTransport
+import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTop
 import Other.AlgebraicGeometry.RelativeChernLocalBoundary
 import Other.AlgebraicTopology.CohomologySheafSectionDerivedVanishing
 import Other.AlgebraicGeometry.CocycleGlobalSectionNaturality
@@ -20,6 +23,7 @@ import Other.Analysis.Complex.NormalDivisionFinOne
 import Other.RingTheory.RegularLocalEquation
 import Other.RingTheory.CotangentDetection
 import Other.AlgebraicGeometry.PointJetDerivation
+import Other.AlgebraicGeometry.PointJetDetection
 import Other.AlgebraicTopology.Sheaf.CohomologyShiftDerivedVanishing
 import Other.AlgebraicGeometry.ClosedImmersion.HolomorphicChartsAnalytic
 /- Representative axiom checks for the incomplete Lefschetz development.
@@ -445,3 +449,10 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 
 #print axioms AlgebraicGeometry.ComplexPoint.analyticOnNhd_openEmbeddingTransportChart_restrict_evaluate
 #print axioms AlgebraicGeometry.ComplexPoint.exists_genericWindingChartData_of_component_canonical
+
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.localizedPointJetDerivation_ne_zero_of_not_mem_square
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.residueAlgHom_ker_eq_residuePrimeIdeal
+#print axioms AlgebraicGeometry.ComplexPoint.Affine.localizedPointJetDerivation_ne_zero_of_not_mem_square_coordinate
+#print axioms TopCat.Sheaf.sectionCohomologyPresheafShiftMap_toSheaf
+#print axioms TopCat.Sheaf.sectionCohomologyToSheafSection_shift_naturality
+#print axioms TopCat.Sheaf.sectionCohomologyPresheafShiftShortComplex_top_homology

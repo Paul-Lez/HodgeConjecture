@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5286 jobs),
-and the comparison audit checks 327 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5289 jobs),
+and the comparison audit checks 333 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -28,15 +28,18 @@ comparison with the existing global support normalization. Three steps remain:
 - Identify the algebraic cotangent class with the analytic derivative.
 - Use that derivative to discharge the input of the canonical winding-chart constructor
   and assemble the generic chart cover.
-- Prove local normalization of the actual Chern class, including restriction of the
-  original complement comparison and its shift and sign conventions.
+- Prove local vanishing under the prescribed normalization and compute restriction
+  of the original complement comparison to a chart.
 
 `CotangentDetection.lean` proves that an injective residue-valued cotangent map detects
 nonzero first-order classes. It also gives the criterion from surjectivity and equal finite
 dimensions. `PointJetDerivation.lean` constructs the actual analytic first jet, its
 value-and-derivative algebra map, and its extension to the local coordinate ring.
 The localized derivation sends the selected chart coordinates to the derivative projections.
-Applying the detection criterion to the component stalk remains in progress.
+`PointJetDetection.lean` proves that it detects nonzero first-order classes, deriving
+the local regularity and dimension from the selected coordinates. It also identifies
+the evaluation kernel with the corresponding scheme-point prime. Applying this to
+the actual component equation germ remains in progress.
 
 `ChernWindingGenericChartCanonical.lean` constructs the actual component winding chart
 from the nonzero ambient derivative. Its carrier lies in any supplied neighborhood,
@@ -50,6 +53,9 @@ quasi-isomorphism. `SupportSheafConeNormalization.lean` proves that its global-s
 map is a quasi-isomorphism and factors the original support equivalence through its
 inverse on homology, the prescribed shift, and the final minus sign. Local vanishing
 under that normalization remains in progress.
+
+`CohomologySectionShiftTransport.lean` and `CohomologySectionShiftTop.lean` prove that
+the original section normalization commutes with the prescribed global cohomology shift.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.

@@ -129,6 +129,8 @@ public import Other.AlgebraicTopology.LocalHomology.PuncturedEuclidean
 public import Other.AlgebraicTopology.Sheaf.CohomologyOpenComparison
 public import Other.AlgebraicTopology.Sheaf.CohomologyOpenRestriction
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
+public import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTransport
+public import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTop
 public import Other.AlgebraicTopology.Sheaf.FlasquePushforwardQuasiIso
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionRestriction
 public import Other.AlgebraicTopology.Sheaf.CohomologyShiftDerivedVanishing
@@ -330,6 +332,7 @@ public import Other.AlgebraicGeometry.OpenRestrictionDerivedFactorization
 public import Other.AlgebraicGeometry.OpenRestrictionLocalSheaf
 public import Other.AlgebraicGeometry.OrderOfVanishing
 public import Other.AlgebraicGeometry.PointJetDerivation
+public import Other.AlgebraicGeometry.PointJetDetection
 public import Other.AlgebraicGeometry.ProjectiveFiniteHomology
 public import Other.AlgebraicGeometry.RationalSupportBoundaryRelative
 public import Other.AlgebraicGeometry.RationalSupportConeBoundaryComparison
