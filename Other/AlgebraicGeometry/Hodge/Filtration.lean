@@ -198,6 +198,48 @@ lemma fieldToDeRhamCohomology_injective
   simpa only [complexConstantCohomologyDeRhamEquiv_apply,
     fieldToDeRhamCohomology_factor K X n] using hαβ
 
+/-- The comparison from complex constant-sheaf cohomology to de Rham cohomology is bijective. -/
+lemma fieldToDeRhamCohomology_complex_bijective
+    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) :
+    Function.Bijective (fieldToDeRhamCohomology ℂ X n) := by
+  have h : fieldToComplexConstantSheaf ℂ X = 𝟙 _ := by
+    have h : AddCommGrpCat.ofHom (algebraMap ℂ ℂ).toAddMonoidHom =
+        𝟙 (AddCommGrpCat.of ℂ) := by
+      ext z
+      rfl
+    change (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map _ = _
+    rw [h]
+    exact (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map_id _
+  have hi : fieldToComplexConstantSheafComplexInt ℂ X = 𝟙 _ := by
+    unfold fieldToComplexConstantSheafComplexInt
+    rw [h, (CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map_id]
+    exact HomologicalComplex.extendMap_id _ _
+  change Function.Bijective (fun α =>
+    hypercohomologyMap X (fieldToHolomorphicDeRhamComplexInt ℂ X) n
+      ((hypercohomologyAddEquivConstantCohomology ℂ X n).symm α))
+  rw [fieldToHolomorphicDeRhamComplexInt, hi, Category.id_comp]
+  exact (complexConstantCohomologyDeRhamEquiv X n).bijective.comp
+    (hypercohomologyAddEquivConstantCohomology ℂ X n).symm.bijective
+
+/-- Complex constant-sheaf cohomology is complex-linearly isomorphic to de Rham cohomology. -/
+def complexSheafCohomologyDeRhamLinearEquiv
+    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) :
+    H^n(X; ℂ) ≃ₗ[ℂ] H_dR^n(X) :=
+  LinearEquiv.ofBijective (fieldToDeRhamCohomologyLinear ℂ X n)
+    (fieldToDeRhamCohomology_complex_bijective X n)
+
+@[simp]
+lemma complexSheafCohomologyDeRhamLinearEquiv_toLinearMap
+    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) :
+    (complexSheafCohomologyDeRhamLinearEquiv X n).toLinearMap =
+      fieldToDeRhamCohomologyLinear ℂ X n := rfl
+
+@[simp]
+lemma complexSheafCohomologyDeRhamLinearEquiv_apply
+    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) (α : H^n(X; ℂ)) :
+    complexSheafCohomologyDeRhamLinearEquiv X n α =
+      fieldToDeRhamCohomology ℂ X n α := rfl
+
 /-- The part of the holomorphic de Rham complex in form degrees at least `p` is zero when `p`
 is above the complex dimension. -/
 lemma hodgeFilteredDeRhamComplex_isZero_of_lt
