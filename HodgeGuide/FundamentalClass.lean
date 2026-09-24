@@ -173,11 +173,10 @@ this chapter, and in general it is cohomological purity; see
 
 Write $`U=X(\mathbb C)\setminus Z_{\mathrm{sing}}(\mathbb C)`. Step 1 gave a section of
 $`\mathcal H^{2p}_Z` over $`U`; the statement needs an element of $`H^{2p}_Z(X;\mathbb Q)`. The
-two are identified by a composite of three isomorphisms, each for its own reason:
+two are identified by a composite of two isomorphisms, each for its own reason:
 
 $$`H^{2p}_Z(X;\mathbb Q)
    \;\xrightarrow{\ \sim\ }\;H^{2p}_Z(U;\mathbb Q)
-   \;\xrightarrow{\ \sim\ }\;\Gamma\bigl(U,\mathcal H^{2p}(R\Gamma_Z\mathbb Q)\bigr)
    \;\xrightarrow{\ \sim\ }\;\Gamma(U,\mathcal H^{2p}_Z).`
 
 The first is restriction to $`U`, and it is what removes the singular locus from the problem.
@@ -188,23 +187,17 @@ long exact sequence of the nested supports $`Z_{\mathrm{sing}}\subseteq Z` then 
 sides of the restriction map.
 
 ```lean
-#check cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree
+#check cycleComponentSingularBoundaryRelH_isZero_of_lt
 ```
 
-The second passes from a cohomology group to a group of sections, and it is the step that purity
-supplies. On $`U` the cohomology sheaves of $`R\Gamma_Z\mathbb Q` vanish in every degree other than
-$`2p`, so $`2p` is the lowest degree in which they are nonzero. In that lowest degree the
-cohomology of the sections over $`U` agrees with the sections of the cohomology sheaf, because no
-lower degree contributes a correction.
+The second passes from supported Ext to a group of sections. The flasque bridge, smooth-locus
+purity, and the supported cohomology-sheaf comparison supply this step. On $`U`, support purity
+puts the relevant cohomology in degree $`2p`, so the lowest-degree section calculation has no
+lower-degree correction.
 
 ```lean
 #check cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
 ```
-
-The third identifies $`\mathcal H^{2p}(R\Gamma_Z\mathbb Q)`, the cohomology sheaf of the supported
-part of an injective resolution, with $`\mathcal H^{2p}_Z`, the sheafification of
-$`V\mapsto H^{2p}(V,V\setminus Z;\mathbb Q)`. The comparison runs through the singular
-resolution.
 
 Of the two definitions quoted below, the first is the restriction isomorphism on its own and the
 second is the whole composite, the normalization isomorphism
@@ -282,10 +275,8 @@ example :
 
 # Step 3: from support to ordinary cohomology
 
-The extension is a class in the cohomology of an injective resolution with supports. The
-comparison of the previous section identifies that group with $`H^{2p}_Z(X;\mathbb Q)`, and
-forgetting the support gives the class in ordinary cohomology, which is the class the statement
-uses.
+The extension is a class in supported Ext. Forgetting the support gives the class in ordinary
+cohomology, which is the class the statement uses.
 
 ```lean -show
 namespace Guide.Subvariety.D5

@@ -80,40 +80,6 @@ private theorem cycleComponentSingularBoundarySectionCohomology_isZero_of_lt
   cycleComponentSingularFiltrationSectionCohomology_isZero_of_lt X x hx
     0 (Nat.zero_le _) n hn
 
-include hx in
-/-- `H^{2p}_{Z_sing(ℂ)}(X(ℂ); ℚ) = 0`. -/
-theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree :
-    -- `H^{2p}_{Z_sing(ℂ)}(X(ℂ); ℚ)`.
-    IsZero ((((TopCat.Sheaf.supportEvaluation
-      -- `X(ℂ)`.
-      (TopCat.of (ComplexPoint X))
-      -- Global sections.
-      ⊤).mapHomologicalComplex ℤᵘᵖ).obj
-      -- `RΓ_{Z_sing(ℂ)}(ℚ)`.
-      (complexSupportInjectiveComplex X
-        -- `Z_sing(ℂ)`, as a closed subset of `X(ℂ)`.
-        (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology
-      -- Degree `2p`.
-      (2 * (p : ℤ))) :=
-  cycleComponentSingularBoundarySectionCohomology_isZero_of_lt X x hx _ (by omega)
-
-include hx in
-/-- `H^{2p+1}_{Z_sing(ℂ)}(X(ℂ); ℚ) = 0`. -/
-private theorem cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree_succ :
-    -- `H^{2p+1}_{Z_sing(ℂ)}(X(ℂ); ℚ)`.
-    IsZero ((((TopCat.Sheaf.supportEvaluation
-      -- `X(ℂ)`.
-      (TopCat.of (ComplexPoint X))
-      -- Global sections.
-      ⊤).mapHomologicalComplex ℤᵘᵖ).obj
-      -- `RΓ_{Z_sing(ℂ)}(ℚ)`.
-      (complexSupportInjectiveComplex X
-        -- `Z_sing(ℂ)`, as a closed subset of `X(ℂ)`.
-        (cycleComponentSingularAnalyticClosedFiltration X x 0))).homology
-      -- Degree `2p + 1`.
-      (2 * (p : ℤ) + 1)) :=
-  cycleComponentSingularBoundarySectionCohomology_isZero_of_lt X x hx _ (by omega)
-
 /-- Every point of the singular boundary belongs to the full component support. -/
 private theorem cycleComponentSingularBoundary_le_support :
     cycleComponentSingularAnalyticClosedFiltration X x 0 ≤ cycleComponentAnalyticClosedSupport X x := by
@@ -128,55 +94,10 @@ theorem cycleComponentSupportComplement_le_smoothAmbientOpen :
     (cycleComponentAnalyticClosedSupport X x).compl ≤ cycleComponentSmoothSupportAmbientOpen X x :=
   fun _ hy hyS ↦ hy (cycleComponentSingularBoundary_le_support X x hyS)
 
-/-- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
+/- Let `X` be a smooth integral projective scheme over `ℂ`, let `x` be a scheme point, and let `Z`
 be its reduced closure in `X`. Let `I^•` be the chosen injective resolution of `ℚ` on `X(ℂ)`.
 This restricts sections of its subsheaves supported in `Z(ℂ)` from all of `X(ℂ)` to `X(ℂ) \
 Z_sing(ℂ)`, degree by degree. -/
-def cycleComponentSupportSectionRestriction :
-    -- Restriction `RΓ_{Z(ℂ)}(X(ℂ)) → RΓ_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ))`.
-    ((TopCat.Sheaf.supportEvaluation
-      -- `X(ℂ)`.
-      (TopCat.of (ComplexPoint X))
-      -- Global sections.
-      ⊤).mapHomologicalComplex ℤᵘᵖ).obj
-      -- `RΓ_{Z(ℂ)}(ℚ)`.
-      (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) ⟶
-    ((TopCat.Sheaf.supportEvaluation
-      -- `X(ℂ)`.
-      (TopCat.of (ComplexPoint X))
-      -- Sections over the open `X(ℂ) \ Z_sing(ℂ)`.
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex ℤᵘᵖ).obj
-        -- `RΓ_{Z(ℂ)}(ℚ)`.
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) :=
-  TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) ℤᵘᵖ
-    (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x)) (homOfLE le_top)
-
-set_option backward.isDefEq.respectTransparency false in
-set_option backward.defeqAttrib.useBackward true in
-include hx in
-/-- Restriction `H^{2p}_{Z(ℂ)}(X(ℂ); ℚ) → H^{2p}_{Z(ℂ)}(X(ℂ) \ Z_sing(ℂ); ℚ)` is an isomorphism:
-in the localization sequence for `Z_sing(ℂ) ⊆ Z(ℂ)`, the neighbouring terms
-`H^{2p}_{Z_sing(ℂ)}(X(ℂ); ℚ)` and `H^{2p+1}_{Z_sing(ℂ)}(X(ℂ); ℚ)` vanish. -/
-theorem cycleComponentSupportSectionRestriction_homology_isIso :
-    IsIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ))) := by
-  let T := TopCat.of (ComplexPoint X)
-  let h := cycleComponentSupportComplement_le_smoothAmbientOpen X x
-  let K := ambientRationalInjectiveComplex X
-  let S := TopCat.Sheaf.nestedSupportRestrictionSectionsComplexShortComplex T h ⊤ K
-  let := TopCat.Sheaf.nestedSupportRestriction_homologyMap_isIso_of_vanishing T h ⊤ K
-    (2 * (p : ℤ))
-    (cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree X x hx)
-    (cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree_succ X x hx)
-  have he : HomologicalComplex.homologyMap S.g (2 * (p : ℤ)) ≫
-      HomologicalComplex.homologyMap
-        (TopCat.Sheaf.nestedSupportRestrictionLastComplexIso T h K).hom (2 * (p : ℤ)) =
-    HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)) := by
-    rw [← HomologicalComplex.homologyMap_comp]
-    exact congrArg (fun f => HomologicalComplex.homologyMap f (2 * (p : ℤ)))
-      (TopCat.Sheaf.nestedSupportRestrictionLastComplexIso_g T h K)
-  rw [← he]
-  infer_instance
-
 include hx in
 /-- The singular-boundary supported Ext groups vanish below degree `2(p + 1)`. -/
 theorem cycleComponentSingularBoundaryRelH_isZero_of_lt (n : ℕ)
