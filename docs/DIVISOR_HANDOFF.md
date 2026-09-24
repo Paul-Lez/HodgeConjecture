@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5334 jobs),
-and the comparison audit checks 457 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5336 jobs),
+and the comparison audit checks 460 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -131,8 +131,9 @@ The remaining calculation has two parallel comparisons: pass the local cycle ide
 to the original ambient cohomology section, and identify its supported normalization
 with positive winding. `ChernRelativeClosedSupportSection.lean` transports the
 original class to its closed-support presentation through support enlargement along
-the double-complement equality. Its winding formula must still be assembled with
-the two comparisons and the existing global assembly.
+the double-complement equality. `ChernRelativeClosedSupportUnit.lean` proves the same
+transport for normalized unit winding. The original Chern winding formula must still
+be assembled with the two comparisons and the existing global assembly.
 Their outputs supply the local premise of `hasChernLocalModel_of_original_local_section`.
 `ChernRelativeSupportNormalized.lean` proves that actual winding classes commute with
 support enlargement through the fixed supported-injective normalization.
@@ -141,10 +142,12 @@ constructed generic chart, enlarging its component support to the bad locus.
 `ActualSingularSupportBoundaryOnOpen.lean` identifies the canonical local singular
 boundary with its image in the supported injective complex on every open set.
 `ActualSingularSupportWindingOnOpen.lean` computes its image under the fixed local
-normalization as the positive winding class. `SupportSheafConeBoundaryOnOpen.lean` now proves that the fixed inverse cone map
-and shift send a local ambient cone boundary to its supported section. The remaining
-comparison must identify the original ambient section with this boundary through
-the actual complement maps and combine the two negative signs.
+normalization as the positive winding class. `SupportSheafConeBoundaryOnOpen.lean`
+proves that the fixed inverse cone map and shift send a local ambient cone boundary
+to its supported section. `SupportSheafConeWindingOnOpen.lean` computes its normalized
+image as positive winding and compares the natural and ambient complement maps on
+local homology. The remaining comparison must use the original open-complement map,
+retain the double-complement restriction, and combine the two negative signs.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.

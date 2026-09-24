@@ -42,6 +42,7 @@ public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeLocalVanishing
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeSectionTransport
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeBoundaryOnOpen
+public import Other.AlgebraicGeometry.Cohomology.SupportSheafConeWindingOnOpen
 public import Other.AlgebraicGeometry.Cohomology.SupportAmbientSectionDerivedSquare
 public import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWinding
 public import Other.AlgebraicGeometry.Cohomology.OriginalChernRawWindingClassMap
@@ -308,6 +309,7 @@ public import Other.AlgebraicGeometry.ChernWindingSupportedBoundary
 public import Other.AlgebraicGeometry.ChernWindingSupportNaturality
 public import Other.AlgebraicGeometry.ChernRelativeSupportGenericUnit
 public import Other.AlgebraicGeometry.ChernRelativeClosedSupportSection
+public import Other.AlgebraicGeometry.ChernRelativeClosedSupportUnit
 public import Other.AlgebraicGeometry.ChernWindingUnitClass
 public import Other.AlgebraicGeometry.ClosedSupportCodimensionVanishing
 public import Other.AlgebraicGeometry.ClosedSupportCoheightDimension
