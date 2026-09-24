@@ -48,13 +48,13 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 | `Other/AlgebraicGeometry/Cycle/SheafClass.lean`, `LefschetzOneOne.lean` | `algebraicCycleClassSpan_le_range_rationalSheafCycleClassOnCycles`; `HodgeConjecture.rationalLefschetzOneOne` and its `type_of%` copy. |
 | `Other/Geometry/Manifold/HolomorphicLogarithm.lean` | Local holomorphic logarithms; local integer kernel of `exp(2πiz)`. |
 | `Other/AlgebraicGeometry/HolomorphicExponential.lean`, `HolomorphicExponentialSequence.lean` | `holomorphicExponentialSequence_shortExact`: `0 → ℤ → 𝒪 → 𝒪ˣ → 0` on the analytic space. |
-| `Other/AlgebraicGeometry/HolomorphicFirstChernClass.lean` | The connecting map `Ext¹(ℤ, 𝒪ˣ) → Ext²(ℤ, ℤ)` and `exists_holomorphicFirstChernClass_iff`. |
+| `Other/AlgebraicGeometry/HolomorphicFirstChernClass.lean`, `HolomorphicFirstChernClassExactness.lean` | The connecting map `Ext¹(ℤ, 𝒪ˣ) → Ext²(ℤ, ℤ)` and `exists_holomorphicFirstChernClass_iff`. |
 | `Other/AlgebraicGeometry/HolomorphicZeroForms.lean`, `HolomorphicHodgeProjection.lean` | The projection to `H²(𝒪)` kills `F¹`; `hodgeClass_one_toHolomorphicFunctionCohomology_eq_zero`. |
 | `Other/AlgebraicGeometry/AnalyticSheafCohomologyExt.lean` | `analyticSheafCohomologyEquivExt`, natural in coefficient maps. |
-| `Other/AlgebraicGeometry/HolomorphicIntegralHodgeClass.lean` | `IntegralCohomology`, `integralToRationalCohomology`, `exists_holomorphicFirstChernClass_of_integral_hodgeClass`. |
+| `Other/AlgebraicGeometry/IntegralCohomology.lean`, `HolomorphicIntegralHodgeClass.lean` | `IntegralCohomology`, `integralToRationalCohomology`, `exists_holomorphicFirstChernClass_of_integral_hodgeClass`. |
 | `Other/CategoryTheory/Abelian/ExtOneRepresentative.lean` | `Abelian.Ext.exists_shortExact`. |
 | `Other/AlgebraicTopology/SheafExtensionCocycle.lean`, `SheafExtensionLocalLifts.lean` | Local lifts through a sheaf epimorphism and their cocycles. |
-| `Other/AlgebraicGeometry/HolomorphicUnitExtension.lean` | `exists_holomorphicUnitExtension_of_integral_hodgeClass`: an extension `E` with `E.firstChernClass = α`. |
+| `Other/AlgebraicGeometry/HolomorphicUnitExtensionHodgeClass.lean` | `exists_holomorphicUnitExtension_of_integral_hodgeClass`: an extension `E` with `E.firstChernClass = α`. |
 | `Other/AlgebraicGeometry/HolomorphicUnitTransition.lean`, `HolomorphicLineBundleOfExtension.lean` | Holomorphic unit transition functions and `E.lineBundleCore`. |
 | `Other/AlgebraicGeometry/HolomorphicLineBundleSections.lean`, `HolomorphicLineBundleModule.lean` | The sheaf of holomorphic sections and `E.sectionSheafOfModules`. |
 | `Other/AlgebraicGeometry/HolomorphicLineBundleCoordinates.lean`, `HolomorphicLineBundleInvertible.lean` | Local coordinate isomorphisms; `E.sectionSheafOfModules_isInvertible`. |
@@ -63,11 +63,11 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 | [PR41 GAGA work](https://github.com/Paul-Lez/HodgeConjecture/pull/41) | Holomorphic stalks are local; `analytificationToAlgebraic`. |
 | `Other/LinearAlgebra/RationalDenominators.lean`, `Other/Algebra/Homology/RationalCochainDenominators.lean` | Denominator clearing for finitely generated abelian groups and for homology. |
 | `Other/AlgebraicGeometry/ChernRelativeFinalAssembly.lean` | `hasDivisorClassOfCartierData`: the uniform divisor–Chern identity. |
-| `Other/AlgebraicGeometry/LefschetzOneOneReduction.lean` | The remaining obligations as explicit propositions, and `RationalLefschetzOneOne.of_obligations`. |
+| `Other/AlgebraicGeometry/LefschetzOneOneObligations.lean`, `LefschetzOneOneReduction.lean` | The remaining obligations as explicit propositions, and `RationalLefschetzOneOne.of_obligations`. |
 
 ## Remaining obligations
 
-[`Other/AlgebraicGeometry/LefschetzOneOneReduction.lean`](../Other/AlgebraicGeometry/LefschetzOneOneReduction.lean)
+[`Other/AlgebraicGeometry/LefschetzOneOneObligations.lean`](../Other/AlgebraicGeometry/LefschetzOneOneObligations.lean)
 states, for a single smooth projective integral complex variety `X`:
 
 1. `HasIntegralDenominatorClearing X`: for every `α : H^2(X; ℚ)` there are `m ≠ 0`
@@ -129,7 +129,7 @@ states, for a single smooth projective integral complex variety `X`:
 `RationalLefschetzOneOne.of_obligations` proves the target from (1) and
 `HasDivisorOfUnitExtension`, which follows from (2) and (3) by
 `hasDivisorOfUnitExtension_of_algebraicModel`. Since (1) is now a theorem,
-`RationalLefschetzOneOne.of_divisor` (`ProjectiveFiniteHomology.lean`) proves it from
+`RationalLefschetzOneOne.of_divisor` (`LefschetzOneOneFiniteHomology.lean`) proves it from
 `HasDivisorOfUnitExtension` alone, i.e. from (2) and (3). The bookkeeping proved there is: rational Hodge
 classes are stable under integer scaling, integral Hodge classes lift to unit-sheaf extensions,
 and the resulting integral divisor is divided by the denominator.

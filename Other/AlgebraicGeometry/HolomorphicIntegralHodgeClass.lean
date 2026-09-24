@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.AnalyticSheafCohomologyExt
-public import Other.AlgebraicGeometry.HolomorphicFirstChernClass
+public import Other.AlgebraicGeometry.IntegralCohomology
+public import Other.AlgebraicGeometry.HolomorphicFirstChernClassExactness
 public import Other.AlgebraicGeometry.HolomorphicHodgeProjection
 
 /-!
@@ -90,17 +90,6 @@ theorem integerToRationalDeRhamToFunctions [IsIntegral X.left] [Smooth X.hom] :
   rw [← Category.assoc, ← Category.assoc, ← analyticSheafComplexIntMap_comp,
     ← analyticSheafComplexIntMap_comp, integerToRationalToComplexConstantSheaf,
     integerToComplexToHolomorphicSheaf]
-
-/-- Integral constant-sheaf cohomology in an integer degree. -/
-abbrev IntegralCohomology (n : ℤ) :=
-  Hypercohomology X (constantIntegerSheafComplexInt X) n
-
-/-- The canonical change from integral to rational coefficients. -/
-def integralToRationalCohomology (n : ℕ) :
-    IntegralCohomology X n →+ H^n(X; ℚ) :=
-  (hypercohomologyAddEquivConstantCohomology ℚ X n).toAddMonoidHom.comp
-    (hypercohomologyMap X (analyticSheafComplexIntMap X
-      (integerToFieldConstantSheaf ℚ X 1)) n)
 
 set_option backward.isDefEq.respectTransparency false in
 /-- An integral degree-two class whose rational image has Hodge type `(1, 1)` vanishes

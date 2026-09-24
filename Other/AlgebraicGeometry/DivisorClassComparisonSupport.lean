@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.Cycle.SheafClass
-public import Other.AlgebraicGeometry.DivisorObligations
+public import Other.AlgebraicGeometry.DivisorClassComparison
 public import Other.AlgebraicGeometry.ChernClassRestrictionVanishing
 
 /-!

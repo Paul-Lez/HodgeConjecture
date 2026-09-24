@@ -43,12 +43,5 @@ theorem hasFiniteSecondHomology : HasFiniteSecondHomology X :=
 theorem hasIntegralDenominatorClearing : HasIntegralDenominatorClearing X :=
   hasIntegralDenominatorClearing_of_hasFiniteSecondHomology X (hasFiniteSecondHomology X)
 
-/-- The rational Lefschetz `(1, 1)` theorem follows from the divisor representation of unit-sheaf
-extensions alone. -/
-theorem _root_.RationalLefschetzOneOne.of_divisor
-    (hdivisor : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
-      HasDivisorOfUnitExtension X) :
-    RationalLefschetzOneOne :=
-  RationalLefschetzOneOne.of_obligations (fun X _ _ _ ↦ hasIntegralDenominatorClearing X) hdivisor
 
 end AlgebraicGeometry.ComplexPoint

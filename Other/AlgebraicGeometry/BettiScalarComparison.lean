@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.HolomorphicIntegralHodgeClass
+public import Other.AlgebraicGeometry.IntegralCohomology
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomology
 public import Other.AlgebraicTopology.Singular.Sheaf.CochainSubdivision
 

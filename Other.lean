@@ -482,3 +482,11 @@ public import Other.AlgebraicGeometry.CycleClassExtComparison
 public import Other.AlgebraicTopology.SupportedExtComparisonEvaluation
 public import Other.AlgebraicGeometry.HypercohomologyExtImage
 public import Other.CategoryTheory.Abelian.ExtOneRepresentative
+public import Other.AlgebraicGeometry.CartierDataRepresents
+public import Other.AlgebraicGeometry.IntegralCohomology
+public import Other.AlgebraicGeometry.HolomorphicFirstChernClassExactness
+public import Other.AlgebraicGeometry.HolomorphicUnitExtensionHodgeClass
+public import Other.AlgebraicGeometry.DivisorClassCompatibility
+public import Other.AlgebraicGeometry.DivisorClassComparison
+public import Other.AlgebraicGeometry.LefschetzOneOneObligations
+public import Other.AlgebraicGeometry.LefschetzOneOneFiniteHomology
