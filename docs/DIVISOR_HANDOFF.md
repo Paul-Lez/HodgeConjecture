@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5295 jobs),
-and the comparison audit checks 363 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5296 jobs),
+and the comparison audit checks 367 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -23,11 +23,12 @@ The current work proves generic ideal generation in the actual component stalk,
 a nonzero cotangent class for the local equation, and continuous division by a simple
 analytic normal coordinate on restricted charts. It also proves the positive winding
 identity for the compatible Cartier frame difference and an exact sheaf-map
-comparison with the existing global support normalization. Two steps remain:
+comparison with the existing global support normalization. Normalized generic winding
+charts are now constructed inside any supplied neighborhood. Two steps remain:
 
-- Assemble the generic chart cover from the canonical derivative and winding-chart constructor.
-- Compute restriction of the original complement comparison to a chart and identify
-  its supported class with the component coclass.
+- Compute restriction of the original complement comparison to a chart through the fixed
+  support normalization.
+- Identify the component multiplicities and assemble the uniform divisor–Chern identity.
 
 `CotangentDetection.lean` proves that an injective residue-valued cotangent map detects
 nonzero first-order classes. It also gives the criterion from surjectivity and equal finite
@@ -47,8 +48,9 @@ It also specializes the result to the canonical smooth-locus component lift.
 
 `ChernWindingGenericChartCanonical.lean` constructs the actual component winding chart
 from the nonzero ambient derivative. Its carrier lies in any supplied neighborhood,
-and it retains the canonical coclass normalization. Assembling the generic chart cover
-remains in progress.
+and it retains the canonical coclass normalization. `ChernWindingGenericChartAlgebraic.lean`
+supplies the derivative and proves `HasGenericFlatteningCharts` and
+`HasNormalizedWindingCharts`, with the stronger neighborhood bound for the generic cover.
 
 `FlasquePushforwardQuasiIso.lean` proves that direct image preserves comparisons between
 bounded-below flasque complexes. `SupportSheafConeQuasiIso.lean` applies it to the fixed
@@ -92,8 +94,8 @@ valid obligations to discharge: they allowed arbitrary complement frames and did
 not relate the extension to the Cartier datum. Use
 `HasRelativeChernChartFormulaExists`, which includes those relations and chooses a
 compatible frame. Its reduction now proves the uniform target via
-`hasDivisorClassOfCartierData_of_chartFormulaExists`; both chart hypotheses in that
-reduction remain to be proved.
+`hasDivisorClassOfCartierData_of_chartFormulaExists`; its normalized-chart hypothesis
+is now proved, while the class comparison remains.
 
 The current worktree additionally proves:
 

@@ -262,6 +262,7 @@ public import Other.AlgebraicGeometry.ChernWindingConnecting
 public import Other.AlgebraicGeometry.ChernWindingGenericChartAssembly
 public import Other.AlgebraicGeometry.ChernWindingGenericChartConditional
 public import Other.AlgebraicGeometry.ChernWindingGenericChartCanonical
+public import Other.AlgebraicGeometry.ChernWindingGenericChartAlgebraic
 public import Other.AlgebraicGeometry.ChernWindingGenericChartData
 public import Other.AlgebraicGeometry.ChernWindingGenericChartExistence
 public import Other.AlgebraicGeometry.ChernWindingHolomorphicLog
