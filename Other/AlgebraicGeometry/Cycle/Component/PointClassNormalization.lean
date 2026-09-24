@@ -159,7 +159,6 @@ theorem cycleComponentSupportedInjectiveClass_point_normalization
       (analyticComponentPointSupportedInjectiveCoclass X x d z)
   symm
   apply cycleComponentSupportedInjectiveClass_unique X x hx a
-  set_option maxHeartbeats 800000 in
   have hnorm :
       (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a =
         (complexSupportInjectiveCohomologySheafIsoRelative X
@@ -170,66 +169,7 @@ theorem cycleComponentSupportedInjectiveClass_point_normalization
               (2 * (d : ℤ))
               ((rationalSupportAddEquivSupportedInjectiveHomology X
                 (cycleComponentAnalyticClosedSupport X x) (2 * d)) a))) := by
-    let T := TopCat.of (ComplexPoint X)
-    let Z := cycleComponentAnalyticClosedSupport X x
-    let U := cycleComponentSmoothSupportAmbientOpen X x
-    let hW : U ⊓ Z.compl = Z.compl := inf_eq_right.mpr
-      (cycleComponentSupportComplement_le_smoothAmbientOpen X x)
-    let f : Z.compl ⟶ U := homOfLE (by
-      intro y hy hyS
-      obtain ⟨w, _, hw⟩ := hyS
-      apply hy
-      change y.underlying ∈ closure ({x} : Set X.left)
-      rw [← range_cycleComponentι X.left x]
-      exact ⟨w, hw⟩)
-    let g : U ⟶ ⊤ := homOfLE le_top
-    let F := (TopCat.Sheaf.constantFunctor T).obj (AddCommGrpCat.of ℚ)
-    let n : ℕ := 2 * d
-    have hcycle (y : H_[Z]^n(X; ℚ)) :
-        cycleComponentSupportExtensionIso X x hx y =
-          CategoryTheory.Sheaf.relH.restrict F (homOfLE (show Z.compl ≤ ⊤ from le_top))
-            f (homOfLE (show Z.compl ≤ Z.compl from le_rfl)) g
-            (by apply Subsingleton.elim) n y := by
-      rfl
-    change cycleComponentSmoothSupportLowestSectionCohomologyEquiv X x hx
-      (cycleComponentSupportExtensionIso X x hx a) = _
-    have hcycle' : cycleComponentSupportExtensionIso X x hx a =
-        CategoryTheory.Sheaf.relH.restrict F (homOfLE (show Z.compl ≤ ⊤ from le_top))
-          (homOfLE (show Z.compl ≤ U from
-            (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
-          (homOfLE (show Z.compl ≤ Z.compl from le_rfl)) (homOfLE (show U ≤ ⊤ from le_top))
-            (by apply Subsingleton.elim) n a := by
-      rw [hcycle]
-    rw [hcycle']
-    change (rationalSupportAddEquivSupportedInjectiveSheafSection X Z U Z.compl hW n
-      (cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx))
-        ((CategoryTheory.Sheaf.relH.restrict F (homOfLE (show Z.compl ≤ ⊤ from le_top))
-          (homOfLE (show Z.compl ≤ U from
-            (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
-          (homOfLE (show Z.compl ≤ Z.compl from le_rfl))
-          (homOfLE (show U ≤ ⊤ from le_top)) (by apply Subsingleton.elim) n) a) = _
-    rw [rationalSupportAddEquivSupportedInjectiveSheafSection_apply]
-    have hbridge :=
-      @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology_restrict T Z.compl
-        (⊤ : Opens T) Z.compl Z.compl U Z.compl (top_inf_eq _) hW le_rfl le_top le_rfl
-        (analyticHasExt X) F (ambientRationalInjectiveComplex X)
-        (ambientRationalInjectiveComplex_isKInjective X)
-        (ambientRationalInjectiveSingleAugmentation X)
-        (ambientRationalInjectiveSingleAugmentation_quasiIso X) n a
-    erw [hbridge]
-    have hsupport :
-          TopCat.Sheaf.supportedSectionsRestriction T
-              (show Z.compl ≤ Z.compl from le_rfl)
-              (show U ≤ (⊤ : Opens T) from le_top)
-              (ambientRationalInjectiveComplex X) =
-            cycleComponentSupportSectionRestriction X x := by
-      rw [TopCat.Sheaf.supportedSectionsRestriction_refl]
-      rfl
-    rw [hsupport]
-    dsimp [cycleComponentSupportSectionRestriction, cycleComponentSmoothRestrictedInjectiveComplex,
-      complexSupportInjectiveComplex, rationalSupportAddEquivSupportedInjectiveHomology]
-    simp [TopCat.Sheaf.supportEvaluation, T, Z, U, n]
-    rfl
+    exact cycleComponentSupportedClassNormalizationIso_apply X x hx a
   rw [hnorm,
     cycleComponentSmoothSupportLowestSectionCohomologyComplexIso,
     TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso_hom]
