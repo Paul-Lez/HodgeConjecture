@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5321 jobs),
-and the comparison audit checks 428 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5323 jobs),
+and the comparison audit checks 434 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -73,8 +73,9 @@ positive winding remains.
 input with the local integer cocycle through the prescribed homology comparison.
 `OriginalChernRawWinding.lean` computes the actual local chain map on the restricted
 integer-one section as the literal raw winding cochain through the fixed complement
-resolution and ambient cone maps. Passing this calculation to the normalized supported
-cohomology class remains.
+resolution and ambient cone maps. `OriginalChernRawWindingClassMap.lean` identifies
+the shifted original boundary cycle with the actual raw winding cycle of the negative
+frame difference. Transport to the original supported section and its normalization remain.
 
 `CohomologySectionShiftTransport.lean` and `CohomologySectionShiftTop.lean` prove that
 the original section normalization commutes with the prescribed global cohomology shift.
@@ -122,8 +123,8 @@ original comparison boundary square and expresses the restricted Chern class as 
 boundary of the negative local frame difference. Identifying its normalized local section
 with winding remains.
 
-The remaining calculation has three parallel tasks: pass the local cochain calculation
-to the ambient boundary class, identify its supported normalization with positive winding,
+The remaining calculation has three parallel tasks: pass the local cycle comparison
+to the original ambient cohomology section, identify its supported normalization with positive winding,
 and prove that normalized winding commutes with support enlargement from a component
 to the bad locus.
 Their outputs supply the local premise of `hasChernLocalModel_of_original_local_section`.
