@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5298 jobs),
-and the comparison audit checks 375 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5299 jobs),
+and the comparison audit checks 379 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -75,6 +75,8 @@ to the original relative Chern class and proves that its ambient image is ration
 `CartierWindingChartCoefficient.lean` identifies the good-complement overlap with the
 punctured chart and computes the Cartier unit's winding coefficient as `c.divisor x`.
 The comparison of this winding value with the original global supported class remains.
+`ChernComponentLocalIsolation.lean` proves that enlarging a component support to the bad locus
+is an isomorphism on the chosen chart, both on section complexes and their cohomology.
 
 `RelativeChernOriginalRestriction.lean` constructs the chain map induced by a local
 frame and proves that it splits the restricted inclusion cone's map to the constant
