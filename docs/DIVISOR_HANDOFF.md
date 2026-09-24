@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5341 jobs),
-and the comparison audit checks 469 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5342 jobs),
+and the comparison audit checks 470 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -76,8 +76,10 @@ integer-one section as the literal raw winding cochain through the fixed complem
 resolution and ambient cone maps. `OriginalChernRawWindingClassMap.lean` identifies
 the shifted original boundary cycle with the actual raw winding cycle of the negative
 frame difference. `OriginalChernRawWindingSection.lean` passes this equality to the
-cohomology-sheaf section on the restricted space. Transport to the original ambient
-section and its supported normalization remain.
+cohomology-sheaf section on the restricted space.
+`OriginalChernAmbientSectionShift.lean` identifies the actual ambient Chern boundary
+section with the restricted degree-one boundary through the fixed homology comparison.
+The remaining assembly must apply the local raw winding identity to this section.
 `ChernOriginalRawAmbientTransport.lean` identifies the original raw cone map with
 the direct ambient map after the prescribed top-evaluation isomorphism. It also
 identifies the direct map's cohomology-sheaf section over the given open with the
