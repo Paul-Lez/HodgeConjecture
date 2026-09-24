@@ -1,6 +1,7 @@
 import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTransport
 import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTop
+import Other.AlgebraicTopology.Sheaf.CohomologySectionArbitraryDegreeVanishing
 import Other.AlgebraicGeometry.RelativeChernLocalBoundary
 import Other.AlgebraicTopology.CohomologySheafSectionDerivedVanishing
 import Other.AlgebraicGeometry.CocycleGlobalSectionNaturality
@@ -456,3 +457,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms TopCat.Sheaf.sectionCohomologyPresheafShiftMap_toSheaf
 #print axioms TopCat.Sheaf.sectionCohomologyToSheafSection_shift_naturality
 #print axioms TopCat.Sheaf.sectionCohomologyPresheafShiftShortComplex_top_homology
+#print axioms TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective_cocycle
+#print axioms TopCat.Sheaf.globalSections_homology_cocycle_rightUnshift
+#print axioms TopCat.Sheaf.sectionCohomology_integerCocycleGlobalSection_ofHom_shift_onOpen_eq_zero

@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5289 jobs),
-and the comparison audit checks 333 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5290 jobs),
+and the comparison audit checks 336 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -56,6 +56,9 @@ under that normalization remains in progress.
 
 `CohomologySectionShiftTransport.lean` and `CohomologySectionShiftTop.lean` prove that
 the original section normalization commutes with the prescribed global cohomology shift.
+`CohomologySectionArbitraryDegreeVanishing.lean` uses this to prove local vanishing
+for a cocycle in any degree when its shifted chain map vanishes after derived restriction.
+Applying this through the original support normalization remains in progress.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.
