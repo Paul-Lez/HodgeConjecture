@@ -11,6 +11,7 @@ import Other.AlgebraicGeometry.RelativeChernOriginalDerivedBoundary
 import Other.AlgebraicGeometry.RelativeChernOriginalDerivedBoundarySquare
 import Other.AlgebraicGeometry.RelativeChernOriginalAmbientDerivedBoundary
 import Other.AlgebraicGeometry.RelativeChernOriginalSupportSection
+import Other.AlgebraicGeometry.ChernWindingSupportNaturality
 import Other.AlgebraicTopology.CohomologySheafSectionDerivedVanishing
 import Other.AlgebraicGeometry.CocycleGlobalSectionNaturality
 import Other.AlgebraicGeometry.CartierWindingChartVanishing
@@ -598,3 +599,5 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.restrict_original_relativeChernClass_ambient_section
 
 #print axioms AlgebraicGeometry.ComplexPoint.restrict_original_relativeChernClass_support_section
+
+#print axioms ChernWinding.windingRelativeClass_supportMap
