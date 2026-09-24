@@ -18,6 +18,7 @@ module  -- shake: keep-all --deprecated_module: ignore
 public import HodgeConjecture
 public import Other.Algebra.DeRham.Complex
 public import Other.Algebra.Homology.DerivedCategory.ConcentratedOrientation
+public import Other.Algebra.Homology.DerivedFunctorHomology
 public import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 public import Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
 public import Other.Algebra.Homology.HomComplexPostcompNaturality
@@ -134,6 +135,7 @@ public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTransport
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTop
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionTransport
+public import Other.AlgebraicTopology.Sheaf.CohomologySectionDerivedTransport
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionArbitraryDegreeVanishing
 public import Other.AlgebraicTopology.Sheaf.FlasquePushforwardQuasiIso
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionRestriction
