@@ -238,6 +238,7 @@ public import Other.AlgebraicGeometry.CartierWindingChartNormalizedVanishing
 public import Other.AlgebraicGeometry.CartierWindingChartCoefficient
 public import Other.AlgebraicGeometry.ChernRelativeCanonicalLift
 public import Other.AlgebraicGeometry.ChernComponentLocalIsolation
+public import Other.AlgebraicGeometry.ChernComponentSectionExtraction
 public import Other.AlgebraicGeometry.CartierDataOfTrivializingCover
 public import Other.AlgebraicGeometry.CartierFrameLift
 public import Other.AlgebraicGeometry.CartierLocalComponentKernel
