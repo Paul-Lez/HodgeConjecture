@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5292 jobs),
-and the comparison audit checks 342 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5293 jobs),
+and the comparison audit checks 350 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -28,7 +28,7 @@ comparison with the existing global support normalization. Three steps remain:
 - Apply the germ-to-derivative comparison to the actual component equation.
 - Use that derivative to discharge the input of the canonical winding-chart constructor
   and assemble the generic chart cover.
-- Prove local vanishing under the prescribed normalization and compute restriction
+- Apply normalized local vanishing to the Cartier frame and compute restriction
   of the original complement comparison to a chart.
 
 `CotangentDetection.lean` proves that an injective residue-valued cotangent map detects
@@ -55,14 +55,15 @@ bounded-below flasque complexes. `SupportSheafConeQuasiIso.lean` applies it to t
 complement resolution and proves that the actual support sheaf-to-cone map is a
 quasi-isomorphism. `SupportSheafConeNormalization.lean` proves that its global-section
 map is a quasi-isomorphism and factors the original support equivalence through its
-inverse on homology, the prescribed shift, and the final minus sign. Local vanishing
-under that normalization remains in progress.
+inverse on homology, the prescribed shift, and the final minus sign.
 
 `CohomologySectionShiftTransport.lean` and `CohomologySectionShiftTop.lean` prove that
 the original section normalization commutes with the prescribed global cohomology shift.
 `CohomologySectionArbitraryDegreeVanishing.lean` uses this to prove local vanishing
 for a cocycle in any degree when its shifted chain map vanishes after derived restriction.
-Applying this through the original support normalization remains in progress.
+`SupportSheafConeLocalVanishing.lean` carries this through the actual sheaf-to-cone map,
+shift, and sign: the original normalized support section vanishes on any open where
+the original derived class vanishes. Its application to the Cartier frame remains.
 
 `RelativeChernOriginalRestriction.lean` constructs the chain map induced by a local
 frame and proves that it splits the restricted inclusion cone's map to the constant
