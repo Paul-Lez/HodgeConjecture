@@ -2,13 +2,13 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5299 jobs),
-and the comparison audit checks 379 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5300 jobs),
+and the comparison audit checks 380 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
 The GAGA sources and their audit moved to [PR41](https://github.com/Paul-Lez/HodgeConjecture/pull/41),
-which is stacked on PR9. This split does not discharge either remaining chart obligation.
+which is stacked on PR9. This split keeps GAGA separate from the divisor–Chern comparison.
 
 The active target is the **uniform** divisor–Chern identity
 `HasDivisorClassOfCartierData X`: for every holomorphic-unit extension `E`, every
@@ -83,7 +83,9 @@ frame and proves that it splits the restricted inclusion cone's map to the const
 integer complex. The original-complement boundary calculation remains in progress.
 It also factors the restricted original cone map through the local frame retraction;
 the literal overlap section and the restricted frame's value on integer `1` are computed.
-Identifying the retraction with the frame-difference unit remains.
+`RelativeChernOriginalFrameFactorisation.lean` identifies the restricted factorization
+with the overlap-unit map evaluated on the negative frame difference. Applying the original
+comparison boundary square and computing the normalized local section remain.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.
