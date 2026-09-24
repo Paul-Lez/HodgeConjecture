@@ -361,6 +361,8 @@ public import Other.AlgebraicGeometry.RelativeChernFrameWinding
 public import Other.AlgebraicGeometry.RelativeChernLocalBoundary
 public import Other.AlgebraicGeometry.RelativeChernOriginalRestriction
 public import Other.AlgebraicGeometry.RelativeChernOriginalFrameFactorisation
+public import Other.AlgebraicGeometry.RelativeChernOriginalBoundary
+public import Other.AlgebraicGeometry.RelativeChernOriginalDerivedBoundary
 public import Other.AlgebraicGeometry.RelativeChernSectionBoundary
 public import Other.AlgebraicGeometry.SheafHomOfLocalStalkMaps
 public import Other.AlgebraicGeometry.SupportEnlargementCodimTwo

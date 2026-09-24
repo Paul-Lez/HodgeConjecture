@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5307 jobs),
-and the comparison audit checks 403 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5309 jobs),
+and the comparison audit checks 405 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -96,8 +96,11 @@ integer complex. The original-complement boundary calculation remains in progres
 It also factors the restricted original cone map through the local frame retraction;
 the literal overlap section and the restricted frame's value on integer `1` are computed.
 `RelativeChernOriginalFrameFactorisation.lean` identifies the restricted factorization
-with the overlap-unit map evaluated on the negative frame difference. Applying the original
-comparison boundary square and computing the normalized local section remain.
+with the overlap-unit map evaluated on the negative frame difference.
+`RelativeChernOriginalBoundary.lean` applies this to the restricted cone map, and
+`RelativeChernOriginalDerivedBoundary.lean` identifies the inverse cone-to-integer map
+after derived restriction. Applying the original comparison boundary square and computing
+the normalized local section remain.
 
 An independent Astra high diagnostic review confirmed these gaps. It was not a
 completion review; the full theorem must still pass that review.
