@@ -95,7 +95,7 @@ def complexSupportInjectiveCohomologySheafIsoRelative
         (TopCat.of (ComplexPoint X)) S S.isClosed n
 
 set_option maxHeartbeats 800000 in
-/-- Supported Ext on an open is canonically the corresponding cohomology-sheaf section group. -/
+/-- Supported Ext on an open is canonically the cohomology of the supported section complex. -/
 def rationalSupportAddEquivSupportedInjectiveHomologyOnOpen
     (S : Closeds (ComplexPoint X)) (V W : Opens (ComplexPoint X))
     (hW : V ⊓ S.compl = W) (n : ℕ) :
