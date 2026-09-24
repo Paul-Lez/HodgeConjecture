@@ -1,6 +1,6 @@
 # Handoff: the divisor of an algebraic model (`HasDivisorOfAlgebraicModel`)
 
-## Current implementation status (2026-09-23)
+## Current implementation status (2026-09-24)
 
 Validation: main `9aba2ec` is merged, `lake build` passes (5283 jobs),
 and the comparison audit checks 312 distinct declarations with only `propext`,
@@ -33,6 +33,10 @@ comparison with the existing global support normalization. Three steps remain:
 `CotangentDetection.lean` proves that an injective residue-valued cotangent map detects
 nonzero first-order classes. It also gives the criterion from surjectivity and equal finite
 dimensions. Constructing and identifying the actual analytic map remains in progress.
+
+The conditional winding-chart constructor retains the inclusion of its final carrier
+in the supplied flattened neighborhood. The actual component-chart constructor remains
+in progress.
 
 `FlasquePushforwardQuasiIso.lean` proves that direct image preserves comparisons between
 bounded-below flasque complexes. `SupportSheafConeQuasiIso.lean` applies it to the fixed
