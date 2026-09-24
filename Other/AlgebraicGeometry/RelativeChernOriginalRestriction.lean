@@ -115,4 +115,67 @@ lemma restrictedConeSection_comp_coneToInteger :
         (Category.id_comp (I.inv.app (𝓒(↧(ComplexPoint X); ℤ))))).trans
         (I.hom_inv_id_app (𝓒(↧(ComplexPoint X); ℤ)))
 
+variable (Ω : Opens (TopCat.of (ComplexPoint X)))
+  (ℓΩ : E.middle.obj.obj (op Ω))
+  (hℓΩ : E.projection.hom.app (op Ω) ℓΩ =
+    (𝓒(↧(ComplexPoint X); ℤ)).obj.map (homOfLE (le_top : Ω ≤ ⊤)).op
+      HolomorphicUnitExtension.integerOneSection)
+
+include hℓΩ in
+lemma restrictedConeSection_comp_relativeConeMap :
+    let F := restrictToOpen X U
+    let H := F.mapHomologicalComplex (.up ℤ)
+    let I := HomologicalComplex.singleMapHomologicalComplex F (.up ℤ) 0
+    let J := CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of U)) 0
+    restrictedConeSection X d E U ℓU ≫
+        H.map (E.relativeConeMap Ω ℓΩ hℓΩ) =
+      I.hom.app (𝓒(↧(ComplexPoint X); ℤ)) ≫
+        J.map (E.restrictedSection U ℓU) ≫ I.inv.app E.middle ≫
+        H.map ((analyticSingleFunctor X).map
+          (E.restrictionFactorisation Ω ℓΩ hℓΩ)) ≫
+        H.map (CochainComplex.mappingCone.inr
+          ((analyticSingleFunctor X).map
+            (restrictionUnit Ω (holomorphicUnitSheaf X d)))) := by
+  dsimp only
+  let F := restrictToOpen X U
+  let H := F.mapHomologicalComplex (.up ℤ)
+  let I := HomologicalComplex.singleMapHomologicalComplex F (.up ℤ) 0
+  let J := CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of U)) 0
+  unfold restrictedConeSection HolomorphicUnitExtension.relativeConeMap
+  have hI :
+      CochainComplex.mappingCone.inr
+          (((restrictToOpen X U).mapHomologicalComplex (.up ℤ)).map E.singleShortComplex.f) ≫
+        (CochainComplex.mappingCone.mapHomologicalComplexIso E.singleShortComplex.f
+          (restrictToOpen X U)).inv =
+      ((restrictToOpen X U).mapHomologicalComplex (.up ℤ)).map
+        (CochainComplex.mappingCone.inr E.singleShortComplex.f) := by
+    rw [← CochainComplex.mappingCone.map_inr E.singleShortComplex.f F]
+    rw [Category.assoc, Iso.hom_inv_id, Category.comp_id]
+  have htrail :
+      CochainComplex.mappingCone.inr
+          (H.map E.singleShortComplex.f) ≫
+        (CochainComplex.mappingCone.mapHomologicalComplexIso E.singleShortComplex.f
+          (restrictToOpen X U)).inv ≫
+        H.map
+          (CochainComplex.mappingCone.map E.singleShortComplex.f
+            ((analyticSingleFunctor X).map (restrictionUnit Ω (holomorphicUnitSheaf X d)))
+            (𝟙 E.singleShortComplex.X₁)
+            ((analyticSingleFunctor X).map (E.restrictionFactorisation Ω ℓΩ hℓΩ))
+            (E.singleShortComplex_f_comp_restrictionFactorisation Ω ℓΩ hℓΩ)) =
+      H.map
+          ((analyticSingleFunctor X).map (E.restrictionFactorisation Ω ℓΩ hℓΩ)) ≫
+        H.map
+          (CochainComplex.mappingCone.inr
+            ((analyticSingleFunctor X).map (restrictionUnit Ω (holomorphicUnitSheaf X d)))) := by
+    rw [← Category.assoc, hI, ← H.map_comp]
+    simp [CochainComplex.mappingCone.map]
+  have hp := congrArg (fun q ↦
+    ((HomologicalComplex.singleMapHomologicalComplex (restrictToOpen X U) (.up ℤ) 0).hom.app
+        (𝓒(↧(ComplexPoint X); ℤ)) ≫
+      (CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat (TopCat.of U)) 0).map
+        (E.restrictedSection U ℓU) ≫
+      (HomologicalComplex.singleMapHomologicalComplex (restrictToOpen X U) (.up ℤ) 0).inv.app
+        E.middle) ≫ q) htrail
+  simpa only [Category.assoc] using hp
+
 end AlgebraicGeometry.ComplexPoint
