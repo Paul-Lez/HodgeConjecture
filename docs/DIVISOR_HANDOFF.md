@@ -2,8 +2,8 @@
 
 ## Current implementation status (2026-09-24)
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5305 jobs),
-and the comparison audit checks 399 distinct declarations with only `propext`,
+Validation: main `9aba2ec` is merged, `lake build` passes (5306 jobs),
+and the comparison audit checks 402 distinct declarations with only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 The comparison is developed in [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
@@ -85,6 +85,8 @@ The comparison of this winding value with the original global supported class re
 is an isomorphism on the chosen chart, both on section complexes and their cohomology.
 `ChernComponentSectionExtraction.lean` proves that all other component contributions vanish
 on that chart and extracts the selected component from the actual supported sum.
+`ChernComponentSheafIsolation.lean` proves that the enlargement map on sections of the
+cohomology sheaf is an isomorphism on any open where the supports agree.
 
 `RelativeChernOriginalRestriction.lean` constructs the chain map induced by a local
 frame and proves that it splits the restricted inclusion cone's map to the constant
