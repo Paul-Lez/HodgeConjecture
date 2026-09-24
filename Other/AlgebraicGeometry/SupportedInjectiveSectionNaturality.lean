@@ -18,12 +18,10 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite HomologicalC
 
 namespace AlgebraicGeometry.ComplexPoint
 
-variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+variable (X : Over (Spec ↧ℂ))
 
 local instance supportedInjectiveSectionNaturalityTopology :
     TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
-attribute [local instance] isNoetherian_of_isProjective
 
 variable {X}
 
