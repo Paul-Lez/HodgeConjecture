@@ -127,7 +127,7 @@ theorem restrictedRationalChernShiftedHom_eq_singularCocycle :
     (SmallShiftedHom.mk (analyticQuasiIsomorphisms X))
     (show (-β) ≫ b⟦(1 : ℤ)⟧' = η ≫ (-βΩ) from by
       rw [Preadditive.neg_comp, Preadditive.comp_neg, hβ])).trans
-    (SmallShiftedHom.mk₀_comp_mk (analyticQuasiIsomorphisms X) η (-βΩ)).symm)
+    (SmallShiftedHom.mk₀_comp_mk.{1} (analyticQuasiIsomorphisms X) η (-βΩ)).symm)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in

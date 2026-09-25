@@ -28,7 +28,7 @@ local instance integralCohomologyTopology : TopologicalSpace (ComplexPoint X) :=
 
 /-- The ordinary sheaf-cohomology presentation of Ext from the plain constant integer sheaf. -/
 def sheafCohomologyEquivExt (F : AnalyticAdditiveSheaf X) (n : ℕ) :
-    Sheaf.H F n ≃+ Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) F n :=
+    Sheaf.H F n ≃+ Abelian.Ext.{0} (𝓒(↧(ComplexPoint X); ℤ)) F n :=
   let e := (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).mapIso
     (show AddCommGrpCat.of (ULift ℤ) ≅ AddCommGrpCat.of ℤ from
       (AddEquiv.ulift (α := ℤ)).toAddCommGrpIso)
