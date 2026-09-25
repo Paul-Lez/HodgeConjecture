@@ -131,17 +131,4 @@ lemma mapExtendCanonicalIso_id : (mapExtendCanonicalIso (𝟭 C) K e).hom = 𝟙
   | none => exact (Limits.isZero_zero C).eq_of_src _ _
   | some n => rfl
 
-set_option backward.isDefEq.respectTransparency false in
-set_option backward.defeqAttrib.useBackward true in
-/-- In a retained degree, the inverse comparison is the inverse grading transport. -/
-lemma mapExtendCanonicalIso_inv_f {i : I} {j : J} (h : e.f i = j) :
-    (mapExtendCanonicalIso F K e).inv.f j =
-    (((F.mapHomologicalComplex c).obj K).extendXIso e h).hom ≫
-      F.map (K.extendXIso e h).inv := by
-  apply (cancel_mono ((mapExtendCanonicalIso F K e).hom.f j)).mp
-  rw [← HomologicalComplex.comp_f, Iso.inv_hom_id, HomologicalComplex.id_f]
-  rw [mapExtendCanonicalIso_hom_f F K e h]
-  simp only [Category.assoc, ← Functor.map_comp_assoc, Iso.inv_hom_id,
-    CategoryTheory.Functor.map_id, Category.id_comp, Iso.hom_inv_id]
-
 end HomologicalComplex
