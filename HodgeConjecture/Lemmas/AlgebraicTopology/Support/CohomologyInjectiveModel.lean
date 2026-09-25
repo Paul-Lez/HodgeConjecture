@@ -96,7 +96,7 @@ lemma homComplexPairSheafIsoSupportedSections_restrict
   refine HomologicalComplex.hom_ext _ _ (fun n => ?_)
   exact pairSheafHomIsoSupportedSections_restrict X hW hW' hU hV hWW (K.X n)
 
-variable [HasExt.{1} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
+variable [HasExt.{0} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
 
 local instance :
     HasDerivedCategory (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat) :=
