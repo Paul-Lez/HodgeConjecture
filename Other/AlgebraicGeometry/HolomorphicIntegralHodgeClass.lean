@@ -165,28 +165,19 @@ theorem integralHodgeClass_toHolomorphicCohomology_eq_zero [IsIntegral X.left] [
       rw [hzero]
     _ = (0 : Sheaf.H (holomorphicAdditiveSheaf X (dim X.left)) 2) := map_zero _
 
-set_option backward.isDefEq.respectTransparency false in
-/-- The preceding vanishing statement in the Ext presentation used by the exponential sequence. -/
+/-- Integral Hodge classes map to zero in the second cohomology of holomorphic functions. -/
 theorem integralHodgeClass_integerToHolomorphicSecondCohomology_eq_zero
     [IsIntegral X.left] [Smooth X.hom] (α : H^2(X; ℤ))
     (hα : integralToRationalCohomology X 2 α ∈ hodgeClasses ℚ X 1) :
-    integerToHolomorphicSecondCohomology X (dim X.left)
-      (sheafCohomologyEquivExt X 𝓒(↧(ComplexPoint X); ℤ) 2 α) = 0 := by
-  have h := congrArg
-    (sheafCohomologyEquivExt X (holomorphicAdditiveSheaf X (dim X.left)) 2)
-    (integralHodgeClass_toHolomorphicCohomology_eq_zero X α hα)
-  erw [sheafCohomologyEquivExt_naturality] at h
-  change (sheafCohomologyEquivExt X 𝓒(↧(ComplexPoint X); ℤ) 2 α).comp
-      (Abelian.Ext.mk₀ (integerConstantsToHolomorphicSheaf X (dim X.left))) (add_zero 2) = 0
-  simpa only [map_zero] using h
+    integerToHolomorphicSecondCohomology X (dim X.left) α = 0 :=
+  integralHodgeClass_toHolomorphicCohomology_eq_zero X α hα
 
 /-- Every integral class whose rational image has Hodge type `(1, 1)` is in the image of
 the Chern-class connecting map of the holomorphic exponential sequence. -/
 theorem exists_holomorphicFirstChernClass_of_integral_hodgeClass [IsIntegral X.left] [Smooth X.hom]
     (α : H^2(X; ℤ))
     (hα : integralToRationalCohomology X 2 α ∈ hodgeClasses ℚ X 1) :
-    ∃ β, holomorphicFirstChernClass X (dim X.left) β =
-      sheafCohomologyEquivExt X 𝓒(↧(ComplexPoint X); ℤ) 2 α :=
+    ∃ β, holomorphicFirstChernClass X (dim X.left) β = α :=
   (exists_holomorphicFirstChernClass_iff X (dim X.left) _).mpr
     (integralHodgeClass_integerToHolomorphicSecondCohomology_eq_zero X α hα)
 

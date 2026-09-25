@@ -24,7 +24,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- An integral cohomology class lifts through the analytic Chern-class connecting map exactly
 when its image in the second cohomology of holomorphic functions vanishes. -/
 theorem exists_holomorphicFirstChernClass_iff
-    (α : Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (𝓒(↧(ComplexPoint X); ℤ)) 2) :
+    (α : H^2(X; ℤ)) :
     (∃ β, holomorphicFirstChernClass X d β = α) ↔
       integerToHolomorphicSecondCohomology X d α = 0 := by
   constructor
@@ -35,6 +35,6 @@ theorem exists_holomorphicFirstChernClass_iff
       ShortComplex.ShortExact.extClass_comp, Abelian.Ext.comp_zero]
   · intro hα
     exact Abelian.Ext.covariant_sequence_exact₁
-      (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicExponentialSequence_shortExact X d) α hα rfl
+      _ (holomorphicExponentialSequence_shortExact X d) α hα rfl
 
 end AlgebraicGeometry.ComplexPoint

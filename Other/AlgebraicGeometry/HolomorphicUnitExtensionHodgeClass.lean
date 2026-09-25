@@ -18,6 +18,10 @@ open CategoryTheory TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
 
+set_option linter.auxLemma false
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
+
 variable (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 
 local instance holomorphicUnitExtensionHodgeTopology : TopologicalSpace (ComplexPoint X) :=
@@ -41,9 +45,9 @@ theorem exists_holomorphicUnitExtension_of_integral_hodgeClass [IsIntegral X.lef
     (hα : integralToRationalCohomology X 2 α ∈ hodgeClasses ℚ X 1) :
     ∃ E : HolomorphicUnitExtension X (dim X.left), E.firstChernClass = α := by
   obtain ⟨β, hβ⟩ := exists_holomorphicFirstChernClass_of_integral_hodgeClass X α hα
-  obtain ⟨E, hE⟩ := HolomorphicUnitExtension.exists_cohomologyClass X (dim X.left) β
+  obtain ⟨E, hE⟩ := HolomorphicUnitExtension.exists_cohomologyClass X (dim X.left)
+    (sheafCohomologyEquivExt X (holomorphicUnitSheaf X (dim X.left)) 1 β)
   refine ⟨E, ?_⟩
-  apply (sheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).injective
-  rw [HolomorphicUnitExtension.firstChernClass, AddEquiv.apply_symm_apply, hE, hβ]
+  rw [HolomorphicUnitExtension.firstChernClass, hE, AddEquiv.symm_apply_apply, hβ]
 
 end AlgebraicGeometry.ComplexPoint
