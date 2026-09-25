@@ -141,7 +141,7 @@ def homComplexPairSheafIsoSupportedSections
       (fun n => pairSheafHomIsoSupportedSections X U V W hW (K.X n))
       (fun i j _ => pairSheafHomIsoSupportedSections_naturality X U V W hW (K.d i j))
 
-variable [HasExt.{1} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
+variable [HasExt.{0} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
 
 local instance :
     HasDerivedCategory (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat) :=
