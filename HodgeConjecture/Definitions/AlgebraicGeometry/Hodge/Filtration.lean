@@ -25,7 +25,9 @@ public import HodgeConjecture.Mathlib.Algebra.Homology.StupidTruncation
 public import Mathlib.Algebra.Homology.DerivedCategory.Basic
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Algebra.Module.MinimalAxioms
-public import Mathlib.CategoryTheory.Localization.SmallShiftedHom
+public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.HasExt
+public import Mathlib.Topology.Sheaves.Abelian
+public import HodgeConjecture.Mathlib.CategoryTheory.Localization.SmallShiftedHom
 public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
 public import Mathlib.Data.Int.Cast.Lemmas
 
@@ -278,13 +280,18 @@ analytic space `X(ℂ)`. The symbol `ℍ` follows page 51 of
 [P. Deligne, *The Hodge Conjecture*](https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf). -/
 scoped notation:max "ℍ^" n:max "(" X "; " 𝒦 ")" => Hypercohomology X 𝒦 n
 
-/-- `Ext`-groups of analytic sheaves are computed in `Type 1`. The instance is stated on the site
-category, which is how Mathlib's sheaf cohomology looks it up. -/
+/-- Ext-groups of analytic sheaves are computed in universe zero. -/
 instance analyticHasExt :
-    HasExt.{1} (CategoryTheory.Sheaf
+    HasExt.{0} (CategoryTheory.Sheaf
       (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))) AddCommGrpCat.{0}) :=
-  fun _ _ _ _ ↦ Localization.hasSmallLocalizedHom_of_isLocalization
-    (analyticQuasiIsomorphisms X) DerivedCategory.Q
+  inferInstance
+
+/-- Shifted morphisms between sheaves in degree zero are small in universe zero. -/
+instance analyticHasSmallSingleShiftedHom (F G : AnalyticAdditiveSheaf.{0} X) :
+    Localization.HasSmallLocalizedShiftedHom.{0} (analyticQuasiIsomorphisms X) ℤ
+      ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf.{0} X) 0).obj F)
+      ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf.{0} X) 0).obj G) :=
+  analyticHasExt X F G
 
 /-- `H^n(X; K)` is the sheaf cohomology of the analytic space `X(ℂ)` with coefficients in the
 constant sheaf `K`, in degree `n`, as defined in Mathlib.
@@ -292,7 +299,7 @@ constant sheaf `K`, in degree `n`, as defined in Mathlib.
 The literature writes `H^n(X; K)` for the variety `X.left` alone; here the variety is presented by
 its structure morphism `X`. -/
 scoped notation3:max "H^" n:max "(" X "; " K ")" =>
-  Sheaf.H ((TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).obj (AddCommGrpCat.of K)) n
+  Sheaf.H.{0} ((TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).obj (AddCommGrpCat.of K)) n
 
 /-- Let `X` be a scheme over `ℂ`, and give `X(ℂ)` its analytic topology. Degree-`n` cohomology with
 coefficients in the constant complex sheaf is `H^n(X(ℂ); ℂ) = ℍ^n(X(ℂ); ℂ[0])`. It is the group
@@ -483,20 +490,41 @@ def hypercohomologyAddEquivConstantCohomology (n : ℕ) :
       ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance) (a := (n : ℤ))).symm.trans
     (Localization.SmallShiftedHom.postcompEquiv.{1} (W := analyticQuasiIsomorphisms X)
       (constantFieldSheafComplexIntIsoSingle K X).hom
-      ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance) (a := (n : ℤ)))
+      ((HomologicalComplex.mem_quasiIso_iff _).mpr inferInstance) (a := (n : ℤ))) |>.trans
+      (Localization.SmallShiftedHom.chgUniv.{0, 1})
   map_add' α β := by
     apply Abelian.Ext.ext
     rw [Abelian.Ext.add_hom]
     show Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
-        (((constantIntegerComparison X).comp (α + β) _).comp (constantFieldComparison K X) _) =
+        (Localization.SmallShiftedHom.chgUniv.{0}
+          (((constantIntegerComparison X).comp (α + β) _).comp (constantFieldComparison K X) _)) =
       Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
-        (((constantIntegerComparison X).comp α _).comp (constantFieldComparison K X) _) +
+        (Localization.SmallShiftedHom.chgUniv.{0}
+          (((constantIntegerComparison X).comp α _).comp (constantFieldComparison K X) _)) +
       Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
-        (((constantIntegerComparison X).comp β _).comp (constantFieldComparison K X) _)
-    simp only [Localization.SmallShiftedHom.equiv_comp, hypercohomologyEquiv_add,
+        (Localization.SmallShiftedHom.chgUniv.{0}
+          (((constantIntegerComparison X).comp β _).comp (constantFieldComparison K X) _))
+    simp only [Localization.SmallShiftedHom.equiv_chgUniv,
+      Localization.SmallShiftedHom.equiv_comp, hypercohomologyEquiv_add,
       ShiftedHom.add_comp, ShiftedHom.comp_add]
     rfl
 
+omit [Algebra K ℂ] in
+private lemma hypercohomologyAddEquivConstantCohomology_hom (n : ℕ)
+    (α : Hypercohomology X (constantFieldSheafComplexInt K X) n) :
+    (hypercohomologyAddEquivConstantCohomology K X n α).hom =
+      Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
+        (((constantIntegerComparison X).comp α (add_zero _)).comp
+          (constantFieldComparison K X) (zero_add _)) := by
+  show Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
+      (Localization.SmallShiftedHom.chgUniv.{0}
+        (((constantIntegerComparison X).comp α (add_zero _)).comp
+          (constantFieldComparison K X) (zero_add _))) = _
+  exact Localization.SmallShiftedHom.equiv_chgUniv DerivedCategory.Q _
+
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
+set_option maxHeartbeats 1000000 in
 omit [Algebra K ℂ] in
 /-- The comparison with Mathlib's sheaf cohomology is natural in maps of constant sheaves. -/
 lemma hypercohomologyAddEquivConstantCohomology_map {L : Type} [Field L]
@@ -507,25 +535,39 @@ lemma hypercohomologyAddEquivConstantCohomology_map {L : Type} [Field L]
         ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map f)
           ComplexShape.embeddingUpNat) n α) =
     Sheaf.H.map f n (hypercohomologyAddEquivConstantCohomology K X n α) := by
-  show ((constantIntegerComparison X).comp (hypercohomologyMap X (HomologicalComplex.extendMap
+  have h : ((constantIntegerComparison X).comp (hypercohomologyMap X (HomologicalComplex.extendMap
         ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).map f)
           ComplexShape.embeddingUpNat) n α) (add_zero _)).comp
       (constantFieldComparison L X) (zero_add _) =
     (((constantIntegerComparison X).comp α (add_zero _)).comp (constantFieldComparison K X)
       (zero_add _)).comp
       (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) (0 : ℤ) rfl
-        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map f)) (zero_add _)
-  refine (constantIntegerComparison_comp_comp_mk₀ X _ _ _).trans (Eq.trans ?_
-    ((congrArg (fun γ => γ.comp (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X)
-      (0 : ℤ) rfl ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map f))
-      (zero_add _)) (constantIntegerComparison_comp_comp_mk₀ X _ α _)).trans
-        (constantIntegerComparison_comp_comp_mk₀ X _ _ _)).symm)
-  congr 1
-  change hypercohomologyMap X _ n (hypercohomologyMap X _ n α) =
-    hypercohomologyMap X _ n (hypercohomologyMap X _ n α)
-  rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
-  exact congrArg (fun g => hypercohomologyMap X g n α)
-    (HomologicalComplex.extendSingleIso_hom_naturality ComplexShape.embeddingUpNat f 0 0 rfl)
+        ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map f)) (zero_add _) := by
+    refine (constantIntegerComparison_comp_comp_mk₀ X _ _ _).trans (Eq.trans ?_
+      ((congrArg (fun γ => γ.comp (Localization.SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X)
+        (0 : ℤ) rfl ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map f))
+        (zero_add _)) (constantIntegerComparison_comp_comp_mk₀ X _ α _)).trans
+          (constantIntegerComparison_comp_comp_mk₀ X _ _ _)).symm)
+    congr 1
+    change hypercohomologyMap X _ n (hypercohomologyMap X _ n α) =
+      hypercohomologyMap X _ n (hypercohomologyMap X _ n α)
+    rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
+    exact congrArg (fun g => hypercohomologyMap X g n α)
+      (HomologicalComplex.extendSingleIso_hom_naturality ComplexShape.embeddingUpNat f 0 0 rfl)
+  apply Abelian.Ext.ext
+  rw [Sheaf.H.map_apply, Abelian.Ext.comp_hom,
+    hypercohomologyAddEquivConstantCohomology_hom,
+    hypercohomologyAddEquivConstantCohomology_hom, Abelian.Ext.mk₀_hom]
+  change Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q _ =
+    (Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q _).comp
+      (ShiftedHom.mk₀ (0 : ℤ) rfl
+        (DerivedCategory.Q.map ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map f)))
+      (zero_add _)
+  have h' := congrArg (Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X)
+    DerivedCategory.Q) h
+  simp only [Localization.SmallShiftedHom.equiv_comp,
+    Localization.SmallShiftedHom.equiv_mk₀] at h' ⊢
+  exact h'
 
 omit [Algebra K ℂ] in
 /-- The inverse comparison is natural in maps of constant sheaves. -/

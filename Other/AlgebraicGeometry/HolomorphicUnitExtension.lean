@@ -55,7 +55,7 @@ abbrev shortComplex (E : HolomorphicUnitExtension X d) :=
 
 /-- The degree-one sheaf cohomology class of an extension. -/
 def cohomologyClass (E : HolomorphicUnitExtension X d) :
-    Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1 :=
+    Abelian.Ext.{0} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1 :=
   E.shortExact.extClass
 
 /-- The integral first Chern class of an extension. -/

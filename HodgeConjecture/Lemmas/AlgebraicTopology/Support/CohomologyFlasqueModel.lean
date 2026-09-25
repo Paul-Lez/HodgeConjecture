@@ -64,7 +64,7 @@ set_option linter.auxLemma false
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
   TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
 
-variable [HasExt.{1} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
+variable [HasExt.{0} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
 
 set_option maxHeartbeats 800000 in
 set_option backward.defeqAttrib.useBackward true in

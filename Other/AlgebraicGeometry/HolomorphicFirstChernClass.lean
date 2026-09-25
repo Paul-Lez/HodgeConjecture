@@ -27,12 +27,12 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 /-- The analytic first Chern-class connecting map of the holomorphic exponential sequence. -/
 def holomorphicFirstChernClass :
-    Sheaf.H.{1} (holomorphicUnitSheaf X d) 1 →+ H^2(X; ℤ) :=
+    Sheaf.H.{0} (holomorphicUnitSheaf X d) 1 →+ H^2(X; ℤ) :=
   Sheaf.H.δ (holomorphicExponentialSequence_shortExact X d) 1
 
 /-- The map on second cohomology induced by the inclusion of integers into holomorphic functions. -/
 def integerToHolomorphicSecondCohomology :
-    H^2(X; ℤ) →+ Sheaf.H.{1} (holomorphicAdditiveSheaf X d) 2 :=
+    H^2(X; ℤ) →+ Sheaf.H.{0} (holomorphicAdditiveSheaf X d) 2 :=
   Sheaf.H.map (integerConstantsToHolomorphicSheaf X d) 2
 
 
