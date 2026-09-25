@@ -16,6 +16,8 @@ limitations under the License.
 module  -- shake: keep-all --deprecated_module: ignore
 
 public import HodgeConjecture
+public import Other.CategoryTheory.Sites.Forget
+public import Other.CategoryTheory.Sites.SheafCohomology.Connecting
 public import Other.Algebra.DeRham.Complex
 public import Other.Algebra.Homology.DerivedCategory.ConcentratedOrientation
 public import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
@@ -193,8 +195,15 @@ public import Other.RingTheory.IntegralPrimitiveElement
 public import Other.RingTheory.RegularLocalQuotientKernel
 public import Other.RingTheory.StandardEtaleAlgebraic
 public import Other.AlgebraicGeometry.DivisorOfRationalSection
+public import Other.AlgebraicGeometry.HolomorphicExponential
+public import Other.AlgebraicGeometry.HolomorphicExponentialSequence
+public import Other.AlgebraicGeometry.HolomorphicFirstChernClass
+public import Other.AlgebraicGeometry.HolomorphicUnitExtension
 public import Other.AlgebraicGeometry.InvertibleSheafRationalSection
 public import Other.AlgebraicGeometry.OrderOfVanishing
+public import Other.AlgebraicTopology.SheafExtensionCocycle
+public import Other.AlgebraicTopology.SheafExtensionLocalLifts
+public import Other.Geometry.Manifold.HolomorphicLogarithm
 public import Other.TauCeti.SheafOfModules.Free
 public import Other.TauCeti.SheafOfModules.Invertible
 public import Other.TauCeti.SheafOfModules.LocalTriviality
@@ -213,3 +222,4 @@ public import Other.AlgebraicGeometry.Cohomology.WithSupport
 public import Other.Mathlib.Topology.Category.TopCat.Basic
 public import Other.AlgebraicTopology.Support.ClosedSupportSheaf
 public import Other.AlgebraicGeometry.CartierDataRepresents
+public import Other.AlgebraicGeometry.IntegralCohomology
