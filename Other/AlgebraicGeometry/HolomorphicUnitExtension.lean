@@ -60,8 +60,8 @@ def cohomologyClass (E : HolomorphicUnitExtension X d) :
 
 /-- The integral first Chern class of an extension. -/
 def firstChernClass (E : HolomorphicUnitExtension X d) : H^2(X; ℤ) :=
-  (sheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
-    (holomorphicFirstChernClass X d E.cohomologyClass)
+  holomorphicFirstChernClass X d
+    ((sheafCohomologyEquivExt X (holomorphicUnitSheaf X d) 1).symm E.cohomologyClass)
 
 /-- The constant integer section `1` on the whole analytic space. -/
 def integerOneSection : (𝓒(↧(ComplexPoint X); ℤ)).obj.obj
