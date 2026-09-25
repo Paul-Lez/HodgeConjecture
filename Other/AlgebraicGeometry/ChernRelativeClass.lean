@@ -222,10 +222,10 @@ theorem cohomologyClass_comp_rationalChernShiftedHom :
   have hα : analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2
         ((analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
           E.firstChernClass) =
-      holomorphicFirstChernClass X d E.cohomologyClass := by
+      E.cohomologyClass.comp (holomorphicExponentialSequence_shortExact X d).extClass rfl := by
     rw [← sheafCohomologyEquivExt_analyticSheafHypercohomologyAddEquiv,
       AddEquiv.apply_symm_apply, HolomorphicUnitExtension.firstChernClass,
-      AddEquiv.apply_symm_apply]
+      sheafCohomologyEquivExt_holomorphicFirstChernClass, AddEquiv.apply_symm_apply]
   have h1 := analyticSheafCohomologyEquivExt_comp X (𝓒(↧(ComplexPoint X); ℤ)) 2
     ((analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
       E.firstChernClass)
