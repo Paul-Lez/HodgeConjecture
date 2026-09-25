@@ -58,10 +58,11 @@ lemma hypercohomologyAddEquivConstantCohomology_ext_hom
           (DerivedCategory.Q.map (constantFieldSheafComplexIntIsoSingle ℚ X).hom) := by
   change
     Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q
-        (((constantIntegerComparisonExtImage X).comp β (add_zero _)).comp
-          (constantFieldComparisonExtImage X) (zero_add _)) = _
+        (Localization.SmallShiftedHom.chgUniv.{0}
+          (((constantIntegerComparisonExtImage X).comp β (add_zero _)).comp
+            (constantFieldComparisonExtImage X) (zero_add _))) = _
   dsimp only [constantIntegerComparisonExtImage, constantFieldComparisonExtImage]
-  simp only [Localization.SmallShiftedHom.equiv_comp,
+  simp only [Localization.SmallShiftedHom.equiv_chgUniv, Localization.SmallShiftedHom.equiv_comp,
     Localization.SmallShiftedHom.equiv_mk₀Inv,
     Localization.SmallShiftedHom.equiv_mk₀, ShiftedHom.mk₀_comp,
     ShiftedHom.comp_mk₀]
