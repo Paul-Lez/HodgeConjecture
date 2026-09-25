@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.AnalyticSheaf
 public import Mathlib.Algebra.Category.ModuleCat.Sheaf
+public import Other.CategoryTheory.Sites.Forget
 
 /-! The holomorphic structure sheaf, regarded as a sheaf of rings. -/
 
@@ -22,7 +23,6 @@ local instance holomorphicRingSheafTopology : TopologicalSpace (ComplexPoint X) 
 
 def holomorphicRingSheaf :
     Sheaf (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))) RingCat :=
-  (sheafCompose (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-    (forget₂ CommRingCat RingCat)).obj (holomorphicFunctionSheaf X d)
+  (forget₂ (Sheaf _ CommRingCat) (Sheaf _ RingCat)).obj (holomorphicFunctionSheaf X d)
 
 end AlgebraicGeometry.ComplexPoint

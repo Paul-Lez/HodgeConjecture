@@ -36,13 +36,6 @@ def integerConstantsToHolomorphicPresheaf :
       (holomorphicAdditiveSheaf X d).obj where
   app U := AddCommGrpCat.ofHom
     (ContMDiffMap.C.toAddMonoidHom.comp (Int.castAddHom ℂ))
-  naturality {U V} i := by
-    apply AddCommGrpCat.hom_ext
-    apply AddMonoidHom.ext
-    intro n
-    apply ContMDiffMap.ext
-    intro x
-    rfl
 
 /-- The canonical inclusion of the constant integer sheaf into holomorphic functions. -/
 def integerConstantsToHolomorphicSheaf :
@@ -114,7 +107,6 @@ def holomorphicExponentialSequenceSheafificationUnit :
     rw [id_comp, comp_id]
     rfl
 
-set_option backward.isDefEq.respectTransparency false in
 /-- The exponential sequence is exact on every stalk before sheafifying its first term. -/
 theorem holomorphicExponentialPresheafSequence_stalk_exact (x : ComplexPoint X) :
     ((holomorphicExponentialPresheafSequence X d).map
@@ -155,8 +147,6 @@ theorem holomorphicExponentialSequence_exact : (holomorphicExponentialSequence X
   exact ShortComplex.exact_of_iso (asIso η)
     (holomorphicExponentialPresheafSequence_stalk_exact X d x)
 
-set_option backward.isDefEq.respectTransparency false in
-set_option backward.isDefEq.respectTransparency.types false in
 /-- Integer constants remain distinct as germs of holomorphic functions. -/
 theorem integerConstantsToHolomorphicPresheaf_stalk_mono (x : ComplexPoint X) :
     Mono ((TopCat.Presheaf.stalkFunctor AddCommGrpCat x).map

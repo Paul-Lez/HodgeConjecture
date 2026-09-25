@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AnalyticSheaf
+public import Other.CategoryTheory.Sites.Forget
 public import Other.Geometry.Manifold.HolomorphicLogarithm
 public import Mathlib.Algebra.Category.Grp.Adjunctions
 public import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
@@ -30,18 +31,25 @@ open scoped Manifold ContDiff
 
 namespace AlgebraicGeometry.ComplexPoint
 
+universe w
+
 variable (X : Over (Spec ↧ℂ)) (d : ℕ)
   [SmoothOfRelativeDimension d X.hom]
 
 local instance holomorphicExponentialTopology : TopologicalSpace (ComplexPoint X) :=
   Point.analyticTopology
 
+local instance : HasForget₂ CommRingCat AddCommGrpCat :=
+  HasForget₂.trans CommRingCat RingCat AddCommGrpCat
+
+local instance : PreservesLimits (forget₂ CommRingCat AddCommGrpCat) :=
+  inferInstanceAs
+    (PreservesLimits (forget₂ CommRingCat RingCat ⋙ forget₂ RingCat AddCommGrpCat))
+
 /-- The additive sheaf underlying the holomorphic-function sheaf. -/
 def holomorphicAdditiveSheaf :
     TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=
-  (sheafCompose (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-    (forget₂ CommRingCat RingCat ⋙ forget₂ RingCat AddCommGrpCat)).obj
-      (holomorphicFunctionSheaf X d)
+  (forget₂ (Sheaf _ CommRingCat) (Sheaf _ AddCommGrpCat)).obj (holomorphicFunctionSheaf X d)
 
 /-- The unit group of a commutative ring, written as an additive group. -/
 def holomorphicUnitsFunctor : CommRingCat ⥤ AddCommGrpCat :=
@@ -61,20 +69,13 @@ instance : PreservesLimits holomorphicUnitsFunctor := by
 /-- The sheaf of invertible holomorphic functions, with its group law written additively. -/
 def holomorphicUnitSheaf :
     TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=
-  (sheafCompose (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
+  (sheafCompose
+    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
     holomorphicUnitsFunctor).obj (holomorphicFunctionSheaf X d)
 
 /-- The normalized exponential morphism of sheaves, sending `f` to `exp(2πif)`. -/
 def holomorphicExponential : holomorphicAdditiveSheaf X d ⟶ holomorphicUnitSheaf X d :=
-  ⟨{ app U := AddCommGrpCat.ofHom ContMDiffMap.holomorphicExponential
-     naturality {U V} i := by
-       apply AddCommGrpCat.hom_ext
-       apply AddMonoidHom.ext
-       intro f
-       apply Units.ext
-       apply ContMDiffMap.ext
-       intro x
-       rfl }⟩
+  ⟨{ app U := AddCommGrpCat.ofHom ContMDiffMap.holomorphicExponential }⟩
 
 /-- Every invertible holomorphic section locally lifts through the normalized exponential. -/
 theorem holomorphicExponential_isLocallySurjective :
