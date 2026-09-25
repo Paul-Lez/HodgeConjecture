@@ -335,6 +335,7 @@ public import Other.AlgebraicGeometry.ComponentSupportDecomposition
 public import Other.AlgebraicGeometry.CycleComponentRestrictionInjective
 public import Other.AlgebraicGeometry.DiscreteValuationLocalRing
 public import Other.AlgebraicGeometry.DivisorClassComparisonSupport
+public import Other.AlgebraicGeometry.DivisorObligations
 public import Other.AlgebraicGeometry.DivisorOfRationalSection
 public import Other.AlgebraicGeometry.GeneratingSectionCoefficient
 public import Other.AlgebraicGeometry.HolomorphicExponential
@@ -349,6 +350,8 @@ public import Other.AlgebraicGeometry.HolomorphicExponentialSingularSections
 public import Other.AlgebraicGeometry.HolomorphicExponentialSupportWinding
 public import Other.AlgebraicGeometry.HolomorphicFirstChernClass
 public import Other.AlgebraicGeometry.HolomorphicFrameLift
+public import Other.AlgebraicGeometry.HolomorphicHodgeProjection
+public import Other.AlgebraicGeometry.HolomorphicIntegralHodgeClass
 public import Other.AlgebraicGeometry.HolomorphicLineBundleCoordinates
 public import Other.AlgebraicGeometry.HolomorphicLineBundleFrame
 public import Other.AlgebraicGeometry.HolomorphicLineBundleInvertible
@@ -359,10 +362,13 @@ public import Other.AlgebraicGeometry.HolomorphicRingSheaf
 public import Other.AlgebraicGeometry.HolomorphicSheafGenerators
 public import Other.AlgebraicGeometry.HolomorphicUnitExtension
 public import Other.AlgebraicGeometry.HolomorphicUnitTransition
+public import Other.AlgebraicGeometry.HolomorphicZeroForms
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueMapNaturality
 public import Other.AlgebraicGeometry.HypercohomologyFlasqueNaturality
 public import Other.AlgebraicGeometry.IntegralDenominatorClearing
 public import Other.AlgebraicGeometry.InvertibleSheafRationalSection
+public import Other.AlgebraicGeometry.LefschetzOneOne
+public import Other.AlgebraicGeometry.LefschetzOneOneReduction
 public import Other.AlgebraicGeometry.OpenRestrictionDerivedFactorization
 public import Other.AlgebraicGeometry.OpenRestrictionLocalSheaf
 public import Other.AlgebraicGeometry.OrderOfVanishing
@@ -480,6 +486,9 @@ public import Other.AlgebraicGeometry.HypercohomologyExtImage
 public import Other.CategoryTheory.Abelian.ExtOneRepresentative
 public import Other.AlgebraicGeometry.CartierDataRepresents
 public import Other.AlgebraicGeometry.IntegralCohomology
+public import Other.AlgebraicGeometry.HolomorphicFirstChernClassExactness
+public import Other.AlgebraicGeometry.HolomorphicUnitExtensionHodgeClass
 public import Other.AlgebraicGeometry.DivisorClassCompatibility
 public import Other.AlgebraicGeometry.DivisorClassComparison
 public import Other.AlgebraicGeometry.LefschetzOneOneObligations
+public import Other.AlgebraicGeometry.LefschetzOneOneFiniteHomology

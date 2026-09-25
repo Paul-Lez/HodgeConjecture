@@ -1,0 +1,86 @@
+/-
+Copyright 2026 The Formal Conjectures Authors.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+module
+
+public import HodgeConjecture.Statement
+public import Other.AlgebraicGeometry.Cycle.SheafClass
+
+/-!
+# The rational Lefschetz (1, 1) theorem assuming the Hodge conjecture
+
+On a smooth projective integral complex variety, every rational cohomology class of degree two
+and Hodge type `(1, 1)` is the class of a rational divisor. Here a rational divisor is an element
+of `ℚ ⊗[ℤ] codimensionCycleSubgroup X 1`, and its class is given by the constructed cycle-class map.
+
+The proof specializes `HodgeConjecture` to codimension one and realizes the resulting span
+membership by a rational cycle. It uses the conjecture as an explicit hypothesis.
+`HodgeConjecture.rationalLefschetzOneOne_direct` copies the type of that implication with Lean's
+`type_of%` elaborator and gives a second proof by checking the divisor generators directly.
+The copied type retains the Hodge-conjecture hypothesis.
+
+This is the rational algebraicity statement. The classical integral Lefschetz `(1, 1)` theorem
+asserts that every integral `(1, 1)` class is the first Chern class of a line bundle. Specializing
+the rational Hodge conjecture does not establish that stronger integral statement, nor does this
+file prove that divisor classes have Hodge type `(1, 1)` or descend the map to the Chow group.
+
+## References
+
+[P. Deligne, *The Hodge Conjecture*, §2(iii)]
+(https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf)
+-/
+
+open CategoryTheory AlgebraicGeometry ComplexPoint
+
+/-- The rational Lefschetz `(1, 1)` statement for smooth projective integral complex varieties:
+every rational Hodge class in degree two is the class of a rational divisor. -/
+@[expose] public def RationalLefschetzOneOne : Prop :=
+  ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom] (α : H^2(X; ℚ)),
+    α ∈ Hdg^1(X; ℚ) →
+      ∃ D : TensorProduct ℤ ℚ (codimensionCycleSubgroup X.left 1),
+        rationalSheafCycleClassOnCycles
+          { scheme := X.left, structureMap := X.hom } 1 D = α
+
+/-- The Hodge conjecture implies the rational Lefschetz `(1, 1)` theorem. -/
+public theorem HodgeConjecture.rationalLefschetzOneOne
+    (hodge : HodgeConjecture) : RationalLefschetzOneOne := by
+  intro X _ _ _ α hα
+  have hspan : algebraicCycleClassSpan X 1 ≤
+      LinearMap.range (rationalSheafCycleClassOnCycles
+        { scheme := X.left, structureMap := X.hom } 1) := by
+    refine sSup_le ?_
+    rintro S ⟨x, hx, hS⟩
+    subst S
+    apply (Submodule.span_singleton_le_iff_mem _ _).mpr
+    refine ⟨1 ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1, ?_⟩
+    refine (rationalSheafCycleClassOnCycles_tmul_single
+      { scheme := X.left, structureMap := X.hom } 1 1 x hx).trans ?_
+    rw [one_smul]
+    rfl
+  exact hspan (hodge X 1 hα)
+
+open scoped TensorProduct
+
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
+/-- A second direct proof of the same implication, with its statement copied using `type_of%`.
+This still assumes the Hodge conjecture. The proof checks each divisor generator without using
+`HodgeConjecture.rationalLefschetzOneOne` or the general span-to-cycle lemma. -/
+public theorem HodgeConjecture.rationalLefschetzOneOne_direct :
+    type_of% HodgeConjecture.rationalLefschetzOneOne := by
+  intro hodge X _ _ _ α hα
+  have hspan : algebraicCycleClassSpan X 1 ≤
+      LinearMap.range (rationalSheafCycleClassOnCycles
+        { scheme := X.left, structureMap := X.hom } 1) := by
+    refine sSup_le ?_
+    rintro S ⟨x, hx, hS⟩
+    subst S
+    apply (Submodule.span_singleton_le_iff_mem _ _).mpr
+    refine ⟨1 ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1, ?_⟩
+    refine (rationalSheafCycleClassOnCycles_tmul_single
+      { scheme := X.left, structureMap := X.hom } 1 1 x hx).trans ?_
+    rw [one_smul]
+    rfl
+  exact hspan (hodge X 1 hα)
