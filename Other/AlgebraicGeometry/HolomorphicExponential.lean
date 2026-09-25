@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AnalyticSheaf
+public import Other.CategoryTheory.Sites.Forget
 public import Other.Geometry.Manifold.HolomorphicLogarithm
 public import Mathlib.Algebra.Category.Grp.Adjunctions
 public import Mathlib.Algebra.Category.Grp.EquivalenceGroupAddGroup
@@ -38,12 +39,17 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 local instance holomorphicExponentialTopology : TopologicalSpace (ComplexPoint X) :=
   Point.analyticTopology
 
+local instance : HasForget₂ CommRingCat AddCommGrpCat :=
+  HasForget₂.trans CommRingCat RingCat AddCommGrpCat
+
+local instance : PreservesLimits (forget₂ CommRingCat AddCommGrpCat) :=
+  inferInstanceAs
+    (PreservesLimits (forget₂ CommRingCat RingCat ⋙ forget₂ RingCat AddCommGrpCat))
+
 /-- The additive sheaf underlying the holomorphic-function sheaf. -/
 def holomorphicAdditiveSheaf :
     TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)) :=
-  (sheafCompose
-    (Opens.grothendieckTopology (TopCat.of (ComplexPoint X)))
-    (forget₂ CommRingCat RingCat ⋙ forget₂ RingCat AddCommGrpCat)).obj (holomorphicFunctionSheaf X d)
+  (forget₂ (Sheaf _ CommRingCat) (Sheaf _ AddCommGrpCat)).obj (holomorphicFunctionSheaf X d)
 
 /-- The unit group of a commutative ring, written as an additive group. -/
 def holomorphicUnitsFunctor : CommRingCat ⥤ AddCommGrpCat :=
