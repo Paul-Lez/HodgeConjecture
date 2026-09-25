@@ -37,13 +37,13 @@ end HolomorphicUnitExtension
 
 /-- Integral Hodge classes are first Chern classes of extensions by holomorphic units. -/
 theorem exists_holomorphicUnitExtension_of_integral_hodgeClass [IsIntegral X.left] [Smooth X.hom]
-    (α : IntegralCohomology X 2)
+    (α : H^2(X; ℤ))
     (hα : integralToRationalCohomology X 2 α ∈ hodgeClasses ℚ X 1) :
     ∃ E : HolomorphicUnitExtension X (dim X.left), E.firstChernClass = α := by
   obtain ⟨β, hβ⟩ := exists_holomorphicFirstChernClass_of_integral_hodgeClass X α hα
   obtain ⟨E, hE⟩ := HolomorphicUnitExtension.exists_cohomologyClass X (dim X.left) β
   refine ⟨E, ?_⟩
-  apply (analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).injective
-  rw [HolomorphicUnitExtension.firstChernClass, Equiv.apply_symm_apply, hE, hβ]
+  apply (sheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).injective
+  rw [HolomorphicUnitExtension.firstChernClass, AddEquiv.apply_symm_apply, hE, hβ]
 
 end AlgebraicGeometry.ComplexPoint

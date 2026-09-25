@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.IntegralCohomology
+public import Other.AlgebraicGeometry.AnalyticSheafCohomologyExt
 public import Other.AlgebraicGeometry.HolomorphicFirstChernClassExactness
 public import Other.AlgebraicGeometry.HolomorphicHodgeProjection
 
@@ -22,9 +23,15 @@ open CategoryTheory TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
 
+set_option linter.auxLemma false
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
+
 variable (X : Over (Spec ↧ℂ))
 
-local instance integralHodgeTopology : TopologicalSpace (ComplexPoint X) := Point.analyticTopology
+attribute [local instance] analyticSheafExtHasDerivedCategory
+
+
 
 /-- Extending integer coefficients through the rationals agrees with the direct complex map. -/
 theorem integerToRationalToComplexConstantSheaf :
@@ -94,12 +101,17 @@ theorem integerToRationalDeRhamToFunctions [IsIntegral X.left] [Smooth X.hom] :
 set_option backward.isDefEq.respectTransparency false in
 /-- An integral degree-two class whose rational image has Hodge type `(1, 1)` vanishes
 after mapping to the second cohomology of holomorphic functions. -/
-theorem integralHodgeClass_toHolomorphicCohomology_eq_zero [IsIntegral X.left] [Smooth X.hom]
-    (α : IntegralCohomology X 2)
-    (hα : integralToRationalCohomology X 2 α ∈ hodgeClasses ℚ X 1) :
+private theorem integralHodgeClass_toHolomorphicHypercohomology_eq_zero
+    [IsIntegral X.left] [Smooth X.hom]
+    (β : Hypercohomology X
+      (analyticSheafComplexInt X (𝓒(↧(ComplexPoint X); ℤ))) 2)
+    (hβ : (hypercohomologyAddEquivConstantCohomology ℚ X 2)
+      (hypercohomologyMap X
+        (analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1)) 2 β) ∈
+      hodgeClasses ℚ X 1) :
     hypercohomologyMap X
-      (analyticSheafComplexIntMap X (integerConstantsToHolomorphicSheaf X (dim X.left))) 2 α = 0 := by
-  have hz := hodgeClass_one_toHolomorphicFunctionCohomology_eq_zero X _ hα
+      (analyticSheafComplexIntMap X (integerConstantsToHolomorphicSheaf X (dim X.left))) 2 β = 0 := by
+  have hz := hodgeClass_one_toHolomorphicFunctionCohomology_eq_zero X _ hβ
   dsimp only [deRhamToHolomorphicFunctionCohomology, fieldToDeRhamCohomology,
     integralToRationalCohomology, AddMonoidHom.comp_apply,
     AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe] at hz
@@ -111,26 +123,70 @@ theorem integralHodgeClass_toHolomorphicCohomology_eq_zero [IsIntegral X.left] [
     (analyticSheafComplexIntIsoSingle X (holomorphicAdditiveSheaf X (dim X.left))).hom 2
   simpa only [map_zero] using hz
 
+/-- An integral class of Hodge type `(1, 1)` maps to zero in holomorphic-function cohomology. -/
+theorem integralHodgeClass_toHolomorphicCohomology_eq_zero [IsIntegral X.left] [Smooth X.hom]
+    (α : H^2(X; ℤ))
+    (hα : integralToRationalCohomology X 2 α ∈ hodgeClasses ℚ X 1) :
+    Sheaf.H.map (integerConstantsToHolomorphicSheaf X (dim X.left)) 2 α =
+      (0 : Sheaf.H (holomorphicAdditiveSheaf X (dim X.left)) 2) := by
+  let β : Hypercohomology X
+      (analyticSheafComplexInt X (𝓒(↧(ComplexPoint X); ℤ))) 2 :=
+    (analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm α
+  have hβ : integralToRationalCohomology X 2
+      (analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) 2 β) ∈
+      hodgeClasses ℚ X 1 := by
+    rw [AddEquiv.apply_symm_apply]
+    exact hα
+  have hβ' : (hypercohomologyAddEquivConstantCohomology ℚ X 2)
+      (hypercohomologyMap X
+        (analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1))
+        ((2 : ℕ) : ℤ) β) ∈
+      hodgeClasses ℚ X 1 := by
+    rw [← integralToRationalCohomology_analyticSheafHypercohomologyAddEquiv X 2 β]
+    exact hβ
+  have hzero := integralHodgeClass_toHolomorphicHypercohomology_eq_zero X β hβ'
+  calc
+    Sheaf.H.map (integerConstantsToHolomorphicSheaf X (dim X.left)) 2 α =
+        Sheaf.H.map (integerConstantsToHolomorphicSheaf X (dim X.left)) 2
+          (analyticSheafHypercohomologyAddEquiv X
+            (𝓒(↧(ComplexPoint X); ℤ)) 2 β) := by
+      rw [AddEquiv.apply_symm_apply]
+    _ = analyticSheafHypercohomologyAddEquiv X
+          (holomorphicAdditiveSheaf X (dim X.left)) 2
+          (hypercohomologyMap X
+            (analyticSheafComplexIntMap X
+              (integerConstantsToHolomorphicSheaf X (dim X.left))) 2 β) := by
+      exact (analyticSheafHypercohomologyAddEquiv_naturality X
+        (integerConstantsToHolomorphicSheaf X (dim X.left)) 2 β).symm
+    _ = analyticSheafHypercohomologyAddEquiv X
+          (holomorphicAdditiveSheaf X (dim X.left)) 2
+          (0 : Hypercohomology X
+            (analyticSheafComplexInt X (holomorphicAdditiveSheaf X (dim X.left))) 2) := by
+      rw [hzero]
+    _ = (0 : Sheaf.H (holomorphicAdditiveSheaf X (dim X.left)) 2) := map_zero _
+
 set_option backward.isDefEq.respectTransparency false in
 /-- The preceding vanishing statement in the Ext presentation used by the exponential sequence. -/
 theorem integralHodgeClass_integerToHolomorphicSecondCohomology_eq_zero
-    [IsIntegral X.left] [Smooth X.hom] (α : IntegralCohomology X 2)
+    [IsIntegral X.left] [Smooth X.hom] (α : H^2(X; ℤ))
     (hα : integralToRationalCohomology X 2 α ∈ hodgeClasses ℚ X 1) :
     integerToHolomorphicSecondCohomology X (dim X.left)
-      (analyticSheafCohomologyEquivExt X 𝓒(↧(ComplexPoint X); ℤ) 2 α) = 0 := by
+      (sheafCohomologyEquivExt X 𝓒(↧(ComplexPoint X); ℤ) 2 α) = 0 := by
   have h := congrArg
-    (analyticSheafCohomologyEquivExt X (holomorphicAdditiveSheaf X (dim X.left)) 2)
+    (sheafCohomologyEquivExt X (holomorphicAdditiveSheaf X (dim X.left)) 2)
     (integralHodgeClass_toHolomorphicCohomology_eq_zero X α hα)
-  erw [analyticSheafCohomologyEquivExt_naturality, analyticSheafCohomologyEquivExt_zero] at h
-  exact h
+  erw [sheafCohomologyEquivExt_naturality] at h
+  change (sheafCohomologyEquivExt X 𝓒(↧(ComplexPoint X); ℤ) 2 α).comp
+      (Abelian.Ext.mk₀ (integerConstantsToHolomorphicSheaf X (dim X.left))) (add_zero 2) = 0
+  simpa only [map_zero] using h
 
 /-- Every integral class whose rational image has Hodge type `(1, 1)` is in the image of
 the Chern-class connecting map of the holomorphic exponential sequence. -/
 theorem exists_holomorphicFirstChernClass_of_integral_hodgeClass [IsIntegral X.left] [Smooth X.hom]
-    (α : IntegralCohomology X 2)
+    (α : H^2(X; ℤ))
     (hα : integralToRationalCohomology X 2 α ∈ hodgeClasses ℚ X 1) :
     ∃ β, holomorphicFirstChernClass X (dim X.left) β =
-      analyticSheafCohomologyEquivExt X 𝓒(↧(ComplexPoint X); ℤ) 2 α :=
+      sheafCohomologyEquivExt X 𝓒(↧(ComplexPoint X); ℤ) 2 α :=
   (exists_holomorphicFirstChernClass_iff X (dim X.left) _).mpr
     (integralHodgeClass_integerToHolomorphicSecondCohomology_eq_zero X α hα)
 

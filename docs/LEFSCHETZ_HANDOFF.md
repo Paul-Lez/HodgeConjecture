@@ -51,7 +51,7 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 | `Other/AlgebraicGeometry/HolomorphicFirstChernClass.lean`, `HolomorphicFirstChernClassExactness.lean` | The connecting map `Ext¹(ℤ, 𝒪ˣ) → Ext²(ℤ, ℤ)` and `exists_holomorphicFirstChernClass_iff`. |
 | `Other/AlgebraicGeometry/HolomorphicZeroForms.lean`, `HolomorphicHodgeProjection.lean` | The projection to `H²(𝒪)` kills `F¹`; `hodgeClass_one_toHolomorphicFunctionCohomology_eq_zero`. |
 | `Other/AlgebraicGeometry/AnalyticSheafCohomologyExt.lean` | `analyticSheafCohomologyEquivExt`, natural in coefficient maps. |
-| `Other/AlgebraicGeometry/IntegralCohomology.lean`, `HolomorphicIntegralHodgeClass.lean` | `IntegralCohomology`, `integralToRationalCohomology`, `exists_holomorphicFirstChernClass_of_integral_hodgeClass`. |
+| `Other/AlgebraicGeometry/IntegralCohomology.lean`, `HolomorphicIntegralHodgeClass.lean` | `sheafCohomologyEquivExt`, `integralToRationalCohomology`, `exists_holomorphicFirstChernClass_of_integral_hodgeClass`. |
 | `Other/CategoryTheory/Abelian/ExtOneRepresentative.lean` | `Abelian.Ext.exists_shortExact`. |
 | `Other/AlgebraicTopology/SheafExtensionCocycle.lean`, `SheafExtensionLocalLifts.lean` | Local lifts through a sheaf epimorphism and their cocycles. |
 | `Other/AlgebraicGeometry/HolomorphicUnitExtensionHodgeClass.lean` | `exists_holomorphicUnitExtension_of_integral_hodgeClass`: an extension `E` with `E.firstChernClass = α`. |
@@ -71,7 +71,7 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 states, for a single smooth projective integral complex variety `X`:
 
 1. `HasIntegralDenominatorClearing X`: for every `α : H^2(X; ℚ)` there are `m ≠ 0`
-   and `β : IntegralCohomology X 2` with `integralToRationalCohomology X 2 β = m • α`.
+   and `β : H^2(X; ℤ)` with `integralToRationalCohomology X 2 β = m • α`.
    **Reduced to geometry.** `Other/AlgebraicGeometry/IntegralDenominatorClearing.lean` proves
    `hasIntegralDenominatorClearing_of_hasFiniteGoodCover`: it suffices that the analytic space
    has a finite good cover (`HasFiniteGoodCover X`: finitely many opens whose nonempty finite
