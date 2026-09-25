@@ -21,6 +21,10 @@ open CategoryTheory.Localization
 
 namespace AlgebraicGeometry.ComplexPoint
 
+set_option linter.auxLemma false
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
+
 variable (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 
 local instance chernRelativeClassTopology : TopologicalSpace (ComplexPoint X) :=
@@ -213,11 +217,18 @@ theorem cohomologyClass_comp_rationalChernShiftedHom :
           (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv).comp
         (hypercohomologyMap X
           (analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1)) 2
-          E.firstChernClass) (add_zero ((2 : ℕ) : ℤ)) := by
-  have hα : analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2 E.firstChernClass =
-      holomorphicFirstChernClass X d E.cohomologyClass :=
-    (analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).apply_symm_apply _
-  have h1 := analyticSheafCohomologyEquivExt_comp X (𝓒(↧(ComplexPoint X); ℤ)) 2 E.firstChernClass
+          ((analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
+            E.firstChernClass)) (add_zero ((2 : ℕ) : ℤ)) := by
+  have hα : analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2
+        ((analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
+          E.firstChernClass) =
+      holomorphicFirstChernClass X d E.cohomologyClass := by
+    rw [← sheafCohomologyEquivExt_analyticSheafHypercohomologyAddEquiv,
+      AddEquiv.apply_symm_apply, HolomorphicUnitExtension.firstChernClass,
+      AddEquiv.apply_symm_apply]
+  have h1 := analyticSheafCohomologyEquivExt_comp X (𝓒(↧(ComplexPoint X); ℤ)) 2
+    ((analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
+      E.firstChernClass)
     (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
       ((analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv ≫
         analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1))) (zero_add ((2 : ℕ) : ℤ))
@@ -352,7 +363,8 @@ theorem mk₀_comp_cohomologyClass_comp_rationalChernShiftedHom :
         (show ((1 : ℕ) : ℤ) + ((1 : ℕ) : ℤ) = ((2 : ℕ) : ℤ) by lia) =
       hypercohomologyMap X
         (analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1)) 2
-        E.firstChernClass := by
+        ((analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
+            E.firstChernClass) := by
   rw [SmallShiftedHom.comp_assoc (analyticQuasiIsomorphisms X)
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
         (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).hom)
@@ -367,7 +379,8 @@ theorem mk₀_comp_cohomologyClass_comp_rationalChernShiftedHom :
         (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv)
       (hypercohomologyMap X
         (analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1)) 2
-        E.firstChernClass)
+        ((analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
+            E.firstChernClass))
       (add_zero (0 : ℤ)) (add_zero ((2 : ℕ) : ℤ)) (by lia),
     SmallShiftedHom.mk₀_comp_mk₀' (M := ℤ), Iso.hom_inv_id,
     SmallShiftedHom.mk₀_id_comp]
@@ -388,13 +401,17 @@ set_option backward.isDefEq.respectTransparency false in
 theorem forgetSupport_relativeChernClass (cmp : RelativeChernComparison X d Ω) :
     coneForgetSupport X ((Ω : Set (ComplexPoint X))ᶜ) 2 (E.relativeChernClass Ω ℓ hℓ cmp) =
       integralToRationalCohomology X 2 E.firstChernClass := by
+  conv_rhs => rw [← (analyticSheafHypercohomologyAddEquiv X
+    (𝓒(↧(ComplexPoint X); ℤ)) 2).apply_symm_apply E.firstChernClass,
+    integralToRationalCohomology_analyticSheafHypercohomologyAddEquiv]
   change (hypercohomologyAddEquivConstantCohomology ℚ X 2)
       (forgetSupportHypercohomology X ((Ω : Set (ComplexPoint X))ᶜ) 2
         (E.relativeChernClass Ω ℓ hℓ cmp)) =
     (hypercohomologyAddEquivConstantCohomology ℚ X 2)
       (hypercohomologyMap X
         (analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1)) 2
-        E.firstChernClass)
+        ((analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
+            E.firstChernClass))
   apply congrArg (hypercohomologyAddEquivConstantCohomology ℚ X 2)
   show SmallShiftedHom.comp
       (SmallShiftedHom.comp (E.relativeCohomologyClass' Ω ℓ hℓ) cmp.hom
