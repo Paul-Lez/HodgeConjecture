@@ -14,7 +14,7 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{0}) (U V W : Opens X) (hW : V ⊓ U = W)
 
-variable [HasExt.{1} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
+variable [HasExt.{0} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
 
 local instance supportedExtComparisonHasDerivedCategory :
     HasDerivedCategory (CategoryTheory.Sheaf

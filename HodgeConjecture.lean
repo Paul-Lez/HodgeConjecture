@@ -262,3 +262,4 @@ public import HodgeConjecture.Mathlib.Topology.KrullDimension
 public import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 public import HodgeConjecture.Statement
 public import HodgeConjecture.Variants
+public import HodgeConjecture.Mathlib.CategoryTheory.Localization.SmallShiftedHom

@@ -113,7 +113,7 @@ set_option linter.auxLemma false
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
   TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
 
-variable [HasExt.{1} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
+variable [HasExt.{0} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
 
 /-- `H^n(V, W; F) ≃ H^n(Γ_{X ∖ U}(V, K))` for a bounded-below flasque resolution `F[0] → K`. -/
 def relHAddEquivSupportedSectionsHomologyOfFlasque (n : ℕ) :
