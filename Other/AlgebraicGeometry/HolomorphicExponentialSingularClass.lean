@@ -176,12 +176,17 @@ set_option backward.isDefEq.respectTransparency false in
 theorem exponential_cone_comp_extClass :
     (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
       (CochainComplex.mappingCone.descShortComplex (exponentialSingleShortComplex X d))).comp
-        (holomorphicExponentialSequence_shortExact X d).extClass (add_zero (1 : ℤ)) =
+        (SmallShiftedHom.chgUniv.{1, 0}
+          (X := (analyticSingleFunctor X).obj (holomorphicUnitSheaf X d))
+          (Y := (analyticSingleFunctor X).obj 𝓒(↧(ComplexPoint X); ℤ))
+          (holomorphicExponentialSequence_shortExact X d).extClass)
+        (add_zero (1 : ℤ)) =
       SmallShiftedHom.mk (analyticQuasiIsomorphisms X)
         (CochainComplex.mappingCone.triangle (exponentialSingleShortComplex X d).f).mor₃ := by
   apply (SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
   rw [SmallShiftedHom.equiv_comp, SmallShiftedHom.equiv_mk₀, SmallShiftedHom.equiv_mk,
     ShiftedHom.mk₀_comp]
+  erw [SmallShiftedHom.equiv_chgUniv]
   erw [show (SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q)
         (holomorphicExponentialSequence_shortExact X d).extClass =
         (holomorphicExponentialSequence_shortExact X d).extClass.hom from rfl,
@@ -192,6 +197,7 @@ theorem exponential_cone_comp_extClass :
     DerivedCategory.singleFunctorsPostcompQIso_inv_hom, CochainComplex.singleFunctors,
     ShortComplex.map, CochainComplex.singleFunctor, analyticSingleFunctor,
     exponentialSingleShortComplex, Category.comp_id, SingleFunctors.postcomp]
+  rfl
 
 set_option maxHeartbeats 2000000 in
 set_option backward.isDefEq.respectTransparency false in
@@ -215,8 +221,8 @@ theorem rationalChernShiftedHom_comp_singularAugmentation :
     (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl _).comp _ (add_zero (1 : ℤ))
   unfold rationalChernShiftedHom
   rw [← SmallShiftedHom.comp_assoc _ _ _ _ (add_zero (1 : ℤ)) (zero_add (1 : ℤ)) (by omega),
-    ← SmallShiftedHom.comp_assoc _ _ _ _ (add_zero (1 : ℤ)) (zero_add (1 : ℤ)) (by omega),
-    exponential_cone_comp_extClass]
+    ← SmallShiftedHom.comp_assoc _ _ _ _ (add_zero (1 : ℤ)) (zero_add (1 : ℤ)) (by omega)]
+  erw [exponential_cone_comp_extClass]
   apply (SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q).injective
   simp only [SmallShiftedHom.equiv_comp, SmallShiftedHom.equiv_mk₀,
     SmallShiftedHom.equiv_mk, ShiftedHom.comp_mk₀, ShiftedHom.mk₀_comp]

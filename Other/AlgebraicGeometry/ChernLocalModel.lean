@@ -277,8 +277,8 @@ theorem hasDivisorClassOfCartierData_of_localModel
     rw [supportedInjectiveToAmbient_componentContribution X hxs, hγx, map_zsmul, dif_pos hx1]
     congr 1
     rw [cycleComponentSheafClass_eq_injectiveModel]
-    exact (AddEquiv.apply_symm_apply
-      (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (1 : ℕ))) _).symm
+    erw [AddEquiv.apply_symm_apply]
+    rfl
   apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (1 : ℕ))).injective
   rw [sheafCycleClassOnCycles_eq_sum X c.divisor, map_sum, ← hb, hγ, map_sum]
   refine Finset.sum_congr rfl fun x hxs => ?_

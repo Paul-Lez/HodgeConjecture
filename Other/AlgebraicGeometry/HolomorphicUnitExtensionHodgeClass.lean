@@ -31,7 +31,7 @@ namespace HolomorphicUnitExtension
 
 /-- Every degree-one class of the holomorphic-unit sheaf is represented by an extension. -/
 theorem exists_cohomologyClass
-    (β : Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1) :
+    (β : Abelian.Ext.{0} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1) :
     ∃ E : HolomorphicUnitExtension X d, E.cohomologyClass = β := by
   obtain ⟨M, i, p, w, h, hβ⟩ := Abelian.Ext.exists_shortExact β
   exact ⟨⟨M, i, p, w, h⟩, hβ⟩

@@ -85,7 +85,7 @@ local instance chernRestrictionHasDerivedCategory :
 
 /-- The Chern-class connecting map agrees with composition of extension classes. -/
 lemma sheafCohomologyEquivExt_holomorphicFirstChernClass
-    (α : Sheaf.H.{1} (holomorphicUnitSheaf X d) 1) :
+    (α : Sheaf.H.{0} (holomorphicUnitSheaf X d) 1) :
     sheafCohomologyEquivExt X 𝓒(↧(ComplexPoint X); ℤ) 2
         (holomorphicFirstChernClass X d α) =
       (sheafCohomologyEquivExt X (holomorphicUnitSheaf X d) 1 α).comp
@@ -105,7 +105,7 @@ variable (Ω : Opens (TopCat.of (ComplexPoint X)))
 complement of `Ωᶜ`, that is to `Ω`. This is the composite appearing on both sides of the
 obligations below. -/
 def restrictedRationalChernClass
-    (e : Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1) :
+    (e : Abelian.Ext.{0} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1) :
     Hypercohomology X
       (derivedPushforwardComplementConstantRationalComplexInt X
         ((Ω : Set (ComplexPoint X))ᶜ)) 2 :=
@@ -122,12 +122,12 @@ Mathematically this is the naturality of the exponential connecting map under re
 open set `Ω`, combined with the identification of the target of `restrictToComplement` — the
 hypercohomology of the derived pushforward from `Ω` — with the cohomology of `Ω`. -/
 def HasRestrictedChernFactorization : Prop :=
-  ∃ Φ : Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ))
+  ∃ Φ : Abelian.Ext.{0} (𝓒(↧(ComplexPoint X); ℤ))
         ((openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d)) 1 →+
       Hypercohomology X
         (derivedPushforwardComplementConstantRationalComplexInt X
           ((Ω : Set (ComplexPoint X))ᶜ)) 2,
-    ∀ e : Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1,
+    ∀ e : Abelian.Ext.{0} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1,
       restrictedRationalChernClass X d Ω e =
         Φ (e.comp (Abelian.Ext.mk₀ (restrictionUnit Ω (holomorphicUnitSheaf X d))) (add_zero 1))
 
@@ -135,7 +135,7 @@ def HasRestrictedChernFactorization : Prop :=
 units to `Ω` has vanishing restricted rational first Chern class. This is the only consequence of
 `HasRestrictedChernFactorization` that the divisor comparison uses. -/
 def RestrictedChernClassVanishes : Prop :=
-  ∀ e : Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1,
+  ∀ e : Abelian.Ext.{0} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1,
     e.comp (Abelian.Ext.mk₀ (restrictionUnit Ω (holomorphicUnitSheaf X d))) (add_zero 1) = 0 →
       restrictedRationalChernClass X d Ω e = 0
 
@@ -174,13 +174,14 @@ lemma analyticSheafCohomologyEquivExt_comp (F : AnalyticAdditiveSheaf X) (n : �
     (γ : SmallShiftedHom.{1} (analyticQuasiIsomorphisms X)
       ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj F) L p)
     (h : p + (n : ℤ) = q) :
-    SmallShiftedHom.comp (analyticSheafCohomologyEquivExt X F n α) γ h =
+    SmallShiftedHom.comp (SmallShiftedHom.chgUniv.{1, 0}
+      (analyticSheafCohomologyEquivExt X F n α)) γ h =
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
         (analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv).comp
         (SmallShiftedHom.comp α
           (SmallShiftedHom.comp (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
             (analyticSheafComplexIntIsoSingle X F).hom) γ (add_zero p)) h) (add_zero q) := by
-  rw [analyticSheafCohomologyEquivExt_apply]
+  rw [analyticSheafCohomologyEquivExt_apply, SmallShiftedHom.chgUniv_chgUniv]
   rw [SmallShiftedHom.comp_assoc _ _ _ _ (zero_add (n : ℤ)) (add_zero p)
     (show p + 0 + (n : ℤ) = q by lia)]
   rw [SmallShiftedHom.comp_assoc _ _ _ _ (add_zero (n : ℤ)) h
@@ -198,7 +199,7 @@ set_option maxHeartbeats 1000000 in
 set_option backward.isDefEq.respectTransparency false in
 /-- The rational Chern class restricted to `Ω`, as a single composition. -/
 lemma restrictedRationalChernClass_eq
-    (e : Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1) :
+    (e : Abelian.Ext.{0} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1) :
     restrictedRationalChernClass X d Ω e =
       SmallShiftedHom.comp ((analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
         (e.comp (holomorphicExponentialSequence_shortExact X d).extClass rfl))
@@ -234,6 +235,8 @@ lemma restrictedRationalChernClass_eq
     (rationalRestrictionComplexInt X ((Ω : Set (ComplexPoint X))ᶜ))
 
 set_option maxHeartbeats 1000000 in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
 /-- **Step 3c.** The restricted rational first Chern class factors through the restriction of the
 extension class to `Ω`.
 
@@ -245,7 +248,8 @@ composition of the extension class with the single derived morphism
 theorem hasRestrictedChernFactorization : HasRestrictedChernFactorization X d Ω := by
   obtain ⟨ζ, hζ⟩ := exists_comp_restrictionUnit_eq X Ω ((Ω : Set (ComplexPoint X))ᶜ)
     Ω.isOpen.isClosed_compl (compl_compl _).symm (holomorphicUnitSheaf X d) ((1 : ℕ) : ℤ)
-    (SmallShiftedHom.comp (holomorphicExponentialSequence_shortExact X d).extClass
+    (SmallShiftedHom.comp (SmallShiftedHom.chgUniv.{1, 0}
+      (holomorphicExponentialSequence_shortExact X d).extClass)
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
         ((analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv ≫
           chernRestrictionTargetMap X Ω)) (zero_add 1))
@@ -287,18 +291,19 @@ theorem hasRestrictedChernFactorization : HasRestrictedChernFactorization X d Ω
       (e.comp (Abelian.Ext.mk₀ (restrictionUnit Ω (holomorphicUnitSheaf X d))) (add_zero 1)))
     ζ (show ((1 : ℕ) : ℤ) + ((1 : ℕ) : ℤ) = ((2 : ℕ) : ℤ) by lia)
   rw [hy] at h2
-  have h3 : SmallShiftedHom.comp (e.comp (holomorphicExponentialSequence_shortExact X d).extClass rfl)
+  have h3 : SmallShiftedHom.comp (SmallShiftedHom.chgUniv.{1, 0}
+      (e.comp (holomorphicExponentialSequence_shortExact X d).extClass rfl))
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
         ((analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv ≫
           chernRestrictionTargetMap X Ω)) (zero_add 2) =
-      SmallShiftedHom.comp
-        (e.comp (Abelian.Ext.mk₀ (restrictionUnit Ω (holomorphicUnitSheaf X d))) (add_zero 1))
+      SmallShiftedHom.comp (SmallShiftedHom.chgUniv.{1, 0}
+        (e.comp (Abelian.Ext.mk₀ (restrictionUnit Ω (holomorphicUnitSheaf X d))) (add_zero 1)))
         ζ (show ((1 : ℕ) : ℤ) + ((1 : ℕ) : ℤ) = ((2 : ℕ) : ℤ) by lia) := by
-    show SmallShiftedHom.comp (SmallShiftedHom.comp e
-        (holomorphicExponentialSequence_shortExact X d).extClass
-        (show ((1 : ℕ) : ℤ) + ((1 : ℕ) : ℤ) = ((2 : ℕ) : ℤ) by lia)) _ (zero_add 2) = _
-    have e1 := SmallShiftedHom.comp_assoc (analyticQuasiIsomorphisms X) e
-      (holomorphicExponentialSequence_shortExact X d).extClass
+    dsimp only [Abelian.Ext.comp, Abelian.Ext.mk₀]
+    rw [SmallShiftedHom.chgUniv_comp, SmallShiftedHom.chgUniv_comp,
+      SmallShiftedHom.chgUniv_mk₀]
+    have e1 := SmallShiftedHom.comp_assoc (analyticQuasiIsomorphisms X) (SmallShiftedHom.chgUniv.{1, 0} e)
+      (SmallShiftedHom.chgUniv.{1, 0} (holomorphicExponentialSequence_shortExact X d).extClass)
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
         ((analyticSheafComplexIntIsoSingle X (𝓒(↧(ComplexPoint X); ℤ))).inv ≫
           chernRestrictionTargetMap X Ω))
@@ -309,9 +314,9 @@ theorem hasRestrictedChernFactorization : HasRestrictedChernFactorization X d Ω
           (holomorphicUnitSheaf X d))
         (derivedPushforwardComplementConstantRationalComplexInt X
           ((Ω : Set (ComplexPoint X))ᶜ)) ((1 : ℕ) : ℤ) =>
-      SmallShiftedHom.comp e t
+      SmallShiftedHom.comp (SmallShiftedHom.chgUniv.{1, 0} e) t
         (show ((1 : ℕ) : ℤ) + ((1 : ℕ) : ℤ) = ((2 : ℕ) : ℤ) by lia)) hζ
-    have e2 := SmallShiftedHom.comp_assoc (analyticQuasiIsomorphisms X) e
+    have e2 := SmallShiftedHom.comp_assoc (analyticQuasiIsomorphisms X) (SmallShiftedHom.chgUniv.{1, 0} e)
       (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
         ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map
           (restrictionUnit Ω (holomorphicUnitSheaf X d)))) ζ
