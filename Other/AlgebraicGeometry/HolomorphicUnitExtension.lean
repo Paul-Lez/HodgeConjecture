@@ -23,6 +23,10 @@ open CategoryTheory TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
 
+set_option linter.auxLemma false
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
+
 variable (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 
 local instance holomorphicUnitExtensionTopology : TopologicalSpace (ComplexPoint X) :=
@@ -54,9 +58,9 @@ def cohomologyClass (E : HolomorphicUnitExtension X d) :
     Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1 :=
   E.shortExact.extClass
 
-/-- The integral first Chern class of an extension, in the project's cohomology presentation. -/
-def firstChernClass (E : HolomorphicUnitExtension X d) : IntegralCohomology X 2 :=
-  (analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
+/-- The integral first Chern class of an extension. -/
+def firstChernClass (E : HolomorphicUnitExtension X d) : H^2(X; ℤ) :=
+  (sheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
     (holomorphicFirstChernClass X d E.cohomologyClass)
 
 /-- The constant integer section `1` on the whole analytic space. -/

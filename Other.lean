@@ -214,7 +214,6 @@ public import Other.Algebra.Homology.MappingConeDifference
 public import Other.Algebra.Homology.MappingConeFactorization
 public import Other.Algebra.Homology.PrecompFactorization
 public import Other.Algebra.Homology.SingleCocycleFactorization
-public import Other.AlgebraicGeometry.AnalyticSheafCohomologyExt
 public import Other.AlgebraicGeometry.AnalytificationModules
 public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
 public import Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
