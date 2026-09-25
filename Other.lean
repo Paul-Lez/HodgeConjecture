@@ -192,7 +192,6 @@ public import Other.RingTheory.AlgebraicNonvanishing
 public import Other.RingTheory.IntegralPrimitiveElement
 public import Other.RingTheory.RegularLocalQuotientKernel
 public import Other.RingTheory.StandardEtaleAlgebraic
-public import Other.AlgebraicGeometry.AnalyticSheafCohomologyExt
 public import Other.AlgebraicGeometry.DivisorOfRationalSection
 public import Other.AlgebraicGeometry.HolomorphicExponential
 public import Other.AlgebraicGeometry.HolomorphicExponentialSequence
