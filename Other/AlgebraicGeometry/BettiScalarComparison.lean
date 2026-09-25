@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.IntegralCohomology
+public import Other.AlgebraicGeometry.AnalyticSheafCohomologyExt
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomology
 public import Other.AlgebraicTopology.Singular.Sheaf.CochainSubdivision
 
@@ -17,7 +17,7 @@ commutative ring. This file records the comparison for an arbitrary coefficient 
 hypercohomology of the constant sheaf `R` on the analytic space of a smooth complex scheme
 is the homology of the algebraic-dual singular cochain complex with coefficients in `R`.
 
-The case `R = ℤ` identifies `IntegralCohomology` with integral singular cohomology. The target
+The case `R = ℤ` identifies ordinary integral sheaf cohomology with integral singular cohomology. The target
 is `OrdinarySingularCohomology`, the homology of the dual cochain complex; the further
 identification with the dual of homology is a universal-coefficient statement valid only over a
 field and is not used here.
@@ -210,10 +210,11 @@ def integralCohomologyEquivOrdinarySingularCohomology
     [T2Space (ComplexPoint X)]
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (n : ℕ) :
-    IntegralCohomology X (n : ℤ) ≃
+    H^n(X; ℤ) ≃
       AlgebraicTopology.Singular.Cohomology ℤ
         (TopCat.of (ComplexPoint X)) n :=
-  scalarCohomologyEquivOrdinarySingularCohomology X ℤ n
+  (analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) n).symm.toEquiv.trans
+    (scalarCohomologyEquivOrdinarySingularCohomology X ℤ n)
 
 end AlgebraicGeometry.ComplexPoint
 

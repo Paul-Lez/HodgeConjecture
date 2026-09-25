@@ -22,7 +22,7 @@ attribute [local instance] isNoetherian_of_isProjective
 
 /-- Every rational degree-two class is a rational multiple of an integral class. -/
 def HasIntegralDenominatorClearing : Prop :=
-  ∀ α : H^2(X; ℚ), ∃ (m : ℤ) (β : IntegralCohomology X 2),
+  ∀ α : H^2(X; ℚ), ∃ (m : ℤ) (β : H^2(X; ℤ)),
     m ≠ 0 ∧ integralToRationalCohomology X 2 β = m • α
 
 /-- The holomorphic section sheaf of every unit-sheaf extension is the analytification of an

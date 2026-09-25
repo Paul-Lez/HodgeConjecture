@@ -94,13 +94,15 @@ theorem hasIntegralDenominatorClearing_of_hasFiniteSecondHomology
   have hβ' : HomologicalComplex.homologyMap
       (AlgebraicTopology.Singular.ordinaryForgottenSingularCochainCoefficientChange
         (Int.castRingHom ℚ) Y) 2 β' = m • Fℚ.symm (Eℚ α) := hβ₀
-  refine ⟨m, Eℤ.symm (Fℤ β'), hm, ?_⟩
-  have h1 : integralToRationalCohomology X 2 (Eℤ.symm (Fℤ β')) =
+  let β := analyticSheafHypercohomologyAddEquiv X (𝓒(↧(ComplexPoint X); ℤ)) 2
+    (Eℤ.symm (Fℤ β'))
+  refine ⟨m, β, hm, ?_⟩
+  have h1 : integralToRationalCohomology X 2 β =
       hypercohomologyAddEquivConstantCohomology ℚ X 2
         (hypercohomologyMap X (constantCoefficientSheafComplexIntMap X (Int.castRingHom ℚ))
           ((2 : ℕ) : ℤ) (Eℤ.symm (Fℤ β'))) := by
     rw [constantCoefficientSheafComplexIntMap_intCast]
-    rfl
+    exact integralToRationalCohomology_analyticSheafHypercohomologyAddEquiv X 2 _
   rw [h1]
   apply (hypercohomologyAddEquivConstantCohomology ℚ X 2).symm.injective
   rw [AddEquiv.symm_apply_apply, map_zsmul]

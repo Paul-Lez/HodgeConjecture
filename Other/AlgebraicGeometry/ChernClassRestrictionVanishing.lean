@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.UnitExtensionOpenRestriction
+public import Other.AlgebraicGeometry.AnalyticSheafCohomologyExt
 public import Other.AlgebraicGeometry.CohomologyWithSupportExact
 public import Other.AlgebraicGeometry.OpenRestrictionDerivedFactorization
 
@@ -69,6 +70,10 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
 
 namespace AlgebraicGeometry.ComplexPoint
 
+set_option linter.auxLemma false
+attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
+  TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
+
 variable (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 
 local instance chernRestrictionTopology :
@@ -90,7 +95,7 @@ def restrictedRationalChernClass
         ((Ω : Set (ComplexPoint X))ᶜ)) 2 :=
   restrictToComplement X ((Ω : Set (ComplexPoint X))ᶜ) 2
     (integralToRationalCohomology X 2
-      ((analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
+      ((sheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
         (holomorphicFirstChernClass X d e)))
 
 /-- **Obligation (step 3).** The restricted rational first Chern class factors through the
@@ -128,37 +133,6 @@ theorem restrictedChernClassVanishes_of_factorization
 section Factorization
 
 open CategoryTheory.Localization
-
-set_option maxHeartbeats 1000000 in
-/-- The cohomology/Ext comparison is additive. -/
-theorem analyticSheafCohomologyEquivExt_add (F : AnalyticAdditiveSheaf X) (n : ℕ)
-    (α β : Hypercohomology X (analyticSheafComplexInt X F) n) :
-    analyticSheafCohomologyEquivExt X F n (α + β) =
-      analyticSheafCohomologyEquivExt X F n α + analyticSheafCohomologyEquivExt X F n β := by
-  apply (SmallShiftedHom.equiv
-    (analyticQuasiIsomorphisms X) (DerivedCategory.Q (C := AnalyticAdditiveSheaf X))).injective
-  change _ = (analyticSheafCohomologyEquivExt X F n α +
-    analyticSheafCohomologyEquivExt X F n β).hom
-  rw [Abelian.Ext.add_hom]
-  change _ = (SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) (DerivedCategory.Q (C := AnalyticAdditiveSheaf X)))
-      (analyticSheafCohomologyEquivExt X F n α) +
-    (SmallShiftedHom.equiv
-      (analyticQuasiIsomorphisms X) (DerivedCategory.Q (C := AnalyticAdditiveSheaf X)))
-      (analyticSheafCohomologyEquivExt X F n β)
-  have hadd := hypercohomologyEquiv_add X (analyticSheafComplexInt X F) (n : ℤ) α β
-  rw [analyticSheafCohomologyEquivExt_apply, analyticSheafCohomologyEquivExt_apply,
-    analyticSheafCohomologyEquivExt_apply]
-  simp only [SmallShiftedHom.equiv_comp]
-  rw [hadd]
-  simp
-
-/-- The cohomology/Ext comparison, as an isomorphism of abelian groups. -/
-def analyticSheafCohomologyAddEquivExt (F : AnalyticAdditiveSheaf X) (n : ℕ) :
-    Hypercohomology X (analyticSheafComplexInt X F) n ≃+
-      Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) F n where
-  toEquiv := analyticSheafCohomologyEquivExt X F n
-  map_add' := analyticSheafCohomologyEquivExt_add X F n
 
 set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 800000 in
@@ -204,6 +178,8 @@ def chernRestrictionTargetMap :
   analyticSheafComplexIntMap X (integerToFieldConstantSheaf ℚ X 1) ≫
     rationalRestrictionComplexInt X ((Ω : Set (ComplexPoint X))ᶜ)
 
+set_option maxHeartbeats 1000000 in
+set_option backward.isDefEq.respectTransparency false in
 /-- The rational Chern class restricted to `Ω`, as a single composition. -/
 lemma restrictedRationalChernClass_eq
     (e : Abelian.Ext.{1} (𝓒(↧(ComplexPoint X); ℤ)) (holomorphicUnitSheaf X d) 1) :
@@ -212,8 +188,15 @@ lemma restrictedRationalChernClass_eq
         (holomorphicFirstChernClass X d e))
         (SmallShiftedHom.mk₀ (analyticQuasiIsomorphisms X) 0 rfl
           (chernRestrictionTargetMap X Ω)) (zero_add 2) := by
-  dsimp only [restrictedRationalChernClass, restrictToComplement,
-    integralToRationalCohomology, AddMonoidHom.comp_apply,
+  have h := sheafCohomologyEquivExt_analyticSheafHypercohomologyAddEquiv X
+    (𝓒(↧(ComplexPoint X); ℤ)) 2
+    ((analyticSheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm
+      (holomorphicFirstChernClass X d e))
+  rw [Equiv.apply_symm_apply] at h
+  have h' := (sheafCohomologyEquivExt X (𝓒(↧(ComplexPoint X); ℤ)) 2).symm_apply_eq.mpr h.symm
+  unfold restrictedRationalChernClass
+  rw [h', integralToRationalCohomology_analyticSheafHypercohomologyAddEquiv]
+  dsimp only [restrictToComplement, AddMonoidHom.comp_apply,
     AddEquiv.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe]
   rw [AddEquiv.symm_apply_apply]
   show SmallShiftedHom.comp (SmallShiftedHom.comp
