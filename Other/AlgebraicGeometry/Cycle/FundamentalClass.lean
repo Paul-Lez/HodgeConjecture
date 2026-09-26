@@ -32,7 +32,6 @@ open AlgebraicTopology.Singular
 namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-attribute [local instance] cycleComponentSheafClassAnalyticTopology
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
 /-- Extension recovers exactly the prescribed smooth-locus section. -/
