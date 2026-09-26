@@ -138,7 +138,6 @@ public import Other.AlgebraicTopology.Sheaf.CohomologySectionDerivedTransport
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionArbitraryDegreeVanishing
 public import Other.AlgebraicTopology.Sheaf.FlasquePushforwardQuasiIso
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionRestriction
-public import Other.AlgebraicTopology.Sheaf.CohomologyShiftDerivedVanishing
 public import Other.AlgebraicTopology.Sheaf.ConstantDegreeZero
 public import Other.AlgebraicTopology.Sheaf.FlasqueGlobalSections
 public import Other.AlgebraicTopology.Sheaf.FlasqueLowestCohomology
@@ -217,8 +216,6 @@ public import Other.Algebra.Homology.MappingConeFactorization
 public import Other.Algebra.Homology.PrecompFactorization
 public import Other.Algebra.Homology.SingleCocycleFactorization
 public import Other.AlgebraicGeometry.AnalytificationModules
-public import Other.AlgebraicGeometry.BettiGlobalSectionsComparison
-public import Other.AlgebraicGeometry.BettiSupportSingularHypercohomologyComparison
 public import Other.AlgebraicGeometry.CocycleGlobalSectionNaturality
 public import Other.AlgebraicGeometry.CocycleGlobalSections
 public import Other.AlgebraicGeometry.DivisorOfRationalSection
@@ -248,7 +245,6 @@ public import Other.AlgebraicTopology.SheafExtensionCocycle
 public import Other.AlgebraicTopology.SheafExtensionLocalLifts
 public import Other.AlgebraicTopology.SimplicialCochainExtension
 public import Other.AlgebraicTopology.SingularChainSheafPushforward
-public import Other.AlgebraicTopology.SingularCochainFlasque
 public import Other.AlgebraicTopology.SingularExcisionScalar
 public import Other.AlgebraicTopology.SupportedSingularBoundaryRelative
 public import Other.AlgebraicTopology.TopOpenRelativeCochainNormalization
