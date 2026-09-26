@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Statement
+public import HodgeConjecture.Variants
 public import Other.AlgebraicGeometry.Cycle.SheafClass
 
 /-!
@@ -42,6 +42,15 @@ every rational Hodge class in degree two is the class of a rational divisor. -/
       ∃ D : TensorProduct ℤ ℚ (codimensionCycleSubgroup X.left 1),
         rationalSheafCycleClassOnCycles
           { scheme := X.left, structureMap := X.hom } 1 D = α
+
+/-- The concrete rational-cycle formulation implies the repository's Lefschetz `(1, 1)`
+statement. -/
+public theorem RationalLefschetzOneOne.to_lefschetzOneOne
+    (h : RationalLefschetzOneOne) : LefschetzOneOne := by
+  intro X _ _ _ α hα
+  obtain ⟨D, hD⟩ := h X α hα
+  rw [← hD]
+  exact rationalSheafCycleClassOnCycles_mem_algebraicCycleClassSpan X 1 D
 
 /-- The Hodge conjecture implies the rational Lefschetz `(1, 1)` theorem. -/
 public theorem HodgeConjecture.rationalLefschetzOneOne
