@@ -7,6 +7,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 import Other.AlgebraicGeometry.Hodge.FiltrationDegreeZero
 import Other.AlgebraicGeometry.Hodge.Filtration
 import Other.LinearAlgebra.HodgeStructure
+import Other.AlgebraicGeometry.Hodge.Decomposition
 open Verso.Genre Manual
 open Verso.Genre.Manual.InlineLean
 
@@ -546,9 +547,10 @@ end Guide.Hodge.D11
 example : @Guide.Hodge.D11.hodgeClasses = @AlgebraicGeometry.ComplexPoint.hodgeClasses := rfl
 ```
 
-The cohomology of $`X` is not equipped with a pure Hodge structure in the formalization; that
-would require the Hodge decomposition. The $`(p,p)` piece is instead defined directly by the
-formula above, which is why the conjugation had to be constructed.
+The pure Hodge structure on the cohomology of $`X` requires the Hodge decomposition theorem.
+The file `Other/AlgebraicGeometry/Hodge/Decomposition.lean` takes this theorem as the hypothesis
+`HasHodgeDecomposition X n`. It constructs a `HodgeStructure.Pure` and proves that its rational
+$`(p,p)`-classes are the Hodge classes defined above.
 
 The two sanity checks on the filtration pass to the Hodge classes: every degree-zero class is a
 Hodge class, and there are none above the dimension. These are the two ends of the conjecture that
@@ -584,6 +586,7 @@ $`H^{p,p}`.
 
 ```lean
 #check HodgeStructure.Pure.ofBase_mem_filtration_iff
+#check hodgeClasses_eq_hodgeClasses_hodgeStructure
 ```
 
 The conjugation condition cannot be dropped for other coefficient fields. Let $`E` be the

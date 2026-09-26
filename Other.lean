@@ -103,7 +103,9 @@ public import Other.AlgebraicGeometry.Cycle.Support
 public import Other.AlgebraicGeometry.Hodge.CodimensionZero
 public import Other.AlgebraicGeometry.Hodge.CodimensionZeroComparison
 public import Other.AlgebraicGeometry.Hodge.CodimensionZeroNonvanishing
+public import Other.AlgebraicGeometry.Hodge.Complexification
 public import Other.AlgebraicGeometry.Hodge.DeRhamAugmentation
+public import Other.AlgebraicGeometry.Hodge.Decomposition
 public import Other.AlgebraicGeometry.Hodge.DimensionZero
 public import Other.AlgebraicGeometry.Hodge.Filtration
 public import Other.AlgebraicGeometry.Hodge.FiltrationDegreeZero
