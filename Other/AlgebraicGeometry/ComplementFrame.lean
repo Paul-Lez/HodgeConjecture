@@ -55,10 +55,6 @@ nowhere-vanishing holomorphic function `frameUnit`, and the section
 `smul_frame` and the agreement of the frames, says exactly that these local lifts agree on
 overlaps (`localLift_compatible`), so they glue to a lift over `Ω` since `E.middle` is a sheaf.
 
-The corollaries `hasChernWindingNaturality_of_unitOffDivisor` and
-`hasDivisorClassOfSomeCartierData_of_unitOffDivisor` restate the reductions of
-`ChernRelativeClassNaturality.lean` with `HasComplementFrame X` replaced by
-`HasUnitOffDivisor X`.
 -/
 
 @[expose] public noncomputable section
@@ -529,25 +525,6 @@ set_option maxHeartbeats 1000000 in
 /-- The frame off the divisor, from the stalk-level Hartogs statement. -/
 theorem hasComplementFrame_of_stalkUnit (h : HasStalkUnitOfOrdEqZero X) : HasComplementFrame X :=
   hasComplementFrame_of_unitOffDivisor X (hasUnitOffDivisor_of_stalkUnit X h)
-
-/-! ### Consequences for the reductions of `ChernRelativeClassNaturality.lean` -/
-
-set_option maxHeartbeats 1000000 in
-/-- `HasChernWindingNaturality X` from the algebraic unit statement and the chart formula. -/
-theorem hasChernWindingNaturality_of_unitOffDivisor (hunit : HasUnitOffDivisor X)
-    (hchart : HasRelativeChernChartFormula X) : HasChernWindingNaturality X :=
-  hasChernWindingNaturality_of_relativeChernChartFormula X
-    (hasComplementFrame_of_unitOffDivisor X hunit) hchart
-
-set_option maxHeartbeats 1000000 in
-/-- **Step 4 of `docs/DIVISOR_HANDOFF.md` §4.3**, with the frame off the divisor replaced by the
-algebraic unit statement: `HasUnitOffDivisor X`, normalised winding charts and the chart formula
-for the canonical relative class give `HasDivisorClassOfSomeCartierData X`. -/
-theorem hasDivisorClassOfSomeCartierData_of_unitOffDivisor (hunit : HasUnitOffDivisor X)
-    (hcharts : HasNormalizedWindingCharts X) (hchart : HasRelativeChernChartFormula X) :
-    HasDivisorClassOfSomeCartierData X :=
-  hasDivisorClassOfSomeCartierData_of_relativeChernChartFormula X
-    (hasComplementFrame_of_unitOffDivisor X hunit) hcharts hchart
 
 end ComplexPoint
 
