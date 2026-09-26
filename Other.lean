@@ -192,6 +192,12 @@ public import Other.RingTheory.AlgebraicNonvanishing
 public import Other.RingTheory.IntegralPrimitiveElement
 public import Other.RingTheory.RegularLocalQuotientKernel
 public import Other.RingTheory.StandardEtaleAlgebraic
+public import Other.AlgebraicGeometry.DivisorOfRationalSection
+public import Other.AlgebraicGeometry.InvertibleSheafRationalSection
+public import Other.AlgebraicGeometry.OrderOfVanishing
+public import Other.TauCeti.SheafOfModules.Free
+public import Other.TauCeti.SheafOfModules.Invertible
+public import Other.TauCeti.SheafOfModules.LocalTriviality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityDef
 public import Other.AlgebraicGeometry.Cohomology.SupportComparison
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyDef
@@ -206,3 +212,4 @@ public import Other.AlgebraicGeometry.Cohomology.SupportSingularNaturality
 public import Other.AlgebraicGeometry.Cohomology.WithSupport
 public import Other.Mathlib.Topology.Category.TopCat.Basic
 public import Other.AlgebraicTopology.Support.ClosedSupportSheaf
+public import Other.AlgebraicGeometry.CartierDataRepresents
