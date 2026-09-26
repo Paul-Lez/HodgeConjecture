@@ -85,15 +85,6 @@ def integerConstantSingleComplex (Y : TopCat.{0}) :
   (CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat Y) 0).obj
     ((constantFunctor Y).obj (AddCommGrpCat.of ℤ))
 
-/-- Let `Y` be a topological space and `K` an integer-indexed complex of sheaves of abelian groups
-on `Y`. The complex `Γ(Y, K)` has `Γ(Y, K^n)` in degree `n`; its differentials are the maps on
-global sections induced by those of `K`. -/
-def globalSectionsComplexInt (Y : TopCat.{0})
-    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
-    -- `Γ(Y, K^•)`.
-    CochainComplex AddCommGrpCat ℤ :=
-  IsFlasque.BoundedBelowComplex.globalSectionsComplex K
-
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
 /-- Let `Y` be a topological space. This natural isomorphism identifies the functors `F ↦ Hom(ℤ_Y,
@@ -101,7 +92,7 @@ F)` and `F ↦ Γ(Y, F)` on sheaves of abelian groups, by evaluating each morphi
 section `1`. -/
 def integerConstantHomIsoGlobalSectionsFunctor (Y : TopCat.{0}) :
     preadditiveCoyoneda.obj (.op ((constantFunctor Y).obj (AddCommGrpCat.of ℤ))) ≅
-      IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y :=
+      TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y :=
   NatIso.ofComponents
     (fun F ↦ (integerConstantHomAddEquivGlobalSections F).toAddCommGrpIso)
     (fun {F G} f ↦ by
@@ -119,10 +110,10 @@ Evaluation at `1` gives this isomorphism of complexes `Hom^•(ℤ_Y[0], K) ≅ 
 def homComplexSingleIntegerIsoGlobalSections
     (Y : TopCat.{0}) (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
     CochainComplex.HomComplex (integerConstantSingleComplex Y) K ≅
-      globalSectionsComplexInt Y K :=
+      TopCat.Sheaf.globalSectionsComplex AddCommGrpCat Y K :=
   let pre := (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y))
   letI : Preadditive (TopCat.Sheaf AddCommGrpCat Y) := pre
-  letI : (IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).PreservesZeroMorphisms :=
+  letI : (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
   CochainComplex.HomComplex.fromSingleZeroIsoPreadditiveCoyoneda
       ((constantFunctor Y).obj (AddCommGrpCat.of ℤ)) K ≪≫

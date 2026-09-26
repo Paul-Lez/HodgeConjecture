@@ -41,6 +41,15 @@ lemma extendSingleIso_hom_naturality
     simp
   · exact (isZero_single_obj_X c' j B k hk).eq_of_tgt _ _
 
+/-- Extending a single-term complex is naturally isomorphic to the single-term complex in the
+extended shape. -/
+def extendSingleNatIso
+    [DecidableEq I] [DecidableEq J] (e : c.Embedding c') (i : I) (j : J)
+    (h : e.f i = j) :
+    single C c i ⋙ e.extendFunctor C ≅ single C c' j :=
+  NatIso.ofComponents (fun A ↦ extendSingleIso e A i j h) (fun f ↦ by
+    exact extendSingleIso_hom_naturality e f i j h)
+
 end Single
 
 variable {C D : Type*} [Category* C] [Category* D] [Preadditive C] [Preadditive D]
@@ -106,6 +115,13 @@ lemma mapExtendCanonicalIso_naturality {L : HomologicalComplex C c} (f : K ⟶ L
       (mapExtendCanonicalIso F K e).hom ≫ extendMap ((F.mapHomologicalComplex c).map f) e := by
   ext j
   exact mapExtendCanonicalXIso_hom_mapX F K f (e.r j)
+
+/-- The canonical comparison between mapping a complex after extension and extending its image. -/
+def mapExtendCanonicalNatIso :
+    e.extendFunctor C ⋙ F.mapHomologicalComplex c' ≅
+      F.mapHomologicalComplex c ⋙ e.extendFunctor D :=
+  NatIso.ofComponents (fun K => mapExtendCanonicalIso F K e) (fun f => by
+    exact mapExtendCanonicalIso_naturality F _ e f)
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in

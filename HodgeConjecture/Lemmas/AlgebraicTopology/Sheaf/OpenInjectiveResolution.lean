@@ -115,15 +115,15 @@ For the chosen injective resolutions `I,J` of the constant sheaves `A_X,A_U`, th
 `Γ(U,I|_U) → Γ(U,J)` takes sections of the comparison extending the identity on `A_U`. Both
 sides are expressed as global sections of direct images under `j`. -/
 def globalRestrictedAmbientToOpenResolution :
-    ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
+    ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X).mapHomologicalComplex
       (.up ℕ)).obj
         (((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
           (restrictedAmbientConstantResolution X U A)) ⟶
-    ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
+    ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X).mapHomologicalComplex
       (.up ℕ)).obj
         (((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).obj
           (ambientConstantInjectiveResolution (TopCat.of U) A).cocomplex) :=
-  ((IsFlasque.BoundedBelowComplex.globalSectionsFunctor X).mapHomologicalComplex
+  ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X).mapHomologicalComplex
     (.up ℕ)).map
       (((pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex (.up ℕ)).map
         (restrictedAmbientToOpenResolution X U A))
@@ -232,7 +232,7 @@ subspace both resolutions are termwise flasque. -/
 theorem globalRestrictedAmbientToOpenResolution_quasiIso :
     QuasiIso (globalRestrictedAmbientToOpenResolution X U A) := by
   change QuasiIso
-    (((IsFlasque.BoundedBelowComplex.globalSectionsFunctor (TopCat.of U)).mapHomologicalComplex
+    (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat (TopCat.of U)).mapHomologicalComplex
       (.up ℕ)).map (restrictedAmbientToOpenResolution X U A))
   let : QuasiIso (restrictedAmbientToOpenResolution X U A) :=
     restrictedAmbientToOpenResolution_quasiIso X U A

@@ -28,9 +28,6 @@ public import Mathlib.Algebra.Homology.SingleHomology
 For a topological space `X` and an abelian coefficient category `C`, derived global sections form
 a functor between bounded-below derived categories. Degree-`n` hypercohomology is obtained by
 composing this functor with degree-`n` cohomology.
-
-Multiplicative structures on hypercohomology require a graded lax-monoidal refinement (the cup
-product); that additional structure is not part of the degreewise functor constructed here.
 -/
 
 @[expose] public noncomputable section
@@ -131,7 +128,13 @@ lemma globalSectionsSingle₀HomologyIso_hom_naturality
         (HomologicalComplex.extendMap g e) ≫ EB.hom =
       EA.hom ≫ (HomologicalComplex.single C (.up ℤ) 0).map (Γ.map f)
     dsimp only [EA, EB, Iso.trans_hom]
-    rw [HomologicalComplex.mapExtendCanonicalIso_naturality_assoc Γ KA e g]
+    have hM := (HomologicalComplex.mapExtendCanonicalNatIso Γ e).hom.naturality g
+    dsimp only [Functor.comp_map, ComplexShape.Embedding.extendFunctor] at hM
+    change (Γ.mapHomologicalComplex (.up ℤ)).map (HomologicalComplex.extendMap g e) ≫
+        (HomologicalComplex.mapExtendCanonicalIso Γ KB e).hom =
+      (HomologicalComplex.mapExtendCanonicalIso Γ KA e).hom ≫
+        HomologicalComplex.extendMap ((Γ.mapHomologicalComplex (.up ℕ)).map g) e at hM
+    rw [← Category.assoc, hM]
     simp only [Category.assoc]
     apply (cancel_epi (HomologicalComplex.mapExtendCanonicalIso Γ KA e).hom).2
     change HomologicalComplex.extendMap ((Γ.mapHomologicalComplex (.up ℕ)).map g) e ≫
@@ -156,7 +159,14 @@ lemma globalSectionsSingle₀HomologyIso_hom_naturality
     simp only [Category.assoc]
     apply (cancel_epi ((e.extendFunctor C).map
       ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).hom.app A))).2
-    exact HomologicalComplex.extendSingleIso_hom_naturality e (Γ.map f) 0 0 rfl
+    have hSingle :=
+      (HomologicalComplex.extendSingleNatIso e 0 0 rfl).hom.naturality (Γ.map f)
+    change HomologicalComplex.extendMap
+          ((HomologicalComplex.single C (.up ℕ) 0).map (Γ.map f)) e ≫
+        (HomologicalComplex.extendSingleIso e (Γ.obj B) 0 0 rfl).hom =
+      (HomologicalComplex.extendSingleIso e (Γ.obj A) 0 0 rfl).hom ≫
+        (HomologicalComplex.single C (.up ℤ) 0).map (Γ.map f) at hSingle
+    exact hSingle
   rw [show (globalSectionsSingle₀HomologyIso C X B).hom =
       HomologicalComplex.homologyMap EB.hom 0 ≫
         (HomologicalComplex.singleObjHomologySelfIso (.up ℤ) 0 (Γ.obj B)).hom from rfl]

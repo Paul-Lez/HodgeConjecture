@@ -31,7 +31,7 @@ identifies rational hypercohomology `ℍ^n(Y; ℚ[0])` with `H^n(Γ(Y,I))` for e
 induced by the augmentation of the constant sheaf into `I`. -/
 def rationalHypercohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
     Hypercohomology X (constantFieldSheafComplexInt ℚ X) n ≃+
-      (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X))
+      (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat (TopCat.of (ComplexPoint X))
         (ambientRationalInjectiveComplex X)).homology n :=
   let e : Hypercohomology X (constantFieldSheafComplexInt ℚ X) n ≃+
       Hypercohomology X (ambientRationalInjectiveComplex X) n :=
@@ -46,7 +46,7 @@ def rationalHypercohomologyAddEquivAmbientInjectiveHomology (n : ℤ) :
 resolution. -/
 def rationalCohomologyAddEquivAmbientInjectiveHomology (n : ℕ) :
     H^n(X; ℚ) ≃+
-      (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X))
+      (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat (TopCat.of (ComplexPoint X))
         (ambientRationalInjectiveComplex X)).homology n :=
   (hypercohomologyAddEquivConstantCohomology ℚ X n).symm.trans
     (rationalHypercohomologyAddEquivAmbientInjectiveHomology X n)
@@ -113,7 +113,7 @@ lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
       (ShiftedHom.map
         (CochainComplex.mappingCone.triangle
           (ambientRationalInjectiveRestriction X Z hZ)).mor₃
-        ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
+        ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat.{0}
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ))
       (n - 1) n (by omega)
       (rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x) := by
@@ -126,6 +126,72 @@ lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
       X
         (CochainComplex.mappingCone (ambientRationalInjectiveRestriction X Z hZ))
         (ambientRationalInjectiveComplex X) 1 (n - 1) n (by omega) _ _)
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
+private lemma coneSupportForget_homologyMap
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    let Y := TopCat.of (ComplexPoint X)
+    let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
+    let Γ : TopCat.Sheaf AddCommGrpCat.{0} (TopCat.of (ComplexPoint X)) ⥤
+        AddCommGrpCat.{0} :=
+      TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat.{0} (TopCat.of (ComplexPoint X))
+    let S := TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y U ⊤
+      (ambientRationalInjectiveComplex X)
+    let c := supportConeToAmbientInjectiveGlobalCone X Z hZ
+    let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
+    HomologicalComplex.homologyMap c (n - 1) ≫
+        H.shiftMap (CochainComplex.mappingCone.triangle
+          ((Γ.mapHomologicalComplex ℤᵘᵖ).map
+            (ambientRationalInjectiveRestriction X Z hZ))).mor₃ (n - 1) n (by omega) =
+      H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) := by
+  dsimp only
+  change ((HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shift (n - 1)).map
+      (supportConeToAmbientInjectiveGlobalCone X Z hZ) ≫ _ = _
+  rw [← Functor.shiftMap_comp', supportConeToAmbientInjectiveGlobalCone_connecting]
+
+private lemma coneSupportForget_shiftedLiftConnecting
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
+    (hS : (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
+      (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
+      (ambientRationalInjectiveComplex X)).ShortExact) :
+    let Y := TopCat.of (ComplexPoint X)
+    let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
+    let S := TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y U ⊤
+      (ambientRationalInjectiveComplex X)
+    letI := CochainComplex.mappingCocone.quasiIso_shiftedLiftShortComplex S
+      hS;
+    -((inv (HomologicalComplex.homologyMap
+      (CochainComplex.mappingCocone.shiftedLiftShortComplex S) (n - 1))) ≫
+        ((HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftIso
+          1 (n - 1) n (by omega)).hom.app S.X₁ ≫
+          HomologicalComplex.homologyMap S.f n) =
+      (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
+        (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) := by
+  dsimp only
+  simpa only using
+    CochainComplex.mappingCocone.inv_homologyMap_shiftedLiftShortComplex_connecting
+      _ hS (n - 1) n (by omega)
+
+private lemma coneSupportForget_coneIsoConnecting
+    (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
+    let Γ : TopCat.Sheaf AddCommGrpCat.{0} (TopCat.of (ComplexPoint X)) ⥤
+        AddCommGrpCat.{0} :=
+      TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat.{0} (TopCat.of (ComplexPoint X))
+    let b := ambientRationalInjectiveRestriction X Z hZ
+    HomologicalComplex.homologyMap
+        (CochainComplex.mappingCone.mapHomologicalComplexIso b Γ).hom (n - 1) ≫
+      (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
+        (CochainComplex.mappingCone.triangle
+          ((Γ.mapHomologicalComplex ℤᵘᵖ).map b)).mor₃ (n - 1) n (by omega) =
+      (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
+        (ShiftedHom.map (CochainComplex.mappingCone.triangle b).mor₃
+          (Γ.mapHomologicalComplex ℤᵘᵖ)) (n - 1) n (by omega) := by
+  dsimp only
+  simpa only using
+    CochainComplex.mappingCone.mapHomologicalComplexIso_homology_connecting
+      _ _ (n - 1) n (by omega)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -144,33 +210,55 @@ lemma coneSupportAddEquivSupportedInjectiveHomology_forgetSupport
       (coneSupportAddEquivSupportedInjectiveHomology X Z hZ n x) := by
   let Y := TopCat.of (ComplexPoint X)
   let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
-  let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-  let S := TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y U ⊤
-    (ambientRationalInjectiveComplex X)
-  let b := ambientRationalInjectiveRestriction X Z hZ
-  let c := supportConeToAmbientInjectiveGlobalCone X Z hZ
-  let H := HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
-  let e := CochainComplex.mappingCone.mapHomologicalComplexIso b Γ
+  let Γ : TopCat.Sheaf AddCommGrpCat.{0} (TopCat.of (ComplexPoint X)) ⥤
+      AddCommGrpCat.{0} :=
+    TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat.{0} (TopCat.of (ComplexPoint X))
+  let S : ShortComplex (CochainComplex AddCommGrpCat ℤ) :=
+    TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y U ⊤
+      (ambientRationalInjectiveComplex X)
+  let b : ambientRationalInjectiveComplex X ⟶
+      derivedPushforwardComplementConstantRationalComplexInt X Z :=
+    ambientRationalInjectiveRestriction X Z hZ
+  let c : CochainComplex.mappingCone S.g ⟶
+      CochainComplex.mappingCone
+        ((Γ.mapHomologicalComplex ℤᵘᵖ).map b) :=
+    supportConeToAmbientInjectiveGlobalCone X Z hZ
+  let H : HomologicalComplex AddCommGrpCat ℤᵘᵖ ⥤ AddCommGrpCat :=
+    HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
+  let e : (Γ.mapHomologicalComplex ℤᵘᵖ).obj
+      (CochainComplex.mappingCone b) ≅
+      CochainComplex.mappingCone ((Γ.mapHomologicalComplex ℤᵘᵖ).map b) :=
+    CochainComplex.mappingCone.mapHomologicalComplexIso b Γ
   let y := rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n x
   let : QuasiIso (CochainComplex.mappingCocone.shiftedLiftShortComplex S) :=
     CochainComplex.mappingCocone.quasiIso_shiftedLiftShortComplex S
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact Y U ⊤ _)
-  have hc : HomologicalComplex.homologyMap c (n - 1) ≫
+  have hc := coneSupportForget_homologyMap (X := X) Z hZ n
+  change HomologicalComplex.homologyMap c (n - 1) ≫
       H.shiftMap (CochainComplex.mappingCone.triangle
         ((Γ.mapHomologicalComplex ℤᵘᵖ).map b)).mor₃ (n - 1) n (by omega) =
-      H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) := by
-    change (H.shift (n - 1)).map c ≫ _ = _
-    rw [← Functor.shiftMap_comp', supportConeToAmbientInjectiveGlobalCone_connecting]
+      H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) at hc
   have hc' : inv (HomologicalComplex.homologyMap c (n - 1)) ≫
       H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃ (n - 1) n (by omega) =
       H.shiftMap (CochainComplex.mappingCone.triangle
         ((Γ.mapHomologicalComplex ℤᵘᵖ).map b)).mor₃ (n - 1) n (by omega) := by
-    rw [← hc, IsIso.inv_hom_id_assoc]
-  have hl := CochainComplex.mappingCocone.inv_homologyMap_shiftedLiftShortComplex_connecting
-    S (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact Y U ⊤ _)
-    (n - 1) n (by omega)
-  have he := CochainComplex.mappingCone.mapHomologicalComplexIso_homology_connecting
-    b Γ (n - 1) n (by omega)
+    exact (IsIso.inv_comp_eq (HomologicalComplex.homologyMap c (n - 1))).2 hc.symm
+  have hl := coneSupportForget_shiftedLiftConnecting (X := X) Z hZ n
+    (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex_shortExact
+      (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
+      (ambientRationalInjectiveComplex X))
+  have he := coneSupportForget_coneIsoConnecting (X := X) Z hZ n
+  change -((inv (HomologicalComplex.homologyMap
+      (CochainComplex.mappingCocone.shiftedLiftShortComplex S) (n - 1))) ≫
+        ((H.shiftIso 1 (n - 1) n (by omega)).hom.app S.X₁ ≫
+          HomologicalComplex.homologyMap S.f n)) =
+      H.shiftMap (CochainComplex.mappingCone.triangle S.g).mor₃
+        (n - 1) n (by omega) at hl
+  change HomologicalComplex.homologyMap e.hom (n - 1) ≫
+      H.shiftMap (CochainComplex.mappingCone.triangle
+        ((Γ.mapHomologicalComplex ℤᵘᵖ).map b)).mor₃ (n - 1) n (by omega) =
+      H.shiftMap (ShiftedHom.map (CochainComplex.mappingCone.triangle b).mor₃
+        (Γ.mapHomologicalComplex ℤᵘᵖ)) (n - 1) n (by omega) at he
   rw [rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone]
   change H.shiftMap (ShiftedHom.map (CochainComplex.mappingCone.triangle b).mor₃
       (Γ.mapHomologicalComplex ℤᵘᵖ)) (n - 1) n (by omega) y =

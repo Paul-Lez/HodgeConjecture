@@ -43,11 +43,6 @@ noncomputable abbrev single₀ : C ⥤ CochainComplex.Plus C :=
     (fun A ↦ ⟨0, (inferInstance : CochainComplex.IsStrictlyGE
       (((CochainComplex.single₀ C).obj A).extend ComplexShape.embeddingUpNat) 0)⟩)
 
-instance single₀_obj_isStrictlyGE (A : C) : ((single₀ C).obj A).obj.IsStrictlyGE 0 := by
-  change CochainComplex.IsStrictlyGE
-    (((CochainComplex.single₀ C).obj A).extend ComplexShape.embeddingUpNat) 0
-  infer_instance
-
 instance single₀_additive : (single₀ C).Additive where
   map_add := by
     intros

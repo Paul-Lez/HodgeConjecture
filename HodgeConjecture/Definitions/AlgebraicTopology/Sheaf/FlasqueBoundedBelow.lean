@@ -17,6 +17,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.GlobalSections
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Topology.Sheaves.Flasque
 
@@ -35,48 +36,3 @@ termwise-injective replacement.
 @[expose] public noncomputable section
 
 open CategoryTheory Limits Opposite TopologicalSpace
-
-namespace TopCat.Sheaf.IsFlasque
-
-universe u
-
-variable {X : TopCat.{u}}
-
-namespace BoundedBelowComplex
-
-variable (K : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ)
-
-/-- Let `X` be a topological space. The global sections functor sends a sheaf of abelian groups `F`
-to `F(X)` and a sheaf morphism to its map on sections over the whole space. -/
-def globalSectionsFunctor (X : TopCat.{u}) :
-    TopCat.Sheaf AddCommGrpCat.{u} X ⥤ AddCommGrpCat.{u} :=
-  (sheafSections (Opens.grothendieckTopology X) AddCommGrpCat.{u}).obj (op (⊤ : Opens X))
-
-noncomputable instance globalSectionsFunctor_additive :
-    (globalSectionsFunctor X).Additive := by
-  constructor
-  intro A B f g
-  change (((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op (⊤ : Opens X))).map
-      ((TopCat.Sheaf.forget AddCommGrpCat.{u} X).map (f + g))) = _
-  rw [Functor.map_add, Functor.map_add]
-  rfl
-
-noncomputable instance globalSectionsFunctor_preservesFiniteLimits :
-    PreservesFiniteLimits (globalSectionsFunctor X) := by
-  let : PreservesFiniteLimits
-      ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op (⊤ : Opens X))) :=
-    inferInstance
-  exact comp_preservesFiniteLimits (TopCat.Sheaf.forget AddCommGrpCat.{u} X)
-    ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj (op (⊤ : Opens X)))
-
-/-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
-groups on `X`. This is the complex of abelian groups with `K^n(X)` in degree `n` and
-differentials obtained by evaluating those of `K` on the whole space. -/
-def globalSectionsComplex
-    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ) :
-    CochainComplex AddCommGrpCat.{u} ℤ :=
-  ((globalSectionsFunctor X).mapHomologicalComplex ℤᵘᵖ).obj K
-
-end BoundedBelowComplex
-
-end TopCat.Sheaf.IsFlasque

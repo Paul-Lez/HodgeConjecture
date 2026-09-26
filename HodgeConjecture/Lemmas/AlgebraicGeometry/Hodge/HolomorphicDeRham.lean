@@ -151,7 +151,8 @@ def complexScalarComplex (c : ℂ) :
 def complexScalarComplexInt (c : ℂ) :
     constantComplexSheafComplexInt X ⟶
       constantComplexSheafComplexInt X :=
-  ((CochainComplex.Plus.single₀ _).map (complexScalarSheaf X c)).hom
+  HomologicalComplex.extendMap (complexScalarComplex X c)
+    ComplexShape.embeddingUpNat
 
 end AlgebraicGeometry.ComplexPoint
 
@@ -343,12 +344,10 @@ lemma complexScalarComplexInt_comp_conj (c : ℂ) :
     complexScalarComplexInt X c ≫ conjConstantComplexSheafComplexInt X =
       conjConstantComplexSheafComplexInt X ≫
         complexScalarComplexInt X (starRingEnd ℂ c) := by
-  change ((CochainComplex.Plus.single₀ _).map (complexScalarSheaf X c) ≫
-      (CochainComplex.Plus.single₀ _).map (conjConstantComplexSheaf X)).hom =
-    ((CochainComplex.Plus.single₀ _).map (conjConstantComplexSheaf X) ≫
-      (CochainComplex.Plus.single₀ _).map
-        (complexScalarSheaf X (starRingEnd ℂ c))).hom
-  rw [← Functor.map_comp, ← Functor.map_comp, complexScalarSheaf_comp_conj]
+  unfold complexScalarComplexInt conjConstantComplexSheafComplexInt
+    constantComplexSheafComplexInt
+  rw [← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp,
+    complexScalarComplex_comp_conj]
 
 @[simp] lemma scalarHolomorphicDeRhamComplexInt_zero
     [IsIntegral X.left] [Smooth X.hom] :
@@ -382,9 +381,6 @@ lemma complexScalarComplexInt_comp_conj (c : ℂ) :
   rw [scalarHolomorphicDeRhamComplex_mul, HomologicalComplex.extendMap_comp]
   rfl
 
-set_option backward.defeqAttrib.useBackward true in
-set_option backward.isDefEq.respectTransparency false in
-set_option backward.isDefEq.respectTransparency.types false in
 /-- The integer-indexed constant-to-de Rham comparison commutes with complex scalar
 multiplication. -/
 lemma constantsToHolomorphicDeRhamComplexInt_scalar
@@ -393,15 +389,14 @@ lemma constantsToHolomorphicDeRhamComplexInt_scalar
       scalarHolomorphicDeRhamComplexInt X c =
     complexScalarComplexInt X c ≫
       constantsToHolomorphicDeRhamComplexInt X := by
-  unfold constantsToHolomorphicDeRhamComplexInt scalarHolomorphicDeRhamComplexInt
-    complexScalarComplexInt
   change HomologicalComplex.extendMap
-        (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat ≫
-      HomologicalComplex.extendMap
-        (scalarHolomorphicDeRhamComplex X (dim X.left) c) ComplexShape.embeddingUpNat =
-    HomologicalComplex.extendMap (complexScalarComplex X c) ComplexShape.embeddingUpNat ≫
-      HomologicalComplex.extendMap
-        (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat
+      (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat ≫
+    HomologicalComplex.extendMap
+      (scalarHolomorphicDeRhamComplex X (dim X.left) c) ComplexShape.embeddingUpNat =
+    HomologicalComplex.extendMap
+      (complexScalarComplex X c) ComplexShape.embeddingUpNat ≫
+    HomologicalComplex.extendMap
+      (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat
   rw [← HomologicalComplex.extendMap_comp, ← HomologicalComplex.extendMap_comp,
     constantsToHolomorphicDeRhamComplex_scalar]
 
