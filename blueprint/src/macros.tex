@@ -1,0 +1,12 @@
+% Macros shared by the web and print versions. Kept in a single file at the top level of
+% `src/` because plasTeX cannot resolve `\input` paths with directories unless kpsewhich is
+% installed.
+%
+% The environments below are the node types of the dependency graph
+% (see the `thms=` option in web.tex).
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
