@@ -525,7 +525,7 @@ lemma hypercohomologyAddEquivConstantCohomology_map {L : Type} [Field L]
     hypercohomologyMap X _ n (hypercohomologyMap X _ n α)
   rw [← hypercohomologyMap_comp_apply, ← hypercohomologyMap_comp_apply]
   exact congrArg (fun g => hypercohomologyMap X g n α)
-    (HomologicalComplex.extendSingleIso_hom_naturality ComplexShape.embeddingUpNat f 0 0 rfl)
+    ((HomologicalComplex.extendSingleNatIso ComplexShape.embeddingUpNat 0 0 rfl).hom.naturality f)
 
 omit [Algebra K ℂ] in
 /-- The inverse comparison is natural in maps of constant sheaves. -/

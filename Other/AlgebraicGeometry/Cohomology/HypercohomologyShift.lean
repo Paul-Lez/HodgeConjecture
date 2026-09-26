@@ -33,29 +33,29 @@ variable (Y : TopCat.{0}) (K : CochainComplex (Sheaf AddCommGrpCat Y) ℤ)
 Both the additive functor's shift comparison and the usual homology shift are
 displayed explicitly. -/
 def globalSectionsShiftShortComplex :
-    (globalSectionsComplexInt Y (K⟦s⟧)).sc n ⟶
-      (globalSectionsComplexInt Y K).sc n' :=
+    (globalSectionsComplex AddCommGrpCat Y (K⟦s⟧)).sc n ⟶
+      (globalSectionsComplex AddCommGrpCat Y K).sc n' :=
   (HomologicalComplex.shortComplexFunctor AddCommGrpCat ℤᵘᵖ n).map
-    ((((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
+    ((((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
       ℤᵘᵖ).commShiftIso s).hom.app K) ≫
     (CochainComplex.shiftShortComplexFunctorIso AddCommGrpCat s n n' (by omega)).hom.app
-      (globalSectionsComplexInt Y K)
+      (globalSectionsComplex AddCommGrpCat Y K)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma globalSectionsShiftShortComplex_homologyMap :
     ShortComplex.homologyMap (globalSectionsShiftShortComplex Y K s n n' h) =
     HomologicalComplex.homologyMap
-      ((((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
+      ((((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
         ℤᵘᵖ).commShiftIso s).hom.app K) n ≫
       ((HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftIso
-        s n n' (by omega)).hom.app (globalSectionsComplexInt Y K) :=
+        s n n' (by omega)).hom.app (globalSectionsComplex AddCommGrpCat Y K) :=
   (ShortComplex.homologyMap_comp _ _).trans
     (congrArg (fun f => HomologicalComplex.homologyMap
-      ((((IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).mapHomologicalComplex
+      ((((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
         ℤᵘᵖ).commShiftIso s).hom.app K) n ≫ f)
       (CochainComplex.ShiftSequence.shiftIso_hom_app s n n' (by omega)
-        (globalSectionsComplexInt Y K)).symm)
+        (globalSectionsComplex AddCommGrpCat Y K)).symm)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -230,7 +230,7 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_shifted_naturality
         (analyticQuasiIsomorphisms X) f) (by omega)) =
     (HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftMap
       (ShiftedHom.map f
-        ((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
+        ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ))
         n n' (by omega)
       (hypercohomologyAddEquivGlobalSectionsKInjective X K n x) := by

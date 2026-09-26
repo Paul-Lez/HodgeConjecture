@@ -39,7 +39,7 @@ sections of a sheaf of abelian groups restricted to the space `U` with its origi
 the open subset `U`. -/
 def openRestrictionGlobalSectionsIso :
     U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u} ⋙
-        IsFlasque.BoundedBelowComplex.globalSectionsFunctor (TopCat.of U) ≅
+        TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat (TopCat.of U) ≅
       supportEvaluation X U :=
   NatIso.ofComponents (fun F =>
     F.obj.mapIso (eqToIso (congrArg op (Opens.isOpenEmbedding_obj_top U)))) (fun {_ _} f =>
@@ -55,7 +55,7 @@ theorem supportEvaluation_map_quasiIso_of_flasque
     (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
     QuasiIso (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).map f) := by
   let R := U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}
-  let Γ := IsFlasque.BoundedBelowComplex.globalSectionsFunctor (TopCat.of U)
+  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat (TopCat.of U)
   let K' : CochainComplex (Sheaf AddCommGrpCat.{u} (TopCat.of U)) ℤ :=
     (R.mapHomologicalComplex ℤᵘᵖ).obj K
   let L' : CochainComplex (Sheaf AddCommGrpCat.{u} (TopCat.of U)) ℤ :=
@@ -69,7 +69,7 @@ theorem supportEvaluation_map_quasiIso_of_flasque
     let : (L.X n).IsFlasque := hL n
     exact openSheafRestriction_isFlasque X U _
   let : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map f') :=
-    IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso f' nK nL hK' hL'
+    TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso f' nK nL hK' hL'
   let e := NatIso.mapHomologicalComplex (openRestrictionGlobalSectionsIso X U) ℤᵘᵖ
   apply (quasiIso_iff_of_arrow_mk_iso ((Γ.mapHomologicalComplex ℤᵘᵖ).map f')
     (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).map f)
