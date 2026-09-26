@@ -31,7 +31,7 @@ jobs:
           build: false
       - name: Check the style
         run: lake exe lint-style HodgeConjecture Other HodgeGuide
-      - name: Build the Lean libraries and the statement-import check
+      - name: Build the Lean libraries and the specification checks
         run: lake build
       - name: Check the import layering
         run: python3 scripts/check_import_layers.py

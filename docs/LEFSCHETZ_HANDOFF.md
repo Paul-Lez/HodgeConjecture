@@ -8,7 +8,7 @@ The proofs contain no `sorry` or added axiom.
 ## Goal
 
 The repository's target is `LefschetzOneOne` in
-[`HodgeConjecture/Variants.lean`](../HodgeConjecture/Variants.lean):
+[`HodgeConjecture/LefschetzOneOne.lean`](../HodgeConjecture/LefschetzOneOne.lean):
 
 ```lean
 ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
@@ -16,7 +16,7 @@ The repository's target is `LefschetzOneOne` in
 ```
 
 The proof first establishes the stronger concrete formulation `RationalLefschetzOneOne` in
-[`Other/AlgebraicGeometry/LefschetzOneOne.lean`](../Other/AlgebraicGeometry/LefschetzOneOne.lean):
+[`Other/AlgebraicGeometry/LefschetzOneOneStatement.lean`](../Other/AlgebraicGeometry/LefschetzOneOneStatement.lean):
 
 ```lean
 ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
@@ -28,6 +28,10 @@ The proof first establishes the stronger concrete formulation `RationalLefschetz
 `RationalLefschetzOneOne.to_lefschetzOneOne` maps the explicit rational cycle into
 `algebraicCycleClassSpan`. Thus the final theorem has the canonical target type without a
 `HodgeConjecture` hypothesis or comparison axiom.
+
+The canonical proposition has a statement-only module. The explicit-cycle proposition has a
+separate proof-interface module. The import checks enforce both boundaries and restate both
+contracts.
 
 ## PR split
 
@@ -50,7 +54,8 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 
 | Files | Result |
 | --- | --- |
-| `Other/AlgebraicGeometry/Cycle/SheafClass.lean`, `LefschetzOneOne.lean` | `algebraicCycleClassSpan_le_range_rationalSheafCycleClassOnCycles`; `HodgeConjecture.rationalLefschetzOneOne` and its `type_of%` copy. |
+| `HodgeConjecture/LefschetzOneOne.lean`, `Other/AlgebraicGeometry/LefschetzOneOneStatement.lean` | Canonical rational statement and stronger explicit-cycle statement. |
+| `Other/AlgebraicGeometry/Cycle/SheafClass.lean`, `LefschetzOneOne.lean` | `rationalSheafCycleClassOnCycles_mem_algebraicCycleClassSpan`; `HodgeConjecture.rationalLefschetzOneOne` and its `type_of%` copy. |
 | `Other/Geometry/Manifold/HolomorphicLogarithm.lean` | Local holomorphic logarithms; local integer kernel of `exp(2πiz)`. |
 | `Other/AlgebraicGeometry/HolomorphicExponential.lean`, `HolomorphicExponentialSequence.lean` | `holomorphicExponentialSequence_shortExact`: `0 → ℤ → 𝒪 → 𝒪ˣ → 0` on the analytic space. |
 | `Other/AlgebraicGeometry/HolomorphicFirstChernClass.lean`, `HolomorphicFirstChernClassExactness.lean` | The connecting map `Ext¹(ℤ, 𝒪ˣ) → Ext²(ℤ, ℤ)` and `exists_holomorphicFirstChernClass_iff`. |
@@ -151,6 +156,7 @@ coherent-sheaf algebraization and faithful flatness of analytification on stalks
 
 ```bash
 lake build
+python3 scripts/check_import_layers.py
 lake env lean scripts/lefschetz_axiom_audit.lean
 git diff --check
 ```
