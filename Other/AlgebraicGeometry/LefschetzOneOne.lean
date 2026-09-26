@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Statement
-public import Other.AlgebraicGeometry.Cycle.SheafClass
+public import HodgeConjecture.Variants
+public import Other.AlgebraicGeometry.LefschetzOneOneStatement
 
 /-!
-# The rational Lefschetz (1, 1) theorem assuming the Hodge conjecture
+# Consequences of the Hodge conjecture for rational Lefschetz (1, 1)
 
 On a smooth projective integral complex variety, every rational cohomology class of degree two
 and Hodge type `(1, 1)` is the class of a rational divisor. Here a rational divisor is an element
@@ -33,15 +33,14 @@ file prove that divisor classes have Hodge type `(1, 1)` or descend the map to t
 
 open CategoryTheory AlgebraicGeometry ComplexPoint
 
-/-- The rational Lefschetz `(1, 1)` statement for smooth projective integral complex varieties:
-every rational Hodge class in degree two is the class of a rational divisor. -/
-@[expose] public def RationalLefschetzOneOne : Prop :=
-  ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (α : H^2(X; ℚ)),
-    α ∈ Hdg^1(X; ℚ) →
-      ∃ D : TensorProduct ℤ ℚ (codimensionCycleSubgroup X.left 1),
-        rationalSheafCycleClassOnCycles
-          { scheme := X.left, structureMap := X.hom } 1 D = α
+/-- The concrete rational-cycle formulation implies the repository's Lefschetz `(1, 1)`
+statement. -/
+public theorem RationalLefschetzOneOne.to_lefschetzOneOne
+    (h : RationalLefschetzOneOne) : LefschetzOneOne := by
+  intro X _ _ _ α hα
+  obtain ⟨D, hD⟩ := h X α hα
+  rw [← hD]
+  exact rationalSheafCycleClassOnCycles_mem_algebraicCycleClassSpan X 1 D
 
 /-- The Hodge conjecture implies the rational Lefschetz `(1, 1)` theorem. -/
 public theorem HodgeConjecture.rationalLefschetzOneOne

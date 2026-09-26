@@ -8,6 +8,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 STATEMENT = "HodgeConjecture.Statement"
+LEFSCHETZ_SPEC = "HodgeConjecture.LefschetzOneOne"
+LEFSCHETZ_EXPLICIT_SPEC = "Other.AlgebraicGeometry.LefschetzOneOneStatement"
 
 
 def without_comments(source: str) -> str:
@@ -72,14 +74,20 @@ def main() -> int:
         for library in ("HodgeConjecture", "Other")
         for path in [ROOT / f"{library}.lean", *sorted((ROOT / library).rglob("*.lean"))]
     ]
+    direct_imports = {}
     graph = {}
     for path in paths:
         module = ".".join(path.relative_to(ROOT).with_suffix("").parts)
-        graph[module] = {
+        imports = {
             dependency
             for line in re.findall(r"^\s*(?:public\s+)?(?:meta\s+)?import\s+([^\n]+)",
                                    without_comments(path.read_text()), re.MULTILINE)
             for dependency in line.split()
+        }
+        direct_imports[module] = imports
+        graph[module] = {
+            dependency
+            for dependency in imports
             if dependency in ("HodgeConjecture", "Other")
             or dependency.startswith(("HodgeConjecture.", "Other."))
         }
@@ -97,6 +105,25 @@ def main() -> int:
         errors.append("Other umbrella must import HodgeConjecture")
 
     closure = import_closure(graph, STATEMENT)
+
+    spec_imports = direct_imports.get(LEFSCHETZ_SPEC, set())
+    if spec_imports != {STATEMENT}:
+        errors.append(
+            f"{LEFSCHETZ_SPEC}: expected the sole direct import {STATEMENT}, "
+            f"found {', '.join(sorted(spec_imports)) or 'none'}"
+        )
+
+    explicit_spec_imports = direct_imports.get(LEFSCHETZ_EXPLICIT_SPEC, set())
+    expected_explicit_spec_imports = {
+        LEFSCHETZ_SPEC,
+        "Other.AlgebraicGeometry.Cycle.SheafClass",
+    }
+    if explicit_spec_imports != expected_explicit_spec_imports:
+        errors.append(
+            f"{LEFSCHETZ_EXPLICIT_SPEC}: expected direct imports "
+            f"{', '.join(sorted(expected_explicit_spec_imports))}; found "
+            f"{', '.join(sorted(explicit_spec_imports)) or 'none'}"
+        )
 
     for module in sorted(closure):
         if module == "Other" or module.startswith("Other."):
@@ -117,7 +144,10 @@ def main() -> int:
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1
-    print(f"Import layers OK: {len(closure) - 1} local dependencies of {STATEMENT}; no Other imports.")
+    print(
+        f"Import layers OK: {len(closure) - 1} local dependencies of {STATEMENT}; "
+        f"{LEFSCHETZ_SPEC} imports only {STATEMENT}; no Other imports."
+    )
     return 0
 
 

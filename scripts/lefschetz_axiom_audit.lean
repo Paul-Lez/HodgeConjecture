@@ -1,4 +1,5 @@
 import Other.AlgebraicGeometry.LefschetzOneOneFiniteHomology
+import Other.AlgebraicGeometry.GAGAProper
 import Other.AlgebraicGeometry.ActualSingularSupportWindingOnOpen
 import Other.AlgebraicGeometry.ActualSingularSupportBoundaryOnOpen
 import Other.AlgebraicTopology.Sheaf.CohomologyIntegerOpenRestriction
@@ -72,9 +73,9 @@ import Other.AlgebraicGeometry.PointJetDetection
 import Other.AlgebraicGeometry.PointJetSectionGerm
 import Other.AlgebraicTopology.Sheaf.CohomologyShiftDerivedVanishing
 import Other.AlgebraicGeometry.ClosedImmersion.HolomorphicChartsAnalytic
-/- Representative axiom checks for the incomplete Lefschetz development.
+/- Representative axiom checks for the rational Lefschetz `(1, 1)` development.
 Run: lake env lean scripts/lefschetz_axiom_audit.lean
-See docs/LEFSCHETZ_HANDOFF.md for the full goal and remaining obligations. -/
+See docs/LEFSCHETZ_HANDOFF.md for the proof route. -/
 import Other.AlgebraicGeometry.ChernWindingRawBoundary
 import Other.AlgebraicGeometry.RelativeChernFrameVariation
 import Other.AlgebraicGeometry.RelativeChernFrameWinding
@@ -154,6 +155,10 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.exists_holomorphicUnitExtension_of_integral_hodgeClass
 #print axioms HodgeConjecture.rationalLefschetzOneOne
 #print axioms HodgeConjecture.rationalLefschetzOneOne_direct
+#print axioms AlgebraicGeometry.ComplexPoint.rationalSheafCycleClassOnCycles_mem_algebraicCycleClassSpan
+#print axioms RationalLefschetzOneOne.to_lefschetzOneOne
+#print axioms rationalLefschetzOneOne
+#print axioms lefschetzOneOne
 #print axioms LinearMap.exists_integer_multiple_isInteger
 #print axioms LinearMap.exists_integer_multiple
 #print axioms CategoryTheory.ShortComplex.homologyMap_exists_integer_multiple
