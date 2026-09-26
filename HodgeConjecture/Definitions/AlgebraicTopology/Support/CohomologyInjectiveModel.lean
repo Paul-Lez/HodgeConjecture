@@ -73,6 +73,17 @@ def supportedSectionsRestriction {U U' V V' : Opens X} (hU : U' ≤ U) (hV : V' 
       (((sheafSectionsSupportedOutsideMap X hU).mapHomologicalComplex ℤᵘᵖ).app K) ≫
     sectionComplexRestriction X ℤᵘᵖ _ (homOfLE hV)
 
+@[simp]
+theorem supportedSectionsRestriction_refl {U V V' : Opens X} (hV : V' ≤ V)
+    (K : CochainComplex (Sheaf AddCommGrpCat X) ℤ) :
+    supportedSectionsRestriction X (le_refl U) hV K =
+      sectionComplexRestriction X ℤᵘᵖ
+        (((sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).obj K)
+        (homOfLE hV) := by
+  dsimp [supportedSectionsRestriction]
+  rw [sheafSectionsSupportedOutsideMap_refl]
+  rfl
+
 set_option linter.auxLemma false
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
   TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5

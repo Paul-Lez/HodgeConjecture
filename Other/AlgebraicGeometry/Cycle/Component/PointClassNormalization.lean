@@ -55,17 +55,6 @@ theorem complexSupportInjectiveCohomologySheafIsoRelative_restriction_section
     (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.naturality,
     complexSupportInjectiveCohomologySheafIsoRelative_section_assoc]
 
-/-- The normalization isomorphism's forward map displays the actual restriction,
-actual lowest-degree map, and actual cohomology-sheaf comparison. -/
-theorem cycleComponentSupportedClassNormalizationIso_hom :
-    (cycleComponentSupportedClassNormalizationIso X x hx).hom =
-      HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x)
-        (2 * (p : ℤ)) ≫
-      (cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx).hom ≫
-      (complexSupportInjectiveCohomologySheafIsoRelative X
-        (cycleComponentAnalyticClosedSupport X x) (2 * p)).hom.hom.app
-          (op (cycleComponentSmoothSupportAmbientOpen X x)) := rfl
-
 section Point
 
 variable (d : ℕ) [SmoothOfRelativeDimension d X.hom]
@@ -156,19 +145,41 @@ theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
-/-- The ACTUAL general supported component class is the old normalized point
-coclass transported through the actual relative/injective comparison. This is
-a uniqueness theorem about the general construction, not a point branch. -/
+set_option maxHeartbeats 10000000 in
+/-- The supported component class equals the normalized point class. -/
 theorem cycleComponentSupportedInjectiveClass_point_normalization
     (hx : Order.coheight x = d) :
     cycleComponentSupportedInjectiveClass X x hx =
-      analyticComponentPointSupportedInjectiveCoclass X x d z := by
-  obtain rfl : dim X.left = d := SmoothOfRelativeDimension.dim_eq X.hom d
+      (rationalSupportAddEquivSupportedInjectiveHomology X
+        (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
+        (analyticComponentPointSupportedInjectiveCoclass X x d z) := by
+  let a : CycleComponentSupportedCohomology X x d :=
+    (rationalSupportAddEquivSupportedInjectiveHomology X
+      (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
+      (analyticComponentPointSupportedInjectiveCoclass X x d z)
   symm
-  apply cycleComponentSupportedInjectiveClass_unique X x hx
-  rw [cycleComponentSupportedClassNormalizationIso_hom,
-    cycleComponentSmoothSupportLowestSectionCohomologyIso,
+  apply cycleComponentSupportedInjectiveClass_unique X x hx a
+  have hnorm :
+      (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a =
+        (complexSupportInjectiveCohomologySheafIsoRelative X
+          (cycleComponentAnalyticClosedSupport X x) (2 * d)).hom.hom.app
+            (op (cycleComponentSmoothSupportAmbientOpen X x))
+          ((cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx).hom
+            (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x)
+              (2 * (d : ℤ))
+              ((rationalSupportAddEquivSupportedInjectiveHomology X
+                (cycleComponentAnalyticClosedSupport X x) (2 * d)) a))) := by
+    exact cycleComponentSupportedClassNormalizationIso_apply X x hx a
+  rw [hnorm,
+    cycleComponentSmoothSupportLowestSectionCohomologyComplexIso,
     TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso_hom]
+  have ha :
+      (rationalSupportAddEquivSupportedInjectiveHomology X
+        (cycleComponentAnalyticClosedSupport X x) (2 * d)) a =
+        analyticComponentPointSupportedInjectiveCoclass X x d z := by
+    dsimp [a]
+    exact AddEquiv.apply_symm_apply _ _
+  rw [ha]
   exact analyticComponentPointSupportedInjectiveCoclass_section_normalization X x _ z hx
 
 /-- Exact positive-kernel point normalization of the mapping-cone class. -/
@@ -178,6 +189,7 @@ theorem coneCycleComponentSheafClass_point_normalization
       analyticComponentPointPositiveKernelClass X x d z := by
   rw [coneCycleComponentSheafClass_eq_injectiveModel,
     cycleComponentSupportedInjectiveClass_point_normalization X x d z hx]
+  simp
   rfl
 
 end Point

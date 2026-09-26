@@ -3,6 +3,7 @@ Copyright 2026 The Formal Conjectures Authors.
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import VersoManual
+import HodgeConjecture.Mathlib.CategoryTheory.Sites.SheafCohomology.Pair
 import Other.AlgebraicGeometry.Hodge.CodimensionZeroNonvanishing
 import Other.AlgebraicGeometry.Cycle.Component.SmoothSupportCoclassSection
 import Other.AlgebraicGeometry.Cycle.FundamentalClass
@@ -172,11 +173,10 @@ this chapter, and in general it is cohomological purity; see
 
 Write $`U=X(\mathbb C)\setminus Z_{\mathrm{sing}}(\mathbb C)`. Step 1 gave a section of
 $`\mathcal H^{2p}_Z` over $`U`; the statement needs an element of $`H^{2p}_Z(X;\mathbb Q)`. The
-two are identified by a composite of three isomorphisms, each for its own reason:
+two are identified by a composite of two isomorphisms, each for its own reason:
 
 $$`H^{2p}_Z(X;\mathbb Q)
    \;\xrightarrow{\ \sim\ }\;H^{2p}_Z(U;\mathbb Q)
-   \;\xrightarrow{\ \sim\ }\;\Gamma\bigl(U,\mathcal H^{2p}(R\Gamma_Z\mathbb Q)\bigr)
    \;\xrightarrow{\ \sim\ }\;\Gamma(U,\mathcal H^{2p}_Z).`
 
 The first is restriction to $`U`, and it is what removes the singular locus from the problem.
@@ -187,23 +187,17 @@ long exact sequence of the nested supports $`Z_{\mathrm{sing}}\subseteq Z` then 
 sides of the restriction map.
 
 ```lean
-#check cycleComponentSingularBoundarySectionCohomology_isZero_cycleDegree
+#check cycleComponentSingularBoundaryRelH_isZero_of_lt
 ```
 
-The second passes from a cohomology group to a group of sections, and it is the step that purity
-supplies. On $`U` the cohomology sheaves of $`R\Gamma_Z\mathbb Q` vanish in every degree other than
-$`2p`, so $`2p` is the lowest degree in which they are nonzero. In that lowest degree the
-cohomology of the sections over $`U` agrees with the sections of the cohomology sheaf, because no
-lower degree contributes a correction.
+The second passes from supported Ext to a group of sections. The flasque bridge, smooth-locus
+purity, and the supported cohomology-sheaf comparison supply this step. On $`U`, support purity
+puts the relevant cohomology in degree $`2p`, so the lowest-degree section calculation has no
+lower-degree correction.
 
 ```lean
 #check cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
 ```
-
-The third identifies $`\mathcal H^{2p}(R\Gamma_Z\mathbb Q)`, the cohomology sheaf of the supported
-part of an injective resolution, with $`\mathcal H^{2p}_Z`, the sheafification of
-$`V\mapsto H^{2p}(V,V\setminus Z;\mathbb Q)`. The comparison runs through the singular
-resolution.
 
 Of the two definitions quoted below, the first is the restriction isomorphism on its own and the
 second is the whole composite, the normalization isomorphism
@@ -217,15 +211,19 @@ namespace Guide.Subvariety.D3
 def cycleComponentSupportExtensionIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-      (cycleComponentSmoothSupportAmbientOpen X x)).mapHomologicalComplex (.up ℤ)).obj
-        (complexSupportInjectiveComplex X (cycleComponentAnalyticClosedSupport X x))).homology
-          (2 * (p : ℤ))) :=
-  letI := cycleComponentSupportSectionRestriction_homology_isIso X x hx
-  asIso (HomologicalComplex.homologyMap (cycleComponentSupportSectionRestriction X x) (2 * (p : ℤ)))
+    H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ) ≃+
+      CategoryTheory.Sheaf.relH
+        ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
+        (2 * p)
+        (homOfLE (show (cycleComponentAnalyticClosedSupport X x).compl ≤
+            cycleComponentSmoothSupportAmbientOpen X x from by
+          intro y hy hyS
+          obtain ⟨z, _, hz⟩ := hyS
+          apply hy
+          change y.underlying ∈ closure ({x} : Set X.left)
+          rw [← range_cycleComponentι X.left x]
+          exact ⟨z, hz⟩)) :=
+  AlgebraicGeometry.ComplexPoint.cycleComponentSupportExtensionIso X x hx
 ```
 ```lean -show
 end Guide.Subvariety.D3
@@ -238,19 +236,10 @@ namespace Guide.Subvariety.D4
 def cycleComponentSupportedClassNormalizationIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) :
-    ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
-        (cycleComponentAnalyticClosedSupport X x))).homology (2 * (p : ℤ))) ≅
-      (supportRelativeCohomologySheaf (TopCat.of (ComplexPoint X))
-        (cycleComponentSupport X x) (2 * p)).obj.obj
-          (op (cycleComponentSmoothSupportAmbientOpen X x)) :=
-  have he : ((2 * p : ℕ) : ℤ) = 2 * (p : ℤ) := by omega
-  cycleComponentSupportExtensionIso X x hx ≪≫
-    cycleComponentSmoothSupportLowestSectionCohomologyIso X x hx ≪≫
-      (he ▸ (TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X))
-        (cycleComponentSmoothSupportAmbientOpen X x)).mapIso
-          (complexSupportInjectiveCohomologySheafIsoRelative X
-            (cycleComponentAnalyticClosedSupport X x) (2 * p)))
+    CycleComponentSupportedCohomology X x p ≃+
+      CycleComponentSmoothCoclassSections X x p :=
+  cycleComponentSupportExtensionIso X x hx |>.trans <|
+    cycleComponentSmoothSupportLowestSectionCohomologyEquiv X x hx
 ```
 ```lean -show
 end Guide.Subvariety.D4
@@ -286,10 +275,8 @@ example :
 
 # Step 3: from support to ordinary cohomology
 
-The extension is a class in the cohomology of an injective resolution with supports. The
-comparison of the previous section identifies that group with $`H^{2p}_Z(X;\mathbb Q)`, and
-forgetting the support gives the class in ordinary cohomology, which is the class the statement
-uses.
+The extension is a class in supported Ext. Forgetting the support gives the class in ordinary
+cohomology, which is the class the statement uses.
 
 ```lean -show
 namespace Guide.Subvariety.D5
@@ -297,11 +284,9 @@ namespace Guide.Subvariety.D5
 ```lean
 def cycleComponentSheafSupportedClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-    (hx : coheight x = p) :
+  (hx : coheight x = p) :
     H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ) :=
-  have he : 2 * (p : ℤ) = ((2 * p : ℕ) : ℤ) := by omega
-  (rationalSupportAddEquivSupportedInjectiveHomology X (cycleComponentAnalyticClosedSupport X x)
-    (2 * p)).symm (he ▸ cycleComponentSupportedInjectiveClass X x hx)
+  cycleComponentSupportedInjectiveClass X x hx
 ```
 ```lean -show
 end Guide.Subvariety.D5

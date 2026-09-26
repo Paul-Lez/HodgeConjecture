@@ -39,15 +39,15 @@ variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 @[simp]
 theorem cycleComponentExtendSmoothCoclass_normalization
     (s : CycleComponentSmoothCoclassSections X x p) :
-    (cycleComponentSupportedClassNormalizationIso X x hx).hom
+    (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom
       (cycleComponentExtendSmoothCoclass X x hx s) = s :=
   AddEquiv.apply_symm_apply
-    (cycleComponentSupportedClassNormalizationIso X x hx).addCommGroupIsoToAddEquiv s
+    (cycleComponentSupportedClassNormalizationIso X x hx) s
 
 /-- Exact smooth-locus normalization, not equality only up to a scalar. -/
 @[simp]
 theorem cycleComponentSupportedInjectiveClass_normalization :
-    (cycleComponentSupportedClassNormalizationIso X x hx).hom
+    (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom
       (cycleComponentSupportedInjectiveClass X x hx) =
     cycleComponentSmoothSupportCoclassSection X x hx :=
   cycleComponentExtendSmoothCoclass_normalization X x hx _
@@ -56,16 +56,16 @@ theorem cycleComponentSupportedInjectiveClass_normalization :
 theorem cycleComponentExtendSmoothCoclass_unique
     (s : CycleComponentSmoothCoclassSections X x p)
     (a : CycleComponentSupportedCohomology X x p)
-    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).hom a = s) :
+    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a = s) :
     a = cycleComponentExtendSmoothCoclass X x hx s :=
-  (cycleComponentSupportedClassNormalizationIso X x hx).addCommGroupIsoToAddEquiv.injective
+  (cycleComponentSupportedClassNormalizationIso X x hx).injective
     (ha.trans (cycleComponentExtendSmoothCoclass_normalization X x hx s).symm)
 
 /-- The normalized global extension is unique, by injectivity of the
 restriction/purity comparison. This is a theorem, not a supplied existence input. -/
 theorem cycleComponentSupportedInjectiveClass_unique
     (a : CycleComponentSupportedCohomology X x p)
-    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).hom a =
+    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a =
       cycleComponentSmoothSupportCoclassSection X x hx) :
     a = cycleComponentSupportedInjectiveClass X x hx :=
   cycleComponentExtendSmoothCoclass_unique X x hx _ a ha
@@ -82,7 +82,9 @@ def coneCycleComponentSheafSupportedClass :
     RationalCohomologyWithSupport X (cycleComponentSupport X x) ((2 * p : ℕ) : ℤ) :=
   (coneSupportAddEquivSupportedInjectiveHomology X (cycleComponentSupport X x)
     (cycleComponentAnalyticClosedSupport X x).isClosed ((2 * p : ℕ) : ℤ)).symm
-      (cycleComponentSupportedInjectiveClass X x hx)
+      ((rationalSupportAddEquivSupportedInjectiveHomology X
+        (cycleComponentAnalyticClosedSupport X x) (2 * p))
+        (cycleComponentSupportedInjectiveClass X x hx))
 
 /-- The class of the component computed through the mapping-cone model. Its agreement with
 `cycleComponentSheafClass` is not yet proved. -/
@@ -101,7 +103,9 @@ theorem coneCycleComponentSheafClass_eq_injectiveModel :
           (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
             (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
             (ambientRationalInjectiveComplex X)).f (2 * p)
-          (cycleComponentSupportedInjectiveClass X x hx)) := by
+          ((rationalSupportAddEquivSupportedInjectiveHomology X
+            (cycleComponentAnalyticClosedSupport X x) (2 * p))
+            (cycleComponentSupportedInjectiveClass X x hx))) := by
   apply (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * p)).injective
   rw [AddEquiv.apply_symm_apply]
   change rationalHypercohomologyAddEquivAmbientInjectiveHomology X _
