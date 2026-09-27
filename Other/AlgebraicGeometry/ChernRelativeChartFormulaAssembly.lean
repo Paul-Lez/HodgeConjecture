@@ -4,7 +4,6 @@ Released under the Apache 2.0 license as described in the LICENSE file.
 -/
 module
 
-public import Other.AlgebraicGeometry.ChernRelativeChartFormula
 public import Other.AlgebraicGeometry.ChernRelativeCanonicalLift
 public import Other.AlgebraicGeometry.ChernComponentRecovery
 public import Other.AlgebraicGeometry.ChernWindingGenericChartAlgebraic

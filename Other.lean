@@ -269,7 +269,6 @@ public import Other.AlgebraicGeometry.CartierWindingChartUnit
 public import Other.AlgebraicGeometry.CartierWindingChartVanishing
 public import Other.AlgebraicGeometry.ChernLocalModel
 public import Other.AlgebraicGeometry.ChernLocalModelWinding
-public import Other.AlgebraicGeometry.ChernRelativeChartFormula
 public import Other.AlgebraicGeometry.ChernRelativeChartFormulaSplitting
 public import Other.AlgebraicGeometry.ChernRelativeClassGeneric
 public import Other.AlgebraicGeometry.ChernRelativeClassNaturality
