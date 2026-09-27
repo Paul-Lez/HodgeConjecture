@@ -71,7 +71,6 @@ import Other.RingTheory.CotangentDetection
 import Other.AlgebraicGeometry.PointJetDerivation
 import Other.AlgebraicGeometry.PointJetDetection
 import Other.AlgebraicGeometry.PointJetSectionGerm
-import Other.AlgebraicTopology.Sheaf.CohomologyShiftDerivedVanishing
 import Other.AlgebraicGeometry.ClosedImmersion.HolomorphicChartsAnalytic
 /- Representative axiom checks for the rational Lefschetz `(1, 1)` development.
 Run: lake env lean scripts/lefschetz_axiom_audit.lean
@@ -122,7 +121,6 @@ import Other.AlgebraicGeometry.ComplementFrameGeneric
 import Other.AlgebraicGeometry.ChernRelativeClassGeneric
 import Other.AlgebraicGeometry.SupportEnlargementCodimTwo
 import Other.Algebra.Homology.MappingConeCocycle
-import Other.AlgebraicGeometry.ChernRelativeChartFormula
 import Other.AlgebraicGeometry.ChernRelativeChartFormulaSplitting
 import Other.AlgebraicGeometry.ChernWindingChartCoclassRestrict
 import Other.AlgebraicGeometry.HolomorphicExponentialSingularCochain
@@ -193,7 +191,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.nonempty_relativeChernComparison
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.forgetSupport_relativeChernClass
 #print axioms AlgebraicGeometry.ComplexPoint.supportedInjectiveToAmbient_relativeChernSupportedClass
-#print axioms AlgebraicGeometry.ComplexPoint.hasDivisorClassOfSomeCartierData_of_relativeChernChartFormula
 #print axioms AlgebraicGeometry.ComplexPoint.exists_holomorphicExponential_of_simplyConnected
 #print axioms ChernWinding.hasRationalWindingPeriod
 #print axioms AlgebraicGeometry.ComplexPoint.hasWindingPeriods
@@ -215,19 +212,13 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.coclass_restrict_of_germ
 #print axioms AlgebraicGeometry.ComplexPoint.hasComplementFrame_of_unitOffDivisor
 #print axioms AlgebraicGeometry.ComplexPoint.hasComplementFrame_of_stalkUnit
-#print axioms AlgebraicGeometry.ComplexPoint.hasDivisorClassOfSomeCartierData_of_unitOffDivisor
 #print axioms AlgebraicGeometry.ComplexPoint.hasComplementFrameOffCodimTwo
 #print axioms TopCat.Sheaf.supportedSectionsEnlarge_bijective_of_vanishing
 #print axioms AlgebraicGeometry.ComplexPoint.exists_closeds_sup_of_codimTwo
 #print axioms AlgebraicGeometry.ComplexPoint.enlargeSupportedInjectiveHomology_bijective_of_codimTwo
 #print axioms AlgebraicGeometry.ComplexPoint.exists_enlarge_eq_of_codimTwo
 #print axioms AlgebraicGeometry.ComplexPoint.supportedInjectiveToAmbient_relativeChernSupportedClassOnClosed
-#print axioms AlgebraicGeometry.ComplexPoint.hasChernWindingNaturality_of_generic
-#print axioms AlgebraicGeometry.ComplexPoint.hasChernWindingNaturality_of_enlargeSurjective
-#print axioms AlgebraicGeometry.ComplexPoint.hasDivisorClassOfSomeCartierData_of_enlargeSurjective
 #print axioms AlgebraicGeometry.ComplexPoint.enlargeSurjectiveCodimTwo
-#print axioms AlgebraicGeometry.ComplexPoint.hasChernWindingNaturality_of_relativeChernChartFormulaGeneric
-#print axioms AlgebraicGeometry.ComplexPoint.hasDivisorClassOfSomeCartierData_of_relativeChernChartFormulaGeneric
 
 -- Divisor–Chern comparison: restriction, normalized cochains, and cone signs.
 #print axioms CochainComplex.mappingCone.map_sub_map_of_eq_add
@@ -244,7 +235,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.holomorphicUnitToSingularOneSheaf_comp_coboundary
 #print axioms AlgebraicGeometry.ComplexPoint.holomorphicExponential_comp_toSingularOneSheaf
 #print axioms AlgebraicGeometry.ComplexPoint.integerConstantsToHolomorphicSheaf_comp_toSingularZeroSheaf
-#print axioms AlgebraicGeometry.ComplexPoint.hasDivisorClassOfCartierData_of_chartFormulaExists
 #print axioms AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_eq_injectiveModel
 
 #print axioms CochainComplex.HomComplex.Cocycle.exists_precomp_single_eq
@@ -476,7 +466,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.Affine.localizedPointJetDerivation_coordinate
 #print axioms Complex.continuousOn_normalQuotient
 #print axioms Complex.exists_ball_analytic_normalQuotient_factor
-#print axioms CategoryTheory.Functor.mapHomologyShift_eq_zero_of_mapDerivedCategory_eq_zero
 #print axioms AlgebraicGeometry.ComplexPoint.analyticAt_closedImmersionHolomorphicFlatteningChart_normalCoordinateChange
 #print axioms AlgebraicGeometry.ComplexPoint.analyticAt_closedImmersionHolomorphicFlatteningChart_evaluate
 #print axioms Complex.exists_nhds_normalQuotientFinOne_factor
