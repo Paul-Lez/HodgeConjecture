@@ -11,9 +11,9 @@ public import Other.AlgebraicTopology.Singular.Sheaf.CochainSubdivision
 /-!
 # Constant-sheaf cohomology with arbitrary coefficients and singular cohomology
 
-The rational comparison of `BettiSheafComparison` and `BettiGlobalSectionsComparison` uses no
-property of `ℚ` beyond its ring structure once the singular-cochain machinery is stated over a
-commutative ring. This file records the comparison for an arbitrary coefficient ring `R`:
+The rational Betti comparison uses no property of `ℚ` beyond its ring structure once the
+singular-cochain machinery is stated over a commutative ring. This file records the comparison
+for an arbitrary coefficient ring `R`:
 hypercohomology of the constant sheaf `R` on the analytic space of a smooth complex scheme
 is the homology of the algebraic-dual singular cochain complex with coefficients in `R`.
 
