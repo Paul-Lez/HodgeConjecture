@@ -1,5 +1,5 @@
 import Other.AlgebraicGeometry.LefschetzOneOneFiniteHomology
-import Other.AlgebraicGeometry.GAGAProper
+import Other.AlgebraicGeometry.LefschetzOneOneProof
 import Other.AlgebraicGeometry.ActualSingularSupportWindingOnOpen
 import Other.AlgebraicGeometry.ActualSingularSupportBoundaryOnOpen
 import Other.AlgebraicTopology.Sheaf.CohomologyIntegerOpenRestriction

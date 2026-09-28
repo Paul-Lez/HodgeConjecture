@@ -4,8 +4,9 @@
 
 The projective GAGA input is complete. `Other/AlgebraicGeometry/GAGAProper.lean` proves both
 `analyticCoherentSheavesAlgebraize` and the original target
-`analyticLineBundlesAlgebraize`. It also closes the repository's rational Lefschetz `(1, 1)`
-statement as the unconditional theorems `rationalLefschetzOneOne` and
+`analyticLineBundlesAlgebraize`. `Other/AlgebraicGeometry/LefschetzOneOneProof.lean` then closes
+the repository's rational Lefschetz `(1, 1)` statement as the unconditional theorems
+`rationalLefschetzOneOne` and
 `lefschetzOneOne : LefschetzOneOne`.
 
 The comparison with Oka's canonical analytification is implemented by this module chain:
@@ -16,10 +17,12 @@ The comparison with Oka's canonical analytification is implemented by this modul
 3. `HolomorphicAnalytificationCharts.lean` proves the affine-coordinate comparison square;
 4. `HolomorphicAnalytificationLocalIso.lean` proves that the comparison is a local isomorphism;
 5. `GAGAProper.lean` transports Oka's proper GAGA theorem and stalk faithful flatness across that
-   comparison, then applies `GAGACoherentReduction.lean`.
+   comparison, then applies `GAGACoherentReduction.lean`;
+6. `LefschetzOneOneProof.lean` applies line-bundle algebraization to the final Lefschetz reduction.
 
 The targeted build `lake build Other.AlgebraicGeometry.GAGAProper` passes. The final declaration
-and its comparison spine are checked by `scripts/gaga_axiom_audit.lean`.
+in `LefschetzOneOneProof.lean` and its comparison spine are checked by
+`scripts/gaga_axiom_audit.lean`.
 
 ## PR provenance
 

@@ -489,6 +489,7 @@ public import Other.AlgebraicGeometry.GAGAStatement
 public import Other.AlgebraicGeometry.GAGAtoLefschetz
 public import Other.AlgebraicGeometry.GAGACoherentReduction
 public import Other.AlgebraicGeometry.GAGAProper
+public import Other.AlgebraicGeometry.LefschetzOneOneProof
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityDef
 public import Other.AlgebraicGeometry.Cohomology.SupportComparison
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyDef

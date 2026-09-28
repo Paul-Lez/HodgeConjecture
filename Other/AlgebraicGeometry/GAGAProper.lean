@@ -10,7 +10,7 @@ public import Other.Oka.Analytification.GAGA.Proper.Equivalence
 public import Other.Oka.Analytification.GAGA.SheafAnalytification
 public import Other.Oka.AnalyticSpace.PullbackCoherent
 
-/-! Proper GAGA and the rational Lefschetz `(1, 1)` theorem. -/
+/-! # Proper GAGA -/
 
 open CategoryTheory AlgebraicGeometry
 
@@ -93,15 +93,6 @@ theorem analyticLineBundlesAlgebraize
   analyticLineBundlesAlgebraize_of_coherent X
     (analyticCoherentSheavesAlgebraize X) fun z ↦
       faithfullyFlat_stalkMap_holomorphicAnalytificationπ X (dim X.left) z
-
-/-- The rational Lefschetz `(1, 1)` theorem. -/
-theorem _root_.rationalLefschetzOneOne : RationalLefschetzOneOne := by
-  exact RationalLefschetzOneOne.of_analyticLineBundlesAlgebraize fun X ↦
-    analyticLineBundlesAlgebraize X
-
-/-- The Lefschetz `(1, 1)` theorem in the repository's named formulation. -/
-theorem _root_.lefschetzOneOne : LefschetzOneOne :=
-  rationalLefschetzOneOne.to_lefschetzOneOne
 
 end AlgebraicGeometry.ComplexPoint
 

@@ -9,7 +9,7 @@ import Other.AlgebraicGeometry.ComplexPointClosedPointEquiv
 import Other.AlgebraicGeometry.FiniteFreeAnalytification
 import Other.AlgebraicGeometry.FiniteSumHomSurjective
 import Other.AlgebraicGeometry.GAGACoherentReduction
-import Other.AlgebraicGeometry.GAGAProper
+import Other.AlgebraicGeometry.LefschetzOneOneProof
 import Other.AlgebraicGeometry.GAGALineBundles
 import Other.AlgebraicGeometry.GAGASerreReduction
 import Other.AlgebraicGeometry.GAGATwistPresentation

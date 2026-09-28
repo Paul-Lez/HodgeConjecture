@@ -1,6 +1,12 @@
 name = "HodgeConjecture"
 keywords = ["math", "algebraic-geometry", "hodge-theory"]
-defaultTargets = ["HodgeConjecture", "Other", "CheckStatementImports", "CheckLefschetzOneOneSpec"]
+defaultTargets = [
+  "HodgeConjecture",
+  "Other",
+  "CheckStatementImports",
+  "CheckLefschetzOneOneSpec",
+  "CheckLefschetzOneOneProof",
+]
 
 [leanOptions]
 pp.unicode.fun = true
@@ -34,6 +40,10 @@ srcDir = "scripts"
 
 [[lean_lib]]
 name = "CheckLefschetzOneOneSpec"
+srcDir = "scripts"
+
+[[lean_lib]]
+name = "CheckLefschetzOneOneProof"
 srcDir = "scripts"
 
 [[lean_exe]]

@@ -1,7 +1,7 @@
 # Rational Lefschetz (1, 1)
 
 This development proves the unconditional theorem `lefschetzOneOne : LefschetzOneOne` in
-`Other/AlgebraicGeometry/GAGAProper.lean`. Its stronger concrete helper
+`Other/AlgebraicGeometry/LefschetzOneOneProof.lean`. Its stronger concrete helper
 `rationalLefschetzOneOne : RationalLefschetzOneOne` produces an explicit rational divisor.
 The proofs contain no `sorry` or added axiom.
 
@@ -38,7 +38,7 @@ contracts.
 [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9) contains the analytic construction,
 denominator clearing, and the divisor–Chern comparison. [PR41](https://github.com/Paul-Lez/HodgeConjecture/pull/41)
 contains the earlier GAGA development and is stacked on PR9. The completed proper-GAGA comparison
-and final theorem are in `GAGAProper.lean`.
+is in `GAGAProper.lean`; the final theorem is in `LefschetzOneOneProof.lean`.
 
 The divisor–Chern comparison takes an algebraic line bundle and its analytic identification as
 inputs. The uniform comparison is proved without GAGA by
@@ -70,7 +70,8 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 | `Other/AlgebraicGeometry/HolomorphicLineBundleCoordinates.lean`, `HolomorphicLineBundleInvertible.lean` | Local coordinate isomorphisms; `E.sectionSheafOfModules_isInvertible`. |
 | `Other/AlgebraicGeometry/RegularFunctionsHolomorphic.lean` | `regularToHolomorphicSheaf`, the structure-sheaf map over `underlyingContinuousMap`. |
 | `Other/AlgebraicGeometry/AnalytificationModules.lean` | `moduleAnalytification`, its adjunction and `moduleAnalytificationUnitIso`. |
-| `Other/AlgebraicGeometry/HolomorphicAnalytificationLocalIso.lean`, `GAGAProper.lean` | Comparison with Oka's canonical analytification; coherent and line-bundle algebraization; unconditional `rationalLefschetzOneOne` and `lefschetzOneOne`. |
+| `Other/AlgebraicGeometry/HolomorphicAnalytificationLocalIso.lean`, `GAGAProper.lean` | Comparison with Oka's canonical analytification; coherent and line-bundle algebraization. |
+| `Other/AlgebraicGeometry/LefschetzOneOneProof.lean` | Unconditional proofs of `rationalLefschetzOneOne` and `lefschetzOneOne`. |
 | `Other/LinearAlgebra/RationalDenominators.lean`, `Other/Algebra/Homology/RationalCochainDenominators.lean` | Denominator clearing for finitely generated abelian groups and for homology. |
 | `Other/AlgebraicGeometry/ChernRelativeFinalAssembly.lean` | `hasDivisorClassOfCartierData`: the uniform divisor–Chern identity. |
 | `Other/AlgebraicGeometry/LefschetzOneOneObligations.lean`, `LefschetzOneOneReduction.lean` | The remaining obligations as explicit propositions, and `RationalLefschetzOneOne.of_obligations`. |
@@ -149,7 +150,8 @@ and the resulting integral divisor is divided by the denominator.
 
 All three obligations are discharged. `GAGACoherentReduction.lean` reduces line-bundle GAGA to
 coherent-sheaf algebraization and faithful flatness of analytification on stalks;
-`GAGAProper.lean` supplies both through Oka's proper GAGA development and proves the final
+`GAGAProper.lean` supplies both through Oka's proper GAGA development.
+`LefschetzOneOneProof.lean` applies that result and proves the final
 `rationalLefschetzOneOne` and `lefschetzOneOne` theorems.
 
 ## Verification
