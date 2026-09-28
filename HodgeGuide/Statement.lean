@@ -29,6 +29,8 @@ noncomputable section
 universe u u_1
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ) (V : SmoothProjectiveComplexVariety)
+  {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) [IsIntegral Y.left] [IsClosedImmersion i.left]
+  (hi : dim Y.left + p = dim X.left)
 ```
 
 # From subvarieties to cycles
@@ -43,7 +45,7 @@ namespace Guide.Statement.D5
 ```
 ```lean
 def sheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (p : ℕ) :
-    codimensionCycleSubgroup V.scheme p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
+    AlgebraicCycle.codimSubgroup V.scheme ℤ p →+ H^(2 * (p : ℤ))(V.over; ℚ) :=
   cycleClassOnCyclesOfComponents (fun x hx ↦ cycleComponentSheafClass V.over x hx)
 ```
 ```lean -show
@@ -60,7 +62,7 @@ namespace Guide.Statement.D6
 ```
 ```lean
 def rationalSheafCycleClassOnCycles (V : SmoothProjectiveComplexVariety) (p : ℕ) :
-    TensorProduct ℤ ℚ (codimensionCycleSubgroup V.scheme p) →ₗ[ℚ]
+    TensorProduct ℤ ℚ (AlgebraicCycle.codimSubgroup V.scheme ℤ p) →ₗ[ℚ]
       H^(2 * (p : ℤ))(V.over; ℚ) :=
   TensorProduct.AlgebraTensorModule.lift (sheafCycleClassRationalExtensionBilinear V p)
 ```
@@ -185,7 +187,7 @@ is proved here, from Noether normalization and a local étale chart, rather than
 ```lean
 #check hodgeClasses_zero_eq_top
 #check connectedSpace
-#check cycleComponentSheafClass_genericPoint_ne_zero
+#check closedEmbeddingSheafClass_genericPointEmbedding_ne_zero
 ```
 
 The nonvanishing is the part that tests the construction. Its proof runs the chain of
@@ -199,7 +201,7 @@ For a component of positive codimension the same chain stops at the last step. T
 section is still nonzero, for every component:
 
 ```lean
-#check cycleComponentSmoothSupportCoclassSection_ne_zero
+#check closedEmbeddingSmoothSupportCoclassSection_ne_zero
 ```
 
 but forgetting support need not be injective on $`H^{2p}_Z(X;\mathbb Q)`, and showing that it is

@@ -23,6 +23,7 @@ import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 public import Other.AlgebraicGeometry.Cycle.Support
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 
 /-!
 # NormalGeometry, the part the statement does not need
@@ -36,49 +37,51 @@ nothing in the statement's dependency chain uses these results, only material in
 @[expose] public noncomputable section
 open CategoryTheory Topology TopologicalSpace
 namespace AlgebraicGeometry
-variable (X : Over (Spec ↧ℂ))
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
 
-/-- The underlying scheme point of a complex point of a cycle component is closed. -/
-lemma cycleComponent_complexPoint_underlying_isClosed
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
+/-- The underlying scheme point of a complex point of the source of a closed embedding is
+closed. -/
+lemma closedEmbedding_complexPoint_underlying_isClosed
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left]
+    (z : ComplexPoint (Y)) :
     IsClosed {z.underlying} := by
-  let φ : Spec ↧ℂ ⟶ cycleComponent X.left x := z.left
+  let φ : Spec ↧ℂ ⟶ Y.left := z.left
   exact ((pointEquivClosedPoint
-    (cycleComponentι X.left x ≫ X.hom)) ⟨φ, Over.w z⟩).2
+    (i.left ≫ X.hom)) ⟨φ, by rw [show i.left ≫ X.hom = Y.hom from Over.w i]; exact Over.w z⟩).2
 
-/-- The image in the ambient variety of a complex point of a cycle component is a closed scheme
+/-- The image in the ambient variety of a complex point of the source is a closed scheme
 point. -/
-lemma cycleComponent_complexPoint_ambient_underlying_isClosed
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom))) :
-    IsClosed {cycleComponentι X.left x z.underlying} := by
-  have hclosed := (cycleComponentι X.left x).isClosedEmbedding.isClosedMap
-    {z.underlying} (cycleComponent_complexPoint_underlying_isClosed X x z)
+lemma closedEmbedding_complexPoint_ambient_underlying_isClosed
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left]
+    (z : ComplexPoint (Y)) :
+    IsClosed {i.left z.underlying} := by
+  have hclosed := (i.left).isClosedEmbedding.isClosedMap
+    {z.underlying} (closedEmbedding_complexPoint_underlying_isClosed i z)
   simpa only [Set.image_singleton] using hclosed
 
-/-- A reduced cycle component has a smooth complex point whose underlying scheme point is
-closed. -/
-lemma exists_cycleComponent_smooth_closed_complexPoint
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left) :
-    ∃ z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)),
+/-- The source of a closed embedding has a smooth complex point whose underlying scheme point
+is closed. -/
+lemma exists_closedEmbedding_smooth_closed_complexPoint
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    ∃ z : ComplexPoint (Y),
       z.underlying ∈
-          (cycleComponentι X.left x ≫ X.hom).smoothLocus ∧
+          (i.left ≫ X.hom).smoothLocus ∧
         IsClosed {z.underlying} := by
-  obtain ⟨z, hz⟩ := exists_cycleComponent_smooth_complexPoint X x
-  exact ⟨z, hz, cycleComponent_complexPoint_underlying_isClosed X x z⟩
+  obtain ⟨z, hz⟩ := exists_closedEmbedding_smooth_complexPoint i
+  exact ⟨z, hz, closedEmbedding_complexPoint_underlying_isClosed i z⟩
 
-/-- The coheight of the generic point of a component cannot exceed the relative dimension of
-the smooth ambient complex scheme. -/
-lemma cycleComponent_codimension_le
+include i in
+/-- The codimension cannot exceed the dimension of the ambient smooth complex scheme. -/
+lemma closedEmbedding_codimension_le
     [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) {d p : ℕ}
-    [SmoothOfRelativeDimension d X.hom] (hx : Order.coheight x = p) :
+    [IsProjective X.hom] [IsIntegral Y.left] [IsClosedImmersion i.left] {d p : ℕ}
+    [SmoothOfRelativeDimension d X.hom] (hi : dim Y.left + p = dim X.left) :
     p ≤ d := by
-  have hle := SmoothOfRelativeDimension.coheight_le_complex
-    (f := X.hom) (d := d) x
-  rw [hx] at hle
-  exact_mod_cast hle
+  have hd := SmoothOfRelativeDimension.dim_eq X.hom d
+  omega
 
 end AlgebraicGeometry
 end

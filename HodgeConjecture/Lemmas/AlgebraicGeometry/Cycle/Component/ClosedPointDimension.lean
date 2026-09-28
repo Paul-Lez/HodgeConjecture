@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.LocalGenerator
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
@@ -31,7 +32,7 @@ import Mathlib.RingTheory.Polynomial.RationalRoot
 import Mathlib.RingTheory.Polynomial.UniqueFactorization
 
 /-!
-# Dimensions at closed points of cycle components
+# Dimensions at closed points of closed subvarieties
 
 This file proves that every closed point of the reduced closure of a codimension-`p` point in a
 smooth complex `d`-fold has coheight `d - p`.  The commutative-algebra input is the
@@ -135,32 +136,34 @@ namespace AlgebraicGeometry
 
 attribute [local instance] overSpecAlgebra
 
-variable (X : Over (Spec ↧ℂ)) {d p : ℕ}
+variable {X Y : Over (Spec ↧ℂ)} {d p : ℕ}
 
-/-- Every closed point of the reduced closure of a codimension-`p` point in a smooth complex
-`d`-fold has coheight `d - p` inside that reduced closure. -/
-lemma cycleComponent_closedPoint_coheight_eq_sub
-    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
-    (z : cycleComponent X.left x)
+/-- Every closed point of the integral source of a closed embedding whose ambient generic point
+has coheight `p` in a smooth complex `d`-fold has coheight `d - p`. -/
+lemma closedEmbedding_closedPoint_coheight_eq_sub (i : Y ⟶ X)
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left]
+    (z : Y.left)
     [SmoothOfRelativeDimension d X.hom]
-    (hx : Order.coheight x = p) (hz : IsClosed {z}) :
+    (hi : Order.coheight (closedEmbeddingGenericPoint i) = p) (hz : IsClosed {z}) :
     Order.coheight z = d - p := by
-  let c : cycleComponent X.left x ⟶ X.left := cycleComponentι X.left x
+  let c : Y.left ⟶ X.left := i.left
+  let x : X.left := closedEmbeddingGenericPoint i
   let y : X.left := c z
-  have hyx : y ≤ x := (cycleComponentOrderIsoIic X.left x z).2
+  have hyx : y ≤ x := le_image_genericPoint c z
   obtain ⟨U, hU, hyU, hstandard⟩ :=
     SmoothOfRelativeDimension.exists_affine_isStandardSmoothOfRelativeDimension
       (d := d) X.hom y
   have hxU : x ∈ U := by
     rw [Scheme.le_iff_specializes] at hyx
     exact hyx.mem_open U.isOpen hyU
-  let W : (cycleComponent X.left x).Opens := c ⁻¹ᵁ U
+  let W : Y.left.Opens := c ⁻¹ᵁ U
   have hW : IsAffineOpen W := hU.preimage c
   have hzW : z ∈ W := hyU
   let : Nonempty W := ⟨⟨z, hzW⟩⟩
   let xu : U.toScheme := ⟨x, hxU⟩
   let zw : W.toScheme := ⟨z, hzW⟩
-  let q : Γ(X.left, U) →+* Γ(cycleComponent X.left x, W) :=
+  let q : Γ(X.left, U) →+* Γ(Y.left, W) :=
     (c.app U).hom
   have hqsurj : Function.Surjective q := c.app_surjective U hU
   let P : Ideal Γ(X.left, U) :=
@@ -185,14 +188,21 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
     change PrimeSpectrum.vanishingIdeal (hU.fromSpec ⁻¹' closure {x}) = P
     erw [hpreimage, PrimeSpectrum.vanishingIdeal_closure,
       PrimeSpectrum.vanishingIdeal_singleton]
+  have hradical : c.ker.radical = I := by
+    rw [← Scheme.IdealSheafData.vanishingIdeal_support]
+    congr 1
+    apply TopologicalSpace.Closeds.ext
+    rw [Scheme.Hom.support_ker, range_eq_closure_image_genericPoint c]
+    exact closure_closure
   have hqker : RingHom.ker q = P := by
-    change RingHom.ker (c.app U).hom = P
-    rw [← Scheme.Hom.ker_apply c ⟨U, hU⟩]
-    calc
-      c.ker.ideal ⟨U, hU⟩ = I.ideal ⟨U, hU⟩ := by
-        rw [show c = I.subschemeι from rfl]
-        exact congrArg (fun J : X.left.IdealSheafData ↦ J.ideal ⟨U, hU⟩)
-          I.ker_subschemeι
+    have hprime : (RingHom.ker q).IsPrime := RingHom.ker_isPrime q
+    calc RingHom.ker q
+        = (RingHom.ker q).radical := hprime.radical.symm
+      _ = (c.ker.ideal ⟨U, hU⟩).radical := by
+            rw [show RingHom.ker q = c.ker.ideal ⟨U, hU⟩ from
+              (Scheme.Hom.ker_apply c ⟨U, hU⟩).symm]
+      _ = (c.ker.radical).ideal ⟨U, hU⟩ := rfl
+      _ = I.ideal ⟨U, hU⟩ := by rw [hradical]
       _ = P := hideal
   have hPheight : P.height = p := by
     calc
@@ -203,29 +213,29 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
         have h := coheight_eq_of_isOpenImmersion
           (x := xu) U.ι
         simpa [xu] using h.symm
-      _ = p := hx
+      _ = p := hi
   have hquotient : ringKrullDim (Γ(X.left, U) ⧸ P) = d - p :=
     (algebraMap_isStandardSmoothOfRelativeDimension
       (d := d) X hstandard).ringKrullDim_quotient_eq_sub_complex
         P hPheight
-  have hringW : ringKrullDim Γ(cycleComponent X.left x, W) = d - p := by
+  have hringW : ringKrullDim Γ(Y.left, W) = d - p := by
     calc
-      ringKrullDim Γ(cycleComponent X.left x, W) =
+      ringKrullDim Γ(Y.left, W) =
           ringKrullDim (Γ(X.left, U) ⧸ RingHom.ker q) :=
         (ringKrullDim_eq_of_ringEquiv
           (RingHom.quotientKerEquivOfSurjective hqsurj)).symm
       _ = ringKrullDim (Γ(X.left, U) ⧸ P) := by rw [hqker]
       _ = d - p := hquotient
-  let s : cycleComponent X.left x ⟶ Spec ↧ℂ := c ≫ X.hom
-  let : Algebra ℂ Γ(cycleComponent X.left x, W) :=
+  let s : Y.left ⟶ Spec ↧ℂ := c ≫ X.hom
+  let : Algebra ℂ Γ(Y.left, W) :=
     overSpecAlgebra (Over.mk s) W
-  let : Algebra.FiniteType ℂ Γ(cycleComponent X.left x, W) := by
+  let : Algebra.FiniteType ℂ Γ(Y.left, W) := by
     rw [← RingHom.finiteType_algebraMap]
-    change (algebraMap ℂ Γ(cycleComponent X.left x, W)).FiniteType
+    change (algebraMap ℂ Γ(Y.left, W)).FiniteType
     apply (s.finiteType_appLE (isAffineOpen_top (Spec ↧ℂ)) hW (by simp)).comp
     exact RingHom.FiniteType.of_surjective _
       (Scheme.ΓSpecIso ↧ℂ).symm.commRingCatIsoToRingEquiv.surjective
-  let Q : Ideal Γ(cycleComponent X.left x, W) :=
+  let Q : Ideal Γ(Y.left, W) :=
     (hW.primeIdealOf zw).asIdeal
   have hQmax : Q.IsMaximal := hW.primeIdealOf_isMaximal_of_isClosed
     zw hz
@@ -244,5 +254,72 @@ lemma cycleComponent_closedPoint_coheight_eq_sub
   apply WithBot.coe_injective
   rw [← hQcoheight]
   exact hQheight
+
+/-- The dimension of an integral closed subvariety plus its codimension is the ambient
+dimension. -/
+lemma closedEmbedding_dim_add_coheight (i : Y ⟶ X)
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] :
+    (dim Y.left : ℕ∞) + Order.coheight (closedEmbeddingGenericPoint i) = dim X.left := by
+  have hle := SmoothOfRelativeDimension.coheight_le_complex
+    (f := X.hom) (d := dim X.left) (closedEmbeddingGenericPoint i)
+  have hfinite : Order.coheight (closedEmbeddingGenericPoint i) ≠ ⊤ :=
+    ne_top_of_le_ne_top (by simp) hle
+  obtain ⟨q, hq⟩ := ENat.ne_top_iff_exists.mp hfinite
+  have hqd : q ≤ dim X.left := by
+    rw [← hq] at hle
+    exact_mod_cast hle
+  obtain ⟨z, _, hz⟩ := (dense_closedEmbedding_smooth_closedPoints i).nonempty
+  have hdim : topologicalKrullDim Y.left = (dim X.left - q : ℕ) := by
+    apply le_antisymm
+    · simpa only [Nat.cast_sub hqd] using
+        topologicalKrullDim_closedEmbedding_le_sub i (d := dim X.left) hq.symm
+    · rw [topologicalKrullDim_eq_krullDim]
+      have h := Order.coheight_le_krullDim z
+      rw [closedEmbedding_closedPoint_coheight_eq_sub i z (d := dim X.left) hq.symm hz] at h
+      simpa only [← ENat.natCast_sub, WithBot.coe_natCast] using h
+  have hnat : dim Y.left = dim X.left - q := by
+    change ((topologicalKrullDim Y.left).unbotD 0).toNat = _
+    rw [hdim]
+    exact ENat.toNat_natCast _
+  rw [hnat, ← hq, ← Nat.cast_add, Nat.sub_add_cancel hqd]
+
+/-- Codimension can be specified by the source dimension instead of an ambient generic point. -/
+lemma closedEmbedding_coheight_eq_iff (i : Y ⟶ X)
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left] {p : ℕ} :
+    Order.coheight (closedEmbeddingGenericPoint i) = p ↔
+      dim Y.left + p = dim X.left := by
+  have h := closedEmbedding_dim_add_coheight i
+  constructor
+  · intro hp
+    rw [hp, ← Nat.cast_add] at h
+    exact_mod_cast h
+  · intro hp
+    have hp' : (dim Y.left : ℕ∞) + p = dim X.left := by exact_mod_cast hp
+    exact ENat.add_right_injective_of_ne_top (by simp) (h.trans hp'.symm)
+
+/-- A closed point of an integral closed subvariety has coheight equal to its dimension. -/
+lemma closedEmbedding_closedPoint_coheight_eq_dim (i : Y ⟶ X)
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    [IsIntegral Y.left] [IsClosedImmersion i.left]
+    (z : Y.left) (hz : IsClosed {z}) : Order.coheight z = dim Y.left := by
+  have hle := SmoothOfRelativeDimension.coheight_le_complex
+    (f := X.hom) (d := dim X.left) (closedEmbeddingGenericPoint i)
+  obtain ⟨q, hq⟩ := ENat.ne_top_iff_exists.mp
+    (ne_top_of_le_ne_top (by simp) hle)
+  have hdim := (closedEmbedding_coheight_eq_iff i).mp hq.symm
+  have hqd : q ≤ dim X.left := by omega
+  have hsub : dim X.left - q = dim Y.left := by omega
+  have h := closedEmbedding_closedPoint_coheight_eq_sub i z (d := dim X.left) hq.symm hz
+  simpa only [← ENat.natCast_sub, hsub] using h
+
+/-- The component associated with a scheme point has the same codimension as that point. -/
+lemma CycleComponent.dim_add_codimension (X : Over (Spec ↧ℂ))
+    [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+    (x : X.left) {p : ℕ} (hx : Order.coheight x = p) :
+    dim (CycleComponent.over X x).left + p = dim X.left :=
+  (closedEmbedding_coheight_eq_iff (CycleComponent.ι X x)).mp
+    (by simpa using hx)
 
 end AlgebraicGeometry

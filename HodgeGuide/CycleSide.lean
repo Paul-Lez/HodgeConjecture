@@ -22,109 +22,63 @@ noncomputable section
 universe u
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
   (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+  {Y : Over (Spec ↧ℂ)} (i : Y ⟶ X) [IsIntegral Y.left] [IsClosedImmersion i.left]
+  (hi : dim Y.left + p = dim X.left)
 
 local instance analyticSupportHasDerivedCategory (X : Over (Spec ↧ℂ)) :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 ```
 
-# Cycles are indexed by generic points
+# From cycle points to closed subvarieties
 
-The *coheight* of a point $`x` of a scheme is the codimension of its closure $`\overline{\{x\}}`,
-an irreducible closed subset with generic point $`x`. A codimension-$`p` cycle is a locally finite
-integer combination of points of coheight $`p`. The formalization uses this description
-throughout, in place of a separate type of subvarieties.
+A codimension-$`p` cycle is a locally finite integer combination of scheme points of coheight
+$`p`. The subgroup {name}`AlgebraicCycle.codimSubgroup` retains this indexing.
 
-```lean -show
-namespace Guide.Cycles.D1
-```
 ```lean
-def codimensionCycleSubgroup (X : Scheme.{u}) (p : ℕ) : AddSubgroup (AlgebraicCycle X ℤ) where
-  carrier c := ∀ x, c x ≠ 0 → coheight x = p
-  zero_mem' x hx := (hx rfl).elim
-  add_mem' := by
-    intro a b ha hb x hx
-    by_cases hax : a x = 0
-    · exact hb x (by simpa [hax] using hx)
-    · exact ha x hax
-  neg_mem' := by
-    intro a ha x hx
-    refine ha x fun h ↦ hx ?_
-    change -(a x) = 0
-    simp [h]
+#check AlgebraicCycle.codimSubgroup
+#check Function.locallyFinsupp.supported.single
 ```
-```lean -show
-end Guide.Cycles.D1
-example : @Guide.Cycles.D1.codimensionCycleSubgroup.{u} = @AlgebraicGeometry.codimensionCycleSubgroup.{u} := rfl
-```
-```lean -show
-namespace Guide.Cycles.D2
-```
-```lean
-open scoped Classical in
-noncomputable def codimensionCycleSubgroup.single {X : Scheme.{u}} {p : ℕ} (x : X) (hx : coheight x = p)
-    (n : ℤ) : codimensionCycleSubgroup X p :=
-  ⟨Function.locallyFinsuppWithin.single x n, by
-    intro y hy
-    by_cases h : y = x
-    · simpa [h] using hx
-    · simp [Function.locallyFinsuppWithin.single_apply, h] at hy⟩
-```
-```lean -show
-end Guide.Cycles.D2
-example : @Guide.Cycles.D2.codimensionCycleSubgroup.single.{u} = @AlgebraicGeometry.codimensionCycleSubgroup.single.{u} := rfl
-```
+
+The geometric construction accepts an integral scheme {lean}`Y` and a closed immersion
+{lean}`i`. Its codimension is specified by {lean}`hi`: the source dimension plus {lean}`p`
+is the ambient dimension. Only the ambient variety is assumed smooth.
+
 # The support of a subvariety
 
-For a point {lean}`x` of {lean}`X.left`, {lean}`cycleComponent X.left x` is the reduced closed
-subscheme with underlying space $`\overline{\{x\}}`, and {name}`cycleComponentι` is its closed
-immersion into {lean}`X.left`. The
-support of the subvariety in $`X(\mathbb C)` is the preimage of $`\overline{\{x\}}` under the map
-from complex points to scheme points, and it is closed in the analytic topology.
+The support is the image on complex points, bundled with its analytic closedness proof.
 
 ```lean -show
-namespace Guide.Cycles.D5
+namespace Guide.Cycles.Support
 ```
 ```lean
-def cycleComponent (X : Scheme) (x : X) : Scheme :=
-  (Scheme.IdealSheafData.vanishingIdeal
-    (X := X) ⟨closure {x}, isClosed_closure⟩).subscheme
+def closedEmbeddingSupport {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+    [IsClosedImmersion i.left] : Closeds (ComplexPoint X) :=
+  ⟨Set.range (Point.map i), ComplexPoint.isClosed_range_map_of_closedImmersion i⟩
 ```
 ```lean -show
-end Guide.Cycles.D5
-example : @Guide.Cycles.D5.cycleComponent.{u} = @AlgebraicGeometry.cycleComponent.{u} := rfl
-```
-```lean -show
-namespace Guide.Cycles.D6
-```
-```lean
-def cycleComponentι (X : Scheme) (x : X) : cycleComponent X x ⟶ X :=
-  (Scheme.IdealSheafData.vanishingIdeal
-    (X := X) ⟨closure {x}, isClosed_closure⟩).subschemeι
-```
-```lean -show
-end Guide.Cycles.D6
-example : @Guide.Cycles.D6.cycleComponentι.{u} = @AlgebraicGeometry.cycleComponentι.{u} := rfl
-```
-```lean -show
-namespace Guide.Cycles.D7
-```
-```lean
-def cycleComponentSupport (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    [IsProjective X.hom] (x : X.left) : Set (ComplexPoint X) :=
-  Point.underlying ⁻¹' closure {x}
-```
-```lean -show
-end Guide.Cycles.D7
-example : @Guide.Cycles.D7.cycleComponentSupport = @AlgebraicGeometry.cycleComponentSupport := rfl
+end Guide.Cycles.Support
+example : @Guide.Cycles.Support.closedEmbeddingSupport =
+    @AlgebraicGeometry.closedEmbeddingSupport := rfl
 ```
 
+The theorem below tests membership through underlying scheme points. Its two sides are sets
+of complex points.
+
 ```lean
-#check isClosed_cycleComponentSupport
+#check closedEmbeddingSupport_eq_preimage
+#check closedEmbedding_coheight_eq_iff
 ```
 
-Only the ambient variety is assumed smooth. A subvariety may be singular, and the construction of
-its class in the next section handles that case from the start.
+To evaluate a point-indexed cycle, {name}`CycleComponent.ι` supplies the closed immersion of
+{name}`Scheme.pointClosure`. The fundamental-class construction itself takes the immersion.
+
+```lean
+#check Scheme.reducedClosedSubscheme
+#check Scheme.pointClosure
+#check CycleComponent.ι
+#check CycleComponent.dim_add_codimension
+```
 
 # Cohomology with support
 

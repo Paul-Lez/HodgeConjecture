@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.Topology.Dimension.ClosedSubset
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Basic
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 
@@ -18,7 +19,7 @@ import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 Over a perfect field the complement of the smooth locus of a reduced irreducible scheme is
 a proper closed subset. This file proves the strict Krull-dimension bound of that reduced
-closed subscheme, including the `d - p` bound for cycle components. The bounds are on
+closed subscheme, including the `d - p` bound for closed subvarieties. The bounds are on
 algebraic dimension throughout.
 -/
 
@@ -36,29 +37,29 @@ variable {K : Type u} [Field K] {X : Scheme.{u}}
   (f : X ⟶ Spec (.of K)) [LocallyOfFiniteType f]
 
 /-- The singular locus equipped with its reduced closed-subscheme structure. -/
-def reducedSingularLocus : Scheme := reducedClosedSubscheme (singularLocusClosed f)
+def reducedSingularLocus : Scheme := X.reducedClosedSubscheme (singularLocusClosed f)
 
 /-- Its canonical closed immersion in the original scheme. -/
 def reducedSingularLocusι : reducedSingularLocus f ⟶ X :=
-  reducedClosedSubschemeι (singularLocusClosed f)
+  X.reducedClosedSubschemeι (singularLocusClosed f)
 
 instance reducedSingularLocus_isReduced : IsReduced (reducedSingularLocus f) :=
-  inferInstanceAs (IsReduced (reducedClosedSubscheme (singularLocusClosed f)))
+  inferInstanceAs (IsReduced (X.reducedClosedSubscheme (singularLocusClosed f)))
 
 instance reducedSingularLocusι_isClosedImmersion :
     IsClosedImmersion (reducedSingularLocusι f) :=
-  inferInstanceAs (IsClosedImmersion (reducedClosedSubschemeι (singularLocusClosed f)))
+  inferInstanceAs (IsClosedImmersion (X.reducedClosedSubschemeι (singularLocusClosed f)))
 
-variable (Y : Over (Spec ↧ℂ))
-  [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] [IsClosedImmersion i.left]
 
-/-- The singular locus of every cycle component admits the actual finite smooth
+/-- The singular locus of the source of a closed embedding admits the actual finite smooth
 decomposition constructed by Noetherian recursion. -/
-def cycleComponentSingularStratification (x : Y.left) :
-    List (Closeds (cycleComponent Y.left x)) :=
-  letI := cycleComponent_isNoetherian Y x
-  reducedSmoothStratification (cycleComponentι Y.left x ≫ Y.hom)
-    (singularLocusClosed (cycleComponentι Y.left x ≫ Y.hom))
+def closedEmbeddingSingularStratification :
+    List (Closeds Y.left) :=
+  letI := closedEmbedding_isNoetherian i
+  reducedSmoothStratification (i.left ≫ X.hom)
+    (singularLocusClosed (i.left ≫ X.hom))
 
 end AlgebraicGeometry
 
@@ -77,7 +78,7 @@ variable {K : Type u} [Field K] {X : Scheme.{u}}
 
 @[simp] theorem range_reducedSingularLocusι :
     Set.range (reducedSingularLocusι f) = (f.smoothLocus : Set X)ᶜ :=
-  range_reducedClosedSubschemeι _
+  X.range_reducedClosedSubschemeι _
 
 /-- Generic smoothness makes the actual singular locus proper; no singular-locus bound
 is supplied as an input. -/
@@ -100,7 +101,7 @@ theorem topologicalKrullDim_reducedSingularLocus_lt [PerfectField K] [IsIntegral
 theorem topologicalKrullDim_reducedClosedSmoothPiece_le {S T : Closeds X} (hTS : T ≤ S) :
     topologicalKrullDim (reducedClosedSmoothPiece f T) ≤ topologicalKrullDim S := by
   calc
-    _ ≤ topologicalKrullDim (reducedClosedSubscheme T) :=
+    _ ≤ topologicalKrullDim (X.reducedClosedSubscheme T) :=
       (reducedClosedStructureMap f T).smoothLocus.ι.isOpenEmbedding.isInducing.topologicalKrullDim_le
     _ ≤ topologicalKrullDim S :=
       (IsEmbedding.inclusion hTS).isInducing.topologicalKrullDim_le
@@ -118,23 +119,24 @@ theorem Smooth.exists_affine_relativeDimension_lt_of_topologicalKrullDim_lt
   obtain ⟨n, hn⟩ := RingHom.IsStandardSmooth.exists_isStandardSmoothOfRelativeDimension hs
   have : Nonempty U := ⟨⟨z, hzU⟩⟩
   have hdimU : topologicalKrullDim U = n := by
-    rw [Scheme.topologicalKrullDim_eq_orderKrullDim U.toScheme]
+    rw [topologicalKrullDim_eq_krullDim U.toScheme]
     exact orderKrullDim_eq_of_isStandardSmoothOfRelativeDimension g hU hn
   have hlt := U.ι.isOpenEmbedding.isInducing.topologicalKrullDim_le.trans_lt hdim
   rw [hdimU] at hlt
   exact ⟨U, hU, hzU, n, by exact_mod_cast hlt, hn⟩
 
-variable (Y : Over (Spec ↧ℂ))
-  [IsIntegral Y.left] [Smooth Y.hom] [IsProjective Y.hom]
+variable {X Y : Over (Spec ↧ℂ)} (i : Y ⟶ X)
+  [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+  [IsIntegral Y.left] [IsClosedImmersion i.left]
 
-/-- For a codimension-`p` component of a smooth projective complex `d`-fold, the reduced
+/-- For a codimension-`p` closed subvariety of a smooth projective complex `d`-fold, the reduced
 singular locus has algebraic dimension strictly less than `d - p`. -/
-theorem topologicalKrullDim_cycleComponent_singularLocus_lt
-    (x : Y.left) {d p : ℕ} [SmoothOfRelativeDimension d Y.hom]
-    (hx : Order.coheight x = p) :
+theorem topologicalKrullDim_closedEmbedding_singularLocus_lt
+    {d p : ℕ} [SmoothOfRelativeDimension d X.hom]
+    (hi : dim Y.left + p = dim X.left) :
     topologicalKrullDim
-      (reducedSingularLocus (cycleComponentι Y.left x ≫ Y.hom)) < (d - p : ℕ) :=
+      (reducedSingularLocus (i.left ≫ X.hom)) < (d - p : ℕ) :=
   topologicalKrullDim_reducedSingularLocus_lt _
-    (topologicalKrullDim_cycleComponent_le_sub Y x hx)
+    (topologicalKrullDim_closedEmbedding_le_sub i ((closedEmbedding_coheight_eq_iff i).mpr hi))
 
 end AlgebraicGeometry

@@ -252,6 +252,8 @@ public import HodgeConjecture.Mathlib.Algebra.PolynomialCatenary
 public import HodgeConjecture.Mathlib.Algebra.Ring.Basic
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
+public import HodgeConjecture.Mathlib.AlgebraicGeometry.PointClosure
+public import HodgeConjecture.Mathlib.AlgebraicGeometry.ReducedClosedSubscheme
 public import HodgeConjecture.Mathlib.AlgebraicTopology.SimplicialSet.ChainComplexSplit
 public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincare
 public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart

@@ -23,7 +23,7 @@ public import Other.AlgebraicGeometry.Smooth.DimensionFormula
 # Dimension bounds for algebraic cycle classes
 
 A smooth complex scheme of relative dimension `d` has no points of coheight greater than `d`.
-Consequently the span indexed by codimension-`p` components is zero when `d < p`.
+Consequently the span indexed by codimension-`p` points is zero when `d < p`.
 -/
 
 @[expose] public noncomputable section
@@ -37,7 +37,7 @@ open Point
 variable (X : Over (Spec ↧ℂ))
 
 /-- A smooth complex `d`-fold has no algebraic points of codimension greater than `d`. -/
-lemma no_cycleComponent_of_lt
+lemma isEmpty_coheight_eq_of_lt
     [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (d p : ℕ)
     [SmoothOfRelativeDimension d X.hom] (h : d < p) :
     IsEmpty {x : X.left // coheight x = p} :=

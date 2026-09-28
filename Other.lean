@@ -69,12 +69,10 @@ public import Other.AlgebraicGeometry.Cycle.AnalyticSupport
 public import Other.AlgebraicGeometry.Cycle.BorelMooreClass
 public import Other.AlgebraicGeometry.Cycle.ClassDimension
 public import Other.AlgebraicGeometry.Cycle.ClassOnCycles
-public import Other.AlgebraicGeometry.Cycle.Codimension
 public import Other.AlgebraicGeometry.Cycle.Component.AnalyticEmbedding
 public import Other.AlgebraicGeometry.Cycle.Component.BorelMoore
 public import Other.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 public import Other.AlgebraicGeometry.Cycle.Component.CoclassNonzero
-public import Other.AlgebraicGeometry.Cycle.Component.GenericPoint
 public import Other.AlgebraicGeometry.Cycle.Component.LocalGenerator
 public import Other.AlgebraicGeometry.Cycle.Component.LocalOrientation
 public import Other.AlgebraicGeometry.Cycle.Component.LocalOrientationCoherence
@@ -188,6 +186,9 @@ public import Other.LinearAlgebra.HodgeStructure
 public import Other.Mathlib.Algebra.Category.Grp.Basic
 public import Other.Mathlib.Algebra.Category.ModuleCat.Basic
 public import Other.Mathlib.Algebra.Homology.StupidTruncation
+public import Other.Mathlib.AlgebraicGeometry.AlgebraicCycle.Support
+public import Other.Mathlib.AlgebraicGeometry.AlgebraicCycle.Weight
+public import Other.Mathlib.Topology.LocallyFinsupp
 public import Other.RingTheory.AlgebraicNonvanishing
 public import Other.RingTheory.IntegralPrimitiveElement
 public import Other.RingTheory.RegularLocalQuotientKernel

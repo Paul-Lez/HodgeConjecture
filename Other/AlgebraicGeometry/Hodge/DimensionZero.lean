@@ -42,7 +42,7 @@ theorem algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan_of_dimensi
     algebraicCycleClassSpan X 0 = codimensionZeroCycleClassSpan X := by
   let : ConnectedSpace (ComplexPoint X) :=
     connectedSpaceOfDimensionEqZero X (dim X.left) hd
-  exact algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan X
+  exact algebraicCycleClassSpan_zero_eq_codimensionZeroCycleClassSpan
 
 /-- The Hodge-conjecture inclusion holds in every codimension for a smooth projective complex
 variety of complex dimension zero. -/
