@@ -156,8 +156,7 @@ theorem cycleComponent_stalkMap_ker_eq_prime_map
         intro hqa
         apply Ideal.mem_primeCompl_iff.mp ha
         have haa : a ∈ Q.comap q := hqa
-        rw [← hPQ] at haa
-        exact haa
+        rwa [← hPQ] at haa
       · intro hb
         obtain ⟨a, rfl⟩ := hq b
         refine ⟨a, Ideal.mem_primeCompl_iff.mpr ?_, rfl⟩
@@ -233,8 +232,8 @@ theorem span_germ_equation_eq_component_stalkMap_ker_of_away
   let l : Localization.Away s →+* R :=
     IsLocalization.Away.lift s hunit
   have hl : l.comp (algebraMap A (Localization.Away s)) =
-      (X.left.presheaf.germ f.opens (cycleComponentι X.left x z) hz).hom := by
-    exact IsLocalization.Away.lift_comp s hunit
+      (X.left.presheaf.germ f.opens (cycleComponentι X.left x z) hz).hom :=
+    IsLocalization.Away.lift_comp s hunit
   have hEqR : P.map
       (X.left.presheaf.germ f.opens (cycleComponentι X.left x z) hz).hom =
       (Ideal.span {f.equation}).map
