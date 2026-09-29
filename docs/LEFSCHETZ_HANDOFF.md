@@ -22,22 +22,21 @@ cycle-class definitions.
 
 ## PR split
 
-Validation: main `9aba2ec` is merged, `lake build` passes (5343 jobs),
-and the comparison audit checks 471 distinct declarations with only `propext`,
-`Classical.choice`, and `Quot.sound`.
+Validation: `lake build`, the comparison axiom audit, and the import-layer check pass.
 
 [PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9) contains the analytic construction,
-denominator clearing, and the divisor–Chern comparison. [PR41](https://github.com/Paul-Lez/HodgeConjecture/pull/41)
-contains the GAGA development and is stacked on PR9. The general algebraization statement is in
-`GAGAStatement.lean`; `GAGAtoLefschetz.lean` supplies its specialization to unit-sheaf extensions.
+denominator clearing, and the divisor–Chern comparison.
+[PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230) isolates the adapted Oka dependency.
+[PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228) is stacked on PR230 and adds the
+project-specific proper-GAGA comparison and final theorem.
 
 The divisor–Chern comparison takes an algebraic line bundle and its analytic identification as
 inputs. The uniform comparison is proved without GAGA by
 `hasDivisorClassOfCartierData` in `ChernRelativeFinalAssembly.lean`; its proof route is in
 [DIVISOR_HANDOFF.md](DIVISOR_HANDOFF.md).
 
-The comparison audit is `scripts/lefschetz_axiom_audit.lean`; the GAGA audit is
-`scripts/gaga_axiom_audit.lean` on PR41. Run `lake build` before either audit.
+The comparison audit is `scripts/lefschetz_axiom_audit.lean`. PR228 also contains the GAGA audit
+and a build-enforced axiom boundary for the final theorem.
 
 ## What is proved
 
@@ -60,7 +59,7 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 | `Other/AlgebraicGeometry/HolomorphicLineBundleCoordinates.lean`, `HolomorphicLineBundleInvertible.lean` | Local coordinate isomorphisms; `E.sectionSheafOfModules_isInvertible`. |
 | `Other/AlgebraicGeometry/RegularFunctionsHolomorphic.lean` | `regularToHolomorphicSheaf`, the structure-sheaf map over `underlyingContinuousMap`. |
 | `Other/AlgebraicGeometry/AnalytificationModules.lean` | `moduleAnalytification`, its adjunction and `moduleAnalytificationUnitIso`. |
-| [PR41 GAGA work](https://github.com/Paul-Lez/HodgeConjecture/pull/41) | Holomorphic stalks are local; `analytificationToAlgebraic`. |
+| [PR230 Oka port](https://github.com/Paul-Lez/HodgeConjecture/pull/230), [PR228 GAGA work](https://github.com/Paul-Lez/HodgeConjecture/pull/228) | Adapted Oka dependency; project-specific proper-GAGA comparison and final theorem. |
 | `Other/LinearAlgebra/RationalDenominators.lean`, `Other/Algebra/Homology/RationalCochainDenominators.lean` | Denominator clearing for finitely generated abelian groups and for homology. |
 | `Other/AlgebraicGeometry/ChernRelativeFinalAssembly.lean` | `hasDivisorClassOfCartierData`: the uniform divisor–Chern identity. |
 | `Other/AlgebraicGeometry/LefschetzOneOneObligations.lean`, `LefschetzOneOneReduction.lean` | The remaining obligations as explicit propositions, and `RationalLefschetzOneOne.of_obligations`. |
@@ -109,11 +108,11 @@ states, for a single smooth projective integral complex variety `X`:
    form `AnalyticLineBundlesAlgebraize X` (every invertible analytic sheaf is the
    analytification of an invertible algebraic one) implies it by
    `hasAlgebraicModel_of_analyticLineBundlesAlgebraize`. This obligation is scoped for
-   independent work in [PR41 GAGA handoff](https://github.com/Paul-Lez/HodgeConjecture/pull/41).
+   downstream work in [PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228), using the
+   isolated Oka port in [PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230).
 3. `HasDivisorOfAlgebraicModel X`: such an `L` is represented by `D : codimensionCycleSubgroup X.left 1`
    with `sheafCycleClassOnCycles (ofOver X) 1 D = integralToRationalCohomology X 2
-   E.firstChernClass`. Since `D` is existential, sign and `2πi` normalisation conventions do not
-   affect the statement. The algebraic half is proved: every invertible algebraic sheaf is
+   E.firstChernClass`. The algebraic half is proved: every invertible algebraic sheaf is
    represented by Cartier data (a cover with local equations) whose divisor is a
    `codimensionCycleSubgroup X.left 1` (`DivisorOfRationalSection.lean`,
    `InvertibleSheafRationalSection.lean`, `CartierDataOfTrivializingCover.lean`), and
@@ -134,7 +133,8 @@ states, for a single smooth projective integral complex variety `X`:
 classes are stable under integer scaling, integral Hodge classes lift to unit-sheaf extensions,
 and the resulting integral divisor is divided by the denominator.
 
-Only obligation (2), algebraization by GAGA, remains among these three inputs.
+Only obligation (2), algebraization by GAGA, remains on this branch. PR228 discharges it and proves
+the final theorem.
 
 ## Verification
 

@@ -42,7 +42,9 @@ comparison) as explicit propositions and proves that they imply the theorem;
 `Other/AlgebraicGeometry/IntegralDenominatorClearing.lean` reduces denominator clearing to finite
 generation of `H²(X^an, ℤ)` through the integral singular comparison, and
 `Other/AlgebraicGeometry/ProjectiveFiniteHomology.lean` proves that finiteness (compact manifolds are
-neighbourhood retracts of Euclidean spaces), so only the line-bundle GAGA and divisor/cycle-class
-obligations remain.
+neighbourhood retracts of Euclidean spaces). The divisor/cycle-class comparison is also proved, so
+only line-bundle GAGA remains on this branch. That final step is completed downstream in
+[PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228), using the isolated Oka port in
+[PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230).
 See [the Lefschetz handoff](docs/LEFSCHETZ_HANDOFF.md) for the status, file map and
 verification commands.

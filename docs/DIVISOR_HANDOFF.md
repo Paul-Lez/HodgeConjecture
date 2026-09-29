@@ -3,10 +3,8 @@
 For an integral, smooth, projective complex scheme `X`,
 `AlgebraicGeometry.ComplexPoint.hasDivisorClassOfCartierData` in
 `Other/AlgebraicGeometry/ChernRelativeFinalAssembly.lean` proves the uniform
-divisor–Chern identity. The full build passes (5343 jobs), and the comparison
-audit checks 471 distinct declarations with only `propext`, `Classical.choice`,
-and `Quot.sound`. Independent Astra high review of `470063f1` passed both
-mathematical correctness and mathlib-level code quality with no blocking findings.
+divisor–Chern identity. The full build, import-layer check, and comparison audit pass.
+The audit reports only `propext`, `Classical.choice`, and `Quot.sound`.
 
 The proved proposition is the existing definition
 
@@ -21,7 +19,8 @@ def HasDivisorClassOfCartierData : Prop :=
 ```
 
 The proof has no GAGA hypothesis. GAGA is developed separately in
-[PR41](https://github.com/Paul-Lez/HodgeConjecture/pull/41) for the Lefschetz `(1,1)` application.
+[PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228), which uses the isolated Oka port in
+[PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230) for the Lefschetz `(1,1)` application.
 
 The established route is:
 
