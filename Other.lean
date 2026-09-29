@@ -189,7 +189,6 @@ public import Other.AlgebraicTopology.Support.RelativeCohomologyGerm
 public import Other.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 public import Other.AlgebraicTopology.Support.RestrictionFiber
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
-public import Other.Analysis.Complex.AnalyticDivision
 public import Other.Analysis.Complex.NormalDivision
 public import Other.Analysis.Complex.NormalDivisionFinOne
 public import Other.Analysis.Complex.Polynomial.Complement
