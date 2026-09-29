@@ -64,8 +64,8 @@ theorem analyticAt_closedImmersionHolomorphicFlatteningChart_evaluate
       (closedImmersionHolomorphicFlatteningChart X Y i m d z y) := by
   let e := closedImmersionHolomorphicFlatteningChart X Y i m d z
   let A := closedImmersionNormalCoordinateChange X Y i m d z
-  have hA : AnalyticAt ℂ A.symm (e y) := by
-    exact (analyticAt_closedImmersionHolomorphicFlatteningChart_normalCoordinateChange
+  have hA : AnalyticAt ℂ A.symm (e y) :=
+    (analyticAt_closedImmersionHolomorphicFlatteningChart_normalCoordinateChange
       X Y i m d z y hy).2
   have htarget : A.symm (e y) ∈ (localChart X d (Point.map i z)).target := by
     have hleft : A.symm (e y) = localChart X d (Point.map i z) y := by
@@ -179,12 +179,10 @@ theorem fderiv_closedImmersionHolomorphicFlatteningChart_evaluate_ne_zero
   have hV' : C.symm (C y) ∈ Point.overOpen V := by
     have hyV : y ∈ Point.overOpen V := by
       change e.symm (e y) ∈ Point.overOpen V at hV
-      rw [e.left_inv hy] at hV
-      exact hV
-    rw [C.left_inv hy.1.1]
-    exact hyV
-  have hg : AnalyticAt ℂ g (C y) := by
-    exact analyticAt_localChart_symm_evaluate X d (Point.map i z) hCtarget V s hV'
+      rwa [e.left_inv hy] at hV
+    rwa [C.left_inv hy.1.1]
+  have hg : AnalyticAt ℂ g (C y) :=
+    analyticAt_localChart_symm_evaluate X d (Point.map i z) hCtarget V s hV'
   have hpull := Complex.fderiv_comp_symm_ne_zero_of_openPartialHomeomorph
     (e := A) (g := g) (p := C y) hy.1.2.1 hg hA.1 hA.2 hambient
   have hAC : A (C y) = e y := by

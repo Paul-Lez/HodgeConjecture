@@ -55,10 +55,8 @@ lemma Generates.coeff_res (hg : Generates g) {W W' : S.Opens} (h : W' ≤ W) (t 
     hg.coeff W' (resSection L h t) =
       S.presheaf.map (homOfLE (inf_le_inf_right U h)).op (hg.coeff W t) := by
   refine (hg.coeff_eq W' _ _ ?_).symm
-  have h2 := congrArg (Scheme.Modules.resSection L (inf_le_inf_right U h)) (hg.coeff_smul_eq W t)
-  rw [resSection_smul] at h2
-  simp only [resSection_resSection] at h2 ⊢
-  exact h2
+  simpa only [resSection_smul, resSection_resSection] using
+    congrArg (Scheme.Modules.resSection L (inf_le_inf_right U h)) (hg.coeff_smul_eq W t)
 
 lemma Generates.coeff_smul (hg : Generates g) (W : S.Opens) (r : Γ(S, W)) (t : Γ(L, W)) :
     hg.coeff W (r • t) =

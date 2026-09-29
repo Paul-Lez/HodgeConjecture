@@ -244,8 +244,7 @@ lemma analyticCoeffHom_analyticSection (hg : Scheme.Modules.Generates g) (W : X.
     have h0 : (moduleAnalytificationAdjunction X d).homEquiv L
         (starUnitSheaf X d (analyticOpen X U)) (analyticCoeffHom X d hg) =
         coeffHom X d hg := Equiv.apply_symm_apply _ _
-    rw [Adjunction.homEquiv_unit] at h0
-    exact h0
+    rwa [Adjunction.homEquiv_unit] at h0
   exact congrArg
     (fun f : L ⟶ (holomorphicModulePushforward X d).obj (starUnitSheaf X d (analyticOpen X U)) =>
       ConcreteCategory.hom (SheafOfModules.Hom.val f |>.app (op W)) t) h
@@ -268,8 +267,7 @@ lemma smul_analyticSection_key (hg : Scheme.Modules.Generates g) (W : X.left.Ope
     (hg.coeff W t) g t (hg.coeff_smul_eq W t)
   have h2 := congrArg (holRes ((moduleAnalytification X d).obj L)
     (prod_le_analyticOpen_inf X U W)) hbase
-  rw [holRes_smul, holRes_holRes, holRes_holRes] at h2
-  exact h2
+  rwa [holRes_smul, holRes_holRes, holRes_holRes] at h2
 
 theorem analyticCoeffHom_comp_smulSectionHom (hg : Scheme.Modules.Generates g) :
     analyticCoeffHom X d hg ≫ (starPushforward X d (analyticOpen X U)).map
@@ -346,8 +344,7 @@ theorem holomorphicGenerates_analyticSection (hg : Scheme.Modules.Generates g) :
     refine ⟨resH X d hVp
       (starUnitSheafSection X d ((analyticCoeffHom X d hg).val.app (op V) m)), ?_⟩
     have h2 := congrArg (holRes ((moduleAnalytification X d).obj L) hVp) (key m)
-    rw [holRes_smul, holRes_holRes, holRes_holRes, holRes_rfl] at h2
-    exact h2
+    rwa [holRes_smul, holRes_holRes, holRes_holRes, holRes_rfl] at h2
 
 end
 
@@ -356,4 +353,3 @@ theorem analytificationGenerates : AnalytificationGenerates X d :=
   fun _ _ _ hg => holomorphicGenerates_analyticSection X d hg
 
 end AlgebraicGeometry.ComplexPoint
-

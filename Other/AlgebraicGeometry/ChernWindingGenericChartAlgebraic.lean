@@ -120,18 +120,10 @@ theorem exists_genericWindingChartData_off_component_exceptional
       (cycleComponentSmoothLocusAmbientOpen X x))
       (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z)
     let N' := N ⊓ analyticOpen X f.opens ⊓ analyticOpen X (X.left.basicOpen s)
-    have hqN : q0 ∈ N' := by
-      have hqN0' : q0 ∈ N := by
-        exact hqN0_orig
-      have hq0open : q0 ∈ analyticOpen X f.opens := by
-        exact hopen
-      have hq0basic : q0 ∈ analyticOpen X (X.left.basicOpen s) := by
-        exact hbasic
-      exact ⟨⟨hqN0', hq0open⟩, hq0basic⟩
-    have hN' : N' ≤ analyticOpen X f.opens := by
-      exact (inf_le_left.trans inf_le_right)
+    have hqN : q0 ∈ N' := ⟨⟨hqN0_orig, hopen⟩, hbasic⟩
+    have hN' : N' ≤ analyticOpen X f.opens := inf_le_left.trans inf_le_right
     obtain ⟨G, hG⟩ := exists_genericWindingChartData_of_component_algebraic X c x hx i f s hs hEq
-      z q0 rfl N' hqN hN' (by exact hbasic)
+      z q0 rfl N' hqN hN' hbasic
     have hq0eq : q0 = (cycleComponentSmoothClosedLiftAmbientMap X x)
         (Point.map (cycleComponentSmoothLocusClosedLiftOver X x) z) := by rfl
     rw [← hq0eq]

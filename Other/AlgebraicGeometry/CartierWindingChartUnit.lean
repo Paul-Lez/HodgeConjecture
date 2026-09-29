@@ -41,9 +41,8 @@ lemma analyticUnitHom_restrict {U V : X.left.Opens} (hVU : V ≤ U)
         (Additive.ofMul (Units.map (X.left.presheaf.map (homOfLE hVU).op).hom u)) =
       sres (holomorphicUnitSheaf X d) (analyticOpen_mono X hVU)
         (analyticUnitHom (X := X) (d := d) U (Additive.ofMul u)) := by
-  apply Additive.toMul.injective
-  apply Units.ext
-  exact analyticFunction_res hVU (u : Γ(X.left, U))
+  exact Additive.toMul.injective <|
+    Units.ext (analyticFunction_res hVU (u : Γ(X.left, U)))
 
 variable [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 attribute [local instance] isNoetherian_of_isProjective

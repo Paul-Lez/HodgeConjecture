@@ -71,11 +71,11 @@ theorem exists_genericWindingChartData_of_fderiv_ne_zero
     F.flattened ⊓ ⟨F.chart.source ∩ F.chart ⁻¹' U,
       F.chart.isOpen_inter_preimage hUopen⟩
   have hqU : F.chart q ∈ U := mem_of_mem_nhds hUn
-  have hqsmall : q ∈ Vsmall := by
-    exact ⟨mem_flattenedSupportNeighborhood _ _ _ _ _, F.mem_source, hqU⟩
+  have hqsmall : q ∈ Vsmall :=
+    ⟨mem_flattenedSupportNeighborhood _ _ _ _ _, F.mem_source, hqU⟩
   let Fsmall := F.restrict Vsmall hqsmall
-  have hWsmall : Fsmall.flattened ≤ F.flattened := by
-    exact F.flattened_restrictChart_le Vsmall hqsmall
+  have hWsmall : Fsmall.flattened ≤ F.flattened :=
+    F.flattened_restrictChart_le Vsmall hqsmall
   have hVsmall : Vsmall ≤ analyticOpen X localForm.opens :=
     (inf_le_left : Vsmall ≤ F.flattened).trans hV
   have hFsmall_analytic : Fsmall.flattened ≤ analyticOpen X localForm.opens :=
