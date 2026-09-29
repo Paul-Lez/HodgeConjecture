@@ -78,7 +78,7 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 | `Other/AlgebraicGeometry/LefschetzOneOneProof.lean` | Unconditional proofs of `rationalLefschetzOneOne` and `lefschetzOneOne`. |
 | `Other/LinearAlgebra/RationalDenominators.lean`, `Other/Algebra/Homology/RationalCochainDenominators.lean` | Denominator clearing for finitely generated abelian groups and for homology. |
 | `Other/AlgebraicGeometry/ChernRelativeFinalAssembly.lean` | `hasDivisorClassOfCartierData`: the uniform divisor–Chern identity. |
-| `Other/AlgebraicGeometry/LefschetzOneOneObligations.lean`, `LefschetzOneOneReduction.lean` | The remaining obligations as explicit propositions, and `RationalLefschetzOneOne.of_obligations`. |
+| `Other/AlgebraicGeometry/LefschetzOneOneObligations.lean`, `Other/AlgebraicGeometry/LefschetzOneOneReduction.lean` | The reduction inputs as explicit propositions, and `RationalLefschetzOneOne.of_obligations`. |
 
 ## Discharged obligations
 
@@ -87,28 +87,7 @@ states, for a single smooth projective integral complex variety `X`:
 
 1. `HasIntegralDenominatorClearing X`: for every `α : H^2(X; ℚ)` there are `m ≠ 0`
    and `β : H^2(X; ℤ)` with `integralToRationalCohomology X 2 β = m • α`.
-   **Reduced to geometry.** `Other/AlgebraicGeometry/IntegralDenominatorClearing.lean` proves
-   `hasIntegralDenominatorClearing_of_hasFiniteGoodCover`: it suffices that the analytic space
-   has a finite good cover (`HasFiniteGoodCover X`: finitely many opens whose nonempty finite
-   intersections are contractible, `AlgebraicTopology.Singular.FiniteGoodCover`). The proof
-   goes through
-   - the integral Betti comparison `integralCohomologyEquivOrdinarySingularCohomology`
-     (`BettiScalarComparison.lean`; the singular-cochain development is now generic over a
-     commutative ring: `Other/Algebra/Homology/LinearDual.lean`,
-     `Other/AlgebraicTopology/SimplicialCochainExtension.lean`, `SingularExcisionScalar.lean`,
-     and the generalised `SingularCochain*`/`SingularSubdivisionCochainSheaf` files);
-   - its naturality in the coefficient ring (`SimplicialCochainCoefficientChange.lean`,
-     `SingularCochainCoefficientChange.lean`, `HypercohomologyFlasqueMapNaturality.lean`,
-     `BettiScalarNaturality.lean`: `scalarCohomologyEquivOrdinarySingularCohomology_coefficientChange`);
-   - finite generation of integral singular homology from a finite good cover
-     (`FiniteGoodCoverNerveHomology.lean`, transported to the `ModuleCat ℤ` chain model in
-     `IntegralSingularHomologyFinite.lean`);
-   - the elementary denominator-clearing theorem on simplicial cochains
-     (`SimplicialCochainDenominators.lean`, `SSet.exists_integer_multiple_of_finite_homology`:
-     a rational cocycle that is integer-valued on integral cycles is cohomologous to an integral
-     cocycle, using divisibility of `ℚ/ℤ`; finite generation bounds the denominators).
-
-   **Obligation (1) is discharged.** `Other/AlgebraicGeometry/ProjectiveFiniteHomology.lean`
+   **Discharged.** `Other/AlgebraicGeometry/ProjectiveFiniteHomology.lean`
    proves `hasIntegralDenominatorClearing X` for every smooth projective integral complex
    variety: the analytic space is a compact Hausdorff real `C^∞` manifold
    (`ComplexPointRealManifold.lean`), a compact manifold embeds in a Euclidean space as a retract

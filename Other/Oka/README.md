@@ -8,5 +8,10 @@ The Lean files in this directory are adapted from
 this directory. The port imports only Mathlib and other modules below `Other.Oka`; project-specific
 Hodge and Lefschetz code therefore remains downstream.
 
+This is a compatibility port, not a byte-for-byte mirror. `FiniteStalk.lean` contains the
+finite-stalk portion split from upstream's `ModulesStalkNakayama.lean`, and `lakefile.toml` sets
+`maxSynthPendingDepth = 3` globally for the port's elaboration requirements.
+
 Run `python3 scripts/check_oka_provenance.py` to check the revision markers, import boundary, and
-umbrella coverage.
+umbrella coverage. The checker enforces those repository invariants; it does not compare the
+ported source text with the upstream repository.
