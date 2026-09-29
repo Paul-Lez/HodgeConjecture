@@ -88,8 +88,7 @@ lemma openRawToSupportedSingularOutside_supportMap
           qU.inv ≫ ((TopCat.Sheaf.supportRestrictionSectionsSupportMap h K W).τ₃ ≫ qV.hom) := by
             simp only [Category.assoc]
       _ = qU.inv ≫ (qU.hom ≫ sectionComplexRestriction X ℤᵘᵖ K j) := by rw [hq]
-      _ = sectionComplexRestriction X ℤᵘᵖ K j := by
-        exact qU.inv_hom_id_assoc _
+      _ = sectionComplexRestriction X ℤᵘᵖ K j := qU.inv_hom_id_assoc _
       _ = (sectionComplexRestriction X ℤᵘᵖ K j ≫ qV.inv) ≫ qV.hom := by
         simp only [Category.assoc, qV.inv_hom_id, Category.comp_id]
   have hR : eU.inv ≫ sectionComplexRestriction X ℤᵘᵖ K j = sV ≫ eV.inv := by
@@ -103,8 +102,7 @@ lemma openRawToSupportedSingularOutside_supportMap
           ComplexShape.embeddingUpNat) := by rw [hr]
       _ = HomologicalComplex.extendMap
           (sectionComplexRestriction X (.up ℕ) (singularCochainSheafComplex ℚ X) j)
-          ComplexShape.embeddingUpNat := by
-        exact eU.inv_hom_id_assoc _
+          ComplexShape.embeddingUpNat := eU.inv_hom_id_assoc _
       _ = (sV ≫ eV.inv) ≫ eV.hom := by
         simp only [Category.assoc, eV.inv_hom_id, Category.comp_id]
         rfl
@@ -117,9 +115,7 @@ lemma openRawToSupportedSingularOutside_supportMap
     rw [← Category.assoc, hR]
     exact Category.assoc _ _ _
   simp only [Category.assoc]
-  rw [hq']
-  rw [hR']
-  rw [← Category.assoc, ← hb]
+  rw [hq', hR', ← Category.assoc, ← hb]
   change (r ≫ bV) ≫ eV.inv ≫ qV.inv = _
   exact Category.assoc _ _ _
 

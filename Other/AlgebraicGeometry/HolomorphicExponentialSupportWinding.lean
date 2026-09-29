@@ -88,9 +88,8 @@ lemma rationalSupportBoundary_restrictedSingularOneCocycle_eq_winding :
     have hm := congrArg (fun f => HomologicalComplex.homologyMap f 1)
       (openRawToIntrinsicComplement_comp_topOpen X Ω)
     rw [HomologicalComplex.homologyMap_comp] at hm
-    have hh := ConcreteCategory.congr_hom hm w
-    have hr := ChernWinding.openRawRationalWindingClass_restriction Y j gΩ hgΩ
-    exact hh.trans hr
+    exact (ConcreteCategory.congr_hom hm w).trans
+      (ChernWinding.openRawRationalWindingClass_restriction Y j gΩ hgΩ)
   have hw := ChernWinding.openRawRelative_winding_boundary Y S S.isClosed ⊤ g hg h
   let F : Hypercohomology X
       (derivedPushforwardComplementConstantRationalComplexInt X (S : Set (ComplexPoint X))) 1 →
