@@ -6,7 +6,7 @@
 `Other/Geometry/Manifold/CompactManifoldFiniteHomology.lean`). The rest of this document is kept
 as the original scoping note.
 
-This scopes the remaining *topological* obligation for the unconditional rational Lefschetz
+This records the former *topological* obligation for the unconditional rational Lefschetz
 `(1, 1)` theorem (see [LEFSCHETZ_HANDOFF.md](LEFSCHETZ_HANDOFF.md)). It is independent of the
 proper-GAGA work in [PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228), its isolated
 Oka dependency in [PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230), and the
@@ -22,7 +22,7 @@ def HasFiniteSecondHomology (X : Over (Spec ↧ℂ)) : Prop :=
     (TopCat.of (ComplexPoint X))).homology 2)
 ```
 
-**Deliverable:** a theorem
+**Proved result:**
 
 ```lean
 theorem hasFiniteSecondHomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
@@ -50,14 +50,15 @@ Proving finite generation in every degree is equally welcome, and a proof of the
   (`Convex.contractibleSpace` in Mathlib); so a finite cover by opens that are convex in a
   common chart is a finite good cover.
 - Structure of `X^an`: compact (`complexPoint_compactSpace`,
-  `Other/AlgebraicGeometry/ProjectiveAnalytification.lean`, via a closed embedding into
-  `ℙ^N(ℂ)`), Hausdorff (`complexPoint_t2Space` instance,
-  `ProjectiveAnalytificationHausdorff.lean`), hereditarily paracompact
+  `HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexPoint/ProjectiveCompact.lean`, via a closed
+  embedding into `ℙ^N(ℂ)`), Hausdorff (`complexPoint_t2Space` instance,
+  `HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexPoint/ProjectiveHausdorff.lean`), hereditarily
+  paracompact
   (`openParacompactSpace`), second countable; a complex manifold of dimension
   `d = dim X.left` with charts `localChart X d z` and the instance
   `isManifold_omega : IsManifold 𝓘(ℂ, Fin d → ℂ) ω (ComplexPoint X)`
-  (`HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexManifold.lean`); a real `C¹` manifold
-  instance `isRealManifold_one` (`Other/AlgebraicGeometry/ComplexManifoldOrientation.lean`),
+  (`HodgeConjecture/Lemmas/AlgebraicGeometry/ComplexPoint/Manifold.lean`); a real `C¹` manifold
+  instance `isRealManifold_one` (`Other/AlgebraicGeometry/ComplexPoint/ManifoldOrientation.lean`),
   whose proof (`contDiffOn_localChart_transition` restricted to `ℝ` and `of_le`) gives the real
   `C^∞` instance with a one-line change. Every point has a basis of contractible open
   neighbourhoods (`exists_contractibleOpen_le`).
@@ -68,7 +69,9 @@ Proving finite generation in every degree is equally welcome, and a proof of the
   compact sets (`IsCompact.exists_cthickening_subset_open`), and functoriality/homotopy
   invariance of singular homology (`Mathlib/AlgebraicTopology/SingularHomology/`).
 - The repository's Mayer–Vietoris and excision tools for singular chains
-  (`SingularMayerVietoris.lean`, `RelativePairExcision.lean`, `SingularExcisionOpenCover.lean`),
+  (`Other/AlgebraicTopology/Singular/MayerVietoris.lean`,
+  `HodgeConjecture/Lemmas/AlgebraicTopology/Singular/RelativePairExcision.lean`,
+  `Other/AlgebraicTopology/Singular/Excision/OpenCover.lean`),
   and `Module.Finite` is stable under direct summands and extensions
   (`Module.Finite.of_surjective`, `Module.Finite.of_injective` over the Noetherian ring `ℤ`).
 
@@ -95,7 +98,7 @@ Do not weaken the statement (e.g. to rational coefficients, or to a hypothesis o
 ## Verification
 
 ```bash
-lake build                                        # ~80 min from scratch; incremental afterwards
+lake build
 lake env lean Other/AlgebraicGeometry/<NewFile>.lean
 lake env lean scripts/lefschetz_axiom_audit.lean
 ```
