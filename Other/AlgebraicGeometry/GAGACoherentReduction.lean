@@ -6,6 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.AnalytificationReflectsInvertible
 public import Other.AlgebraicGeometry.GAGACoherentStatement
+public import Other.AlgebraicGeometry.GAGAStatement
 public import Other.AlgebraicGeometry.HolomorphicAnalyticSpace
 public import Other.AlgebraicGeometry.InvertibleSheafCoherent
 

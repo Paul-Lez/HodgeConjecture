@@ -4,8 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.GAGAStatement
+public import Other.AlgebraicGeometry.AnalytificationModules
 public import Other.Oka.Algebra.Category.ModuleCat.Sheaf.Coherent.Basic
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 
 /-!
 # Coherent-sheaf GAGA statement
