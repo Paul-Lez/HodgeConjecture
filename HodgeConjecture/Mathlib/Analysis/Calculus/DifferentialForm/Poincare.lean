@@ -478,7 +478,7 @@ lemma radialIntegrandFDeriv_eq (n : ℕ)
         (t : ℂ) • curryDerivativeAt n (fderiv ℂ η ((t : ℂ) • x)) x) := by
   ext h v
   simp [radialIntegrandFDeriv, curryDerivativeAt, IsBoundedBilinearMap.deriv_apply,
-    smul_add, smul_smul]
+    smul_add]
 
 /-- Exterior derivative of the radial integrand, before adding the contraction of `dη`. -/
 theorem extDeriv_radialIntegrand (n : ℕ)
