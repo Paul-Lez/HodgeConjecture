@@ -228,13 +228,10 @@ lemma restrict_original_relativeChernClass_derived_boundary :
       F.mapDerivedCategoryFactors.hom_inv_id_app_assoc]
   simp only [Category.assoc] at hfactor ⊢
   refine hfactor.trans ?_
-  rw [reassoc_of% hinv]
-  rw [reassoc_of% hR]
+  rw [reassoc_of% hinv, reassoc_of% hR]
   simp only [F.mapDerivedCategoryFactors.inv_hom_id_app_assoc]
   simp only [Functor.map_comp] at hchain
-  rw [reassoc_of% hchain]
-  rw [htail]
-  rw [reassoc_of% hconst]
+  rw [reassoc_of% hchain, htail, reassoc_of% hconst]
   simp only [F, H, b, βΩ, Functor.map_comp]
 
 end AlgebraicGeometry.ComplexPoint

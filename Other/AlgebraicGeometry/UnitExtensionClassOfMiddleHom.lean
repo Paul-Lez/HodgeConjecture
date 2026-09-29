@@ -41,7 +41,6 @@ theorem extClass_eq_of_middleHom {A B M M' : C} {i : A ⟶ M} {p : M ⟶ B} {w :
   have hn := h.extClass_naturality h' f
   change h.extClass.comp (Abelian.Ext.mk₀ (𝟙 A)) (add_zero 1) =
     (Abelian.Ext.mk₀ (𝟙 B)).comp h'.extClass (zero_add 1) at hn
-  rw [Abelian.Ext.comp_mk₀_id, Abelian.Ext.mk₀_id_comp] at hn
-  exact hn
+  rwa [Abelian.Ext.comp_mk₀_id, Abelian.Ext.mk₀_id_comp] at hn
 
 end CategoryTheory.ShortComplex.ShortExact

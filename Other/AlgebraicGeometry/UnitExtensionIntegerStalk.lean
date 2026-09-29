@@ -68,8 +68,7 @@ theorem integerStalkIso_hom_apply (x : ComplexPoint X) (n : ℤ) :
         (n • integerOneSection (X := X)) := by
   have h1 : (integerStalkIso X x).hom n = n • (integerStalkIso X x).hom (1 : ℤ) := by
     have h := map_zsmul (ConcreteCategory.hom (integerStalkIso X x).hom) n (1 : ℤ)
-    rw [zsmul_eq_mul, mul_one, Int.cast_id] at h
-    exact h
+    rwa [zsmul_eq_mul, mul_one, Int.cast_id] at h
   rw [h1, integerStalkIso_hom_one, map_zsmul]
 
 theorem integerOneSection_zsmul_germ_injective (x : ComplexPoint X) :

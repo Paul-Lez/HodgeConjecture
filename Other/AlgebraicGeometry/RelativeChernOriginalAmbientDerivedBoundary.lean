@@ -110,8 +110,7 @@ lemma supportAmbientDerivedSquare_of_rationalLocalSquare
   simp only [Functor.map_comp, Category.assoc]
   rw [hfac]
   simp only [Functor.map_comp, Category.assoc] at hlocal
-  rw [reassoc_of% hlocal]
-  rw [← DerivedCategory.Q.map_comp, hgU]
+  rw [reassoc_of% hlocal, ← DerivedCategory.Q.map_comp, hgU]
 
 variable (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom]
   [IsIntegral X.left] [Smooth X.hom]

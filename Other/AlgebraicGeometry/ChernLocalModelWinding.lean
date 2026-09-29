@@ -123,7 +123,6 @@ every such germ vanishes off the support. -/
 theorem supportRelativeCohomologySheaf_subsingleton_stalk (hS : IsClosed S)
     (y : M) (hy : y ∉ S) :
     Subsingleton ((supportRelativeCohomologySheaf M S n).presheaf.stalk y) := by
-  constructor
   have hiso := TopCat.Presheaf.stalkFunctor_map_unit_toSheafify_isIso y AddCommGrpCat
     (supportRelativeCohomologyPresheaf M S n)
   have hsurj : Function.Surjective ((TopCat.Presheaf.stalkFunctor AddCommGrpCat y).map
@@ -136,8 +135,7 @@ theorem supportRelativeCohomologySheaf_subsingleton_stalk (hS : IsClosed S)
     obtain ⟨V, hyV, a, rfl⟩ := (supportRelativeCohomologyPresheaf M S n).exists_germ_eq t₀
     rw [TopCat.Presheaf.stalkFunctor_map_germ_apply]
     exact supportRelativeCohomologyGerm_eq_zero_of_not_mem M S n hS V y hyV hy a
-  intro a b
-  rw [key a, key b]
+  exact ⟨fun a b => (key a).trans (key b).symm⟩
 
 /-- Every section of the local relative-cohomology sheaf over an open set disjoint from the
 (closed) support vanishes. -/

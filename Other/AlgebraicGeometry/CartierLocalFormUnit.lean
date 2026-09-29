@@ -48,8 +48,7 @@ lemma germ_cartierUnit [Nonempty (S.basicOpen F.equation)] :
     change S.germToFunctionField (S.basicOpen F.equation) _ =
       (S.germToFunctionField (S.basicOpen F.equation)
         (S.presheaf.map (homOfLE (S.basicOpen_le F.equation)).op F.equation)) ^ (c.divisor x) at h
-    rw [Scheme.germToFunctionField_res] at h
-    exact h
+    rwa [Scheme.germToFunctionField_res] at h
   rw [cartierUnit, Units.val_mul, map_mul, hz, Units.coe_map]
   erw [Scheme.germToFunctionField_res, F.fn_eq]
 

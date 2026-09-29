@@ -44,8 +44,7 @@ lemma constantIntegerMorphism_eq_constHomOfSection
       (s.hom.app (op ⊤) HolomorphicUnitExtension.integerOneSection) := by
   have h := TopCat.Sheaf.constHomOfSection_comp
     (TopCat.Sheaf.integerOne (Y := TopCat.of (ComplexPoint X))) s
-  rw [TopCat.Sheaf.constHomOfSection_integerOne, Category.id_comp] at h
-  exact h
+  rwa [TopCat.Sheaf.constHomOfSection_integerOne, Category.id_comp] at h
 
 /-- Reading a restricted integer-input morphism as a section on the open and
 then reconstructing the constant morphism returns the original morphism. -/

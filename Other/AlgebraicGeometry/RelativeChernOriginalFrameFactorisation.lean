@@ -257,10 +257,8 @@ lemma restrictedFrameFactorisation_eq_overlapUnitHom
     (((holomorphicUnitSheaf X d).obj.map _ ≫
       (holomorphicUnitSheaf X d).obj.map _) ≫
       E.inclusion.hom.app _ ≫ E.middle.obj.map _) (-w)
-  rw [← (holomorphicUnitSheaf X d).obj.map_comp]
-  rw [E.inclusion.hom.naturality_assoc]
-  rw [← E.middle.obj.map_comp]
-  rw [← E.middle.obj.map_comp]
+  rw [← (holomorphicUnitSheaf X d).obj.map_comp, E.inclusion.hom.naturality_assoc,
+    ← E.middle.obj.map_comp, ← E.middle.obj.map_comp]
   simp only [ConcreteCategory.comp_apply, map_neg, hw, map_sub, neg_sub]
   congr 1 <;>
     change E.middle.obj.map _ _ = (E.middle.obj.map _ ≫ E.middle.obj.map _) _

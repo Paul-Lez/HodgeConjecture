@@ -91,8 +91,7 @@ lemma supportConeSection_restrict_eq_inv_local_section
   have : IsIso HΓ := (quasiIsoAt_iff_isIso_homologyMap
     (((Γ.mapHomologicalComplex (.up ℤ)).map m)) (n - 1)).mp inferInstance
   have : IsIso H := (quasiIsoAt_iff_isIso_homologyMap m (n - 1)).mp inferInstance
-  have ha : HΓ a = e α := by
-    exact ConcreteCategory.congr_hom (IsIso.inv_hom_id HΓ) (e α)
+  have ha : HΓ a = e α := ConcreteCategory.congr_hom (IsIso.inv_hom_id HΓ) (e α)
   have htransport := TopCat.Sheaf.sectionCohomologyToSheafSection_restrict_eq_of_homologyMap
     Y (K⟦(1 : ℤ)⟧) (CochainComplex.mappingCone (ambientRationalInjectiveRestriction X Z hZ))
       m (n - 1) a (e α) ha W t ht

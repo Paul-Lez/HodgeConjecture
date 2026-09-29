@@ -120,8 +120,7 @@ lemma originalLocalRawToComplementResolution_f_one
           (singularCochainSheafComplex ℚ (TopCat.of (ComplexPoint X)))).extendXIso
             ComplexShape.embeddingUpNat (i := 1) (i' := (1 : ℤ)) rfl).hom =
         eqToHom hobj := by
-    rw [← hIso]
-    rw [Iso.inv_hom_id]
+    rw [← hIso, Iso.inv_hom_id]
     rfl
   rw [hcomp]
   have hraw (x : (openRawSingularCochainComplex ℚ (TopCat.of (ComplexPoint X))
@@ -134,8 +133,7 @@ lemma originalLocalRawToComplementResolution_f_one
           ((HomologicalComplex.extendXIso
             (openRawSingularCochainComplex ℚ (TopCat.of (ComplexPoint X)) (U ⊓ Ω))
             ComplexShape.embeddingUpNat (i := 1) (i' := (1 : ℤ)) rfl).inv)) x) = x := by
-    rw [← AddCommGrpCat.comp_apply]
-    rw [Iso.inv_hom_id]
+    rw [← AddCommGrpCat.comp_apply, Iso.inv_hom_id]
     rfl
   rw [hraw]
   rfl

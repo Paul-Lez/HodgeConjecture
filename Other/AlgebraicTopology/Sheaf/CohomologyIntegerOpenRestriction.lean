@@ -50,8 +50,8 @@ lemma constantToOpen_integerOne (Y : TopCat.{0}) (U : Opens Y) :
         (toSheafify (Opens.grothendieckTopology Y)
           (integerConstantPresheaf Y)).app
           (op (U.isOpenEmbedding.functor.obj (⊤ : Opens (TopCat.of U)))) (1 : ℤ) := by
-    rw [integerOne, ← CategoryTheory.comp_apply]
-    rw [← (toSheafify (Opens.grothendieckTopology Y)
+    rw [integerOne, ← CategoryTheory.comp_apply,
+      ← (toSheafify (Opens.grothendieckTopology Y)
       (integerConstantPresheaf Y)).naturality
       (homOfLE (le_top : U.isOpenEmbedding.functor.obj (⊤ : Opens (TopCat.of U)) ≤ ⊤)).op]
     rfl
@@ -147,8 +147,7 @@ lemma integerConstant_h0_restriction
   have he : e.inv.hom.app (op (⊤ : Opens (TopCat.of U))) ≫
       e.hom.hom.app (op (⊤ : Opens (TopCat.of U))) = 𝟙 _ := by
     have he := congrArg (fun f => f.hom.app (op (⊤ : Opens (TopCat.of U)))) e.inv_hom_id
-    rw [ObjectProperty.FullSubcategory.comp_hom] at he
-    exact he
+    rwa [ObjectProperty.FullSubcategory.comp_hom] at he
   exact (ConcreteCategory.congr_hom he bY).trans (hrestriction.symm.trans hleft'.symm)
 
 end TopCat.Sheaf
