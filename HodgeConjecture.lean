@@ -46,6 +46,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Transport.Cohomolog
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Analytification
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueBoundedBelow
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.CohomologySection
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Cohomology
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.CohomologyStalkVanishing
 public import HodgeConjecture.Definitions.AlgebraicTopology.LocalHomology.ComplexClass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSections

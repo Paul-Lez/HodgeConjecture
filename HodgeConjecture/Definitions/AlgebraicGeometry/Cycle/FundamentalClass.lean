@@ -69,7 +69,8 @@ def cycleComponentSmoothSupportLowestSectionCohomologyEquiv :
   let hW : U ⊓ Z.compl = Z.compl := inf_eq_right.mpr h
   let n : ℕ := 2 * p
   exact rationalSupportAddEquivSupportedInjectiveSheafSection X Z U Z.compl hW n
-    (cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx)
+    (fun j hj => cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne X x hx j
+      (ne_of_lt hj))
 
 /-- Let `X` be a smooth integral projective scheme over `ℂ` and let `Z` be the codimension-`p`
 integral subvariety with generic point `x`. Write `S = Z(ℂ)`, `U = X(ℂ) \ Z_sing(ℂ)`, and

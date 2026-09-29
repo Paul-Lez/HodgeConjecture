@@ -95,38 +95,29 @@ def complexSupportInjectiveCohomologySheafIsoRelative
         (TopCat.of (ComplexPoint X)) S S.isClosed n
 
 set_option maxHeartbeats 800000 in
-/-- Supported Ext on an open is canonically the cohomology of the supported section complex. -/
-def rationalSupportAddEquivSupportedInjectiveHomologyOnOpen
-    (S : Closeds (ComplexPoint X)) (V W : Opens (ComplexPoint X))
-    (hW : V ⊓ S.compl = W) (n : ℕ) :
-    CategoryTheory.Sheaf.relH
-        ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
-        n (homOfLE (hW ▸ inf_le_left : W ≤ V)) ≃+
-      ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-        ℤᵘᵖ).obj
-        (complexSupportInjectiveComplex X S)).homology n) :=
-  @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology (TopCat.of (ComplexPoint X)) S.compl V W
-    hW (analyticHasExt X) _ (ambientRationalInjectiveComplex X)
-    (ambientRationalInjectiveComplex_isKInjective X)
-    (ambientRationalInjectiveSingleAugmentation X)
-    (ambientRationalInjectiveSingleAugmentation_quasiIso X) n
-
-set_option maxHeartbeats 800000 in
 /-- Supported Ext on an open is canonically the corresponding cohomology-sheaf section group. -/
 def rationalSupportAddEquivSupportedInjectiveSheafSection
     (S : Closeds (ComplexPoint X)) (V W : Opens (ComplexPoint X))
     (hW : V ⊓ S.compl = W) (n : ℕ)
-    (lowest :
-      ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-        ℤᵘᵖ).obj
-        (complexSupportInjectiveComplex X S)).homology (n : ℤ)) ≅
-      ((complexSupportInjectiveComplex X S).homology (n : ℤ)).presheaf.obj (op V)) :
+    (hK : ∀ j : ℤ, j < (n : ℤ) → IsZero
+      (((((V.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj
+        (complexSupportInjectiveComplex X S)).homology j))) :
     CategoryTheory.Sheaf.relH
         ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
         n (homOfLE (hW ▸ inf_le_left : W ≤ V)) ≃+
       (𝓗_[S]^n(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj (op V) := by
   let T := TopCat.of (ComplexPoint X)
-  let bridge := rationalSupportAddEquivSupportedInjectiveHomologyOnOpen X S V W hW n
+  let K := complexSupportInjectiveComplex X S
+  let bridge := @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology
+    (TopCat.of (ComplexPoint X)) S.compl V W hW (analyticHasExt X)
+    ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
+    (ambientRationalInjectiveComplex X)
+    (ambientRationalInjectiveComplex_isKInjective X)
+    (ambientRationalInjectiveSingleAugmentation X)
+    (ambientRationalInjectiveSingleAugmentation_quasiIso X) n
+  let lowest := TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso T V K
+    0 (n : ℤ) hK (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
+      T S.compl ((ambientRationalInjectiveComplex X).X j))
   let sheaf := (TopCat.Sheaf.supportEvaluation T V).mapIso
     (complexSupportInjectiveCohomologySheafIsoRelative X S n)
   exact bridge.trans (lowest.addCommGroupIsoToAddEquiv.trans sheaf.addCommGroupIsoToAddEquiv)
@@ -135,18 +126,45 @@ def rationalSupportAddEquivSupportedInjectiveSheafSection
 theorem rationalSupportAddEquivSupportedInjectiveSheafSection_apply
     (S : Closeds (ComplexPoint X)) (V W : Opens (ComplexPoint X))
     (hW : V ⊓ S.compl = W) (n : ℕ)
-    (lowest :
-      ((((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) V).mapHomologicalComplex
-        ℤᵘᵖ).obj (complexSupportInjectiveComplex X S)).homology (n : ℤ)) ≅
-      ((complexSupportInjectiveComplex X S).homology (n : ℤ)).presheaf.obj (op V))
+    (hK : ∀ j : ℤ, j < (n : ℤ) → IsZero
+      (((((V.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj
+        (complexSupportInjectiveComplex X S)).homology j)))
     (z : CategoryTheory.Sheaf.relH
       ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
       n (homOfLE (hW ▸ inf_le_left : W ≤ V))) :
-    rationalSupportAddEquivSupportedInjectiveSheafSection X S V W hW n lowest z =
+    rationalSupportAddEquivSupportedInjectiveSheafSection X S V W hW n hK z =
       (complexSupportInjectiveCohomologySheafIsoRelative X S n).hom.hom.app (op V)
-        (lowest.hom
-          (rationalSupportAddEquivSupportedInjectiveHomologyOnOpen X S V W hW n z)) := by
+        ((TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso
+          (TopCat.of (ComplexPoint X)) V (complexSupportInjectiveComplex X S)
+          0 (n : ℤ) hK (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
+            (TopCat.of (ComplexPoint X)) S.compl
+              ((ambientRationalInjectiveComplex X).X j))).hom
+          (@TopCat.Sheaf.relHAddEquivSupportedSectionsHomology
+            (TopCat.of (ComplexPoint X)) S.compl V W hW (analyticHasExt X)
+            ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj
+              (AddCommGrpCat.of ℚ)) (ambientRationalInjectiveComplex X)
+            (ambientRationalInjectiveComplex_isKInjective X)
+            (ambientRationalInjectiveSingleAugmentation X)
+            (ambientRationalInjectiveSingleAugmentation_quasiIso X) n z)) := by
   rfl
+
+set_option maxHeartbeats 800000 in
+/-- Global sections of the relative cohomology sheaf compute supported Ext under lower vanishing. -/
+def rationalSupportAddEquivSupportedInjectiveGlobalSheafSection
+    (S : Closeds (ComplexPoint X)) (n : ℕ)
+    (hK : ∀ j : ℤ, j < (n : ℤ) → IsZero
+      ((complexSupportInjectiveComplex X S).homology j)) :
+    H_[S]^n(X; ℚ) ≃+
+      (𝓗_[S]^n(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj (op ⊤) := by
+  let T := TopCat.of (ComplexPoint X)
+  let K := complexSupportInjectiveComplex X S
+  let bridge := rationalSupportAddEquivSupportedInjectiveHomology X S n
+  let lowest := TopCat.Sheaf.lowestSectionCohomologyIso T K 0 (n : ℤ) hK
+    (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
+      T S.compl ((ambientRationalInjectiveComplex X).X j)) ⊤
+  let sheaf := (TopCat.Sheaf.supportEvaluation T ⊤).mapIso
+    (complexSupportInjectiveCohomologySheafIsoRelative X S n)
+  exact bridge.trans (lowest.addCommGroupIsoToAddEquiv.trans sheaf.addCommGroupIsoToAddEquiv)
 
 end Rational
 

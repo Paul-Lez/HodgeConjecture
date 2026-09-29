@@ -147,15 +147,20 @@ theorem cycleComponentSupportedClassNormalizationIso_apply
         (homOfLE (show Z.compl ≤ Z.compl from le_rfl)) (homOfLE (show U ≤ ⊤ from le_top))
           (by apply Subsingleton.elim) n a := by
     rw [hcycle]
+  let hK : ∀ j : ℤ, j < (n : ℤ) → IsZero
+      (((((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj
+        (complexSupportInjectiveComplex X Z)).homology j)) := by
+    intro j hj
+    dsimp only [U, T, Z]
+    exact cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne X x hx j (ne_of_lt hj)
   rw [hcycle']
-  change (rationalSupportAddEquivSupportedInjectiveSheafSection X Z U Z.compl hW n
-    (cycleComponentSmoothSupportLowestSectionCohomologyComplexIso X x hx))
+  change (rationalSupportAddEquivSupportedInjectiveSheafSection X Z U Z.compl hW n hK)
       ((CategoryTheory.Sheaf.relH.restrict F (homOfLE (show Z.compl ≤ ⊤ from le_top))
         (homOfLE (show Z.compl ≤ U from
           (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
         (homOfLE (show Z.compl ≤ Z.compl from le_rfl))
         (homOfLE (show U ≤ ⊤ from le_top)) (by apply Subsingleton.elim) n) a) = _
-  rw [rationalSupportAddEquivSupportedInjectiveSheafSection_apply]
+  rw [rationalSupportAddEquivSupportedInjectiveSheafSection_apply X Z U Z.compl hW n hK]
   have hbridge :=
     @relHAddEquivSupportedSectionsHomology_restrict T Z.compl
       (⊤ : Opens T) Z.compl Z.compl U Z.compl (top_inf_eq _) hW le_rfl le_top le_rfl
