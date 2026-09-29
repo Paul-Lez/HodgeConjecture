@@ -33,9 +33,6 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-local instance cycleComponentSheafClassAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 /-- Let `X` be a smooth integral projective scheme over `ℂ` and `S ⊆ X(ℂ)` closed. For a natural
 number `n`, this identifies the degree-`n` cohomology sheaf of `Γ_S(I^•)` with the
 sheafification of `V ↦ H^n(V, V \ S; ℚ)`. Here `ℚ → I^•` is an injective resolution and `Γ_S`
