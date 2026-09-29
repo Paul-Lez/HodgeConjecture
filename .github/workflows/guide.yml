@@ -35,6 +35,8 @@ jobs:
         run: lake build
       - name: Check the import layering
         run: python3 scripts/check_import_layers.py
+      - name: Check the Oka port boundary and provenance
+        run: python3 scripts/check_oka_provenance.py
 
       - name: Build the Verso guide
         if: github.event_name != 'pull_request'

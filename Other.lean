@@ -16,6 +16,7 @@ limitations under the License.
 module  -- shake: keep-all --deprecated_module: ignore
 
 public import HodgeConjecture
+public import Other.Oka
 public import Other.CategoryTheory.Sites.Forget
 public import Other.CategoryTheory.Sites.SheafCohomology.Connecting
 public import Other.Algebra.DeRham.Complex
