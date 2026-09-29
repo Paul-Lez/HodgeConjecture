@@ -6,6 +6,7 @@ defaultTargets = ["HodgeConjecture", "Other", "CheckStatementImports"]
 pp.unicode.fun = true
 autoImplicit = false
 relaxedAutoImplicit = false
+maxSynthPendingDepth = 3
 
 [[require]]
 name = "mathlib"
