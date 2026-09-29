@@ -73,7 +73,6 @@ theorem restrict_original_relativeChernClass_closed_support_section :
     let S₀ : Closeds (ComplexPoint X) := ⟨Z, S.compl.isOpen.isClosed_compl⟩
     let hS : S₀ = S := by
       apply Closeds.ext
-      change ((S.compl : Set (ComplexPoint X))ᶜ) = (S : Set (ComplexPoint X))
       exact compl_compl _
     let C := CochainComplex.mappingCone (ambientRationalInjectiveRestriction X Z
       S.compl.isOpen.isClosed_compl)
@@ -125,7 +124,6 @@ theorem restrict_original_relativeChernClass_closed_support_section :
     ⟨((S.compl : Set (ComplexPoint X))ᶜ), S.compl.isOpen.isClosed_compl⟩
   let hS : S₀ = S := by
     apply Closeds.ext
-    change ((S.compl : Set (ComplexPoint X))ᶜ) = (S : Set (ComplexPoint X))
     exact compl_compl _
   let a₀ := coneSupportAddEquivSupportedInjectiveHomology X
     (S₀ : Set (ComplexPoint X)) S₀.isClosed 2

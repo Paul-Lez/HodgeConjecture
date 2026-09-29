@@ -34,7 +34,6 @@ lemma normalizedWindingUnit_supportMap_doubleComplement
       ⟨((S.compl : Set (ComplexPoint X))ᶜ), S.compl.isOpen.isClosed_compl⟩
     let hS : S₀ = S := by
       apply Closeds.ext
-      change ((S.compl : Set (ComplexPoint X))ᶜ) = (S : Set (ComplexPoint X))
       exact compl_compl _
     let h₀ : S₀.compl ≤ S.compl := by
       intro y hy hyS
@@ -52,7 +51,6 @@ lemma normalizedWindingUnit_supportMap_doubleComplement
     ⟨((S.compl : Set (ComplexPoint X))ᶜ), S.compl.isOpen.isClosed_compl⟩
   let hS : S₀ = S := by
     apply Closeds.ext
-    change ((S.compl : Set (ComplexPoint X))ᶜ) = (S : Set (ComplexPoint X))
     exact compl_compl _
   let h₀ : S₀.compl ≤ S.compl := by
     intro y hy hyS
@@ -67,8 +65,7 @@ lemma normalizedWindingUnit_supportMap_doubleComplement
       (homOfLE (inf_le_inf_left W h₁)).op
       ((holomorphicUnitSheaf X d).obj.map
         (homOfLE (inf_le_inf_left W h₀)).op u)
-  rw [← ConcreteCategory.comp_apply]
-  rw [← (holomorphicUnitSheaf X d).obj.map_comp]
+  rw [← ConcreteCategory.comp_apply, ← (holomorphicUnitSheaf X d).obj.map_comp]
   have hmap :
       (homOfLE (inf_le_inf_left W h₀)).op ≫
           (homOfLE (inf_le_inf_left W h₁)).op = 𝟙 _ := by

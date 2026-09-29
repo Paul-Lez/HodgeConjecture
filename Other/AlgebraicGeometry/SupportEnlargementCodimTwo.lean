@@ -151,8 +151,7 @@ theorem exists_closeds_sup_of_codimTwo (Z Z' : Closeds X.left) (hZZ' : Z ≤ Z')
     · exact Or.inl (hkZ hzk)
     · refine Or.inr ?_
       have hle : k ≤ S.sup f := by
-        have h := Finset.le_sup (f := f) hk
-        simpa only [hf, if_neg hkZ] using h
+        simpa only [hf, if_neg hkZ] using Finset.le_sup (f := f) hk
       exact hle hzk
   · intro w hw
     obtain ⟨k, hk, hwk⟩ := hmem_sup f w hw

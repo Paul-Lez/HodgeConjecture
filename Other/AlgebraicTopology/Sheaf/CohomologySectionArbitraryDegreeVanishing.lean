@@ -97,8 +97,7 @@ lemma globalSections_homology_cocycle_rightUnshift
       (fun c => (integerConstantSingleComplex Y).kInjectiveDerivedHomAddEquivCohomologyClass
         K n c) he
     rw [← he', AddEquiv.apply_symm_apply]
-  rw [hc, h0] at hr
-  exact hr
+  rwa [hc, h0] at hr
 
 lemma sectionCohomology_integerCocycleGlobalSection_ofHom_shift_onOpen_eq_zero
     (Y : TopCat.{0}) (K : CochainComplex (Sheaf AddCommGrpCat Y) ℤ)

@@ -223,8 +223,7 @@ theorem supportRelativeCohomologySectionOnOpen_restrict_flattened (U : Opens X)
       hf.functor.obj (chartSourceOpens E c e) := by
     intro y hy
     have h := flattenedSupportNeighborhood_subset_source E c _ q hq hy
-    rw [openEmbeddingTransportChart_source] at h
-    exact h
+    rwa [openEmbeddingTransportChart_source] at h
   have h1 := supportRelativeCohomologySectionOnOpen_restrict_eq_toSheaf f hf S B hB (2 * c) U hU
     s (chartSourceOpens E c e) _ hs hV
   rw [chartNormalProjectionCoclass_transport f hf E c e B S hB hS

@@ -89,8 +89,7 @@ lemma derivedHomAddEquivGlobalSections_restrictedSingularOneCocycle :
       ((analyticSingleFunctor X).map (TopCat.Sheaf.constHomOfSection
         ((openRestrictionFunctor Ω).obj (holomorphicUnitSheaf X d))
         ((openRestrictionTopEval Ω).inv.app (holomorphicUnitSheaf X d) u))))
-  rw [Cocycle.equivHomShift_symm_precomp] at h
-  exact h
+  rwa [Cocycle.equivHomShift_symm_precomp] at h
 
 /-- The particular complement hypercohomology comparison used by the fixed support
 boundary computes the same actual section cocycle. -/
