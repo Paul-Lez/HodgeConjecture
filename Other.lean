@@ -206,7 +206,6 @@ public import Other.AlgebraicTopology.Support.RelativeCohomologyGerm
 public import Other.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 public import Other.AlgebraicTopology.Support.RestrictionFiber
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
-public import Other.Analysis.Complex.AnalyticDivision
 public import Other.Analysis.Complex.NormalDerivative
 public import Other.Analysis.Complex.NormalDivision
 public import Other.Analysis.Complex.NormalDivisionChart
@@ -313,7 +312,6 @@ public import Other.AlgebraicGeometry.DivisorOfRationalSection
 public import Other.AlgebraicGeometry.GeneratingSectionCoefficient
 public import Other.AlgebraicGeometry.HolomorphicExponential
 public import Other.AlgebraicGeometry.HolomorphicExponentialSequence
-public import Other.AlgebraicGeometry.HolomorphicExponentialSupportWinding
 public import Other.AlgebraicGeometry.HolomorphicFirstChernClass
 public import Other.AlgebraicGeometry.HolomorphicFrameLift
 public import Other.AlgebraicGeometry.HolomorphicLineBundleCoordinates
