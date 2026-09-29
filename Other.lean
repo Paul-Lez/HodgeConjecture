@@ -243,8 +243,6 @@ public import Other.AlgebraicGeometry.ActualSingularSupportWindingOnOpen
 public import Other.AlgebraicGeometry.AnalyticSectionOfAlgebraic
 public import Other.AlgebraicGeometry.AnalytificationGenerates
 public import Other.AlgebraicGeometry.AnalytificationModules
-public import Other.AlgebraicGeometry.CartierChernLocalWinding
-public import Other.AlgebraicGeometry.CartierWindingChartNormalizedVanishing
 public import Other.AlgebraicGeometry.CartierWindingChartCoefficient
 public import Other.AlgebraicGeometry.CartierOriginalChernFrame
 public import Other.AlgebraicGeometry.ChernRelativeCanonicalLift
@@ -265,7 +263,6 @@ public import Other.AlgebraicGeometry.CartierLocalFormUnit
 public import Other.AlgebraicGeometry.CartierLocalIdeal
 public import Other.AlgebraicGeometry.CartierWindingChartFrame
 public import Other.AlgebraicGeometry.CartierWindingChartUnit
-public import Other.AlgebraicGeometry.CartierWindingChartVanishing
 public import Other.AlgebraicGeometry.ChernLocalModel
 public import Other.AlgebraicGeometry.ChernLocalModelWinding
 public import Other.AlgebraicGeometry.ChernRelativeChartFormulaSplitting
@@ -291,7 +288,6 @@ public import Other.AlgebraicGeometry.ChernWindingNormalChartUnit
 public import Other.AlgebraicGeometry.ChernWindingNormalChartValue
 public import Other.AlgebraicGeometry.ChernWindingNormalizedCharts
 public import Other.AlgebraicGeometry.ChernWindingStandardTriangle
-public import Other.AlgebraicGeometry.ChernWindingSupportNaturality
 public import Other.AlgebraicGeometry.ChernRelativeSupportGenericUnit
 public import Other.AlgebraicGeometry.ChernRelativeClosedSupportSection
 public import Other.AlgebraicGeometry.ChernRelativeClosedSupportUnit
@@ -334,8 +330,6 @@ public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicGeometry.RelativeChernFrameLocalVanishing
 public import Other.AlgebraicGeometry.RelativeChernFrameRestriction
 public import Other.AlgebraicGeometry.RelativeChernFrameVariation
-public import Other.AlgebraicGeometry.RelativeChernFrameWinding
-public import Other.AlgebraicGeometry.RelativeChernLocalBoundary
 public import Other.AlgebraicGeometry.RelativeChernOriginalRestriction
 public import Other.AlgebraicGeometry.RelativeChernOriginalFrameFactorisation
 public import Other.AlgebraicGeometry.RelativeChernOriginalBoundary
@@ -350,7 +344,6 @@ public import Other.AlgebraicGeometry.SupportUnionSplitting
 public import Other.AlgebraicGeometry.SupportedInjectiveSectionNaturality
 public import Other.AlgebraicGeometry.UnitExtensionClassObligations
 public import Other.AlgebraicGeometry.UnitExtensionClassOfMiddleHom
-public import Other.AlgebraicGeometry.UnitExtensionClassOfSectionSheaf
 public import Other.AlgebraicGeometry.UnitExtensionCorrectedLifts
 public import Other.AlgebraicGeometry.UnitExtensionCorrectedLiftsOfIso
 public import Other.AlgebraicGeometry.UnitExtensionIntegerStalk
