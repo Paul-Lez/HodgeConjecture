@@ -58,8 +58,7 @@ lemma integerConstantHomAddEquivGlobalSections_freeAbelianTerminal
     e
     (𝟙 ((constantFunctor Y).obj (AddCommGrpCat.of (ULift ℤ))))
   rw [Category.comp_id] at hi
-  rw [hi]
-  rw [Adjunction.homEquiv_id]
+  rw [hi, Adjunction.homEquiv_id]
   change ((CategoryTheory.Sheaf.freeAbelianSheafTerminalIso
       (J := Opens.grothendieckTopology Y) (T := (⊤ : Opens Y)) isTerminalTop).inv.hom.app
       (op (⊤ : Opens Y)))

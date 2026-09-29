@@ -50,8 +50,8 @@ private theorem normalQuotient_continuousAt_plane
     simpa only [L, Function.comp_def, Prod.fst, Prod.snd, sub_self, sub_zero, zero_add] using h'
   have hEval : ContinuousAt (fun w ↦ fderiv ℂ f w (0, 1)) p :=
     hdf.clm_apply continuousAt_const
-  have hzero' : ∀ᶠ w in 𝓝 p, f (w.1, (0 : ℂ)) = 0 := by
-    exact continuousAt_fst.tendsto.eventually hzero
+  have hzero' : ∀ᶠ w in 𝓝 p, f (w.1, (0 : ℂ)) = 0 :=
+    continuousAt_fst.tendsto.eventually hzero
   have hkp : normalQuotient f p = k := by
     simp only [normalQuotient, if_pos hp]
     rfl

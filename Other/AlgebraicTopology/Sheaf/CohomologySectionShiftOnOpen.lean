@@ -76,7 +76,6 @@ lemma sectionCohomologyShift_onOpen_homology_one (Y : TopCat.{0}) (U : Opens Y)
       CochainComplex.shiftEval, HomologicalComplex.XIsoOfEq]
     rfl
   have hh := ShortComplex.homologyMap_eq_of_middle_eq φY (ψ ≫ φU) hmiddle
-  rw [ShortComplex.homologyMap_comp] at hh
-  exact hh
+  rwa [ShortComplex.homologyMap_comp] at hh
 
 end TopCat.Sheaf

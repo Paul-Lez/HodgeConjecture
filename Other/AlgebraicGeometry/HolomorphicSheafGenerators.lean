@@ -159,8 +159,7 @@ theorem holomorphicGenerates_unitIsoSection {U : Opens (TopCat.of (ComplexPoint 
         (1 : (holomorphicRingSheaf X d).obj.obj (op U)) =
         (1 : (holomorphicRingSheaf X d).obj.obj (op V)) :=
       PresheafOfModules.unit_map_one _ hmu.op
-    rw [h1] at hnat
-    exact hnat
+    rwa [h1] at hnat
   have hsmul : ∀ r : (holomorphicRingSheaf X d).obj.obj (op V),
       e.hom.val.app (op (Over.mk (homOfLE h))) r =
         r • holRes M h (holomorphicUnitIsoSection e) := by
