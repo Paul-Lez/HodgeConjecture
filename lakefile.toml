@@ -6,6 +6,7 @@ defaultTargets = [
   "CheckStatementImports",
   "CheckLefschetzOneOneSpec",
   "CheckLefschetzOneOneProof",
+  "CheckLefschetzOneOneAxioms",
 ]
 
 [leanOptions]
@@ -44,6 +45,10 @@ srcDir = "scripts"
 
 [[lean_lib]]
 name = "CheckLefschetzOneOneProof"
+srcDir = "scripts"
+
+[[lean_lib]]
+name = "CheckLefschetzOneOneAxioms"
 srcDir = "scripts"
 
 [[lean_exe]]
