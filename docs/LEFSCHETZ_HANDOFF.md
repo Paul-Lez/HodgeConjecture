@@ -59,7 +59,7 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 | Files | Result |
 | --- | --- |
 | `HodgeConjecture/LefschetzOneOne.lean`, `Other/AlgebraicGeometry/LefschetzOneOneStatement.lean` | Canonical rational statement and stronger explicit-cycle statement. |
-| `Other/AlgebraicGeometry/Cycle/SheafClass.lean`, `LefschetzOneOne.lean` | `rationalSheafCycleClassOnCycles_mem_algebraicCycleClassSpan`; `HodgeConjecture.rationalLefschetzOneOne` and its `type_of%` copy. |
+| `Other/AlgebraicGeometry/Cycle/SheafClass.lean`, `Other/AlgebraicGeometry/LefschetzOneOne.lean` | `rationalSheafCycleClassOnCycles_mem_algebraicCycleClassSpan`; `HodgeConjecture.rationalLefschetzOneOne` and its `type_of%` copy. |
 | `Other/Geometry/Manifold/HolomorphicLogarithm.lean` | Local holomorphic logarithms; local integer kernel of `exp(2πiz)`. |
 | `Other/AlgebraicGeometry/HolomorphicExponential.lean`, `HolomorphicExponentialSequence.lean` | `holomorphicExponentialSequence_shortExact`: `0 → ℤ → 𝒪 → 𝒪ˣ → 0` on the analytic space. |
 | `Other/AlgebraicGeometry/HolomorphicFirstChernClass.lean`, `HolomorphicFirstChernClassExactness.lean` | The connecting map `Ext¹(ℤ, 𝒪ˣ) → Ext²(ℤ, ℤ)` and `exists_holomorphicFirstChernClass_iff`. |
