@@ -7,8 +7,8 @@ module
 public import Other.AlgebraicGeometry.HolomorphicAnalytificationCharts
 public import Other.Oka.AnalyticSpace.LocalAtSource
 public import Other.Oka.Analytification.GAGA.AffineSpace
+public import Other.Oka.Analytification.RepresentableAffine
 public import Other.Oka.Analytification.SchemeAffine
-public import Other.Oka.Analytification.UniversalProperty
 public import Other.Oka.Analytification.RET.EtaleLocalIso
 
 /-! The project-specific comparison with Oka's analytification is locally an isomorphism. -/
@@ -290,7 +290,7 @@ lemma coordinateRingHomULift_etale
 theorem localCoordinateSchemeHom_etale (z : ComplexPoint X) :
     Etale (localCoordinateSchemeHom X d z).hom.left := by
   let D := localEtaleCoordinates X d z
-  letI : IsAffine D.neighborhood.toScheme := D.isAffine
+  let : IsAffine D.neighborhood.toScheme := D.isAffine
   have hspec : Etale
       (Spec.map (CommRingCat.ofHom (coordinateRingHomULift D))) :=
     (HasRingHomProperty.Spec_iff (P := @Etale)).2
@@ -363,31 +363,31 @@ theorem localComparisonToCanonical_comp_coordinateMap (z : ComplexPoint X) :
 theorem localComparisonToCanonical_isLocalIso (z : ComplexPoint X) :
     ComplexAnalytic.AnalyticSpace.IsLocalIso
       (localComparisonToCanonical X d z) := by
-  letI : Etale (localCoordinateSchemeHom X d z).hom.left :=
+  let : Etale (localCoordinateSchemeHom X d z).hom.left :=
     localCoordinateSchemeHom_etale X d z
-  letI : ComplexAnalytic.AnalyticSpace.IsLocalIso
+  let : ComplexAnalytic.AnalyticSpace.IsLocalIso
       (ComplexAnalytic.analytification.map (localCoordinateSchemeHom X d z)) :=
     ComplexAnalytic.isLocalIso_analytification_map_of_etale _
-  letI : ComplexAnalytic.AnalyticSpace.IsLocalIso
+  let : ComplexAnalytic.AnalyticSpace.IsLocalIso
       (coordinateAffineCanonicalIso d).hom :=
     ComplexAnalytic.AnalyticSpace.isLocalIso_of_isIso _
-  letI : ComplexAnalytic.AnalyticSpace.IsLocalIso
+  let : ComplexAnalytic.AnalyticSpace.IsLocalIso
       (localChartAnalyticIso X d z).hom :=
     ComplexAnalytic.AnalyticSpace.isLocalIso_of_isIso _
-  letI : ComplexAnalytic.AnalyticSpace.IsLocalIso
+  let : ComplexAnalytic.AnalyticSpace.IsLocalIso
       ((ComplexAnalytic.AnalyticSpace.complexAffineSpace.{0} d).ofRestrict
         (localChartTargetULift X d z)) := inferInstance
-  letI : ComplexAnalytic.AnalyticSpace.IsLocalIso
+  let : ComplexAnalytic.AnalyticSpace.IsLocalIso
       (localChartToComplexAffineSpaceHom X d z) := by
     change ComplexAnalytic.AnalyticSpace.IsLocalIso
       ((localChartAnalyticIso X d z).hom ≫
         (ComplexAnalytic.AnalyticSpace.complexAffineSpace.{0} d).ofRestrict
           (localChartTargetULift X d z))
     infer_instance
-  letI : ComplexAnalytic.AnalyticSpace.IsLocalIso
+  let : ComplexAnalytic.AnalyticSpace.IsLocalIso
       (localChartToComplexAffineSpaceHom X d z ≫
         (coordinateAffineCanonicalIso d).hom) := inferInstance
-  letI : ComplexAnalytic.AnalyticSpace.IsLocalIso
+  let : ComplexAnalytic.AnalyticSpace.IsLocalIso
       (localComparisonToCanonical X d z ≫
         ComplexAnalytic.analytification.map
           (localCoordinateSchemeHom X d z)) := by
@@ -425,13 +425,13 @@ theorem comparisonToCanonical_ofRestrict_isLocalIso (z : ComplexPoint X) :
     ComplexAnalytic.AnalyticSpace.IsLocalIso
       ((holomorphicAnalyticSpace X d).ofRestrict (localChartSource X d z) ≫
         comparisonToCanonical X d) := by
-  letI : Etale (localNeighborhoodInclusionSchemeLFTℂ X d z).hom.left :=
+  let : Etale (localNeighborhoodInclusionSchemeLFTℂ X d z).hom.left :=
     localNeighborhoodInclusionSchemeLFTℂ_etale X d z
-  letI : ComplexAnalytic.AnalyticSpace.IsLocalIso
+  let : ComplexAnalytic.AnalyticSpace.IsLocalIso
       (ComplexAnalytic.analytification.map
         (localNeighborhoodInclusionSchemeLFTℂ X d z)) :=
     ComplexAnalytic.isLocalIso_analytification_map_of_etale _
-  letI : ComplexAnalytic.AnalyticSpace.IsLocalIso
+  let : ComplexAnalytic.AnalyticSpace.IsLocalIso
       (localComparisonToCanonical X d z) :=
     localComparisonToCanonical_isLocalIso X d z
   rw [localComparisonToCanonical_comp_neighborhoodInclusion]

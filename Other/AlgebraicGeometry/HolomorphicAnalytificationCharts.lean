@@ -105,7 +105,7 @@ lemma canonicalRestrictedComplexSpaceIso_base
       Set.range (Subtype.val : φ.opensCongr U → κ → ℂ)
     rintro _ ⟨x, rfl⟩
     refine ⟨⟨φ x, ?_⟩, rfl⟩
-    simpa using x.2
+    simp
   have hfg : E.hom ≫ g = f := by
     change LocallyRingedSpace.IsOpenImmersion.lift g f H ≫ g = f
     exact LocallyRingedSpace.IsOpenImmersion.lift_fac g f H
@@ -402,7 +402,7 @@ lemma localChart_comparison_square_raw_base (z : ComplexPoint X) :
         coordinateRingHomULift D (MvPolynomial.C c)
       change c = pointEvaluationLRS (ComplexPoint.openScheme X D.neighborhood) wz sc
       rw [pointEvaluationLRS_eq_evaluate]
-      letI : Algebra ℂ Γ(D.neighborhood.toScheme, ⊤) :=
+      let : Algebra ℂ Γ(D.neighborhood.toScheme, ⊤) :=
         (D.coordinateRingHomOnOpen.comp MvPolynomial.C).toAlgebra
       rw [← D.pointAlgHomHomeomorph_apply]
       have hsc : sc = algebraMap ℂ Γ(D.neighborhood.toScheme, ⊤) c := by

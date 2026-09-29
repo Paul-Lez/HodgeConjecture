@@ -61,7 +61,7 @@ namespace ComplexAnalytic
 theorem AnalyticSpace.isCoherent_of_isInvertible (X : AnalyticSpace.{u})
     (M : SheafOfModules.{u} X.toLocallyRingedSpace.ringSheaf)
     [TauCeti.SheafOfModules.IsInvertible.{u, u, u} M] : M.IsCoherent := by
-  letI : (SheafOfModules.unit X.toLocallyRingedSpace.ringSheaf).IsCoherent :=
+  let : (SheafOfModules.unit X.toLocallyRingedSpace.ringSheaf).IsCoherent :=
     X.isCoherentStructureSheaf
   exact X.toLocallyRingedSpace.isCoherent_of_isInvertible M
 

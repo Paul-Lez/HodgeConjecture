@@ -29,7 +29,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 
 /-- Regard the smooth scheme as an Oka scheme locally of finite type over `ℂ`. -/
 def toSchemeLFTℂ : ComplexAnalytic.SchemeLFTℂ.{0} :=
-  letI : Smooth X.hom := SmoothOfRelativeDimension.smooth d X.hom
+  let : Smooth X.hom := SmoothOfRelativeDimension.smooth d X.hom
   ⟨Over.mk (X.hom ≫ (specComplexULiftIso).hom),
     show LocallyOfFiniteType (X.hom ≫ (specComplexULiftIso).hom) from inferInstance⟩
 
@@ -150,7 +150,7 @@ lemma analytificationπ_comparisonToCanonical_base (z : ComplexPoint X) :
 
 lemma comparisonToCanonical_base_injective :
     Function.Injective (comparisonToCanonical X d).toLRSHom.base := by
-  letI : Smooth X.hom := SmoothOfRelativeDimension.smooth d X.hom
+  let : Smooth X.hom := SmoothOfRelativeDimension.smooth d X.hom
   intro z w hzw
   apply (complexPointEquivClosedPoint X).injective
   apply Subtype.ext
@@ -165,7 +165,7 @@ lemma comparisonToCanonical_base_surjective_of_range_analytificationπ_base
       (ComplexAnalytic.analytificationπ (toSchemeLFTℂ X d)).left.base =
         closedPoints X.left) :
     Function.Surjective (comparisonToCanonical X d).toLRSHom.base := by
-  letI : Smooth X.hom := SmoothOfRelativeDimension.smooth d X.hom
+  let : Smooth X.hom := SmoothOfRelativeDimension.smooth d X.hom
   intro y
   have hyClosed : IsClosed
       ({(ComplexAnalytic.analytificationπ (toSchemeLFTℂ X d)).left.base y} :
@@ -209,7 +209,7 @@ theorem comparisonToCanonical_isIso
 theorem holomorphicAnalytificationπ_isAnalytification
     [ComplexAnalytic.AnalyticSpace.IsLocalIso (comparisonToCanonical X d)] :
     ComplexAnalytic.IsAnalytification (holomorphicAnalytificationπ X d) := by
-  letI : IsIso (comparisonToCanonical X d) := comparisonToCanonical_isIso X d
+  let : IsIso (comparisonToCanonical X d) := comparisonToCanonical_isIso X d
   rw [← comparisonToCanonical_fac X d]
   exact (ComplexAnalytic.isAnalytification_analytificationπ (toSchemeLFTℂ X d)).of_iso_source
     (asIso (comparisonToCanonical X d))
