@@ -424,12 +424,6 @@ def canonicalRestrictedComplexSpaceIso (φ : (ι → ℂ) ≃L[ℂ] (κ → ℂ)
     (complexSpace κ).ofRestrict (φ.opensCongr U).isOpenEmbedding
   haveI : LocallyRingedSpace.IsOpenImmersion f := inferInstance
   haveI : LocallyRingedSpace.IsOpenImmersion g := inferInstance
-  let hf : PresheafedSpace.IsOpenImmersion f.toHom := by
-    change LocallyRingedSpace.IsOpenImmersion f
-    infer_instance
-  let hg : PresheafedSpace.IsOpenImmersion g.toHom := by
-    change LocallyRingedSpace.IsOpenImmersion g
-    infer_instance
   have hrange : Set.range f.base = Set.range g.base := by
     change Set.range (fun x : U ↦ φ x) =
       Set.range (Subtype.val : φ.opensCongr U → κ → ℂ)
@@ -467,14 +461,6 @@ def localChartSource (z : ComplexPoint X) : Opens (ComplexPoint X) :=
 /-- The target of the chosen analytic chart at `z`. -/
 def localChartTarget (z : ComplexPoint X) : Opens (Fin d → ℂ) :=
   ⟨(localChart X d z).target, (localChart X d z).open_target⟩
-
-local instance localChartSourceChartedSpace (z : ComplexPoint X) :
-    ChartedSpace (Fin d → ℂ) (localChartSource X d z) :=
-  TopologicalSpace.Opens.instChartedSpace _
-
-local instance localChartTargetChartedSpace (z : ComplexPoint X) :
-    ChartedSpace (Fin d → ℂ) (localChartTarget X d z) :=
-  TopologicalSpace.Opens.instChartedSpace _
 
 /-- The homeomorphism between the source and target of the chosen chart. -/
 def localChartHomeomorph (z : ComplexPoint X) :
