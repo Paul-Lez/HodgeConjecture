@@ -145,9 +145,8 @@ lemma comparisonToCanonical_fac :
 
 lemma analytificationπ_comparisonToCanonical_base (z : ComplexPoint X) :
     (ComplexAnalytic.analytificationπ (toSchemeLFTℂ X d)).left.base
-        ((comparisonToCanonical X d).toLRSHom.base z) = z.underlying := by
-  have h := congrArg (fun f ↦ f.left.base z) (comparisonToCanonical_fac X d)
-  exact h
+        ((comparisonToCanonical X d).toLRSHom.base z) = z.underlying :=
+  congrArg (fun f ↦ f.left.base z) (comparisonToCanonical_fac X d)
 
 lemma comparisonToCanonical_base_injective_of_analytificationπ_base_injective
     (hπ : Function.Injective
@@ -178,8 +177,7 @@ lemma comparisonToCanonical_base_surjective_of_range_analytificationπ_base
     have hy : (ComplexAnalytic.analytificationπ (toSchemeLFTℂ X d)).left.base y ∈
         Set.range (ComplexAnalytic.analytificationπ (toSchemeLFTℂ X d)).left.base :=
       ⟨y, rfl⟩
-    rw [hrange] at hy
-    exact hy
+    rwa [hrange] at hy
   let z : ComplexPoint X := (complexPointEquivClosedPoint X).symm
     ⟨(ComplexAnalytic.analytificationπ (toSchemeLFTℂ X d)).left.base y, hyClosed⟩
   refine ⟨z, hπ ?_⟩

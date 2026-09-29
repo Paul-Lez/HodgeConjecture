@@ -192,8 +192,7 @@ lemma coordinateRingHomULift_comp_coordinateAffineAlgebraMap
   change D.coordinateRingHomOnOpen
       (MvPolynomial.rename ULift.down (MvPolynomial.C (ULift.ringEquiv c))) =
     localAlgebraicAlgebraMap X d D (ULift.ringEquiv c)
-  rw [MvPolynomial.rename_C]
-  rw [localAlgebraicAlgebraMap_eq_appTop]
+  rw [MvPolynomial.rename_C, localAlgebraicAlgebraMap_eq_appTop]
   exact DFunLike.congr_fun
     (congrArg CommRingCat.Hom.hom D.C_comp_coordinateRingHomOnOpen) (ULift.ringEquiv c)
 
@@ -284,11 +283,11 @@ def coordinateAffineAnalytificationπViaPresentation :
 theorem isAnalytification_coordinateAffineAnalytificationπViaPresentation :
     ComplexAnalytic.IsAnalytification
       (coordinateAffineAnalytificationπViaPresentation d) := by
-  have h := ((ComplexAnalytic.isAnalytification_analytificationToSpec
-    (Fin.elim0 : Fin 0 → MvPolynomial (ULift.{0} (Fin d)) ℂ)).of_iso
-      (rawSpecPresentationOverIso d)).of_iso_source
-        (rawAnalytificationEmptyIso d).symm
-  simpa [coordinateAffineAnalytificationπViaPresentation] using h
+  simpa [coordinateAffineAnalytificationπViaPresentation] using
+    ((ComplexAnalytic.isAnalytification_analytificationToSpec
+      (Fin.elim0 : Fin 0 → MvPolynomial (ULift.{0} (Fin d)) ℂ)).of_iso
+        (rawSpecPresentationOverIso d)).of_iso_source
+          (rawAnalytificationEmptyIso d).symm
 
 @[simp]
 lemma coordinateAffineAnalytificationπ_left :
@@ -317,8 +316,7 @@ theorem coordinateAffineAnalytificationπ_eq_viaPresentation :
         (ComplexAnalytic.presentationIdeal
           (Fin.elim0 : Fin 0 → MvPolynomial (ULift.{0} (Fin d)) ℂ)))) := by
     congr 1
-  rw [hspec, ComplexAnalytic.analytificationToSpec_comp_specMk]
-  rw [← Category.assoc]
+  rw [hspec, ComplexAnalytic.analytificationToSpec_comp_specMk, ← Category.assoc]
   have hinv : (rawAnalytificationEmptyIso d).inv.toLRSHom ≫
       (rawAnalytificationEmptyIso d).hom.toLRSHom = 𝟙 _ :=
     congrArg ComplexAnalytic.AnalyticSpace.Hom.toLRSHom
@@ -339,8 +337,8 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ) [SmoothOfRelativeDimension d X.hom]
 
 lemma coordinateRingHomULift_etale
     {x : X.left} (D : LocalEtaleCoordinates X d x) :
-    (coordinateRingHomULift D).Etale := by
-  exact RingHom.Etale.respectsIso.2 D.coordinateRingHomOnOpen
+    (coordinateRingHomULift D).Etale :=
+  RingHom.Etale.respectsIso.2 D.coordinateRingHomOnOpen
     (MvPolynomial.renameEquiv ℂ Equiv.ulift).toRingEquiv
     D.coordinateRingHomOnOpen_etale
 
@@ -349,13 +347,10 @@ theorem localCoordinateSchemeHom_etale (z : ComplexPoint X) :
   let D := localEtaleCoordinates X d z
   letI : IsAffine D.neighborhood.toScheme := D.isAffine
   letI : IsIso D.neighborhood.toScheme.toSpecΓ := IsAffine.affine
-  letI : Etale D.neighborhood.toScheme.toSpecΓ :=
-    MorphismProperty.of_isIso @Etale _
   have hspec : Etale
       (Spec.map (CommRingCat.ofHom (coordinateRingHomULift D))) :=
     (HasRingHomProperty.Spec_iff (P := @Etale)).2
       (coordinateRingHomULift_etale X d D)
-  letI : Etale (Spec.map (CommRingCat.ofHom (coordinateRingHomULift D))) := hspec
   change Etale (D.neighborhood.toScheme.toSpecΓ ≫
     Spec.map (CommRingCat.ofHom (coordinateRingHomULift D)))
   exact MorphismProperty.comp_mem @Etale _ _
@@ -412,9 +407,8 @@ theorem localComparisonToCanonical_comp_coordinateMap (z : ComplexPoint X) :
   apply (ComplexAnalytic.isAnalytification_analytificationπ
     (coordinateAffineSchemeLFTℂ d)).hom_ext
   rw [Functor.map_comp, Functor.map_comp, Category.assoc,
-    ComplexAnalytic.analytificationπ_naturality]
-  rw [← Category.assoc, localComparisonToCanonical_fac]
-  rw [Category.assoc, coordinateAffineCanonicalIso_hom_comp]
+    ComplexAnalytic.analytificationπ_naturality, ← Category.assoc,
+    localComparisonToCanonical_fac, Category.assoc, coordinateAffineCanonicalIso_hom_comp]
   apply Over.OverMorphism.ext
   change localAnalytificationToNeighborhood X d z ≫
       (toCoordinateSpecULift (localEtaleCoordinates X d z)).toLRSHom =
@@ -469,9 +463,9 @@ theorem localComparisonToCanonical_comp_neighborhoodInclusion
   apply (ComplexAnalytic.isAnalytification_analytificationπ
     (toSchemeLFTℂ X d)).hom_ext
   rw [Functor.map_comp, Functor.map_comp, Category.assoc,
-    comparisonToCanonical_fac]
-  rw [Category.assoc, ComplexAnalytic.analytificationπ_naturality]
-  rw [← Category.assoc, localComparisonToCanonical_fac]
+    comparisonToCanonical_fac, Category.assoc,
+    ComplexAnalytic.analytificationπ_naturality, ← Category.assoc,
+    localComparisonToCanonical_fac]
   apply Over.OverMorphism.ext
   change localToAlgebraic X d z =
     localAnalytificationToNeighborhood X d z ≫
@@ -504,15 +498,14 @@ theorem localChartSource_isOpenCover :
       (fun z : ComplexPoint X ↦ localChartSource X d z) := by
   apply TopologicalSpace.IsOpenCover.mk
   rw [eq_top_iff]
-  intro z _
-  exact Opens.mem_iSup.mpr ⟨z, mem_localChart_source X d z⟩
+  exact fun z _ ↦ Opens.mem_iSup.mpr ⟨z, mem_localChart_source X d z⟩
 
 /-- The project-specific comparison is a local isomorphism, by descent from its coordinate
 charts. -/
 theorem comparisonToCanonical_isLocalIso :
     ComplexAnalytic.AnalyticSpace.IsLocalIso
-      (comparisonToCanonical X d) := by
-  exact ComplexAnalytic.AnalyticSpace.isLocalIso_of_isOpenCover_source
+      (comparisonToCanonical X d) :=
+  ComplexAnalytic.AnalyticSpace.isLocalIso_of_isOpenCover_source
     (comparisonToCanonical X d)
     (fun z : ComplexPoint X ↦ localChartSource X d z)
     (localChartSource_isOpenCover X d)

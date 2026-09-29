@@ -136,16 +136,15 @@ lemma neighborhoodInclusion_isCLinear (D : LocalEtaleCoordinates X d x) :
       (coordinateAlgebraMap D) (algebraicAlgebraMap X) := by
   intro c
   rw [algebraicAlgebraMap_eq_appTop]
-  have h := D.C_comp_coordinateRingHomOnOpen
-  have hc := DFunLike.congr_fun (congrArg CommRingCat.Hom.hom h) c
-  exact hc.symm
+  exact (DFunLike.congr_fun
+    (congrArg CommRingCat.Hom.hom D.C_comp_coordinateRingHomOnOpen) c).symm
 
 lemma localToAlgebraic_isCLinear (z : ComplexPoint X) :
     ComplexAnalytic.IsCLinearHom (localToAlgebraic X d z)
       ((holomorphicLocallyRingedSpace X d).resAlgMap ContMDiffMap.C
         (localChartSource X d z))
-      (algebraicAlgebraMap X) := by
-  exact (ComplexAnalytic.isCLinearHom_ofRestrict
+      (algebraicAlgebraMap X) :=
+  (ComplexAnalytic.isCLinearHom_ofRestrict
     (holomorphicLocallyRingedSpace X d) ContMDiffMap.C
     (localChartSource X d z)).comp
       (analytificationToAlgebraic_isCLinear (X := X) (d := d))
@@ -154,8 +153,8 @@ lemma localAnalytificationToNeighborhood_isCLinear (z : ComplexPoint X) :
     ComplexAnalytic.IsCLinearHom (localAnalytificationToNeighborhood X d z)
       ((holomorphicLocallyRingedSpace X d).resAlgMap ContMDiffMap.C
         (localChartSource X d z))
-      (coordinateAlgebraMap (localEtaleCoordinates X d z)) := by
-  exact ComplexAnalytic.IsCLinearHom.of_comp
+      (coordinateAlgebraMap (localEtaleCoordinates X d z)) :=
+  ComplexAnalytic.IsCLinearHom.of_comp
     (localAnalytificationToNeighborhood_comp X d z)
     (localToAlgebraic_isCLinear (X := X) (d := d) z)
     (neighborhoodInclusion_isCLinear (D := localEtaleCoordinates X d z))
@@ -164,8 +163,8 @@ lemma localChartToComplexAffineSpace_isCLinear (z : ComplexPoint X) :
     ComplexAnalytic.IsCLinearHom (localChartToComplexAffineSpace X d z)
       ((holomorphicLocallyRingedSpace X d).resAlgMap ContMDiffMap.C
         (localChartSource X d z))
-      (Algebra.algebraMap ℂ (OkaRing (⊤ : Opens (ULift.{0} (Fin d) → ℂ)))) := by
-  exact (localChartLocallyRingedSpaceIso_isCLinear X d z).comp
+      (Algebra.algebraMap ℂ (OkaRing (⊤ : Opens (ULift.{0} (Fin d) → ℂ)))) :=
+  (localChartLocallyRingedSpaceIso_isCLinear X d z).comp
     (ComplexAnalytic.isCLinearHom_ofRestrict
       (_root_.complexAffineSpace.{0} d)
       (Algebra.algebraMap ℂ (OkaRing (⊤ : Opens (ULift.{0} (Fin d) → ℂ))))
@@ -183,8 +182,8 @@ abbrev localChartTargetAnalyticSpace (z : ComplexPoint X) :
 lemma localChartLocallyRingedSpaceIso_inv_isCLinear (z : ComplexPoint X) :
     ComplexAnalytic.IsCLinearHom (localChartLocallyRingedSpaceIso X d z).inv
       (localChartTargetAnalyticSpace (X := X) (d := d) z).algebraMap
-      (localChartAnalyticSpace (X := X) (d := d) z).algebraMap := by
-  exact ComplexAnalytic.IsCLinearHom.of_comp
+      (localChartAnalyticSpace (X := X) (d := d) z).algebraMap :=
+  ComplexAnalytic.IsCLinearHom.of_comp
     (localChartLocallyRingedSpaceIso X d z).inv_hom_id
     (ComplexAnalytic.IsCLinearHom.id
       (localChartTargetAnalyticSpace (X := X) (d := d) z).algebraMap)
@@ -314,8 +313,7 @@ lemma mem_toSpecOfAlgMap_base_iff_eval_eq_zero
   change r ∈ (PrimeSpectrum.comap a
     (Z.toLocallyRingedSpace.toΓSpecFun w)).asIdeal ↔ _
   rw [PrimeSpectrum.comap_asIdeal, Ideal.mem_comap,
-    mem_toΓSpecFun_asIdeal_iff_not_isUnit]
-  rw [← Z.evalStalk_ne_zero_iff_isUnit, not_ne_iff]
+    mem_toΓSpecFun_asIdeal_iff_not_isUnit, ← Z.evalStalk_ne_zero_iff_isUnit, not_ne_iff]
   rfl
 
 lemma localLeftCoordinateRingHom_C (z : ComplexPoint X) (c : ℂ) :
@@ -427,12 +425,11 @@ lemma localChart_comparison_square_raw_base (z : ComplexPoint X) :
         change D.coordinateRingHomOnOpen
           ((MvPolynomial.rename ULift.down) (MvPolynomial.X i)) = _
         rw [MvPolynomial.rename_X]
-      rw [hsi]
-      rw [← D.analyticCoordinates_apply_eq_evaluate wz i.down]
+      rw [hsi, ← D.analyticCoordinates_apply_eq_evaluate wz i.down]
       dsimp [v]
-      rw [localChartToComplexAffineSpace_base_apply]
-      rw [localChart_apply_component_eq_evaluate X d z w.1 w.2 i.down]
-      rw [← D.ambientAnalyticCoordinates_apply_eq_evaluate
+      rw [localChartToComplexAffineSpace_base_apply,
+        localChart_apply_component_eq_evaluate X d z w.1 w.2 i.down,
+        ← D.ambientAnalyticCoordinates_apply_eq_evaluate
         (⟨w.1, hw⟩ : {q : ComplexPoint X // q ∈ Point.overOpen D.neighborhood}) i.down]
       rfl
   rw [RingHom.congr_fun hring p]
@@ -510,10 +507,6 @@ lemma localChart_coordinateRing_square (z : ComplexPoint X) :
       mem_toSpecOfAlgMap_base_iff_eval_eq_zero
         (localChartAnalyticSpace (X := X) (d := d) z)
         (localRightCoordinateRingHom (X := X) (d := d) z) w p] at hmem
-    have hLC : L (MvPolynomial.C a) = Z.algebraMap a := by
-      exact localLeftCoordinateRingHom_C (X := X) (d := d) z a
-    have hRC : R (MvPolynomial.C a) = Z.algebraMap a := by
-      exact localRightCoordinateRingHom_C (X := X) (d := d) z a
     have hLzero : ev (L p) = 0 := by
       calc
         ev (L p) = ev (L (MvPolynomial.X i) - L (MvPolynomial.C a)) := by
@@ -521,14 +514,14 @@ lemma localChart_coordinateRing_square (z : ComplexPoint X) :
           rw [map_sub]
         _ = ev (L (MvPolynomial.X i)) - ev (L (MvPolynomial.C a)) := map_sub ev _ _
         _ = a - a := by
-          rw [hLC, ComplexAnalytic.AnalyticSpace.eval_algebraMap]
+          rw [localLeftCoordinateRingHom_C, ComplexAnalytic.AnalyticSpace.eval_algebraMap]
         _ = 0 := sub_self a
     have hRzero : ev (R p) = 0 := hmem.mp hLzero
     have hRsub : ev (R (MvPolynomial.X i)) - a = 0 := by
       calc
         ev (R (MvPolynomial.X i)) - a =
             ev (R (MvPolynomial.X i)) - ev (R (MvPolynomial.C a)) := by
-          rw [hRC, ComplexAnalytic.AnalyticSpace.eval_algebraMap]
+          rw [localRightCoordinateRingHom_C, ComplexAnalytic.AnalyticSpace.eval_algebraMap]
         _ = ev (R (MvPolynomial.X i) - R (MvPolynomial.C a)) := (map_sub ev _ _).symm
         _ = ev (R p) := by
           apply congrArg ev
@@ -552,9 +545,8 @@ theorem localChart_comparison_square_raw (z : ComplexPoint X) :
   rw [← Category.assoc, LocallyRingedSpace.toΓSpec_naturality,
     ← Category.assoc, LocallyRingedSpace.toΓSpec_naturality]
   simp only [Category.assoc]
-  rw [← Spec.locallyRingedSpaceMap_comp]
-  rw [localChart_coordinateRing_square]
-  rw [Spec.locallyRingedSpaceMap_comp]
+  rw [← Spec.locallyRingedSpaceMap_comp, localChart_coordinateRing_square,
+    Spec.locallyRingedSpaceMap_comp]
   rfl
 
 end AlgebraicGeometry.ComplexPoint

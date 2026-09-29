@@ -20,8 +20,8 @@ open CategoryTheory AlgebraicGeometry
 namespace AlgebraicGeometry.ComplexPoint
 
 /-- The rational Lefschetz `(1, 1)` theorem in explicit-cycle form. -/
-theorem _root_.rationalLefschetzOneOne : RationalLefschetzOneOne := by
-  exact RationalLefschetzOneOne.of_analyticLineBundlesAlgebraize fun X ↦
+theorem _root_.rationalLefschetzOneOne : RationalLefschetzOneOne :=
+  RationalLefschetzOneOne.of_analyticLineBundlesAlgebraize fun X ↦
     analyticLineBundlesAlgebraize X
 
 /-- The rational Lefschetz `(1, 1)` theorem in the repository's canonical formulation. -/

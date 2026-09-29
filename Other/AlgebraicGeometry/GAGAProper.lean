@@ -46,14 +46,13 @@ theorem coherent_algebraizes_of_isAnalytification
   let I := hπ.isoOfIsAnalytification hcan
   let IL := AnalyticSpace.forgetToLocallyRingedSpace.mapIso I
   let N := IL.inv.pullbackModules.obj M
-  have hN : N.IsCoherent := by
-    exact @isCoherent_pullbackModules_of_isCoherent _ _ IL.inv M hM
+  have hN : N.IsCoherent :=
+    @isCoherent_pullbackModules_of_isCoherent _ _ IL.inv M hM
   obtain ⟨F, hF, ⟨eF⟩⟩ := hGAGA N hN
   refine ⟨F, hF, ⟨?_⟩⟩
-  have hI : IL.hom ≫ analytificationπLRS X = π.left := by
-    have hI' := congrArg CommaMorphism.left
+  have hI : IL.hom ≫ analytificationπLRS X = π.left :=
+    congrArg CommaMorphism.left
       (IsAnalytification.isoOfIsAnalytification_hom_comp hπ hcan)
-    exact hI'
   let eπ : π.left.pullbackModules.obj F ≅
       IL.hom.pullbackModules.obj ((analytificationModules X).obj F) :=
     (LocallyRingedSpace.Hom.pullbackModulesCongr hI.symm).app F ≪≫
@@ -81,8 +80,7 @@ theorem analyticCoherentSheavesAlgebraize
     (toSchemeLFTℂ X (dim X.left))
     (holomorphicAnalytificationπ_isAnalytification X (dim X.left))
     ?_ M hM
-  intro N hN
-  exact @ComplexAnalytic.gaga₃_proper
+  exact fun N hN ↦ @ComplexAnalytic.gaga₃_proper
     (toSchemeLFTℂ X (dim X.left))
     (toSchemeLFTℂ_isProper X (dim X.left)) N hN
 

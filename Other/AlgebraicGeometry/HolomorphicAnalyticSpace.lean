@@ -116,15 +116,15 @@ variable {ι κ : Type} [Fintype ι] [Fintype κ] {M P : Type}
 lemma contMDiffAt_subtypeVal_comp_iff_omega {V : Opens P} (f : M → V) (x : M) :
     ContMDiffAt 𝓘(ℂ, ι → ℂ) 𝓘(ℂ, κ → ℂ) ω
         (Subtype.val ∘ f) x ↔
-      ContMDiffAt 𝓘(ℂ, ι → ℂ) 𝓘(ℂ, κ → ℂ) ω f x := by
-  exact ChartedSpace.liftPropWithinAt_subtypeVal_comp_iff f Set.univ x
+      ContMDiffAt 𝓘(ℂ, ι → ℂ) 𝓘(ℂ, κ → ℂ) ω f x :=
+  ChartedSpace.liftPropWithinAt_subtypeVal_comp_iff f Set.univ x
 
 /-- Analyticity into an open submanifold can be checked after its subtype inclusion. -/
 lemma contMDiff_subtypeVal_comp_iff_omega {V : Opens P} (f : M → V) :
     ContMDiff 𝓘(ℂ, ι → ℂ) 𝓘(ℂ, κ → ℂ) ω
         (Subtype.val ∘ f) ↔
-      ContMDiff 𝓘(ℂ, ι → ℂ) 𝓘(ℂ, κ → ℂ) ω f := by
-  exact forall_congr' fun x ↦ contMDiffAt_subtypeVal_comp_iff_omega f x
+      ContMDiff 𝓘(ℂ, ι → ℂ) 𝓘(ℂ, κ → ℂ) ω f :=
+  forall_congr' fun x ↦ contMDiffAt_subtypeVal_comp_iff_omega f x
 
 /-- An analytic map pulls analytic functions back. -/
 def sheafHom (f : M → P)
@@ -232,8 +232,8 @@ instance (U : Opens M) : SheafedSpace.IsOpenImmersion
 /-- Restriction to an open subset agrees with its analytic manifold sheaf. -/
 def restrictSheafedSpaceIso (U : Opens M) :
     (sheafedSpace (ι := ι) (M := M)).restrict U.isOpenEmbedding ≅
-      sheafedSpace (ι := ι) (M := U) := by
-  exact (SheafedSpace.IsOpenImmersion.isoRestrict
+      sheafedSpace (ι := ι) (M := U) :=
+  (SheafedSpace.IsOpenImmersion.isoRestrict
     (map (ι := ι) (κ := ι) (M := U) (P := M) Subtype.val
       (contMDiff_subtype_val (I := 𝓘(ℂ, ι → ℂ))))).symm
 
@@ -241,8 +241,8 @@ set_option backward.isDefEq.respectTransparency false in
 private theorem restrictSheafedSpaceIso_isCLinear (U : Opens M) :
     IsCLinearSheafedHom (restrictSheafedSpaceIso (ι := ι) (M := M) U).hom
       (sheafedResAlgMap (sheafedSpace (ι := ι) (M := M)) ContMDiffMap.C U)
-      ContMDiffMap.C := by
-  exact IsCLinearSheafedHom.of_comp
+      ContMDiffMap.C :=
+  IsCLinearSheafedHom.of_comp
     (SheafedSpace.IsOpenImmersion.isoRestrict_inv_ofRestrict _)
     (isCLinearSheafedHom_ofRestrict
       (sheafedSpace (ι := ι) (M := M)) ContMDiffMap.C U)
@@ -340,8 +340,8 @@ private theorem restrictHolomorphicSheafedSpaceIsoOka_isCLinear
       (sheafedResAlgMap (HolomorphicManifold.sheafedSpace
         (ι := Fin n) (M := Fin n → ℂ)) ContMDiffMap.C V)
       ((complexSpace (Fin n)).resAlgMap
-        (Algebra.algebraMap ℂ (OkaRing (⊤ : Opens (Fin n → ℂ)))) V) := by
-  exact IsCLinearSheafedHom.of_comp
+        (Algebra.algebraMap ℂ (OkaRing (⊤ : Opens (Fin n → ℂ)))) V) :=
+  IsCLinearSheafedHom.of_comp
     (SheafedSpace.IsOpenImmersion.isoRestrict_hom_ofRestrict _)
     ((isCLinearSheafedHom_ofRestrict
         (HolomorphicManifold.sheafedSpace (ι := Fin n) (M := Fin n → ℂ))
@@ -451,8 +451,8 @@ theorem canonicalRestrictedComplexSpaceIso_isCLinear
       ((complexSpace ι).resAlgMap
         (Algebra.algebraMap ℂ (OkaRing (⊤ : Opens (ι → ℂ)))) U)
       ((complexSpace κ).resAlgMap
-        (Algebra.algebraMap ℂ (OkaRing (⊤ : Opens (κ → ℂ)))) (φ.opensCongr U)) := by
-  exact ComplexAnalytic.IsCLinearHom.of_comp
+        (Algebra.algebraMap ℂ (OkaRing (⊤ : Opens (κ → ℂ)))) (φ.opensCongr U)) :=
+  ComplexAnalytic.IsCLinearHom.of_comp
     (by simp [canonicalRestrictedComplexSpaceIso])
     ((ComplexAnalytic.isCLinearHom_ofRestrict (complexSpace ι) _ U).comp
       (complexSpaceIso_isCLinear φ))

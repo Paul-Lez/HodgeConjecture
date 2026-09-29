@@ -63,8 +63,8 @@ theorem holomorphicStalk_isUnit_iff (x : ComplexPoint X)
     exact (hf.map (holomorphicStalkEvaluation X d x).hom).ne_zero
   · intro hf
     obtain ⟨U, hx, g, rfl⟩ := (holomorphicFunctionSheaf X d).presheaf.exists_germ_eq f
-    have hg : g.1 ⟨x, hx⟩ ≠ 0 := by
-      exact (holomorphicStalkEvaluation_germ X d U x hx g) ▸ hf
+    have hg : g.1 ⟨x, hx⟩ ≠ 0 :=
+      (holomorphicStalkEvaluation_germ X d U x hx g) ▸ hf
     obtain ⟨V, hVU, hxV, l, hl⟩ :=
       ContMDiffMap.exists_local_holomorphicExponential
         (I := 𝓘(ℂ, Fin d → ℂ)) g ⟨x, hx⟩ hg

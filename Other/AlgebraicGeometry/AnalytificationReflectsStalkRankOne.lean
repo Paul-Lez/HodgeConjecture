@@ -41,8 +41,8 @@ theorem exists_algebraicStalkLinearEquiv_of_analytification
         (holomorphicFunctionSheaf X d).presheaf.stalk z) :
     Nonempty (((SheafOfModules.stalkFunctor
       (R := X.left.presheaf) (hR := X.left.ringCatSheaf.property) z.underlying).obj F) ≃ₗ[
-      X.left.presheaf.stalk z.underlying] X.left.presheaf.stalk z.underlying) := by
-  exact Module.exists_linearEquiv_self_of_faithfullyFlat_extendScalars
+      X.left.presheaf.stalk z.underlying] X.left.presheaf.stalk z.underlying) :=
+  Module.exists_linearEquiv_self_of_faithfullyFlat_extendScalars
     (X.left.presheaf.stalk z.underlying)
     ((holomorphicFunctionSheaf X d).presheaf.stalk z)
     ((analytificationToPresheafedSpace X d).stalkMap z).hom
