@@ -1,7 +1,8 @@
 # Statement of the Hodge Conjecture
 
-This repo is work in progress towards stating the Hodge conjecture in Lean for the
-[Formal Conjectures project](https://github.com/google-deepmind/formal-conjectures).
+This repository formalizes the statement of the Hodge conjecture in Lean for the
+[Formal Conjectures project](https://github.com/google-deepmind/formal-conjectures) and develops
+supporting definitions and results.
 
 During the initial stages of this work, autoformalisation tools were used extensively.
 The bulk of the work is now directed towards cleaning up the code.
@@ -30,19 +31,18 @@ WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
 
 ## Lefschetz (1, 1) development
 
-`Other/AlgebraicGeometry/LefschetzOneOne.lean` states the rational Lefschetz `(1, 1)` theorem
-and proves it assuming `HodgeConjecture`. The unconditional proof is in progress: the holomorphic
-exponential sequence, its connecting map, the vanishing of Hodge classes in `H²(𝒪)`, the
-resulting unit-sheaf extensions and their invertible holomorphic section sheaves, and the
-analytification functor on sheaves of modules are constructed in the `Holomorphic*` and
-`Analytification*` files of `Other/AlgebraicGeometry`.
-`Other/AlgebraicGeometry/LefschetzOneOneReduction.lean` states the remaining obligations
-(integral denominator clearing, projective GAGA for line bundles, and the divisor/cycle-class
-comparison) as explicit propositions and proves that they imply the theorem;
-`Other/AlgebraicGeometry/IntegralDenominatorClearing.lean` reduces denominator clearing to finite
-generation of `H²(X^an, ℤ)` through the integral singular comparison, and
-`Other/AlgebraicGeometry/ProjectiveFiniteHomology.lean` proves that finiteness (compact manifolds are
-neighbourhood retracts of Euclidean spaces), so only the line-bundle GAGA and divisor/cycle-class
-obligations remain.
+`HodgeConjecture/LefschetzOneOne.lean` contains the canonical rational Lefschetz `(1, 1)`
+proposition, and `Other/AlgebraicGeometry/LefschetzOneOneStatement.lean` contains the stronger
+explicit-cycle proposition. Their unconditional proofs are in
+`Other/AlgebraicGeometry/LefschetzOneOneProof.lean`. The proof combines the holomorphic
+exponential sequence, integral denominator clearing, the divisor–Chern comparison, and proper
+GAGA for line bundles. It proves the rational codimension-one result, not the stronger integral
+Picard/Chern-class formulation.
+
+The adapted Oka dependency is isolated in
+[PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230). The completed proper-GAGA step and
+final theorem are in [PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228), stacked on
+PR230 and the Lefschetz reduction in
+[PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
 See [the Lefschetz handoff](docs/LEFSCHETZ_HANDOFF.md) for the status, file map and
 verification commands.

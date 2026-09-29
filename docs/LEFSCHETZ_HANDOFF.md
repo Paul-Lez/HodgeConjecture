@@ -2,7 +2,8 @@
 
 This development proves the unconditional theorem `lefschetzOneOne : LefschetzOneOne` in
 `Other/AlgebraicGeometry/LefschetzOneOneProof.lean`. Its stronger concrete helper
-`rationalLefschetzOneOne : RationalLefschetzOneOne` produces an explicit rational divisor.
+`rationalLefschetzOneOne : RationalLefschetzOneOne` produces an explicit rational
+codimension-one cycle.
 The proofs contain no `sorry` or added axiom.
 
 ## Goal
@@ -29,24 +30,27 @@ The proof first establishes the stronger concrete formulation `RationalLefschetz
 `algebraicCycleClassSpan`. Thus the final theorem has the canonical target type without a
 `HodgeConjecture` hypothesis or comparison axiom.
 
-The canonical proposition has a statement-only module. The explicit-cycle proposition has a
-separate proof-interface module. The import checks enforce both boundaries and restate both
-contracts.
+The canonical and explicit-cycle propositions each have a statement-only module. Their final
+proofs live in `Other/AlgebraicGeometry/LefschetzOneOneProof.lean`. The import checks enforce
+these boundaries and restate both contracts.
 
 ## PR split
 
-[PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9) contains the analytic construction,
-denominator clearing, and the divisor–Chern comparison. [PR41](https://github.com/Paul-Lez/HodgeConjecture/pull/41)
-contains the earlier GAGA development and is stacked on PR9. The completed proper-GAGA comparison
-is in `GAGAProper.lean`; the final theorem is in `LefschetzOneOneProof.lean`.
+[The stack through PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9) contains the analytic
+construction, denominator clearing, and the divisor–Chern comparison.
+[PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230) isolates the adapted Oka dependency.
+[PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228) is stacked on PR230 and adds the
+project-specific proper-GAGA comparison in `GAGAProper.lean` and the final theorem in
+`LefschetzOneOneProof.lean`.
 
 The divisor–Chern comparison takes an algebraic line bundle and its analytic identification as
 inputs. The uniform comparison is proved without GAGA by
 `hasDivisorClassOfCartierData` in `ChernRelativeFinalAssembly.lean`; its proof route is in
 [DIVISOR_HANDOFF.md](DIVISOR_HANDOFF.md).
 
-The comparison audit is `scripts/lefschetz_axiom_audit.lean`; the GAGA audit is
-`scripts/gaga_axiom_audit.lean` on PR41. Run `lake build` before either audit.
+`scripts/CheckLefschetzOneOneAxioms.lean` is the build-enforced axiom boundary for both exported
+theorems. `scripts/lefschetz_axiom_audit.lean` and `scripts/gaga_axiom_audit.lean` provide the
+larger diagnostic audits. All three are present on PR228.
 
 ## What is proved
 
@@ -126,8 +130,7 @@ states, for a single smooth projective integral complex variety `X`:
    faithfully flat stalk maps.
 3. `HasDivisorOfAlgebraicModel X`: such an `L` is represented by `D : codimensionCycleSubgroup X.left 1`
    with `sheafCycleClassOnCycles (ofOver X) 1 D = integralToRationalCohomology X 2
-   E.firstChernClass`. Since `D` is existential, sign and `2πi` normalisation conventions do not
-   affect the statement. The algebraic half is proved: every invertible algebraic sheaf is
+   E.firstChernClass`. The algebraic half is proved: every invertible algebraic sheaf is
    represented by Cartier data (a cover with local equations) whose divisor is a
    `codimensionCycleSubgroup X.left 1` (`DivisorOfRationalSection.lean`,
    `InvertibleSheafRationalSection.lean`, `CartierDataOfTrivializingCover.lean`), and
@@ -158,8 +161,11 @@ coherent-sheaf algebraization and faithful flatness of analytification on stalks
 
 ```bash
 lake build
+lake build CheckLefschetzOneOneAxioms
+lake exe lint-style HodgeConjecture Other HodgeGuide
 python3 scripts/check_import_layers.py
 lake env lean scripts/lefschetz_axiom_audit.lean
+lake env lean scripts/gaga_axiom_audit.lean
 git diff --check
 ```
 
