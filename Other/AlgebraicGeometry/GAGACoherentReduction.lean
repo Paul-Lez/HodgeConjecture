@@ -6,7 +6,6 @@ module
 
 public import Other.AlgebraicGeometry.AnalytificationReflectsInvertible
 public import Other.AlgebraicGeometry.GAGACoherentStatement
-public import Other.AlgebraicGeometry.GAGAtoLefschetz
 public import Other.AlgebraicGeometry.HolomorphicAnalyticSpace
 public import Other.AlgebraicGeometry.InvertibleSheafCoherent
 
@@ -45,17 +44,5 @@ theorem analyticLineBundlesAlgebraize_of_coherent
   let : F.IsCoherent := hF
   exact ⟨F, algebraic_isInvertible_of_analytificationIso
     X (dim X.left) F M hff eFM hM, ⟨eFM⟩⟩
-
-/-- The rational Lefschetz `(1, 1)` theorem follows from coherent GAGA and faithfully flat
-analytification maps on stalks. -/
-theorem _root_.RationalLefschetzOneOne.of_coherentGAGA
-    (hGAGA : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-      [IsProjective X.hom], AnalyticCoherentSheavesAlgebraize X)
-    (hff : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-      [IsProjective X.hom] (z : ComplexPoint X),
-      ((analytificationToPresheafedSpace X (dim X.left)).stalkMap z).hom.FaithfullyFlat) :
-    RationalLefschetzOneOne :=
-  RationalLefschetzOneOne.of_analyticLineBundlesAlgebraize fun X ↦
-    analyticLineBundlesAlgebraize_of_coherent X (hGAGA X) (hff X)
 
 end AlgebraicGeometry.ComplexPoint

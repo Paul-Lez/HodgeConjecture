@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Variants
 public import Other.AlgebraicGeometry.LefschetzOneOneStatement
 
 /-!
@@ -38,8 +37,7 @@ statement. -/
 public theorem RationalLefschetzOneOne.to_lefschetzOneOne
     (h : RationalLefschetzOneOne) : LefschetzOneOne := by
   intro X _ _ _ α hα
-  obtain ⟨D, hD⟩ := h X α hα
-  rw [← hD]
+  obtain ⟨D, rfl⟩ := h X α hα
   exact rationalSheafCycleClassOnCycles_mem_algebraicCycleClassSpan X 1 D
 
 /-- The Hodge conjecture implies the rational Lefschetz `(1, 1)` theorem. -/

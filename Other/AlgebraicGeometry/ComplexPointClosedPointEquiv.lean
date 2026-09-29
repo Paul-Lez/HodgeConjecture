@@ -23,8 +23,7 @@ public import Mathlib.Analysis.Complex.Polynomial.Basic
 # Complex points and closed points
 
 For a complex scheme locally of finite type, its complex points are equivalent to its closed
-scheme points. The second construction packages the same fact for any point model whose map to
-the underlying scheme is injective with image the closed points.
+scheme points.
 -/
 
 @[expose] public noncomputable section
@@ -46,19 +45,5 @@ def complexPointEquivClosedPoint
       exact congrArg Subtype.val
         ((pointEquivClosedPoint X.hom).symm_apply_apply ⟨z.left, Over.w z⟩)
     right_inv := fun x ↦ (pointEquivClosedPoint X.hom).apply_symm_apply x }
-
-/-- A point model mapping injectively to a complex scheme with image its closed points is
-equivalent to the scheme's complex points. -/
-def pointEquivOfRangeClosedPoints
-    (X : Over (Spec (CommRingCat.of ℂ))) [LocallyOfFiniteType X.hom]
-    (A : Type*) (p : A → X.left) (hp_inj : Function.Injective p)
-    (hp_range : Set.range p = closedPoints X.left) : A ≃ ComplexPoint X := by
-  let q : A → closedPoints X.left :=
-    fun a ↦ ⟨p a, by rw [← hp_range]; exact Set.mem_range_self a⟩
-  exact (Equiv.ofBijective q
-    ⟨fun a b h ↦ hp_inj (congrArg Subtype.val h), fun x ↦ by
-      obtain ⟨a, ha⟩ : x.1 ∈ Set.range p := by rw [hp_range]; exact x.2
-      exact ⟨a, Subtype.ext ha⟩⟩).trans
-    (complexPointEquivClosedPoint X).symm
 
 end AlgebraicGeometry.ComplexPoint

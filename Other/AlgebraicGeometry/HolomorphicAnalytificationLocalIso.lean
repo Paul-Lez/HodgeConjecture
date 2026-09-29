@@ -6,6 +6,7 @@ module
 
 public import Other.AlgebraicGeometry.HolomorphicAnalytificationCharts
 public import Other.Oka.AnalyticSpace.LocalAtSource
+public import Other.Oka.Analytification.GAGA.AffineSpace
 public import Other.Oka.Analytification.SchemeAffine
 public import Other.Oka.Analytification.UniversalProperty
 public import Other.Oka.Analytification.RET.EtaleLocalIso
@@ -124,62 +125,22 @@ def coordinateAffineAnalytificationπ :
 
 def localAlgebraicAlgebraMap {x : X.left} (D : LocalEtaleCoordinates X d x) :
     ℂ →+* LocallyRingedSpace.Γ.obj (op D.neighborhood.toScheme.toLocallyRingedSpace) :=
-  ((ΓSpec.locallyRingedSpaceAdjunction.homEquiv
-    D.neighborhood.toScheme.toLocallyRingedSpace (op ↧ℂ)).symm
-      (D.neighborhood.ι ≫ X.hom).toLRSHom).unop.hom
+  algebraicAlgebraMap (ComplexPoint.openScheme X D.neighborhood)
 
 lemma localAlgebraicAlgebraMap_eq_appTop
     {x : X.left} (D : LocalEtaleCoordinates X d x) :
     localAlgebraicAlgebraMap X d D =
       (D.neighborhood.ι ≫ X.hom).appTop.hom.comp
-        (Scheme.ΓSpecIso ↧ℂ).inv.hom := by
-  simp only [localAlgebraicAlgebraMap, Functor.rightOp_obj,
-    LocallyRingedSpace.Γ_obj]
-  rfl
+        (Scheme.ΓSpecIso ↧ℂ).inv.hom :=
+  algebraicAlgebraMap_eq_appTop (ComplexPoint.openScheme X D.neighborhood)
 
 lemma localAlgebraicStructure_eq_toSpecOfAlgebraMap
     {x : X.left} (D : LocalEtaleCoordinates X d x) :
     (((D.neighborhood.ι ≫ X.hom) ≫ (specComplexULiftIso).hom).toLRSHom) =
       D.neighborhood.toScheme.toLocallyRingedSpace.toSpecOfAlgMap
-        (ComplexAnalytic.uliftAlgMap (localAlgebraicAlgebraMap X d D)) := by
-  have hD : D.neighborhood.toScheme.toLocallyRingedSpace.toSpecOfAlgMap
-      (localAlgebraicAlgebraMap X d D) =
-        (D.neighborhood.ι ≫ X.hom).toLRSHom := by
-    rw [LocallyRingedSpace.toSpecOfAlgMap_eq_homEquiv]
-    exact (ΓSpec.locallyRingedSpaceAdjunction.homEquiv
-      D.neighborhood.toScheme.toLocallyRingedSpace (op ↧ℂ)).apply_symm_apply
-        (D.neighborhood.ι ≫ X.hom).toLRSHom
-  change (D.neighborhood.ι ≫ X.hom).toLRSHom ≫
-      Spec.locallyRingedSpaceMap
-        (CommRingCat.ofHom ULift.ringEquiv.toRingHom) = _
-  rw [← hD]
-  change (D.neighborhood.toScheme.toLocallyRingedSpace.toΓSpec ≫
-      Spec.locallyRingedSpaceMap
-        (CommRingCat.ofHom (localAlgebraicAlgebraMap X d D))) ≫
-        Spec.locallyRingedSpaceMap
-          (CommRingCat.ofHom ULift.ringEquiv.toRingHom) =
-    D.neighborhood.toScheme.toLocallyRingedSpace.toΓSpec ≫
-      Spec.locallyRingedSpaceMap
-        (CommRingCat.ofHom
-          ((localAlgebraicAlgebraMap X d D).comp ULift.ringEquiv.toRingHom))
-  calc
-    _ = D.neighborhood.toScheme.toLocallyRingedSpace.toΓSpec ≫
-        (Spec.locallyRingedSpaceMap
-            (CommRingCat.ofHom (localAlgebraicAlgebraMap X d D)) ≫
-          Spec.locallyRingedSpaceMap
-            (CommRingCat.ofHom ULift.ringEquiv.toRingHom)) := by
-      rw [Category.assoc]
-    _ = D.neighborhood.toScheme.toLocallyRingedSpace.toΓSpec ≫
-        Spec.locallyRingedSpaceMap
-          (CommRingCat.ofHom ULift.ringEquiv.toRingHom ≫
-            CommRingCat.ofHom (localAlgebraicAlgebraMap X d D)) := by
-      rw [Spec.locallyRingedSpaceMap_comp]
-    _ = _ := by
-      apply congrArg (fun q ↦
-        D.neighborhood.toScheme.toLocallyRingedSpace.toΓSpec ≫
-          Spec.locallyRingedSpaceMap q)
-      exact (CommRingCat.ofHom_comp ULift.ringEquiv.toRingHom
-        (localAlgebraicAlgebraMap X d D)).symm
+        (ComplexAnalytic.uliftAlgMap (localAlgebraicAlgebraMap X d D)) :=
+  algebraicStructure_eq_toSpecOfAlgebraMap
+    (ComplexPoint.openScheme X D.neighborhood)
 
 lemma coordinateRingHomULift_comp_coordinateAffineAlgebraMap
     {x : X.left} (D : LocalEtaleCoordinates X d x) :
@@ -222,24 +183,8 @@ def localCoordinateSchemeHom (z : ComplexPoint X) :
 variable (d : ℕ)
 
 /-- The empty analytic zero locus is all of complex affine space. -/
-def rawAnalytificationEmptyIso :
-    ComplexAnalytic.AnalyticSpace.analytification.{0}
-        (Fin.elim0 : Fin 0 → MvPolynomial (ULift.{0} (Fin d)) ℂ) ≅
-      ComplexAnalytic.AnalyticSpace.complexAffineSpace.{0} d where
-  hom := ComplexAnalytic.analytificationInclHom _
-  inv := ComplexAnalytic.liftHom _ _ ComplexAnalytic.coord
-    (fun j ↦ j.elim0)
-  hom_inv_id := ComplexAnalytic.hom_ext_analytification _ _ _ fun i ↦ by
-    rw [Category.id_comp, Category.assoc,
-      ComplexAnalytic.AnalyticSpace.coordPullback_comp,
-      ComplexAnalytic.coordPullback_liftHom_comp]
-    rfl
-  inv_hom_id := ComplexAnalytic.AnalyticSpace.hom_ext_complexAffineSpace _ _ fun j ↦ by
-    change ComplexAnalytic.AnalyticSpace.coordPullback _ j =
-      ComplexAnalytic.AnalyticSpace.coordPullback (𝟙 _) j
-    rw [ComplexAnalytic.coordPullback_liftHom_comp]
-    simp only [ComplexAnalytic.AnalyticSpace.coordPullback_apply]
-    rfl
+abbrev rawAnalytificationEmptyIso :=
+  ComplexAnalytic.analytificationEmptyIso.{0} d
 
 /-- Quotienting the raw polynomial ring by the ideal generated by the empty tuple changes
 nothing. -/
@@ -346,7 +291,6 @@ theorem localCoordinateSchemeHom_etale (z : ComplexPoint X) :
     Etale (localCoordinateSchemeHom X d z).hom.left := by
   let D := localEtaleCoordinates X d z
   letI : IsAffine D.neighborhood.toScheme := D.isAffine
-  letI : IsIso D.neighborhood.toScheme.toSpecΓ := IsAffine.affine
   have hspec : Etale
       (Spec.map (CommRingCat.ofHom (coordinateRingHomULift D))) :=
     (HasRingHomProperty.Spec_iff (P := @Etale)).2

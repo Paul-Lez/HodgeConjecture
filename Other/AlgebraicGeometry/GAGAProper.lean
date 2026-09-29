@@ -80,17 +80,17 @@ theorem analyticCoherentSheavesAlgebraize
     (toSchemeLFTℂ X (dim X.left))
     (holomorphicAnalytificationπ_isAnalytification X (dim X.left))
     ?_ M hM
-  exact fun N hN ↦ @ComplexAnalytic.gaga₃_proper
+  exact @ComplexAnalytic.gaga₃_proper
     (toSchemeLFTℂ X (dim X.left))
-    (toSchemeLFTℂ_isProper X (dim X.left)) N hN
+    (toSchemeLFTℂ_isProper X (dim X.left))
 
 /-- Proper GAGA algebraizes holomorphic line bundles on smooth projective complex varieties. -/
 theorem analyticLineBundlesAlgebraize
     (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] :
     AnalyticLineBundlesAlgebraize X :=
   analyticLineBundlesAlgebraize_of_coherent X
-    (analyticCoherentSheavesAlgebraize X) fun z ↦
-      faithfullyFlat_stalkMap_holomorphicAnalytificationπ X (dim X.left) z
+    (analyticCoherentSheavesAlgebraize X)
+    (faithfullyFlat_stalkMap_holomorphicAnalytificationπ X (dim X.left))
 
 end AlgebraicGeometry.ComplexPoint
 

@@ -445,25 +445,9 @@ lemma localChart_coordinateRing_square (z : ComplexPoint X) :
   apply CommRingCat.hom_ext
   apply MvPolynomial.ringHom_ext
   · intro c
-    change LocallyRingedSpace.Γ.map (localChartToComplexAffineSpace X d z).op
-        (okaGlobalOfMvPolynomial (ULift.{0} (Fin d)) (MvPolynomial.C c)) =
-      LocallyRingedSpace.Γ.map (localAnalytificationToNeighborhood X d z).op
-        (coordinateRingHomULift (localEtaleCoordinates X d z) (MvPolynomial.C c))
-    have hl := localChartToComplexAffineSpace_isCLinear (X := X) (d := d) z c
-    have hr := localAnalytificationToNeighborhood_isCLinear
-      (X := X) (d := d) z c
-    rw [show okaGlobalOfMvPolynomial (ULift.{0} (Fin d)) (MvPolynomial.C c) =
-      Algebra.algebraMap ℂ (OkaRing (⊤ : Opens (ULift.{0} (Fin d) → ℂ))) c by
-        exact (OkaRing.ofMvPolynomial
-          (⊤ : Opens (ULift.{0} (Fin d) → ℂ))).commutes c]
-    rw [show coordinateRingHomULift (localEtaleCoordinates X d z)
-        (MvPolynomial.C c) =
-      coordinateAlgebraMap (localEtaleCoordinates X d z) c by
-        change (localEtaleCoordinates X d z).coordinateRingHomOnOpen
-          ((MvPolynomial.rename ULift.down) (MvPolynomial.C c)) = _
-        rw [MvPolynomial.rename_C]
-        rfl]
-    exact hl.trans hr.symm
+    change localLeftCoordinateRingHom (X := X) (d := d) z (MvPolynomial.C c) =
+      localRightCoordinateRingHom (X := X) (d := d) z (MvPolynomial.C c)
+    rw [localLeftCoordinateRingHom_C, localRightCoordinateRingHom_C]
   · intro i
     apply localChart_section_ext (X := X) (d := d) z
     intro w

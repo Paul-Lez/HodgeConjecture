@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import Other.AlgebraicGeometry.GAGAProper
+public import Other.AlgebraicGeometry.GAGAtoLefschetz
 
 /-!
 # Proof of the rational Lefschetz (1, 1) theorem
@@ -21,8 +22,8 @@ namespace AlgebraicGeometry.ComplexPoint
 
 /-- The rational Lefschetz `(1, 1)` theorem in explicit-cycle form. -/
 theorem _root_.rationalLefschetzOneOne : RationalLefschetzOneOne :=
-  RationalLefschetzOneOne.of_analyticLineBundlesAlgebraize fun X ↦
-    analyticLineBundlesAlgebraize X
+  RationalLefschetzOneOne.of_analyticLineBundlesAlgebraize
+    analyticLineBundlesAlgebraize
 
 /-- The rational Lefschetz `(1, 1)` theorem in the repository's canonical formulation. -/
 theorem _root_.lefschetzOneOne : LefschetzOneOne :=

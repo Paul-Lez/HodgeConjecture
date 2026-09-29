@@ -460,12 +460,6 @@ theorem canonicalRestrictedComplexSpaceIso_isCLinear
 
 end Euclidean
 
-/-- The project-specific holomorphic sheaf is the analytic-manifold sheaf. -/
-def holomorphicSheafedSpaceIso :
-    (holomorphicLocallyRingedSpace X d).toSheafedSpace ≅
-      HolomorphicManifold.sheafedSpace (ι := Fin d) (M := ComplexPoint X) :=
-  Iso.refl _
-
 /-- The source of the chosen analytic chart at `z`. -/
 def localChartSource (z : ComplexPoint X) : Opens (ComplexPoint X) :=
   ⟨(localChart X d z).source, (localChart X d z).open_source⟩

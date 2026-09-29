@@ -148,12 +148,9 @@ lemma analytificationπ_comparisonToCanonical_base (z : ComplexPoint X) :
         ((comparisonToCanonical X d).toLRSHom.base z) = z.underlying :=
   congrArg (fun f ↦ f.left.base z) (comparisonToCanonical_fac X d)
 
-lemma comparisonToCanonical_base_injective_of_analytificationπ_base_injective
-    (hπ : Function.Injective
-      (ComplexAnalytic.analytificationπ (toSchemeLFTℂ X d)).left.base) :
+lemma comparisonToCanonical_base_injective :
     Function.Injective (comparisonToCanonical X d).toLRSHom.base := by
   letI : Smooth X.hom := SmoothOfRelativeDimension.smooth d X.hom
-  letI : LocallyOfFiniteType X.hom := inferInstance
   intro z w hzw
   apply (complexPointEquivClosedPoint X).injective
   apply Subtype.ext
@@ -169,7 +166,6 @@ lemma comparisonToCanonical_base_surjective_of_range_analytificationπ_base
         closedPoints X.left) :
     Function.Surjective (comparisonToCanonical X d).toLRSHom.base := by
   letI : Smooth X.hom := SmoothOfRelativeDimension.smooth d X.hom
-  letI : LocallyOfFiniteType X.hom := inferInstance
   intro y
   have hyClosed : IsClosed
       ({(ComplexAnalytic.analytificationπ (toSchemeLFTℂ X d)).left.base y} :
@@ -193,7 +189,7 @@ lemma comparisonToCanonical_base_bijective_of_closedPoints
       (ComplexAnalytic.analytificationπ (toSchemeLFTℂ X d)).left.base =
         closedPoints X.left) :
     Function.Bijective (comparisonToCanonical X d).toLRSHom.base :=
-  ⟨comparisonToCanonical_base_injective_of_analytificationπ_base_injective X d hπ,
+  ⟨comparisonToCanonical_base_injective X d,
     comparisonToCanonical_base_surjective_of_range_analytificationπ_base X d hπ hrange⟩
 
 theorem comparisonToCanonical_base_bijective :
