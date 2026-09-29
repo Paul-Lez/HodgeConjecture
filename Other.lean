@@ -210,6 +210,7 @@ public import Other.AlgebraicGeometry.AnalytificationModules
 public import Other.AlgebraicGeometry.DivisorOfRationalSection
 public import Other.AlgebraicGeometry.HolomorphicExponential
 public import Other.AlgebraicGeometry.HolomorphicExponentialSequence
+public import Other.AlgebraicGeometry.HolomorphicExponentialSupportWinding
 public import Other.AlgebraicGeometry.HolomorphicFirstChernClass
 public import Other.AlgebraicGeometry.HolomorphicLineBundleModule
 public import Other.AlgebraicGeometry.HolomorphicLineBundleOfExtension
