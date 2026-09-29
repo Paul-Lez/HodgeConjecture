@@ -109,11 +109,9 @@ lemma canonicalRestrictedComplexSpaceIso_base
   have hfg : E.hom ≫ g = f := by
     change LocallyRingedSpace.IsOpenImmersion.lift g f H ≫ g = f
     exact LocallyRingedSpace.IsOpenImmersion.lift_fac g f H
-  have h := congrArg (fun q :
-      (complexSpace ι).restrict U.isOpenEmbedding ⟶ complexSpace κ ↦
-      q.base w) hfg
-  change ((E.hom.base w).1 : κ → ℂ) = φ w.1 at h
-  exact h
+  change ((E.hom.base w).1 : κ → ℂ) = φ w.1
+  exact congrArg (fun q :
+    (complexSpace ι).restrict U.isOpenEmbedding ⟶ complexSpace κ ↦ q.base w) hfg
 
 lemma localChartToComplexAffineSpace_base_apply (z : ComplexPoint X)
     (w : ↑↑(localChartLRS X d z).toPresheafedSpace)
@@ -223,10 +221,8 @@ lemma localChart_section_ext (z : ComplexPoint X)
           (show w ∈ (⊤ : Opens (localChartAnalyticSpace
             (X := X) (d := d) z)) from trivial) t) : s = t := by
   let e := localChartLocallyRingedSpaceIso X d z
-  have hinj : Function.Injective
-      (LocallyRingedSpace.Γ.map e.inv.op).hom :=
-    (ConcreteCategory.bijective_of_isIso _).injective
-  apply hinj
+  apply (ConcreteCategory.bijective_of_isIso
+    (LocallyRingedSpace.Γ.map e.inv.op)).injective
   apply OkaRing.ext
   funext y
   obtain ⟨y', hy', right⟩ := y.2
@@ -235,9 +231,7 @@ lemma localChart_section_ext (z : ComplexPoint X)
     localChartTargetULift X d z
   let y₀ : V.isOpenEmbedding.isOpenMap.functor.obj ⊤ :=
     ⟨V.inclusion' y', ⟨y', trivial, rfl⟩⟩
-  have hy : y = y₀ := by
-    apply Subtype.ext
-    exact right.symm
+  have hy : y = y₀ := Subtype.ext right.symm
   rw [hy]
   change OkaRing.evalHom
       (U := V.isOpenEmbedding.isOpenMap.functor.obj ⊤)
@@ -355,8 +349,8 @@ lemma localChart_comparison_square_raw_base (z : ComplexPoint X) :
   refine (mem_complexSpaceToSpec_base_asIdeal_iff
     v p).trans ?_
   let D := localEtaleCoordinates X d z
-  let g := localAnalytificationToNeighborhood X d z
-  let y : D.neighborhood.toScheme := g.base w
+  let y : D.neighborhood.toScheme :=
+    (localAnalytificationToNeighborhood X d z).base w
   let q : PrimeSpectrum (MvPolynomial (ULift.{0} (Fin d)) ℂ) :=
     (toCoordinateSpecULift D).base y
   change MvPolynomial.eval v p = 0 ↔ p ∈ q.asIdeal
@@ -371,18 +365,15 @@ lemma localChart_comparison_square_raw_base (z : ComplexPoint X) :
     ComplexPoint.asOpenPoint X D.neighborhood w.1 hw
   have hy : wz.underlying = y := by
     apply Subtype.ext
-    have hwz : Point.map (ComplexPoint.openInclusion X D.neighborhood) wz = w.1 := by
-      exact congrArg Subtype.val
+    have hwz : Point.map (ComplexPoint.openInclusion X D.neighborhood) wz = w.1 :=
+      congrArg Subtype.val
         ((ComplexPoint.openEquiv X D.neighborhood).apply_symm_apply ⟨w.1, hw⟩)
     have hwz' := congrArg Point.underlying hwz
     rw [Point.underlying_map] at hwz'
-    have hgy := congrArg (fun f : localChartLRS X d z ⟶
-        X.left.toLocallyRingedSpace ↦ f.base w)
-      (localAnalytificationToNeighborhood_comp X d z)
-    have hgy' : y.1 = w.1.underlying := by
-      change y.1 = w.1.underlying at hgy
-      exact hgy
-    exact hwz'.trans hgy'.symm
+    have hgy : y.1 = w.1.underlying := congrArg (fun f : localChartLRS X d z ⟶
+      X.left.toLocallyRingedSpace ↦ f.base w)
+        (localAnalytificationToNeighborhood_comp X d z)
+    exact hwz'.trans hgy.symm
   rw [← hy, ← isUnit_map_iff (Point.stalkHom wz).hom,
     isUnit_iff_ne_zero, not_ne_iff]
   let s : Γ(D.neighborhood.toScheme, ⊤) := coordinateRingHomULift D p
@@ -500,7 +491,6 @@ lemma localChart_coordinateRing_square (z : ComplexPoint X) :
         _ = a - a := by
           rw [localLeftCoordinateRingHom_C, ComplexAnalytic.AnalyticSpace.eval_algebraMap]
         _ = 0 := sub_self a
-    have hRzero : ev (R p) = 0 := hmem.mp hLzero
     have hRsub : ev (R (MvPolynomial.X i)) - a = 0 := by
       calc
         ev (R (MvPolynomial.X i)) - a =
@@ -511,7 +501,7 @@ lemma localChart_coordinateRing_square (z : ComplexPoint X) :
           apply congrArg ev
           dsimp only [p]
           rw [map_sub]
-        _ = 0 := hRzero
+        _ = 0 := hmem.mp hLzero
     exact (sub_eq_zero.mp hRsub).symm
 
 theorem localChart_comparison_square_raw (z : ComplexPoint X) :
