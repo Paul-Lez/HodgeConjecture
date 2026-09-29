@@ -9,7 +9,6 @@ import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftTop
 import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftOnOpen
 import Other.AlgebraicTopology.Sheaf.CohomologySectionShiftOpenOne
 import Other.AlgebraicTopology.Sheaf.CohomologySectionArbitraryDegreeVanishing
-import Other.AlgebraicGeometry.RelativeChernLocalBoundary
 import Other.AlgebraicGeometry.RelativeChernOriginalRestriction
 import Other.AlgebraicGeometry.RelativeChernOriginalFrameFactorisation
 import Other.AlgebraicGeometry.RelativeChernOriginalBoundary
@@ -17,16 +16,12 @@ import Other.AlgebraicGeometry.RelativeChernOriginalDerivedBoundary
 import Other.AlgebraicGeometry.RelativeChernOriginalDerivedBoundarySquare
 import Other.AlgebraicGeometry.RelativeChernOriginalAmbientDerivedBoundary
 import Other.AlgebraicGeometry.RelativeChernOriginalSupportSection
-import Other.AlgebraicGeometry.ChernWindingSupportNaturality
 import Other.AlgebraicGeometry.ChernRelativeSupportGenericUnit
 import Other.AlgebraicGeometry.ChernRelativeClosedSupportSection
 import Other.AlgebraicGeometry.ChernRelativeClosedSupportUnit
 import Other.AlgebraicGeometry.ChernOriginalRawAmbientTransport
 import Other.AlgebraicTopology.CohomologySheafSectionDerivedVanishing
 import Other.AlgebraicGeometry.CocycleGlobalSectionNaturality
-import Other.AlgebraicGeometry.CartierWindingChartVanishing
-import Other.AlgebraicGeometry.CartierChernLocalWinding
-import Other.AlgebraicGeometry.CartierWindingChartNormalizedVanishing
 import Other.AlgebraicGeometry.CartierWindingChartCoefficient
 import Other.AlgebraicGeometry.CartierOriginalChernFrame
 import Other.AlgebraicGeometry.ChernRelativeCanonicalLift
@@ -74,9 +69,7 @@ import Other.AlgebraicGeometry.ClosedImmersion.HolomorphicChartsAnalytic
 /- Representative axiom checks for the incomplete Lefschetz development.
 Run: lake env lean scripts/lefschetz_axiom_audit.lean
 See docs/LEFSCHETZ_HANDOFF.md for the full goal and remaining obligations. -/
-import Other.AlgebraicGeometry.ChernWindingRawBoundary
 import Other.AlgebraicGeometry.RelativeChernFrameVariation
-import Other.AlgebraicGeometry.RelativeChernFrameWinding
 import Other.AlgebraicGeometry.HolomorphicExponentialIntrinsicWindingClass
 import Other.AlgebraicGeometry.CocycleGlobalSections
 import Other.AlgebraicGeometry.HolomorphicExponentialSingularSectionClass
@@ -99,7 +92,6 @@ import Other.AlgebraicGeometry.IntegralDenominatorClearing
 import Other.AlgebraicGeometry.ProjectiveFiniteHomology
 import Other.AlgebraicGeometry.DivisorObligations
 import Other.AlgebraicGeometry.AnalytificationGenerates
-import Other.AlgebraicGeometry.UnitExtensionClassOfSectionSheaf
 import Other.AlgebraicGeometry.CohomologyWithSupportExact
 import Other.AlgebraicGeometry.ChernClassRestrictionVanishing
 import Other.AlgebraicGeometry.ChernLocalModel
@@ -171,7 +163,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.hasDivisorOfAlgebraicModel_of_divisorClass
 #print axioms AlgebraicGeometry.ComplexProjectiveSpace.instPathConnectedSpace
 #print axioms AlgebraicGeometry.ComplexPoint.analytificationGenerates
-#print axioms AlgebraicGeometry.ComplexPoint.sectionSheafDeterminesClass
 #print axioms AlgebraicGeometry.ComplexPoint.exact_forgetSupport_restrictToComplement
 #print axioms AlgebraicGeometry.ComplexPoint.restrictedChernClassVanishes
 #print axioms AlgebraicGeometry.ComplexPoint.hasDivisorClassOfSomeCartierData_of_localModel
@@ -391,7 +382,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.complementRationalHypercohomology_restrictedSingularOneCocycle_eq_intrinsicWinding
 
 -- The actual relative Chern class and its concrete frame-change boundary.
-#print axioms ChernWinding.openRawRelative_winding_boundary
 #print axioms AlgebraicGeometry.ComplexPoint.RelativeChernComparison.boundary_eq_singular_on_section
 #print axioms AlgebraicGeometry.ComplexPoint.hypercohomologyEquiv_sub
 #print axioms AlgebraicGeometry.ComplexPoint.constantIntegerMorphism_eq_constHomOfSection
@@ -401,13 +391,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.exists_relativeChernClass_sub_eq_singular_boundary
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.exists_relativeChernClass_sub_eq_unit_boundary
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.relativeChernClass_sub_eq_neg_unit_boundary
-
--- The actual frame variation under the fixed support-to-winding comparison.
-#print axioms AlgebraicGeometry.ComplexPoint.rationalSupportBoundary_restrictedSingularOneCocycle_eq_winding
-#print axioms AlgebraicGeometry.ComplexPoint.rationalSupportBoundary_restrictedSingularOneCocycle_eq_windingHom
-#print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.relativeChernClass_sub_eq_winding
-
-#print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.relativeChernClass_sub_eq_windingSheaf
 
 -- Actual restriction and local vanishing for an extending reference frame.
 #print axioms CochainComplex.mappingCone.mapHomotopyZeroOfFactorization
@@ -424,8 +407,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.relativeConeMap_restrict_homotopyZero
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.relativeConeMap_restrict_mapDerivedCategory_eq_zero
 #print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.relativeChernClass_restrict_eq_zero
-#print axioms AlgebraicGeometry.ComplexPoint.ChernWindingChart.regularFrame_relativeChernClass_restrict_eq_zero
-#print axioms AlgebraicGeometry.ComplexPoint.HolomorphicUnitExtension.relativeChernClass_local_eq_neg_unit_boundary
 
 -- Derived vanishing and the actual cocycle-to-cohomology-sheaf normalization.
 #print axioms HomologicalComplex.homologyMap_eq_zero_of_Q_map_eq_zero
@@ -444,7 +425,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.rationalCohomologyAddEquivAmbientInjectiveHomology_eq_extModel
 #print axioms AlgebraicGeometry.ComplexPoint.rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
 #print axioms AlgebraicGeometry.Scheme.CartierData.LocalForm.exists_away_eq_component_with_exceptional
-#print axioms AlgebraicGeometry.ComplexPoint.IsCartierComplementLift.relativeChernClass_sub_eq_windingSheaf_cartier
 #print axioms Ideal.generator_not_mem_square_of_regular_quotient
 #print axioms Derivation.cotangentMap_toCotangent
 #print axioms Derivation.ne_zero_of_mem_maximalIdeal_of_not_mem_square_of_injective
@@ -525,8 +505,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 #print axioms AlgebraicGeometry.ComplexPoint.Affine.fderiv_ne_zero_of_component_equation
 #print axioms AlgebraicGeometry.ComplexPoint.Affine.fderiv_ne_zero_of_smooth_locus_component_equation
 #print axioms AlgebraicGeometry.ComplexPoint.Affine.fderiv_ne_zero_of_smooth_locus_component_equation_of_ambient_membership
-#print axioms AlgebraicGeometry.ComplexPoint.ChernWindingChart.regularFrame_relativeSection_restrict_eq_zero
-#print axioms AlgebraicGeometry.ComplexPoint.ChernWindingChart.cartier_relativeSection_restrict_eq_windingSheaf
 #print axioms AlgebraicGeometry.ComplexPoint.exists_genericWindingChartData_of_component_algebraic
 #print axioms AlgebraicGeometry.ComplexPoint.exists_genericWindingChartData_off_component_exceptional
 #print axioms AlgebraicGeometry.ComplexPoint.hasGenericFlatteningCharts_of_component_algebraic
@@ -614,7 +592,6 @@ import Other.AlgebraicGeometry.CartierWindingChartFrame
 
 #print axioms AlgebraicGeometry.ComplexPoint.restrict_original_relativeChernClass_support_section
 
-#print axioms ChernWinding.windingRelativeClass_supportMap
 
 #print axioms TopCat.Sheaf.constantToOpen_integerOne
 #print axioms TopCat.Sheaf.integerConstant_h0_restriction
