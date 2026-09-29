@@ -108,11 +108,10 @@ lemma coneSupportAddEquivSupportedInjectiveHomology_eq_supportSheaf
   let e := rationalSupportAddEquivAmbientInjectiveConeGlobalSections X Z hZ n
   have h := coneSupportAddEquivSupportedInjectiveHomology_supportSheaf X Z hZ n
     (inv Hm (e α))
-  have ha : Hm (inv Hm (e α)) = e α := by
-    exact ConcreteCategory.congr_hom (IsIso.inv_hom_id Hm) (e α)
+  have ha : Hm (inv Hm (e α)) = e α :=
+    ConcreteCategory.congr_hom (IsIso.inv_hom_id Hm) (e α)
   change coneSupportAddEquivSupportedInjectiveHomology X Z hZ n
     (e.symm (Hm (inv Hm (e α)))) = _ at h
-  rw [ha, AddEquiv.symm_apply_apply] at h
-  exact h
+  rwa [ha, AddEquiv.symm_apply_apply] at h
 
 end AlgebraicGeometry.ComplexPoint

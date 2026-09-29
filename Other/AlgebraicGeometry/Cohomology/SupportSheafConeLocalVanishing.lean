@@ -268,8 +268,8 @@ lemma supportSheafSection_restrict_eq_zero
   have hL := supportAmbientSection_restrict_eq_zero X Z hZ n α U hα W
   have hm : HomologicalComplex.homologyMap
       (((TopCat.Sheaf.supportEvaluation Y ⊤).mapHomologicalComplex (.up ℤ)).map m)
-      (n - 1) a = e α := by
-    exact ConcreteCategory.congr_hom (IsIso.inv_hom_id Hm) (e α)
+      (n - 1) a = e α :=
+    ConcreteCategory.congr_hom (IsIso.inv_hom_id Hm) (e α)
   have hshift : ((K⟦(1 : ℤ)⟧).homology (n - 1)).obj.map
       (homOfLE (le_top : U.isOpenEmbedding.functor.obj W ≤ ⊤)).op
       (TopCat.Sheaf.sectionCohomologyToSheafSection Y (K⟦(1 : ℤ)⟧)

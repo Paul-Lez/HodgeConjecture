@@ -84,8 +84,7 @@ lemma supportAmbientSection_restrict_eq_of_derived_square
   let E := CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass
     (TopCat.Sheaf.integerConstantSingleComplex Y) C 1
   obtain ⟨z, hz⟩ := (E x).mk_surjective
-  have hx : eTop x = e α := by
-    exact eTop.apply_symm_apply (e α)
+  have hx : eTop x = e α := eTop.apply_symm_apply (e α)
   have hzx : x = ShiftedHom.map
       (CochainComplex.HomComplex.Cocycle.equivHomShift.symm z)
       DerivedCategory.Q := by
@@ -128,7 +127,6 @@ lemma supportAmbientSection_restrict_eq_of_derived_square
   have hmain := TopCat.Sheaf.sectionCohomology_integerCocycleGlobalSection_ofHom_derived_square
     Y U C g gU hfg W
   dsimp only at hmain
-  rw [← hclass] at hmain
-  exact hmain
+  rwa [← hclass] at hmain
 
 end AlgebraicGeometry.ComplexPoint
