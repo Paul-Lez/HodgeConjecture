@@ -204,11 +204,11 @@ theorem fderiv_ne_zero_of_component_equation
           (U.ι.app f.opens f.equation)
           ((localChart (openScheme X U) d zM).symm w))
         (localChart (openScheme X U) d zM zM) ≠ 0 := by
-  have hjet := regularPointJet_ne_zero_of_component_equation X c x d f hx s hs hEq U zM zC
-    hzC hyC hysC hmap (U.ι ⁻¹ᵁ f.opens) (by exact hyU)
-    (U.ι.app f.opens f.equation) hyU
-    (openInclusion_stalk_germ_eq X U f.opens zM hyU f.equation)
-  simpa only [regularPointJet] using hjet
+  simpa only [regularPointJet] using
+    regularPointJet_ne_zero_of_component_equation X c x d f hx s hs hEq U zM zC
+      hzC hyC hysC hmap (U.ι ⁻¹ᵁ f.opens) (by exact hyU)
+      (U.ι.app f.opens f.equation) hyU
+      (openInclusion_stalk_germ_eq X U f.opens zM hyU f.equation)
 
 /-- The derivative statement specialized to the smooth component lift used by the canonical chart.
 The two membership hypotheses are precisely the open and principal shrink conditions. -/

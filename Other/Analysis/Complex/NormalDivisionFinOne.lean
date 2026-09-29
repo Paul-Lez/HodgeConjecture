@@ -82,8 +82,8 @@ theorem exists_nhds_normalQuotientFinOne_factor
   let U := push ⁻¹' Metric.ball (push p) r
   have hUopen : IsOpen U := Metric.isOpen_ball.preimage push.continuous
   have hUn : U ∈ 𝓝 p := by
-    apply push.continuous.continuousAt
-    exact Metric.mem_nhds_iff.mpr ⟨r, hr, subset_rfl⟩
+    exact push.continuous.continuousAt
+      (Metric.mem_nhds_iff.mpr ⟨r, hr, subset_rfl⟩)
   have hqcont : ContinuousOn (normalQuotientFinOne f) U := by
     have hqscalar : ContinuousOn (normalQuotient (f ∘ lift))
         (Metric.ball (push p) r) :=

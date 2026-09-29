@@ -58,8 +58,7 @@ lemma frameLiftUnit_smul (z : ComplexPoint X) (U : Opens (TopCat.of (ComplexPoin
     (s : E.sectionSheafOfModules.val.obj (op U)) (hs : HolomorphicGenerates s) :
     unitSection (E.frameLiftUnit z U hU s hs) • s = E.frame z U hU := by
   have h := (hs.exists_isUnit_smul_eq (E.holomorphicGenerates_frame z U hU)).choose_spec.2
-  rw [← (hs.exists_isUnit_smul_eq (E.holomorphicGenerates_frame z U hU)).choose_spec.1.unit_spec] at h
-  exact h
+  rwa [← (hs.exists_isUnit_smul_eq (E.holomorphicGenerates_frame z U hU)).choose_spec.1.unit_spec] at h
 
 lemma frameLiftUnit_unique (z : ComplexPoint X) (U : Opens (TopCat.of (ComplexPoint X)))
     (hU : U ≤ E.localLifts.opens z)

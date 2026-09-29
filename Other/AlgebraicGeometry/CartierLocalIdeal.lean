@@ -60,8 +60,8 @@ theorem span_germ_equation_eq_maximalIdeal
     simpa [a] using h
   obtain ⟨p, hp⟩ := IsDiscreteValuationRing.exists_irreducible (S.presheaf.stalk x)
   have hfracp : Ring.ordFrac (S.presheaf.stalk x) (K := S.functionField)
-      (algebraMap (S.presheaf.stalk x) S.functionField p) = WithZero.exp 1 := by
-    exact Ring.ordFrac_irreducible hp
+      (algebraMap (S.presheaf.stalk x) S.functionField p) = WithZero.exp 1 :=
+    Ring.ordFrac_irreducible hp
   obtain ⟨u, hu⟩ := Ring.associated_of_ordFrac_eq
     (R := S.presheaf.stalk x) (K := S.functionField)
     (algebraMap (S.presheaf.stalk x) S.functionField a)
@@ -169,8 +169,8 @@ theorem exists_away_eq_component
     rw [Scheme.mem_basicOpen _ _ x f.mem]
     exact (f.isAffineOpen.isUnit_germ_iff_notMem ⟨x, f.mem⟩ f.equation).mpr hnot
   have hIP : Ideal.span ({f.equation} : Set Γ(S, f.opens)) ≤
-      (f.isAffineOpen.primeIdealOf ⟨x, f.mem⟩).asIdeal := by
-    exact (Ideal.span_singleton_le_iff_mem _).mpr heq
+      (f.isAffineOpen.primeIdealOf ⟨x, f.mem⟩).asIdeal :=
+    (Ideal.span_singleton_le_iff_mem _).mpr heq
   have hmap :
       (f.isAffineOpen.primeIdealOf ⟨x, f.mem⟩).asIdeal.map
           (algebraMap (Γ(S, f.opens)) (S.presheaf.stalk x)) =
@@ -194,17 +194,15 @@ theorem exists_away_eq_component
         rw [RingHom.algebraMap_toAlgebra]]
     exact (f.span_germ_equation_eq_maximalIdeal hx).symm
   obtain ⟨s, hs, hsi⟩ := exists_away_eq_of_map_eq hIP hmap
-  refine ⟨s, ?_, ?_⟩
-  · exact hs
-  · simpa using hsi
+  exact ⟨s, hs, by simpa using hsi⟩
 
 /-- The part of the reduced component removed by a principal affine shrink. -/
 def exceptionalSet (f : c.LocalForm i x) (s : Γ(S, f.opens)) : Set S :=
   closure ({x} : Set S) \ S.basicOpen s
 
 theorem exceptionalSet_isClosed (f : c.LocalForm i x) (s : Γ(S, f.opens)) :
-    IsClosed (f.exceptionalSet s) := by
-  exact isClosed_closure.sdiff (S.basicOpen s).isOpen
+    IsClosed (f.exceptionalSet s) :=
+  isClosed_closure.sdiff (S.basicOpen s).isOpen
 
 theorem exceptionalSet_subset (f : c.LocalForm i x) (s : Γ(S, f.opens)) :
     f.exceptionalSet s ⊆ closure ({x} : Set S) := by
@@ -215,9 +213,9 @@ theorem x_not_mem_exceptionalSet (f : c.LocalForm i x) (s : Γ(S, f.opens))
     (hs : s ∉ (f.isAffineOpen.primeIdealOf ⟨x, f.mem⟩).asIdeal) :
     x ∉ f.exceptionalSet s := by
   intro hxB
-  apply hxB.2
-  exact (Scheme.mem_basicOpen _ _ x f.mem).mpr
-    ((f.isAffineOpen.isUnit_germ_iff_notMem ⟨x, f.mem⟩ s).mpr hs)
+  exact hxB.2 <|
+    (Scheme.mem_basicOpen _ _ x f.mem).mpr
+      ((f.isAffineOpen.isUnit_germ_iff_notMem ⟨x, f.mem⟩ s).mpr hs)
 
 /-- The principal shrink and its explicit closed exceptional subset. -/
 theorem exists_away_eq_component_with_exceptional

@@ -126,8 +126,7 @@ lemma supportIntersectionIso_supportMap
       ((supportEvaluation X W).mapHomologicalComplex ℤᵘᵖ).map
         ((openRestrictionPushforwardMap X h).mapHomologicalComplex ℤᵘᵖ |>.app K) := by
     rfl
-  rw [hτ3]
-  rw [HomologicalComplex.comp_f]
+  rw [hτ3, HomologicalComplex.comp_f]
   change (((supportEvaluation X W).mapHomologicalComplex ℤᵘᵖ).map
       ((openRestrictionPushforwardMap X h).mapHomologicalComplex ℤᵘᵖ |>.app K)).f n ≫ _ = _
   simp [supportRestrictionSectionsIntersectionIso, supportedOutsideIntersectionIso, Hom.isoOfComponents]

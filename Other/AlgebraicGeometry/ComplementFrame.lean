@@ -373,8 +373,7 @@ theorem unitSection_frameUnit_smul :
     unitSection (frameUnit g E e z D hg) • liftFrame g E e z D =
       E.frame z (liftOpen E z D) (liftOpen_le_localLifts E z D) := by
   have h := (exists_frameUnit g E e z D hg).choose_spec.2
-  rw [← (exists_frameUnit g E e z D hg).choose_spec.1.unit_spec] at h
-  exact h
+  rwa [← (exists_frameUnit g E e z D hg).choose_spec.1.unit_spec] at h
 
 /-- The frame change as a section of the sheaf of holomorphic units. -/
 def frameCochain : (holomorphicUnitSheaf X (dim X.left)).obj.obj (op (liftOpen E z D)) :=

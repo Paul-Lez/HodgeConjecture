@@ -154,8 +154,7 @@ theorem localizedPointJetDerivation_ne_zero_of_not_mem_square
     Module.compHom (PointJet d) u.toRingHom
   let : IsScalarTower ℂ (Localization.AtPrime
       (RingHom.ker (residueAlgHom X d D z hz).toRingHom)) (PointJet d) := by
-    constructor
-    intro c r v
+    refine ⟨fun c r v => ?_⟩
     change u (c • r) • v = c • u r • v
     rw [map_smul]
     simp only [smul_eq_mul, smul_smul]
@@ -216,8 +215,7 @@ theorem localizedPointJetDerivation_ne_zero_of_not_mem_square
     exact (pointJet_basis d v).symm
   let : IsScalarTower ℂ (IsLocalRing.ResidueField (Localization.AtPrime (RingHom.ker (residueAlgHom X d D z hz).toRingHom)))
       (IsLocalRing.CotangentSpace (Localization.AtPrime (RingHom.ker (residueAlgHom X d D z hz).toRingHom))) := by
-    constructor
-    intro c k v
+    refine ⟨fun c k v => ?_⟩
     calc
       (c • k) • v = (algebraMap ℂ (IsLocalRing.ResidueField (Localization.AtPrime (RingHom.ker (residueAlgHom X d D z hz).toRingHom))) c * k) • v := by rw [Algebra.smul_def]
       _ = algebraMap ℂ (IsLocalRing.ResidueField (Localization.AtPrime (RingHom.ker (residueAlgHom X d D z hz).toRingHom))) c • (k • v) := by rw [mul_smul]
