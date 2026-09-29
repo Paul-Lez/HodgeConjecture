@@ -75,7 +75,6 @@ theorem hasDivisorClassOfCartierData : HasDivisorClassOfCartierData X := by
       (analyticClosedSupport X (badLocus c)).compl.isOpen.isClosed_compl⟩
   let hS : S₀ = analyticClosedSupport X (badLocus c) := by
     apply Closeds.ext
-    change (((analyticClosedSupport X (badLocus c)).compl : Set (ComplexPoint X))ᶜ) = _
     exact compl_compl _
   change supportedInjectiveLocalSection V 2
       (relativeChernSupportedClassOnClosed
@@ -166,8 +165,7 @@ theorem hasDivisorClassOfCartierData : HasDivisorClassOfCartierData X := by
           ((HomologicalComplex.homologyMap (supportedInjectiveComplexMap X hS.le) 2).hom.app
             (op ch.carrier)))
           ((ConcreteCategory.hom rK₀) y) := by
-    have hh := ConcreteCategory.congr_hom hnat y
-    exact hh.symm
+    exact (ConcreteCategory.congr_hom hnat y).symm
   have hleft :
       (ConcreteCategory.hom rK)
           (supportedInjectiveLocalSection V 2

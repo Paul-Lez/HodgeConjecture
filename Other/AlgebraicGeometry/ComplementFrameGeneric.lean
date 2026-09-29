@@ -211,8 +211,7 @@ theorem exists_lift_of_goodLocus (E : HolomorphicUnitExtension X (dim X.left))
     rw [sres_sres, sres_sres]
     have h := congrArg (sres E.middle (inf_le_inf (hWl z) (hWl w)))
       (localLift_compatible g E e z (D z) hg w (D w) hrep)
-    rw [sres_sres, sres_sres] at h
-    exact h
+    rwa [sres_sres, sres_sres] at h
   obtain ⟨ℓ, hℓ, -⟩ := E.middle.existsUnique_gluing' W Ω (fun z => homOfLE (hWΩ z)) hcover
     (fun z => sres E.middle (hWl z) (localLift g E e z (D z) hg)) hcompat
   refine ⟨ℓ, ?_⟩

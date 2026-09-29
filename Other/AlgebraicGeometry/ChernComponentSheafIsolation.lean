@@ -112,8 +112,7 @@ theorem supportedInjectiveHomologySheafMap_app_isIso
   change IsIso ((HomologicalComplex.homologyMap
     (supportedInjectiveComplexMap X hST) n).hom.app
       (op (W.isOpenEmbedding.functor.obj ⊤))) at ht
-  rw [Opens.isOpenEmbedding_obj_top] at ht
-  exact ht
+  rwa [Opens.isOpenEmbedding_obj_top] at ht
 
 end
 end AlgebraicGeometry.ComplexPoint

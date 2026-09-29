@@ -282,11 +282,10 @@ lemma analyticSheafHypercohomologyAddEquiv_naturality
       (ShiftedHom.mk₀ (0 : ℤ) rfl
         (DerivedCategory.Q.map ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map f)))
       (zero_add _)
-  have h' := congrArg (Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X)
-    DerivedCategory.Q) h
-  simp only [Localization.SmallShiftedHom.equiv_comp,
-    Localization.SmallShiftedHom.equiv_mk₀] at h' ⊢
-  exact h'
+  simpa only [Localization.SmallShiftedHom.equiv_comp,
+    Localization.SmallShiftedHom.equiv_mk₀] using
+    congrArg (Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X)
+      DerivedCategory.Q) h
 
 /-- The ordinary sheaf-cohomology comparison respects coefficient maps. -/
 lemma sheafCohomologyEquivExt_naturality {F G : AnalyticAdditiveSheaf X} (f : F ⟶ G) (n : ℕ)
@@ -362,10 +361,9 @@ lemma sheafCohomologyEquivExt_analyticSheafHypercohomologyAddEquiv (F : Analytic
         (Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q _)
         (add_zero _) =
       Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X) DerivedCategory.Q _
-  have h' := congrArg (Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X)
-    DerivedCategory.Q) h
-  simp only [sheafCohomologyTargetComparison, Localization.SmallShiftedHom.equiv_comp,
-    Localization.SmallShiftedHom.equiv_mk₀] at h' ⊢
-  exact h'
+  simpa only [sheafCohomologyTargetComparison, Localization.SmallShiftedHom.equiv_comp,
+    Localization.SmallShiftedHom.equiv_mk₀] using
+    congrArg (Localization.SmallShiftedHom.equiv (analyticQuasiIsomorphisms X)
+      DerivedCategory.Q) h
 
 end AlgebraicGeometry.ComplexPoint

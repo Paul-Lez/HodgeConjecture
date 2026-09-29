@@ -171,9 +171,8 @@ theorem d_comp_windingIntegerCochain :
     (singularChains Y).d 2 1 ≫ windingIntegerCochain g hg = 0 := by
   rw [← cancel_mono ratToComplex, zero_comp, Category.assoc]
   have h := d_comp_windingCochain g hg
-  rw [windingCochain_eq_coboundary_add_integer g hg, Preadditive.comp_add, ← Category.assoc,
+  rwa [windingCochain_eq_coboundary_add_integer g hg, Preadditive.comp_add, ← Category.assoc,
     HomologicalComplex.d_comp_d, zero_comp, zero_add] at h
-  exact h
 
 /-- **The rational winding class.** -/
 def windingRationalPeriodHom : (singularChains Y).homology 1 ⟶ ModuleCat.of ℚ ℚ :=

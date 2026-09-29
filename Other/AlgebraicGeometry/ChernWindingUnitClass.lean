@@ -116,9 +116,8 @@ def windingRelativeHom (h : HasWindingPeriods X d V S) :
     intro y
     rw [ContinuousMap.zero_apply, Complex.exp_zero]
     rfl
-  map_add' a b := by
-    exact ChernWinding.windingRelativeClass_mul _ _
-      (fun w => windingUnitFunction_add X d V S a b w) (h a) (h b) (h (a + b))
+  map_add' a b := ChernWinding.windingRelativeClass_mul _ _
+    (fun w => windingUnitFunction_add X d V S a b w) (h a) (h b) (h (a + b))
 
 theorem windingRelativeHom_apply (h : HasWindingPeriods X d V S)
     (u : (holomorphicUnitSheaf X d).obj.obj (op (windingPuncturedOpen X V S))) :
