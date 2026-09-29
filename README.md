@@ -11,7 +11,7 @@ by Imperial College London 7-11 September 2026 thanks to a generous donation fro
 
 See [full list of contributors](https://github.com/Paul-Lez/HodgeConjecture/graphs/contributors?all=1).
 
-The short-term goal of this project is to be integrated to the Formal Conjectures repository.
+The short-term goal of this project is to be integrated into the Formal Conjectures repository.
 The medium-term goal is for all the prerequisites to the conjecture to be upstreamed to
 [Mathlib](https://github.com/leanprover-community/mathlib4).
 The long-term goal is to have either a proof or a disproof of the Hodge conjecture in Mathlib.
@@ -21,8 +21,8 @@ The remaining content of the project is sorted into four folders:
 
 - `HodgeConjecture/Mathlib`: Content that is on track to be upstreamed to Mathlib;
 - `HodgeConjecture/Definitions`: Definitions used in the statement of the conjecture;
-- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions. If these aren't used in `Lemmas` then they should go in `Other`. This folder can also contain definitions that are only used to in *proofs* of theorems that are needed to state the conjecture;
-- `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
+- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions. If these aren't used in `Lemmas` then they should go in `Other`. This folder can also contain definitions that are only used in *proofs* of theorems that are needed to state the conjecture;
+- `Other`: Proofs and supporting results that aren't needed to state the conjecture.
 
 > [!WARNING]
 > This formalisation is still a work in progress, and is still in the process of being reviewed and improved.

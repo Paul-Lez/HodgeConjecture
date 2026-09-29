@@ -32,7 +32,7 @@ The proof first establishes the stronger concrete formulation `RationalLefschetz
 
 The canonical and explicit-cycle propositions each have a statement-only module. Their final
 proofs live in `Other/AlgebraicGeometry/LefschetzOneOneProof.lean`. The import checks enforce
-these boundaries and restate both contracts.
+the intended import boundaries and restate both contracts.
 
 ## PR split
 
