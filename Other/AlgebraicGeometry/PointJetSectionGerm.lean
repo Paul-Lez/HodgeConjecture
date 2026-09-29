@@ -264,8 +264,7 @@ theorem regularPointJet_ne_zero_of_germ_mem_maximalIdeal_of_not_mem_square
       let u :=
         (TrivSqZeroExt.fstHom ℂ ℂ (PointJet d)).comp
           (localizedPointJetAlgHom X d D z hz)
-      constructor
-      intro c a v
+      refine ⟨fun c a v => ?_⟩
       change u (c • a) • v = c • u a • v
       rw [map_smul]
       simp only [smul_eq_mul, smul_smul]
@@ -300,8 +299,8 @@ theorem regularPointJet_ne_zero_of_germ_mem_maximalIdeal_of_not_mem_square
       X.left.presheaf hzT (x := y.1) e.ge
     have hsp' := congrArg (fun f => f.hom r) hsp
     simpa only [ConcreteCategory.comp_apply] using hsp'
-  have hjg : j g = X.left.presheaf.germ V y.1 (by simpa [hy] using hzV) s := by
-    exact hj_res V s hzV
+  have hjg : j g = X.left.presheaf.germ V y.1 (by simpa [hy] using hzV) s :=
+    hj_res V s hzV
   have hfracZ :
       X.left.presheaf.germ V z.underlying hzV s *
           X.left.presheaf.germ D.ambientCoordinateOpen z.underlying

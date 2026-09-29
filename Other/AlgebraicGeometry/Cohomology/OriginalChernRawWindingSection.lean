@@ -102,8 +102,7 @@ lemma originalLocalBoundaryMap_section_eq_raw_winding
         (CochainComplex.HomComplex.Cochain.ofHom_comp q gshift).symm
     have h := TopCat.Sheaf.homologyπ_integerCocycleGlobalSection_postcomp
       YU gshift 0 (CochainComplex.HomComplex.Cocycle.ofHom q)
-    rw [he] at h
-    exact h
+    rwa [he] at h
   have hsource' := hsource
   have hnat := ConcreteCategory.congr_hom
     (TopCat.Sheaf.sectionCohomologyToSheafSection_naturality YU gshift 0 ⊤) aLocal

@@ -67,8 +67,7 @@ lemma restrictedConeSection_comp_coneToInteger :
         (E.restrictedSection U ℓU) ≫
       I.inv.app E.middle ≫ CochainComplex.mappingCone.inr (H.map E.singleShortComplex.f) ≫
       C.inv ≫ H.map E.coneToInteger = 𝟙 _
-  rw [hcone]
-  rw [hD]
+  rw [hcone, hD]
   have hnat := I.inv.naturality E.projection
   have hproj : I.inv.app E.middle ≫ H.map E.singleShortComplex.g =
       (F ⋙ HomologicalComplex.single (TopCat.Sheaf AddCommGrpCat (TopCat.of U))
@@ -108,8 +107,7 @@ lemma restrictedConeSection_comp_coneToInteger :
           I.inv.app (𝓒(↧(ComplexPoint X); ℤ)) := by
       simpa only [Category.assoc] using hmap2'.symm
     _ = _ := by
-      rw [E.restrictedSection_comp_projection U ℓU hℓU]
-      rw [CategoryTheory.Functor.map_id]
+      rw [E.restrictedSection_comp_projection U ℓU hℓU, CategoryTheory.Functor.map_id]
       exact (congrArg
         (fun f ↦ I.hom.app (𝓒(↧(ComplexPoint X); ℤ)) ≫ f)
         (Category.id_comp (I.inv.app (𝓒(↧(ComplexPoint X); ℤ))))).trans
@@ -149,8 +147,8 @@ lemma restrictedConeSection_comp_relativeConeMap :
           (restrictToOpen X U)).inv =
       ((restrictToOpen X U).mapHomologicalComplex (.up ℤ)).map
         (CochainComplex.mappingCone.inr E.singleShortComplex.f) := by
-    rw [← CochainComplex.mappingCone.map_inr E.singleShortComplex.f F]
-    rw [Category.assoc, Iso.hom_inv_id, Category.comp_id]
+    rw [← CochainComplex.mappingCone.map_inr E.singleShortComplex.f F,
+      Category.assoc, Iso.hom_inv_id, Category.comp_id]
   have htrail :
       CochainComplex.mappingCone.inr
           (H.map E.singleShortComplex.f) ≫
@@ -350,10 +348,8 @@ lemma restrictedConstantMap_eq_constHomOfSection
         (TopCat.Sheaf.integerOne (Y := TopCat.of U))) := by
     have h := TopCat.Sheaf.constHomOfSection_comp
       (TopCat.Sheaf.integerOne (Y := TopCat.of U)) (e.inv ≫ s)
-    rw [TopCat.Sheaf.constHomOfSection_integerOne, Category.id_comp] at h
-    exact h
-  rw [hs]
-  rw [← Category.assoc, e.inv_hom_id]
+    rwa [TopCat.Sheaf.constHomOfSection_integerOne, Category.id_comp] at h
+  rw [hs, ← Category.assoc, e.inv_hom_id]
   congr 1
 
 end AlgebraicGeometry.ComplexPoint

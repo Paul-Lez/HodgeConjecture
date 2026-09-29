@@ -59,8 +59,8 @@ lemma regularPointJet_add
   let p := localChart X d z z
   have hp : p ∈ (localChart X d z).target :=
     (localChart X d z).map_source (mem_localChart_source X d z)
-  have hleft : (localChart X d z).symm p = z := by
-    exact (localChart X d z).left_inv (mem_localChart_source X d z)
+  have hleft : (localChart X d z).symm p = z :=
+    (localChart X d z).left_inv (mem_localChart_source X d z)
   have hnhds : (localChart X d z).symm ⁻¹' (Point.overOpen V) ∈ 𝓝 p :=
     by
       have hV : (localChart X d z).symm p ∈ Point.overOpen V := by
@@ -93,8 +93,8 @@ lemma regularPointJet_mul
   let p := localChart X d z z
   have hp : p ∈ (localChart X d z).target :=
     (localChart X d z).map_source (mem_localChart_source X d z)
-  have hleft : (localChart X d z).symm p = z := by
-    exact (localChart X d z).left_inv (mem_localChart_source X d z)
+  have hleft : (localChart X d z).symm p = z :=
+    (localChart X d z).left_inv (mem_localChart_source X d z)
   have hnhds : (localChart X d z).symm ⁻¹' (Point.overOpen V) ∈ 𝓝 p :=
     by
       have hV : (localChart X d z).symm p ∈ Point.overOpen V := by
@@ -214,8 +214,7 @@ theorem pointJetScalarTower (z : ComplexPoint X)
       ((pointJetModule X d D z hz).toDistribMulAction.toMulAction.toSMul) _ := by
   let : Module (localSectionRing X d D) (PointJet d) :=
     pointJetModule X d D z hz
-  constructor
-  intro c a v
+  refine ⟨fun c a v => ?_⟩
   change (residueAlgHom X d D z hz (c • a)) • v =
     c • residueAlgHom X d D z hz a • v
   rw [map_smul]
@@ -461,8 +460,7 @@ noncomputable def localizedPointJetDerivation (z : ComplexPoint X)
       let u :=
         (TrivSqZeroExt.fstHom ℂ ℂ (PointJet d)).comp
           (localizedPointJetAlgHom X d D z hz)
-      constructor
-      intro c a v
+      refine ⟨fun c a v => ?_⟩
       change u (c • a) • v = c • u a • v
       rw [map_smul]
       simp only [smul_eq_mul, smul_smul]
@@ -483,8 +481,7 @@ noncomputable def localizedPointJetDerivation (z : ComplexPoint X)
   letI : Module (Localization.AtPrime q) (PointJet d) :=
     Module.compHom (PointJet d) u.toRingHom
   letI : IsScalarTower ℂ (Localization.AtPrime q) (PointJet d) := by
-    constructor
-    intro c a v
+    refine ⟨fun c a v => ?_⟩
     change u (c • a) • v = c • u a • v
     rw [map_smul]
     simp only [smul_eq_mul, smul_smul]
@@ -536,8 +533,7 @@ lemma localizedPointJetDerivation_coordinate (z : ComplexPoint X) (i : Fin d) :
       let u :=
         (TrivSqZeroExt.fstHom ℂ ℂ (PointJet d)).comp
           (localizedPointJetAlgHom X d D z hz)
-      constructor
-      intro c a v
+      refine ⟨fun c a v => ?_⟩
       change u (c • a) • v = c • u a • v
       rw [map_smul]
       simp only [smul_eq_mul, smul_smul]

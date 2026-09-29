@@ -316,13 +316,12 @@ theorem exists_genericWindingChartData_of_component_canonical
         cycleComponentSmoothClosedLiftCoclassSection] using T.coclass_restrict }
   let V : Opens (ComplexPoint X) :=
     N ⊓ analyticOpen X localForm.opens ⊓ F0.flattened
-  have hqV : q0 ∈ V := by
-    exact ⟨⟨hqN, hN hqN⟩, mem_flattenedSupportNeighborhood _ _ _ _ _⟩
+  have hqV : q0 ∈ V := ⟨⟨hqN, hN hqN⟩, mem_flattenedSupportNeighborhood _ _ _ _ _⟩
   let F := F0.restrict V hqV
   have hV : V ≤ analyticOpen X localForm.opens :=
     (inf_le_left : V ≤ N ⊓ analyticOpen X localForm.opens).trans inf_le_right
-  have hF : F.flattened ≤ analyticOpen X localForm.opens := by
-    exact (F0.restrict_flattened_le V hqV).trans hV
+  have hF : F.flattened ≤ analyticOpen X localForm.opens :=
+    (F0.restrict_flattened_le V hqV).trans hV
   let A : Set (ComplexPoint X) := (V ⊓ F0.flattened : Opens (ComplexPoint X))
   have hA : IsOpen A := (V ⊓ F0.flattened).isOpen
   have hAV : A ⊆ Point.overOpen localForm.opens := by
@@ -442,8 +441,8 @@ theorem exists_genericWindingChartData_of_component_canonical
     rw [localForm.equationUnit_val, analyticFunction_res]
     rfl
 
-  have hy0source : Point.map j z ∈ e0.source := by
-    exact closedImmersionHolomorphicFlatteningChart_mem_source
+  have hy0source : Point.map j z ∈ e0.source :=
+    closedImmersionHolomorphicFlatteningChart_mem_source
       M (cycleComponentSmoothLocusOver X x) j (D - 1) D z
   have hy0V : Point.map j z ∈ Point.overOpen (r.left ⁻¹ᵁ localForm.opens) := by
     rw [← Point.mem_overOpen_map_iff r (Point.map j z) localForm.opens]

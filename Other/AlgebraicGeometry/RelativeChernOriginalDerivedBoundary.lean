@@ -59,8 +59,8 @@ lemma restrict_coneToInteger_inv_comp_factors_eq_restrictedConeSection :
     rw [← Category.assoc, F.mapDerivedCategoryFactors.hom_inv_id_app,
       Category.id_comp]
     exact hn.symm
-  have : IsIso (DerivedCategory.Q.map C) := by
-    exact Localization.inverts DerivedCategory.Q (analyticQuasiIsomorphisms X) C
+  have : IsIso (DerivedCategory.Q.map C) :=
+    Localization.inverts DerivedCategory.Q (analyticQuasiIsomorphisms X) C
       (by change QuasiIso C; exact E.quasiIso_coneToInteger)
   have : IsIso (F.mapDerivedCategory.map (DerivedCategory.Q.map C)) := by
     infer_instance
@@ -72,13 +72,10 @@ lemma restrict_coneToInteger_inv_comp_factors_eq_restrictedConeSection :
   change F.mapDerivedCategory.map e.inv ≫
       F.mapDerivedCategoryFactors.hom.app E.inclusionCone ≫
       DerivedCategory.Q.map (H.map C) = _
-  rw [← hn]
-  rw [← Category.assoc, ← F.mapDerivedCategory.map_comp]
-  have he : e.inv ≫ DerivedCategory.Q.map C = 𝟙 _ := by
-    exact e.inv_hom_id
-  rw [he, F.mapDerivedCategory.map_id, Category.id_comp]
-  rw [← CategoryTheory.Functor.map_comp, hq]
-  rw [CategoryTheory.Functor.map_id]
+  rw [← hn, ← Category.assoc, ← F.mapDerivedCategory.map_comp]
+  have he : e.inv ≫ DerivedCategory.Q.map C = 𝟙 _ := e.inv_hom_id
+  rw [he, F.mapDerivedCategory.map_id, Category.id_comp,
+    ← CategoryTheory.Functor.map_comp, hq, CategoryTheory.Functor.map_id]
   exact (Category.comp_id _).symm
 
 end AlgebraicGeometry.ComplexPoint

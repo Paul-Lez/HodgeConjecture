@@ -56,8 +56,8 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_apply
             (isoHomCongrAddEquiv (Iso.refl _)
               ((shiftFunctor _ (n : ℤ)).mapIso
                 (asIso (DerivedCategory.Q.map (ambientRationalInjectiveSingleAugmentation X))))
-              (Ext.homAddEquiv α)))) := by
-  exact @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology_apply
+              (Ext.homAddEquiv α)))) :=
+  @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology_apply
     (TopCat.of (ComplexPoint X)) Z.compl ⊤ Z.compl (top_inf_eq _) (analyticHasExt X) _
     (ambientRationalInjectiveComplex X) (ambientRationalInjectiveComplex_isKInjective X)
     (ambientRationalInjectiveSingleAugmentation X)

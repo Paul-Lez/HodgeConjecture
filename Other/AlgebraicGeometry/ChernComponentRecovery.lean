@@ -108,8 +108,7 @@ theorem normalizedClass_restrict_eq_divisor_smul_of_original
       (HomologicalComplex.homologyMap
         (supportedInjectiveComplexMap X hSB) (2 : ℤ)).hom.app (op ch.carrier)
         (supportedInjectiveLocalSection ch.carrier (2 : ℤ) (γ x)) := by
-    rw [← hβ, henlarge, hloc]
-    rw [← ConcreteCategory.comp_apply, hhomcomp]
+    rw [← hβ, henlarge, hloc, ← ConcreteCategory.comp_apply, hhomcomp]
   have hmapiso : IsIso ((HomologicalComplex.homologyMap
       (supportedInjectiveComplexMap X hSB) (2 : ℤ)).hom.app (op ch.carrier)) := by
     exact supportedInjectiveHomologySheafMap_app_isIso (X := X) hSB ch.carrier
@@ -122,9 +121,8 @@ theorem normalizedClass_restrict_eq_divisor_smul_of_original
       ((HomologicalComplex.homologyMap
         (supportedInjectiveComplexMap X hSB) (2 : ℤ)).hom.app (op ch.carrier))).1
     rw [← hleft, horig]
-  rw [normalizedComponentSection_restrict (X := X) hx (γ x) (ch.le)]
-  rw [hsection]
-  rw [← ConcreteCategory.comp_apply]
+  rw [normalizedComponentSection_restrict (X := X) hx (γ x) (ch.le), hsection,
+    ← ConcreteCategory.comp_apply]
   have hi :
       (ConcreteCategory.hom
         ((complexSupportInjectiveCohomologySheafIsoRelative X

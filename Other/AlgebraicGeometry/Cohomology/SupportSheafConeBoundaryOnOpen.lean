@@ -109,8 +109,7 @@ lemma supportSheafSection_shift_eq_local_boundary
     dsimp only [Kshift, Ssec]
     exact HomologicalComplex.homologyMap
       (CochainComplex.mappingCocone.shiftedLiftShortComplex Ssec) 1
-  let : IsIso Hc := by
-    exact HcIso.isIso_hom
+  let : IsIso Hc := HcIso.isIso_hom
   let : IsIso Hl := by
     dsimp only [Hl]
     exact (quasiIsoAt_iff_isIso_homologyMap

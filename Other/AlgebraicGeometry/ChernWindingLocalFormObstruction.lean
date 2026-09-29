@@ -53,9 +53,7 @@ variable {S : Scheme.{u}} [IsIntegral S] [IsNoetherian S] {c : S.CartierData} {i
 theorem equation_functionField_ne_zero (f : c.LocalForm i x) :
     S.germToFunctionField (h := ⟨⟨x, f.mem⟩⟩) f.opens f.equation ≠ 0 := by
   intro h0
-  have := f.ord_equation
-  rw [h0] at this
-  simp at this
+  simpa [h0] using f.ord_equation
 
 /-- The comparison unit of a local form is a nonzero rational function. -/
 theorem unit_functionField_ne_zero (f : c.LocalForm i x) :

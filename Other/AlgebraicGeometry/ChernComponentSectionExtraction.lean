@@ -173,8 +173,7 @@ theorem supportedInjectiveLocalSection_sum_of_componentContribution
     supportedInjectiveLocalSection W (2 : ℤ) b =
       ∑ y ∈ s, supportedInjectiveLocalSection W (2 : ℤ)
         (componentContribution X s y (2 : ℤ) (γ y)) := by
-  rw [hγ]
-  rw [supportedInjectiveLocalSection_sum]
+  rw [hγ, supportedInjectiveLocalSection_sum]
 
 theorem supportedInjectiveLocalSection_eq_component_of_componentContribution_sum
     {s : Finset X.left} {x : X.left} (hx : x ∈ s)
@@ -191,8 +190,8 @@ theorem supportedInjectiveLocalSection_eq_component_of_componentContribution_sum
           (cycleComponentAnalyticClosedSupport_le_componentsAnalyticClosedSupport X hx))
         (2 : ℤ)).hom.app (op W)
         (supportedInjectiveLocalSection W (2 : ℤ) (γ x)) := by
-  rw [supportedInjectiveLocalSection_sum_of_componentContribution b γ hγ W]
-  rw [Finset.sum_eq_single x]
+  rw [supportedInjectiveLocalSection_sum_of_componentContribution b γ hγ W,
+    Finset.sum_eq_single x]
   · rw [componentContribution_of_mem X hx]
     exact supportedInjectiveLocalSection_enlarge _ W _ _
   · intro y hy hne
@@ -222,10 +221,9 @@ theorem carrier_localSection_eq_component_of_componentContribution_sum
           (cycleComponentAnalyticClosedSupport_le_componentsAnalyticClosedSupport X hxS))
         (2 : ℤ)).hom.app (op ch.carrier)
         (supportedInjectiveLocalSection ch.carrier (2 : ℤ) (γ x)) := by
-  apply supportedInjectiveLocalSection_eq_component_of_componentContribution_sum
-    hxS b γ hγ ch.carrier
-  intro y hy hyx
-  exact ch.carrier_le_component_compl_of_divisor_ne_zero hx (hco y hy) hyx (hdiv y hy)
+  exact supportedInjectiveLocalSection_eq_component_of_componentContribution_sum
+    hxS b γ hγ ch.carrier fun y hy hyx =>
+      ch.carrier_le_component_compl_of_divisor_ne_zero hx (hco y hy) hyx (hdiv y hy)
 
 end ChernWindingChart
 

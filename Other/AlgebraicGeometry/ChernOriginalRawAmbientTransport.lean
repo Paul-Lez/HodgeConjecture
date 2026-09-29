@@ -139,7 +139,6 @@ lemma originalLocalRawToAmbientCone_direct_section_eq_restricted_original
             (U.isOpenEmbedding.functor.obj ⊤) ≫
             (TopCat.Sheaf.openRestrictionTopSectionsIso Y U).hom.app (C.homology 1)) := by
     rw [hmap, Category.assoc, hsection]
-  have hv := ConcreteCategory.congr_hom hcat z
-  exact hv
+  exact ConcreteCategory.congr_hom hcat z
 
 end AlgebraicGeometry.ComplexPoint
