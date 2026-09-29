@@ -220,10 +220,9 @@ theorem faithfullyFlat_stalkMap_holomorphicAnalytificationπ
     [ComplexAnalytic.AnalyticSpace.IsLocalIso (comparisonToCanonical X d)]
     (z : ComplexPoint X) :
     ((analytificationToPresheafedSpace X d).stalkMap z).hom.FaithfullyFlat := by
-  have h := ComplexAnalytic.faithfullyFlat_stalkMap_of_isAnalytification
+  change ((analytificationToAlgebraic X d).stalkMap z).hom.FaithfullyFlat
+  exact ComplexAnalytic.faithfullyFlat_stalkMap_of_isAnalytification
     (holomorphicAnalytificationπ_isAnalytification X d)
     (ComplexAnalytic.exists_iso_specOver_overRestrict (toSchemeLFTℂ X d)) z
-  change ((analytificationToAlgebraic X d).stalkMap z).hom.FaithfullyFlat at h
-  exact h
 
 end AlgebraicGeometry.ComplexPoint
