@@ -209,6 +209,7 @@ public import Other.Algebra.Homology.PrecompFactorization
 public import Other.Algebra.Homology.SingleCocycleFactorization
 public import Other.AlgebraicGeometry.AnalytificationModules
 public import Other.AlgebraicGeometry.CartierLocalDerivativePointJet
+public import Other.AlgebraicGeometry.ChernWindingGenericChartAlgebraic
 public import Other.AlgebraicGeometry.DivisorOfRationalSection
 public import Other.AlgebraicGeometry.HolomorphicExponential
 public import Other.AlgebraicGeometry.HolomorphicExponentialSequence
