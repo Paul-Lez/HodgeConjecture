@@ -212,6 +212,7 @@ public import Other.AlgebraicGeometry.AnalytificationModules
 public import Other.AlgebraicGeometry.CartierLocalDerivativePointJet
 public import Other.AlgebraicGeometry.ChernRelativeFinalAssembly
 public import Other.AlgebraicGeometry.ChernWindingGenericChartAlgebraic
+public import Other.AlgebraicGeometry.DivisorObligations
 public import Other.AlgebraicGeometry.DivisorOfRationalSection
 public import Other.AlgebraicGeometry.HolomorphicExponential
 public import Other.AlgebraicGeometry.HolomorphicExponentialSequence
@@ -256,4 +257,5 @@ public import Other.CategoryTheory.Abelian.ExtOneRepresentative
 public import Other.AlgebraicGeometry.CartierDataRepresents
 public import Other.AlgebraicGeometry.IntegralCohomology
 public import Other.AlgebraicGeometry.DivisorClassCompatibility
+public import Other.AlgebraicGeometry.LefschetzOneOneFiniteHomology
 public import Other.AlgebraicTopology.SupportedSingularSupportMap
