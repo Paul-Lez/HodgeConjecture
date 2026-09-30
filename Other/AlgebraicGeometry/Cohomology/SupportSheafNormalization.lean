@@ -9,6 +9,7 @@ import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicTopology.Sheaf.CohomologySectionNaturality
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 
 /-! # Exact local normalization of the actual supported injective cohomology sheaf -/
 
@@ -80,6 +81,31 @@ lemma complexSupportInjectiveCohomologySheafIsoRelative_section
     (supportedRationalSingularSectionCohomologyEquivSupportComplement Y S S.isClosed V n z))
       (e.addCommGroupIsoToAddEquiv.symm_apply_apply z).symm
 
+private def rationalSupportAddEquivSupportedInjectiveSheafSection
+    (S : Closeds (ComplexPoint X)) (V W : Opens (ComplexPoint X))
+    (hW : V ⊓ S.compl = W) (n : ℕ)
+    (hH : ∀ j : ℕ, j < n → IsZero
+      ((V.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
+        (𝓗_[S]^j(TopCat.of (ComplexPoint X); ℚ)))) :
+    CategoryTheory.Sheaf.relH
+        ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
+        n (homOfLE (hW ▸ inf_le_left : W ≤ V)) ≃+
+      (𝓗_[S]^n(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj (op V) := by
+  let T := TopCat.of (ComplexPoint X)
+  let K := complexSupportInjectiveComplex X S
+  let bridge := @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology
+    (TopCat.of (ComplexPoint X)) S.compl V W hW (analyticHasExt X)
+    ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
+    (ambientRationalInjectiveComplex X)
+    (ambientRationalInjectiveComplex_isKInjective X)
+    (ambientRationalInjectiveSingleAugmentation X)
+    (ambientRationalInjectiveSingleAugmentation_quasiIso X) n
+  let lowest := TopCat.Sheaf.openRestrictedLowestSectionCohomologyIsoOfNat T V K
+    (fun j => 𝓗_[S]^j(T; ℚ)) (fun j => complexSupportInjectiveCohomologySheafIsoRelative X S j)
+    n hH (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
+      T S.compl ((ambientRationalInjectiveComplex X).X j))
+  exact bridge.trans lowest.addCommGroupIsoToAddEquiv
+
 /-- The normalization equation on an actual local injective-model cohomology class. -/
 lemma complexSupportInjectiveCohomologySheafIsoRelative_section_apply
     (S : Closeds (ComplexPoint X)) (n : ℕ) (V : Opens (ComplexPoint X))
@@ -147,20 +173,37 @@ theorem cycleComponentSupportedClassNormalizationIso_apply
         (homOfLE (show Z.compl ≤ Z.compl from le_rfl)) (homOfLE (show U ≤ ⊤ from le_top))
           (by apply Subsingleton.elim) n a := by
     rw [hcycle]
-  let hK : ∀ j : ℤ, j < (n : ℤ) → IsZero
-      (((((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj
-        (complexSupportInjectiveComplex X Z)).homology j)) := by
+  let hH : ∀ j : ℕ, j < n → IsZero
+      ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
+        (𝓗_[Z]^j(T; ℚ))) := by
     intro j hj
     dsimp only [U, T, Z]
-    exact cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne X x hx j (ne_of_lt hj)
+    exact cycleComponentSmoothSupportCohomologySheaf_isZero_of_ne X x hx j
+      (Nat.ne_of_lt hj)
   rw [hcycle']
-  change (rationalSupportAddEquivSupportedInjectiveSheafSection X Z U Z.compl hW n hK)
+  change (rationalSupportAddEquivSupportedInjectiveSheafSection X Z U Z.compl hW n hH)
       ((CategoryTheory.Sheaf.relH.restrict F (homOfLE (show Z.compl ≤ ⊤ from le_top))
         (homOfLE (show Z.compl ≤ U from
           (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
         (homOfLE (show Z.compl ≤ Z.compl from le_rfl))
         (homOfLE (show U ≤ ⊤ from le_top)) (by apply Subsingleton.elim) n) a) = _
-  rw [rationalSupportAddEquivSupportedInjectiveSheafSection_apply X Z U Z.compl hW n hK]
+  let bridge := @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology
+    T Z.compl U Z.compl hW (analyticHasExt X) F (ambientRationalInjectiveComplex X)
+    (ambientRationalInjectiveComplex_isKInjective X)
+    (ambientRationalInjectiveSingleAugmentation X)
+    (ambientRationalInjectiveSingleAugmentation_quasiIso X) n
+  let lowest := TopCat.Sheaf.openRestrictedLowestSectionCohomologyIsoOfNat T U
+    (complexSupportInjectiveComplex X Z) (fun j => 𝓗_[Z]^j(T; ℚ))
+    (fun j => complexSupportInjectiveCohomologySheafIsoRelative X Z j) n hH
+    (fun j => TopCat.Sheaf.sheafSectionsSupportedOutsideIsFlasque T Z.compl
+      ((ambientRationalInjectiveComplex X).X j))
+  change (complexSupportInjectiveCohomologySheafIsoRelative X Z n).hom.hom.app (op U)
+      (lowest.hom (bridge
+        ((CategoryTheory.Sheaf.relH.restrict F (homOfLE (show Z.compl ≤ ⊤ from le_top))
+          (homOfLE (show Z.compl ≤ U from
+            (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
+          (homOfLE (show Z.compl ≤ Z.compl from le_rfl)) (homOfLE (show U ≤ ⊤ from le_top))
+          (by apply Subsingleton.elim) n) a))) = _
   have hbridge :=
     @relHAddEquivSupportedSectionsHomology_restrict T Z.compl
       (⊤ : Opens T) Z.compl Z.compl U Z.compl (top_inf_eq _) hW le_rfl le_top le_rfl

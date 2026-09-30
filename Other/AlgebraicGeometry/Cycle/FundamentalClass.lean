@@ -35,31 +35,13 @@ variable (X : Over (Spec ↧ℂ))
 attribute [local instance] cycleComponentSheafClassAnalyticTopology
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
 
-/-- Extension recovers exactly the prescribed smooth-locus section. -/
-@[simp]
-theorem cycleComponentExtendSmoothCoclass_normalization
-    (s : CycleComponentSmoothCoclassSections X x p) :
-    (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom
-      (cycleComponentExtendSmoothCoclass X x hx s) = s :=
-  AddEquiv.apply_symm_apply
-    (cycleComponentSupportedClassNormalizationIso X x hx) s
-
 /-- Exact smooth-locus normalization, not equality only up to a scalar. -/
 @[simp]
 theorem cycleComponentSupportedInjectiveClass_normalization :
     (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom
       (cycleComponentSupportedInjectiveClass X x hx) =
     cycleComponentSmoothSupportCoclassSection X x hx :=
-  cycleComponentExtendSmoothCoclass_normalization X x hx _
-
-/-- The prescribed smooth-locus section determines the extension uniquely. -/
-theorem cycleComponentExtendSmoothCoclass_unique
-    (s : CycleComponentSmoothCoclassSections X x p)
-    (a : CycleComponentSupportedCohomology X x p)
-    (ha : (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a = s) :
-    a = cycleComponentExtendSmoothCoclass X x hx s :=
-  (cycleComponentSupportedClassNormalizationIso X x hx).injective
-    (ha.trans (cycleComponentExtendSmoothCoclass_normalization X x hx s).symm)
+  AddEquiv.apply_symm_apply (cycleComponentSupportedClassNormalizationIso X x hx) _
 
 /-- The normalized global extension is unique, by injectivity of the
 restriction/purity comparison. This is a theorem, not a supplied existence input. -/
@@ -67,14 +49,15 @@ theorem cycleComponentSupportedInjectiveClass_unique
     (a : CycleComponentSupportedCohomology X x p)
     (ha : (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a =
       cycleComponentSmoothSupportCoclassSection X x hx) :
-    a = cycleComponentSupportedInjectiveClass X x hx :=
-  cycleComponentExtendSmoothCoclass_unique X x hx _ a ha
+    a = cycleComponentSupportedInjectiveClass X x hx := by
+  apply (cycleComponentSupportedClassNormalizationIso X x hx).injective
+  exact ha.trans (cycleComponentSupportedInjectiveClass_normalization X x hx).symm
 
 /-- The ordinary class is the support-forgetting image of the supported class, by definition. -/
 theorem cycleComponentSheafClass_eq_forgetSupport :
     cycleComponentSheafClass X x hx =
       forgetSupport ℚ X (cycleComponentAnalyticClosedSupport X x) (2 * p)
-        (cycleComponentSheafSupportedClass X x hx) :=
+        (cycleComponentSupportedInjectiveClass X x hx) :=
   rfl
 
 /-- The supported class in the mapping-cone model of cohomology with support. -/

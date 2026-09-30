@@ -6,13 +6,14 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.LocalHomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
 
 /-!
 # Cohomology-sheaf concentration for smooth closed supports
 
-Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf`.
+Concentration lemmas for the supported injective model.
 -/
 
 /-! ### Constructions used only in proofs -/
@@ -27,6 +28,19 @@ open AlgebraicTopology.Singular
 
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
+
+/-- The supported sections of the ambient rational injective resolution. -/
+def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
+    CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
+  ((TopCat.Sheaf.sheafSectionsSupportedOutside
+    (TopCat.of (ComplexPoint X))
+    S.compl).mapHomologicalComplex ℤᵘᵖ).obj
+      (ambientRationalInjectiveComplex X)
+
+instance complexSupportInjectiveComplex_isStrictlyGE (S : Closeds (ComplexPoint X)) :
+    (complexSupportInjectiveComplex X S).IsStrictlyGE 0 := by
+  dsimp [complexSupportInjectiveComplex]
+  infer_instance
 
 /-- Let `X` be a smooth integral projective scheme over `ℂ`, `Y = X(ℂ)` with its analytic topology,
 `S ⊆ Y` closed, and `V ⊆ Y` open. For an injective resolution `I` of the constant rational

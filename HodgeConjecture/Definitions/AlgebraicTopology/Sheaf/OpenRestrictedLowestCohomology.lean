@@ -85,4 +85,29 @@ def openRestrictedLowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     lowestSectionCohomologyIso (TopCat.of U) L N n hK hLF ⊤ ≪≫
       openRestrictionHomologyTopSectionsIso X U K n
 
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
+/-- Lowest-degree section cohomology with an abstract cohomology-sheaf comparison. -/
+def openRestrictedLowestSectionCohomologyIsoOfNat
+    (H : ℕ → Sheaf AddCommGrpCat.{u} X)
+    (e : ∀ n : ℕ, K.homology (n : ℤ) ≅ H n) (n : ℕ)
+    (hH : ∀ j : ℕ, j < n → IsZero
+      ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj (H j)))
+    (hflasque : ∀ j, (K.X j).IsFlasque) [K.IsStrictlyGE 0] :
+    (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology (n : ℤ) ≅
+      (H n).presheaf.obj (op U) := by
+  let L := ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj K
+  let hK : ∀ j : ℤ, j < (n : ℤ) → IsZero (L.homology j) := by
+    intro j hj
+    by_cases hj' : j < 0
+    · apply ShortComplex.isZero_homology_of_isZero_X₂
+      exact (U.isOpenEmbedding.sheafPullback AddCommGrpCat).map_isZero
+        (K.isZero_of_isStrictlyGE 0 j hj')
+    · obtain ⟨j, rfl⟩ := Int.eq_ofNat_of_zero_le (le_of_not_gt hj')
+      exact IsZero.of_iso (hH j (by omega))
+        ((K.sc (j : ℤ)).mapHomologyIso (U.isOpenEmbedding.sheafPullback AddCommGrpCat) ≪≫
+          (U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapIso (e j))
+  exact openRestrictedLowestSectionCohomologyIso X U K 0 (n : ℤ) hK hflasque ≪≫
+    asIso ((e n).hom.hom.app (op U))
+
 end TopCat.Sheaf

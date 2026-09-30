@@ -146,7 +146,7 @@ theorem cycleComponentSheafClass_genericPoint_eq_zero_iff_supportedInjectiveClas
   rw [cycleComponentSheafClass_eq_forgetSupport]
   refine Iff.trans (map_eq_zero_iff _ (forgetSupport_injective_of_eq_top ℚ X _
     (cycleComponentAnalyticClosedSupport_genericPoint_eq_top X) _)) ?_
-  rw [cycleComponentSheafSupportedClass]
+  rfl
 
 /-- The generic-point component class vanishes exactly when the normalized coclass section it is
 constructed from vanishes: the normalization comparison is an isomorphism. -/

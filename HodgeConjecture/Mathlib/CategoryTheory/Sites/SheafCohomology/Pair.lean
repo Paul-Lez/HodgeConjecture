@@ -115,6 +115,24 @@ def pairSheafMap {U V U' V' : C} (f : U ⟶ V) (f' : U' ⟶ V') (a : U' ⟶ U) (
   cokernel.map _ _ ((freeAbelianSheaf J).map a) ((freeAbelianSheaf J).map b)
     (by rw [← Functor.map_comp, ← Functor.map_comp, w])
 
+@[simp]
+lemma pairSheafMap_id {U V : C} (f : U ⟶ V) :
+    pairSheafMap (J := J) f f (𝟙 _) (𝟙 _) (by simp) = 𝟙 _ := by
+  apply (cancel_epi (cokernel.π ((freeAbelianSheaf J).map f))).1
+  dsimp [pairSheafMap]
+  simp
+
+lemma pairSheafMap_comp {U V U' V' U'' V'' : C}
+    (f : U ⟶ V) (f' : U' ⟶ V') (f'' : U'' ⟶ V'')
+    (a : U' ⟶ U) (b : V' ⟶ V) (a' : U'' ⟶ U') (b' : V'' ⟶ V')
+    (w : f' ≫ b = a ≫ f) (w' : f'' ≫ b' = a' ≫ f') :
+    pairSheafMap (J := J) f f'' (a' ≫ a) (b' ≫ b) (by
+      rw [← Category.assoc, w', Category.assoc, w]; simp only [Category.assoc]) =
+      pairSheafMap f' f'' a' b' w' ≫ pairSheafMap f f' a b w := by
+  apply (cancel_epi (cokernel.π ((freeAbelianSheaf J).map f''))).1
+  dsimp [pairSheafMap]
+  simp [Category.assoc]
+
 lemma pairSheafHomAddEquiv_pairSheafMap_comp {U V U' V' : C} (f : U ⟶ V) (f' : U' ⟶ V')
     (a : U' ⟶ U) (b : V' ⟶ V) (w : f' ≫ b = a ≫ f) (G : Sheaf J AddCommGrpCat.{v})
     (φ : pairSheaf (J := J) f ⟶ G) :

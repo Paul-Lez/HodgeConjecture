@@ -79,7 +79,8 @@ the sheafification of `V ↦ H^n(V, V \ S; ℚ)`, rational relative singular coh
 subsets. Its sections are locally represented by these relative classes, with representatives
 identified when they agree on smaller neighborhoods. -/
 def supportRelativeCohomologySheaf (S : Set X) (n : ℕ) : TopCat.Sheaf AddCommGrpCat X :=
-  TopCat.Sheaf.CohomologySheafOfOpens X (supportRelativeCohomologyFunctor X S n)
+  TopCat.Sheaf.SupportedCohomologySheaf X S
+    (fun S n => supportRelativeCohomologyFunctor X S n) n
 
 /-- `𝓗_[S]^n(X; ℚ)` is the `n`-th rational relative-cohomology sheaf on `X` with support in `S`,
 the sheaf associated with `V ↦ H^n(V, V \ S; ℚ)`. -/
@@ -91,8 +92,8 @@ map from the presheaf `V ↦ H^n(V, V \ S; ℚ)` to its associated sheaf `𝓗^n
 relative singular class on an open `V` to the section represented by its germs. -/
 def supportRelativeCohomologyToSheaf :
     supportRelativeCohomologyPresheaf X S n ⟶ (𝓗_[S]^n(X; ℚ)).obj :=
-  TopCat.Sheaf.cohomologySheafOfOpensToSheaf X
-    (supportRelativeCohomologyFunctor X S n)
+  TopCat.Sheaf.supportedCohomologyToSheaf X S
+    (fun S n => supportRelativeCohomologyFunctor X S n) n
 
 /-- Let `X` be a topological space, `S ⊆ X`, `V ⊆ X` open, and `x ∈ V`. For a natural number `n`,
 this sends a relative singular class in `H^n(V, V \ S; ℚ)` to its germ at `x` in the stalk of

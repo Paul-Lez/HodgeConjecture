@@ -104,12 +104,4 @@ def supportedSingularCohomologySheafIsoRelative :
   (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).mapIso
     (supportedSingularCohomologyPresheafIsoRelative X S hS n)
 
-/-- The supported singular cochain cohomology sheaf is the generic cohomology sheaf of the local
-relative cohomology functor. -/
-def supportedSingularCohomologySheafIsoCohomologySheaf :
-    (supportedRationalSingularCochainComplex X
-      ⟨Sᶜ, hS.isOpen_compl⟩).homology (n : ℤ) ≅
-      TopCat.Sheaf.CohomologySheafOfOpens X (supportRelativeCohomologyFunctor X S n) :=
-  supportedSingularCohomologySheafIsoRelative X S hS n
-
 end AlgebraicTopology.Singular

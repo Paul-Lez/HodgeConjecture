@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.CohomologyFlasqueModel
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.CohomologyStalkVanishing
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.CohomologyInjectiveModel
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
@@ -126,6 +127,93 @@ theorem relHAddEquivSupportedSectionsHomologyOfFlasque_restrict (n : ℕ)
     (injectiveResolutionAugmentation X F) (injectiveResolutionAugmentation_quasiIso X F) n x,
     Iso.addCommGroupIsoToAddEquiv_apply, Iso.addCommGroupIsoToAddEquiv_apply, Iso.symm_hom,
     Iso.symm_hom, asIso_inv, asIso_inv, hF]
+
+set_option maxHeartbeats 800000 in
+/-- Supported Ext on all opens is naturally the cohomology of a flasque supported complex. -/
+def supportHOnOpenPresheafIsoOfFlasque
+    (Z : Closeds X) (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)
+    (K : CochainComplex (Sheaf AddCommGrpCat X) ℤ) [K.IsStrictlyGE 0]
+    (ι : (CochainComplex.singleFunctor _ 0).obj F ⟶ K) [Mono ι] [QuasiIso ι]
+    (hK : ∀ n, IsFlasque (K.X n)) (n : ℕ) :
+    supportHOnOpenPresheaf (Z := Z) F n ≅
+      sectionCohomologyPresheaf X
+        (((sheafSectionsSupportedOutside X Z.compl).mapHomologicalComplex ℤᵘᵖ).obj K) (n : ℤ) := by
+  let K' := ((sheafSectionsSupportedOutside X Z.compl).mapHomologicalComplex ℤᵘᵖ).obj K
+  refine NatIso.ofComponents (fun V => ?_) ?_
+  · let e := @relHAddEquivSupportedSectionsHomologyOfFlasque X F K ι Z.compl V.unop
+      (V.unop ⊓ Z.compl) rfl hK n
+    exact e.toAddCommGrpIso ≪≫ sectionCohomologyPresheafOnOpenIso X K' (n : ℤ) V.unop
+  · intro U V f
+    apply AddCommGrpCat.hom_ext
+    apply AddMonoidHom.ext
+    intro z
+    let hV : V.unop ≤ U.unop := leOfHom f.unop
+    let hW : V.unop ⊓ Z.compl ≤ U.unop ⊓ Z.compl := inf_le_inf_right Z.compl hV
+    let eU := @relHAddEquivSupportedSectionsHomologyOfFlasque X F K ι Z.compl U.unop
+      (U.unop ⊓ Z.compl) rfl hK n
+    let eV := @relHAddEquivSupportedSectionsHomologyOfFlasque X F K ι Z.compl V.unop
+      (V.unop ⊓ Z.compl) rfl hK n
+    have hrestrict := relHAddEquivSupportedSectionsHomologyOfFlasque_restrict X
+      (U := Z.compl) (V := U.unop) (W := U.unop ⊓ Z.compl)
+      (U' := Z.compl) (V' := V.unop) (W' := V.unop ⊓ Z.compl)
+      (hU := le_rfl) hV hW F K ι hK n (eU z)
+    change (sectionCohomologyPresheafOnOpenIso X K' (n : ℤ) V.unop).hom
+        (eV ((supportHOnOpenPresheaf (Z := Z) F n).map f z)) = _
+    rw [hrestrict]
+    exact ConcreteCategory.congr_hom
+      (sectionCohomologyPresheafOnOpenIso_inv_naturality X K' (n : ℤ) f.unop) _
+
+set_option maxHeartbeats 800000 in
+/-- Global supported Ext is computed by the associated cohomology sheaf in the lowest degree. -/
+def supportHCohomologySheafSectionAddEquivOfFlasque
+    (Z : Closeds X) (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)
+    (K : CochainComplex (Sheaf AddCommGrpCat X) ℤ) [K.IsStrictlyGE 0]
+    (ι : (CochainComplex.singleFunctor _ 0).obj F ⟶ K) [Mono ι] [QuasiIso ι]
+    (hK : ∀ n, IsFlasque (K.X n))
+    (H : ℕ → Sheaf AddCommGrpCat X)
+    (e : ∀ n, K.homology n ≅ H n) (n : ℕ)
+    (hH : ∀ j : ℕ, j < n → IsZero (H j)) :
+    H_[Z]^n(X; F) ≃+
+      (supportHCohomologySheaf (Z := Z) F n).presheaf.obj (op ⊤) := by
+  let K' := ((sheafSectionsSupportedOutside X Z.compl).mapHomologicalComplex ℤᵘᵖ).obj K
+  let p := supportHOnOpenPresheafIsoOfFlasque X Z F K ι hK n
+  let s := (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).mapIso p ≪≫
+    sectionCohomologyPresheafSheafificationIso X K' (n : ℤ) ≪≫ e n
+  let b := @relHAddEquivSupportedSectionsHomologyOfFlasque X F K ι Z.compl ⊤ Z.compl
+    (top_inf_eq _) hK n
+  let a := sectionCohomologyPresheafOnOpenIso X K' (n : ℤ) ⊤
+  let l := lowestSectionCohomologyIsoOfNat X K'
+    (fun j => H j) (fun j => e j) n hH hK
+  change H_[Z]^n(X; F) ≃+
+    (supportHCohomologySheaf (Z := Z) F n).presheaf.obj (op ⊤)
+  exact b.trans (a.addCommGrpIsoToAddEquiv.trans <|
+    l.addCommGrpIsoToAddEquiv.trans <|
+      (s.symm.hom.app (op ⊤)).toAddCommGrpIso.addCommGroupIsoToAddEquiv)
+
+set_option maxHeartbeats 800000 in
+/-- Supported Ext on an open is computed by the associated cohomology sheaf in the lowest degree. -/
+def supportHCohomologySheafSectionAddEquivOfFlasqueOnOpen
+    (Z : Closeds X) (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)
+    (K : CochainComplex (Sheaf AddCommGrpCat X) ℤ) [K.IsStrictlyGE 0]
+    (ι : (CochainComplex.singleFunctor _ 0).obj F ⟶ K) [Mono ι] [QuasiIso ι]
+    (hK : ∀ n, IsFlasque (K.X n))
+    (H : ℕ → Sheaf AddCommGrpCat X)
+    (e : ∀ n, K.homology n ≅ H n) (V W : Opens X) (hW : V ⊓ Z.compl = W) (n : ℕ)
+    (hH : ∀ j : ℕ, j < n → IsZero
+      ((V.isOpenEmbedding.sheafPullback AddCommGrpCat).obj (H j))) :
+    CategoryTheory.Sheaf.relH F n (homOfLE (hW ▸ inf_le_left : W ≤ V)) ≃+
+      (supportHCohomologySheaf (Z := Z) F n).presheaf.obj (op V) := by
+  let K' := ((sheafSectionsSupportedOutside X Z.compl).mapHomologicalComplex ℤᵘᵖ).obj K
+  let p := supportHOnOpenPresheafIsoOfFlasque X Z F K ι hK n
+  let s := (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).mapIso p ≪≫
+    sectionCohomologyPresheafSheafificationIso X K' (n : ℤ) ≪≫ e n
+  let b := @relHAddEquivSupportedSectionsHomologyOfFlasque X F K ι Z.compl V W hW hK n
+  let l := openRestrictedLowestSectionCohomologyIsoOfNat X V K'
+    (fun j => H j) (fun j => e j) n hH (fun j => hK j)
+  change CategoryTheory.Sheaf.relH F n (homOfLE (hW ▸ inf_le_left : W ≤ V)) ≃+
+    (supportHCohomologySheaf (Z := Z) F n).presheaf.obj (op V)
+  exact b.trans (l.addCommGrpIsoToAddEquiv.trans <|
+    (s.symm.hom.app (op V)).toAddCommGrpIso.addCommGroupIsoToAddEquiv)
 
 end TopCat.Sheaf
 

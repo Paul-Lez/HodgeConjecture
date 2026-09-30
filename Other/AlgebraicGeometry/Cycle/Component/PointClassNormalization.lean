@@ -145,20 +145,14 @@ theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
-set_option maxHeartbeats 10000000 in
-/-- The supported component class equals the normalized point class. -/
-theorem cycleComponentSupportedInjectiveClass_point_normalization
-    (hx : Order.coheight x = d) :
-    cycleComponentSupportedInjectiveClass X x hx =
-      (rationalSupportAddEquivSupportedInjectiveHomology X
-        (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
-        (analyticComponentPointSupportedInjectiveCoclass X x d z) := by
-  let a : CycleComponentSupportedCohomology X x d :=
-    (rationalSupportAddEquivSupportedInjectiveHomology X
-      (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
-      (analyticComponentPointSupportedInjectiveCoclass X x d z)
-  symm
-  apply cycleComponentSupportedInjectiveClass_unique X x hx a
+set_option maxHeartbeats 800000 in
+private theorem cycleComponentSupportedInjectiveClass_point_normalization_aux
+    (hx : Order.coheight x = d) (a : CycleComponentSupportedCohomology X x d)
+    (ha : (rationalSupportAddEquivSupportedInjectiveHomology X
+      (cycleComponentAnalyticClosedSupport X x) (2 * d)) a =
+        analyticComponentPointSupportedInjectiveCoclass X x d z) :
+    (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a =
+      cycleComponentSmoothSupportCoclassSection X x hx := by
   have hnorm :
       (cycleComponentSupportedClassNormalizationIso X x hx).toAddMonoidHom a =
         (complexSupportInjectiveCohomologySheafIsoRelative X
@@ -172,15 +166,34 @@ theorem cycleComponentSupportedInjectiveClass_point_normalization
     exact cycleComponentSupportedClassNormalizationIso_apply X x hx a
   rw [hnorm,
     cycleComponentSmoothSupportLowestSectionCohomologyComplexIso,
-    TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso_hom]
+    TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso_hom,
+    ha]
+  exact analyticComponentPointSupportedInjectiveCoclass_section_normalization X x d z hx
+
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.isDefEq.respectTransparency.types false in
+set_option backward.defeqAttrib.useBackward true in
+set_option maxHeartbeats 800000 in
+/-- The supported component class equals the normalized point class. -/
+theorem cycleComponentSupportedInjectiveClass_point_normalization
+    (hx : Order.coheight x = d) :
+    cycleComponentSupportedInjectiveClass X x hx =
+      (rationalSupportAddEquivSupportedInjectiveHomology X
+        (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
+        (analyticComponentPointSupportedInjectiveCoclass X x d z) := by
+  let a : CycleComponentSupportedCohomology X x d :=
+    (rationalSupportAddEquivSupportedInjectiveHomology X
+      (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
+      (analyticComponentPointSupportedInjectiveCoclass X x d z)
+  symm
+  apply cycleComponentSupportedInjectiveClass_unique X x hx a
   have ha :
       (rationalSupportAddEquivSupportedInjectiveHomology X
         (cycleComponentAnalyticClosedSupport X x) (2 * d)) a =
         analyticComponentPointSupportedInjectiveCoclass X x d z := by
     dsimp [a]
     exact AddEquiv.apply_symm_apply _ _
-  rw [ha]
-  exact analyticComponentPointSupportedInjectiveCoclass_section_normalization X x _ z hx
+  exact cycleComponentSupportedInjectiveClass_point_normalization_aux X x d z hx a ha
 
 /-- Exact positive-kernel point normalization of the mapping-cone class. -/
 theorem coneCycleComponentSheafClass_point_normalization

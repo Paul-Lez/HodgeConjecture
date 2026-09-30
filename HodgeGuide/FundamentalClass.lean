@@ -196,38 +196,16 @@ puts the relevant cohomology in degree $`2p`, so the lowest-degree section calcu
 lower-degree correction.
 
 ```lean
-#check cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
+#check cycleComponentSmoothSupportCohomologySheaf_isZero_of_ne
 ```
 
-Of the two definitions quoted below, the first is the restriction isomorphism on its own and the
-second is the whole composite, the normalization isomorphism
+The restriction isomorphism is available directly, and the definition below is the whole
+composite, the normalization isomorphism
 $`H^{2p}_Z(X;\mathbb Q)\cong\Gamma(U,\mathcal H^{2p}_Z)`. Its inverse extends a section on $`U`
 uniquely across $`Z_{\mathrm{sing}}` to a class supported on all of $`Z`.
 
-```lean -show
-namespace Guide.Subvariety.D3
-```
 ```lean
-def cycleComponentSupportExtensionIso (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-    (hx : coheight x = p) :
-    H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ) ≃+
-      CategoryTheory.Sheaf.relH
-        ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
-        (2 * p)
-        (homOfLE (show (cycleComponentAnalyticClosedSupport X x).compl ≤
-            cycleComponentSmoothSupportAmbientOpen X x from by
-          intro y hy hyS
-          obtain ⟨z, _, hz⟩ := hyS
-          apply hy
-          change y.underlying ∈ closure ({x} : Set X.left)
-          rw [← range_cycleComponentι X.left x]
-          exact ⟨z, hz⟩)) :=
-  AlgebraicGeometry.ComplexPoint.cycleComponentSupportExtensionIso X x hx
-```
-```lean -show
-end Guide.Subvariety.D3
-example : @Guide.Subvariety.D3.cycleComponentSupportExtensionIso = @AlgebraicGeometry.ComplexPoint.cycleComponentSupportExtensionIso := rfl
+#check AlgebraicGeometry.ComplexPoint.cycleComponentSupportExtensionIso
 ```
 ```lean -show
 namespace Guide.Subvariety.D4
@@ -254,22 +232,20 @@ The two ends of that isomorphism have short names, which keep the distinction vi
 signatures: {name}`CycleComponentSupportedCohomology` is the group $`H^{2p}_Z(X;\mathbb Q)`, and
 {name}`CycleComponentSmoothCoclassSections` is the group of sections
 $`\Gamma(U,\mathcal H^{2p}_Z)`. Despite the shared word "cohomology", they are objects of
-different kinds, and {name}`cycleComponentExtendSmoothCoclass`, the inverse of the normalization
-isomorphism, is the only passage between them. Applying it to the normalized section of Step 1
-gives the class of the component.
+different kinds. Applying the inverse normalization isomorphism to the section of Step 1 gives
+the class of the component.
 
 ```lean
 #check CycleComponentSupportedCohomology
 #check CycleComponentSmoothCoclassSections
-#check cycleComponentExtendSmoothCoclass
-#check cycleComponentExtendSmoothCoclass_normalization
-#check cycleComponentExtendSmoothCoclass_unique
+#check cycleComponentSupportedInjectiveClass_normalization
+#check cycleComponentSupportedInjectiveClass_unique
 ```
 
 ```lean
 example :
     CycleComponentSupportedCohomology X x p :=
-  cycleComponentExtendSmoothCoclass X x hx
+  (cycleComponentSupportedClassNormalizationIso X x hx).symm.toAddMonoidHom
     (cycleComponentSmoothSupportCoclassSection X x hx)
 ```
 
@@ -279,20 +255,6 @@ The extension is a class in supported Ext. Forgetting the support gives the clas
 cohomology, which is the class the statement uses.
 
 ```lean -show
-namespace Guide.Subvariety.D5
-```
-```lean
-def cycleComponentSheafSupportedClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
-    [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
-  (hx : coheight x = p) :
-    H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ) :=
-  cycleComponentSupportedInjectiveClass X x hx
-```
-```lean -show
-end Guide.Subvariety.D5
-example : @Guide.Subvariety.D5.cycleComponentSheafSupportedClass = @AlgebraicGeometry.ComplexPoint.cycleComponentSheafSupportedClass := rfl
-```
-```lean -show
 namespace Guide.Subvariety.D6
 ```
 ```lean
@@ -300,7 +262,7 @@ def cycleComponentSheafClass (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] [IsProjective X.hom] (x : X.left) {p : ℕ}
     (hx : coheight x = p) : H^(2 * p)(X; ℚ) :=
   forgetSupport ℚ X (cycleComponentAnalyticClosedSupport X x) (2 * p)
-    (cycleComponentSheafSupportedClass X x hx)
+    (cycleComponentSupportedInjectiveClass X x hx)
 ```
 ```lean -show
 end Guide.Subvariety.D6
