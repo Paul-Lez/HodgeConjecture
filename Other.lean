@@ -206,6 +206,7 @@ public import Other.Algebra.Homology.MappingConeCocycle
 public import Other.Algebra.Homology.MappingConeDifference
 public import Other.Algebra.Homology.MappingConeFactorization
 public import Other.Algebra.Homology.PrecompFactorization
+public import Other.Algebra.Homology.RationalCochainDenominators
 public import Other.Algebra.Homology.SingleCocycleFactorization
 public import Other.AlgebraicGeometry.AnalytificationModules
 public import Other.AlgebraicGeometry.CartierLocalDerivativePointJet
@@ -223,6 +224,7 @@ public import Other.AlgebraicGeometry.HolomorphicUnitExtension
 public import Other.AlgebraicGeometry.HolomorphicUnitTransition
 public import Other.AlgebraicGeometry.InvertibleSheafRationalSection
 public import Other.AlgebraicGeometry.OrderOfVanishing
+public import Other.AlgebraicGeometry.ProjectiveFiniteHomology
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.LinearDualConnecting
 public import Other.AlgebraicTopology.OpenRawCochainRepresentatives
