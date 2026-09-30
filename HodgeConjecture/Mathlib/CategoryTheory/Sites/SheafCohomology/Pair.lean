@@ -260,9 +260,9 @@ theorem isIso_restrict_of_isZero {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f
 def restrictEquivOfIsZero {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mono g]
     (n : ℕ) (h₀ : IsZero (AddCommGrpCat.of (relH F n g)))
     (h₁ : IsZero (AddCommGrpCat.of (relH F (n + 1) g))) :
-    relH F n (f ≫ g) ≃+ relH F n f := by
+    relH F n (f ≫ g) ≃+ relH F n f :=
   letI := isIso_restrict_of_isZero F f g n h₀ h₁
-  exact (asIso (AddCommGrpCat.ofHom
+  (asIso (AddCommGrpCat.ofHom
     (restrict F (f ≫ g) f (𝟙 _) g (by simp) n))).addCommGroupIsoToAddEquiv
 
 @[simp]

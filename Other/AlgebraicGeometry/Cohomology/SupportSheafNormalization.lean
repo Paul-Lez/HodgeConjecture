@@ -90,7 +90,7 @@ private def rationalSupportAddEquivSupportedInjectiveSheafSection
     CategoryTheory.Sheaf.relH
         ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
         n (homOfLE (hW ▸ inf_le_left : W ≤ V)) ≃+
-      (𝓗_[S]^n(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj (op V) := by
+      (𝓗_[S]^n(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj (op V) :=
   let T := TopCat.of (ComplexPoint X)
   let K := complexSupportInjectiveComplex X S
   let bridge := @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology
@@ -104,7 +104,7 @@ private def rationalSupportAddEquivSupportedInjectiveSheafSection
     (fun j => 𝓗_[S]^j(T; ℚ)) (fun j => complexSupportInjectiveCohomologySheafIsoRelative X S j)
     n hH (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
       T S.compl ((ambientRationalInjectiveComplex X).X j))
-  exact bridge.trans lowest.addCommGroupIsoToAddEquiv
+  bridge.trans lowest.addCommGroupIsoToAddEquiv
 
 /-- The normalization equation on an actual local injective-model cohomology class. -/
 lemma complexSupportInjectiveCohomologySheafIsoRelative_section_apply

@@ -69,11 +69,7 @@ def supportRelativeCohomologyPresheaf : TopCat.Presheaf AddCommGrpCat X where
 /-- The contravariant functor whose value on an open `V` is `H^n(V, V \ S; ℚ)` and whose maps
 are induced by inclusions of pairs. -/
 def supportRelativeCohomologyFunctor : Opens X ⥤ AddCommGrpCatᵒᵖ :=
-  let P := supportRelativeCohomologyPresheaf X S n
-  { obj U := op (P.obj (op U))
-    map f := (P.map f.op).op
-    map_id U := by simp
-    map_comp f g := by simp }
+  opOp (Opens X) ⋙ (supportRelativeCohomologyPresheaf X S n).op
 
 /-- Let `X` be a topological space, `S ⊆ X` a subset, and `n` a natural number. The sheaf `𝓗^n_S` is
 the sheafification of `V ↦ H^n(V, V \ S; ℚ)`, rational relative singular cohomology on open

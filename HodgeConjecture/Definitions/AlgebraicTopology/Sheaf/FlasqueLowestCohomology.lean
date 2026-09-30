@@ -118,7 +118,7 @@ def lowestSectionCohomologyIsoOfNat
     (hH : ∀ j : ℕ, j < n → IsZero (H j))
     (hflasque : ∀ j, (K.X j).IsFlasque) [K.IsStrictlyGE 0] :
     (((supportEvaluation X ⊤).mapHomologicalComplex ℤᵘᵖ).obj K).homology (n : ℤ) ≅
-      (H n).presheaf.obj (op ⊤) := by
+      (H n).presheaf.obj (op ⊤) :=
   let hK : ∀ j : ℤ, j < (n : ℤ) → IsZero (K.homology j) := by
     intro j hj
     by_cases hj' : j < 0
@@ -126,7 +126,7 @@ def lowestSectionCohomologyIsoOfNat
       exact K.isZero_of_isStrictlyGE 0 j hj'
     · obtain ⟨j, rfl⟩ := Int.eq_ofNat_of_zero_le (le_of_not_gt hj')
       exact IsZero.of_iso (hH j (by omega)) (e j)
-  exact lowestSectionCohomologyIso X K 0 (n : ℤ) hK hflasque ⊤ ≪≫
+  lowestSectionCohomologyIso X K 0 (n : ℤ) hK hflasque ⊤ ≪≫
     asIso ((e n).hom.hom.app (op ⊤))
 
 end TopCat.Sheaf

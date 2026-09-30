@@ -78,9 +78,9 @@ def openRestrictedLowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
       (K.homology n).presheaf.obj (op U) :=
   let L := ((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
     ℤᵘᵖ).obj K
-  have hLF (j : ℤ) : (L.X j).IsFlasque := by
-    let := hflasque j
-    exact openSheafRestriction_isFlasque X U (K.X j)
+  let hLF : ∀ j : ℤ, (L.X j).IsFlasque := fun j =>
+    letI := hflasque j
+    openSheafRestriction_isFlasque X U (K.X j)
   (HomologicalComplex.homologyMapIso (openRestrictionTopSectionComplexIso X U K) n).symm ≪≫
     lowestSectionCohomologyIso (TopCat.of U) L N n hK hLF ⊤ ≪≫
       openRestrictionHomologyTopSectionsIso X U K n
@@ -97,7 +97,7 @@ def openRestrictedLowestSectionCohomologyIsoOfNat
       ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj (H j)))
     (hflasque : ∀ j, (K.X j).IsFlasque) [K.IsStrictlyGE 0] :
     (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology (n : ℤ) ≅
-      (H n).presheaf.obj (op U) := by
+      (H n).presheaf.obj (op U) :=
   let L := ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj K
   let hK : ∀ j : ℤ, j < (n : ℤ) → IsZero (L.homology j) := by
     intro j hj
@@ -109,7 +109,7 @@ def openRestrictedLowestSectionCohomologyIsoOfNat
       exact IsZero.of_iso (hH j (by omega))
         ((K.sc (j : ℤ)).mapHomologyIso (U.isOpenEmbedding.sheafPullback AddCommGrpCat) ≪≫
           (U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapIso (e j))
-  exact openRestrictedLowestSectionCohomologyIso X U K 0 (n : ℤ) hK hflasque ≪≫
+  openRestrictedLowestSectionCohomologyIso X U K 0 (n : ℤ) hK hflasque ≪≫
     asIso ((e n).hom.hom.app (op U))
 
 end TopCat.Sheaf

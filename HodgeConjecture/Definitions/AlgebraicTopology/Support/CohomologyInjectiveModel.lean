@@ -46,12 +46,11 @@ variable (X : TopCat.{0})
 def supportedSectionsIsoKer (U V W : Opens X) (hW : V ⊓ U = W)
     (G : Sheaf AddCommGrpCat X) :
     ((sheafSectionsSupportedOutside X U).obj G).obj.obj (op V) ≅
-      AddCommGrpCat.of (G.obj.map (homOfLE (hW ▸ inf_le_left : W ≤ V)).op).hom.ker := by
-  subst hW
-  exact sheafSectionsSupportedOutsideOnOpenIso X U V G ≪≫
+      AddCommGrpCat.of (G.obj.map (homOfLE (hW ▸ inf_le_left : W ≤ V)).op).hom.ker :=
+  hW ▸ (sheafSectionsSupportedOutsideOnOpenIso X U V G ≪≫
     (kernelCompMono _ (supportedOutsideIntersectionIso X U V G).hom).symm ≪≫
     kernelIsoOfEq (toOpenRestrictionPushforward_intersection X U V G) ≪≫
-    AddCommGrpCat.kernelIsoKer _
+    AddCommGrpCat.kernelIsoKer _)
 
 lemma supportedSectionsIsoKer_hom_subtype (U V W : Opens X) (hW : V ⊓ U = W)
     (G : Sheaf AddCommGrpCat X) :

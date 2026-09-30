@@ -34,7 +34,7 @@ def cycleComponentSupportExtensionIso :
       CategoryTheory.Sheaf.relH
         ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
         (2 * p)
-        (homOfLE (cycleComponentSupportComplement_le_smoothAmbientOpen X x)) := by
+        (homOfLE (cycleComponentSupportComplement_le_smoothAmbientOpen X x)) :=
   let T := TopCat.of (ComplexPoint X)
   let Z := cycleComponentAnalyticClosedSupport X x
   let U := cycleComponentSmoothSupportAmbientOpen X x
@@ -42,10 +42,9 @@ def cycleComponentSupportExtensionIso :
   let g : U ⟶ ⊤ := homOfLE le_top
   let F := (TopCat.Sheaf.constantFunctor T).obj (AddCommGrpCat.of ℚ)
   let n : ℕ := 2 * p
-  simpa [f, g] using CategoryTheory.Sheaf.relH.restrictEquivOfIsZero F f g n
-    (by
-      exact cycleComponentSingularBoundaryRelH_isZero_of_lt X x hx n (by omega))
-    (by
-      exact cycleComponentSingularBoundaryRelH_isZero_of_lt X x hx (n + 1) (by omega))
+  let e := CategoryTheory.Sheaf.relH.restrictEquivOfIsZero F f g n
+    (cycleComponentSingularBoundaryRelH_isZero_of_lt X x hx n (by omega))
+    (cycleComponentSingularBoundaryRelH_isZero_of_lt X x hx (n + 1) (by omega))
+  e
 
 end AlgebraicGeometry.ComplexPoint
