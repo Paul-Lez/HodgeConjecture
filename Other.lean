@@ -184,6 +184,7 @@ public import Other.AlgebraicTopology.Support.RelativeCohomologyGerm
 public import Other.AlgebraicTopology.Support.RelativeCohomologyOpenTransport
 public import Other.AlgebraicTopology.Support.RestrictionFiber
 public import Other.AlgebraicTopology.Support.SingularCohomologySheafComparison
+public import Other.Analysis.Complex.NormalDivisionFinOne
 public import Other.Analysis.Complex.Polynomial.Complement
 public import Other.Analysis.Complex.Polynomial.FactorGrowth
 public import Other.Analysis.Complex.Polynomial.FiniteSingularity
@@ -207,6 +208,7 @@ public import Other.Algebra.Homology.MappingConeFactorization
 public import Other.Algebra.Homology.PrecompFactorization
 public import Other.Algebra.Homology.SingleCocycleFactorization
 public import Other.AlgebraicGeometry.AnalytificationModules
+public import Other.AlgebraicGeometry.CartierLocalDerivativePointJet
 public import Other.AlgebraicGeometry.DivisorOfRationalSection
 public import Other.AlgebraicGeometry.HolomorphicExponential
 public import Other.AlgebraicGeometry.HolomorphicExponentialSequence
