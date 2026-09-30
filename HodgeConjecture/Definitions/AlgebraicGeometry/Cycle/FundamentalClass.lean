@@ -32,9 +32,6 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-local instance cycleComponentSheafClassAnalyticTopology :
-    TopologicalSpace (ComplexPoint X) := Point.analyticTopology
-
 section
 
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)
