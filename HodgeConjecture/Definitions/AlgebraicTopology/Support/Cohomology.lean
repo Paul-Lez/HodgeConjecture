@@ -136,14 +136,10 @@ def supportHOnOpenPresheaf : TopCat.Presheaf AddCommGrpCat X where
     congr 1
     apply CategoryTheory.Sheaf.pairSheafMap_comp
 
-/-- This is the supported-cohomology presheaf viewed contravariantly as a functor
-`Opens X ⥤ AddCommGrpCatᵒᵖ`. -/
+/-- The contravariant functor whose value on an open `V` is `H^n(V, V \ Z; F)` and whose maps are
+induced by inclusions of pairs. -/
 def supportHOnOpenFunctor : Opens X ⥤ AddCommGrpCatᵒᵖ :=
-  let P := supportHOnOpenPresheaf (Z := Z) F n
-  { obj U := op (P.obj (op U))
-    map f := (P.map f.op).op
-    map_id U := by simp
-    map_comp f g := by simp }
+  opOp (Opens X) ⋙ (supportHOnOpenPresheaf (Z := Z) F n).op
 
 set_option maxHeartbeats 800000 in
 set_option synthInstance.maxHeartbeats 800000 in
