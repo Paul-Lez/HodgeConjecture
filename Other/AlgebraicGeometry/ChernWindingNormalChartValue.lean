@@ -46,7 +46,7 @@ private lemma piCoordCLE_one_re (z : Fin 1 → ℂ) :
     Equiv.coe_prodComm, Finsupp.mapDomain_equiv_apply]
   rw [show finProdFinEquiv.symm 0 = Prod.swap (finProdFinEquiv.symm 0) by decide]
   rw [Finsupp.mapDomain_apply Prod.swap_injective]
-  simp [Module.Basis.smulTower', Complex.basisOneI, show (finProdFinEquiv (m := 2) (n := 1)).symm 0 = (0, 0) by decide]
+  simp [show (finProdFinEquiv (m := 2) (n := 1)).symm 0 = (0, 0) by decide]
 
 private lemma piCoordCLE_one_im (z : Fin 1 → ℂ) :
     (Complex.piCoordCLE 1 z) 1 = (z 0).im := by
@@ -55,7 +55,7 @@ private lemma piCoordCLE_one_im (z : Fin 1 → ℂ) :
     Equiv.coe_prodComm, Finsupp.mapDomain_equiv_apply]
   rw [show finProdFinEquiv.symm 1 = Prod.swap (finProdFinEquiv.symm 1) by decide]
   rw [Finsupp.mapDomain_apply Prod.swap_injective]
-  simp [Module.Basis.smulTower', Complex.basisOneI, show (finProdFinEquiv (m := 2) (n := 1)).symm 1 = (1, 0) by decide]
+  simp [show (finProdFinEquiv (m := 2) (n := 1)).symm 1 = (1, 0) by decide]
 
 @[expose] public noncomputable section
 
@@ -87,15 +87,13 @@ theorem complexLineCoordinate_standardRealToComplex (v : (puncturedPair ℝ 2).s
       (((complexRealHomeomorph 1).symm (Subtype.val v)) 0).re =
           (Complex.piCoordCLE 1 ((complexRealHomeomorph 1).symm (Subtype.val v))) 0 :=
             (piCoordCLE_one_re _).symm
-      _ = (Subtype.val v) 0 := by
-        simpa [complexRealHomeomorph] using congrFun ((complexRealHomeomorph 1).right_inv (Subtype.val v)) 0
+      _ = (Subtype.val v) 0 := by simp [complexRealHomeomorph]
       _ = (complexCoordinateFun (Subtype.val v)).re := by simp [complexCoordinateFun]
   · calc
       (((complexRealHomeomorph 1).symm (Subtype.val v)) 0).im =
           (Complex.piCoordCLE 1 ((complexRealHomeomorph 1).symm (Subtype.val v))) 1 :=
             (piCoordCLE_one_im _).symm
-      _ = (Subtype.val v) 1 := by
-        simpa [complexRealHomeomorph] using congrFun ((complexRealHomeomorph 1).right_inv (Subtype.val v)) 1
+      _ = (Subtype.val v) 1 := by simp [complexRealHomeomorph]
       _ = (complexCoordinateFun (Subtype.val v)).im := by simp [complexCoordinateFun]
 
 /-! ### The winding number of the normal coordinate -/
