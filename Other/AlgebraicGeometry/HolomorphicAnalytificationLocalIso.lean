@@ -439,9 +439,10 @@ theorem comparisonToCanonical_ofRestrict_isLocalIso (z : ComplexPoint X) :
 
 theorem localChartSource_isOpenCover :
     TopologicalSpace.IsOpenCover
-      (fun z : ComplexPoint X ↦ localChartSource X d z) :=
-  TopologicalSpace.IsOpenCover.mk <| eq_top_iff.mpr fun z _ ↦
-    Opens.mem_iSup.mpr ⟨z, mem_localChart_source X d z⟩
+      (fun z : ComplexPoint X ↦ localChartSource X d z) := by
+  apply TopologicalSpace.IsOpenCover.mk
+  rw [eq_top_iff]
+  exact fun z _ ↦ Opens.mem_iSup.mpr ⟨z, mem_localChart_source X d z⟩
 
 /-- The project-specific comparison is a local isomorphism, by descent from its coordinate
 charts. -/
