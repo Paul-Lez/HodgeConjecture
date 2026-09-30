@@ -65,15 +65,6 @@ private lemma cycleComponent_affine_app_ker_eq_prime
       _ = P := hI
   simpa [c, P, xu] using hker
 
-private lemma ker_localRingHom_of_surjective
-    {A B : Type*} [CommRing A] [CommRing B]
-    (q : A →+* B) (hq : Function.Surjective q) (Q : Ideal B) [Q.IsPrime] :
-    RingHom.ker (Localization.localRingHom (Q.comap q) Q q rfl) =
-      (RingHom.ker q).map (algebraMap A (Localization.AtPrime (Q.comap q))) := by
-  simpa [Localization.localRingHom] using
-    (IsLocalization.ker_map (Localization.AtPrime Q) q
-      (Ideal.map_primeCompl_comap_of_surjective q hq Q))
-
 private lemma ker_of_ringEquiv_square
     {R L C K : Type*} [CommRing R] [CommRing L] [CommRing C] [CommRing K]
     (f : R →+* C) (g : L →+* K) (eR : R ≃+* L) (eC : C ≃+* K)
