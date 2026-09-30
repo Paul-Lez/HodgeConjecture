@@ -369,7 +369,7 @@ theorem exists_flatteningChartWithCoclass (hx : coheight x = ((1 : ℕ) : ℕ∞
     Nonempty (FlatteningChartWithCoclass X x d q) := by
   have hd : d = dim X.left := (SmoothOfRelativeDimension.dim_eq X.hom d).symm
   subst d
-  letI : SmoothOfRelativeDimension (dim X.left - 1) (cycleComponentSmoothLocusOver X x).hom :=
+  let : SmoothOfRelativeDimension (dim X.left - 1) (cycleComponentSmoothLocusOver X x).hom :=
     cycleComponentSmoothLocusOver_hom_smoothOfRelativeDimension X x hx
   have hq' : q ∈ (cycleComponentSmoothClosedLiftAmbientMap_isOpenEmbedding X x).functor.obj ⊤ := by
     rw [cycleComponentSmoothClosedLiftAmbientMap_imageOpen]
