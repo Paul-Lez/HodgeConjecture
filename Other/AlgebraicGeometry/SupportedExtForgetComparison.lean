@@ -137,7 +137,7 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
     simp only [Ext.comp_hom, Ext.mk₀_hom, ShiftedHom.mk₀_comp]
     dsimp only [g₀, g, y, Ext.homAddEquiv_apply, isoHomCongrAddEquiv_apply,
       Iso.refl_inv, Category.id_comp, Functor.mapIso_hom, asIso_hom]
-    simp only [Functor.map_comp, Category.assoc, Category.id_comp, Category.comp_id]
+    simp only [Functor.map_comp, Category.assoc, Category.id_comp]
     rfl
   rw [hA, CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass_precomp,
     CochainComplex.HomComplex.homologyAddEquiv_symm_precompClass]
