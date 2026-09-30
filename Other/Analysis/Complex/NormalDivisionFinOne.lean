@@ -81,9 +81,8 @@ theorem exists_nhds_normalQuotientFinOne_factor
     exists_ball_analytic_normalQuotient_factor hV' hzero' hf' hp' hpz' hk'
   let U := push ⁻¹' Metric.ball (push p) r
   have hUopen : IsOpen U := Metric.isOpen_ball.preimage push.continuous
-  have hUn : U ∈ 𝓝 p := by
-    exact push.continuous.continuousAt
-      (Metric.mem_nhds_iff.mpr ⟨r, hr, subset_rfl⟩)
+  have hUn : U ∈ 𝓝 p := push.continuous.continuousAt
+    (Metric.mem_nhds_iff.mpr ⟨r, hr, subset_rfl⟩)
   have hqcont : ContinuousOn (normalQuotientFinOne f) U := by
     have hqscalar : ContinuousOn (normalQuotient (f ∘ lift))
         (Metric.ball (push p) r) :=
@@ -111,13 +110,9 @@ theorem exists_nhds_normalQuotientFinOne_factor
     rw [hLP] at hyV'
     exact hyV'
   · intro y
-    have hyball : push (y : E × (Fin 1 → ℂ)) ∈ Metric.ball (push p) r := by
-      exact y.property
-    exact hne (push (y : E × (Fin 1 → ℂ))) hyball
+    exact hne (push (y : E × (Fin 1 → ℂ))) y.property
   · intro y
-    have hyball : push (y : E × (Fin 1 → ℂ)) ∈ Metric.ball (push p) r := by
-      exact y.property
-    have hfac := hfactor (push (y : E × (Fin 1 → ℂ))) hyball
+    have hfac := hfactor (push (y : E × (Fin 1 → ℂ))) y.property
     have hpush : push (y : E × (Fin 1 → ℂ)) = (y.1.1, y.1.2 0) := by
       apply Prod.ext
       · rfl
