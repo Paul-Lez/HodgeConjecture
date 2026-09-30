@@ -149,8 +149,7 @@ set_option synthInstance.maxHeartbeats 800000 in
 def supportHCohomologySheaf (Z : Closeds X)
     (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
     (n : ℕ) : TopCat.Sheaf AddCommGrpCat X :=
-  cohomologySheafOfPresheaf X
-    ((supportHOnOpenFunctor (Z := Z) F n).op ⋙ unopUnop AddCommGrpCat)
+  CohomologySheafOfOpens X (supportHOnOpenFunctor (Z := Z) F n)
 
 set_option maxHeartbeats 800000 in
 set_option synthInstance.maxHeartbeats 800000 in
