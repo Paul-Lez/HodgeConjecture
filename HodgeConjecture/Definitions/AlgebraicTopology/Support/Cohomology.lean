@@ -109,7 +109,8 @@ variable {Z : Closeds X}
   (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
   (n : ℕ)
 
-/-- The presheaf of supported cohomology groups on the opens of `X`. -/
+/-- For an open `V`, this presheaf has value `H^n(V, V \ Z; F)` and restriction maps induced by
+inclusions of pairs. -/
 def supportHOnOpenPresheaf : TopCat.Presheaf AddCommGrpCat X where
   obj V := AddCommGrpCat.of (CategoryTheory.Sheaf.relH F n
     (homOfLE (inf_le_left : V.unop ⊓ Z.compl ≤ V.unop)))
@@ -135,7 +136,8 @@ def supportHOnOpenPresheaf : TopCat.Presheaf AddCommGrpCat X where
     congr 1
     apply CategoryTheory.Sheaf.pairSheafMap_comp
 
-/-- The contravariant functor of supported cohomology groups on the opens of `X`. -/
+/-- This is the supported-cohomology presheaf viewed contravariantly as a functor
+`Opens X ⥤ AddCommGrpCatᵒᵖ`. -/
 def supportHOnOpenFunctor : Opens X ⥤ AddCommGrpCatᵒᵖ :=
   let P := supportHOnOpenPresheaf (Z := Z) F n
   { obj U := op (P.obj (op U))
@@ -145,7 +147,8 @@ def supportHOnOpenFunctor : Opens X ⥤ AddCommGrpCatᵒᵖ :=
 
 set_option maxHeartbeats 800000 in
 set_option synthInstance.maxHeartbeats 800000 in
-/-- The sheaf of cohomology with support in `Z`, for arbitrary coefficients. -/
+/-- For a closed support `Z`, this is the sheafification of the presheaf
+`V ↦ H^n(V, V \ Z; F)`. -/
 def supportHCohomologySheaf (Z : Closeds X)
     (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
     (n : ℕ) : TopCat.Sheaf AddCommGrpCat X :=
@@ -153,8 +156,7 @@ def supportHCohomologySheaf (Z : Closeds X)
 
 set_option maxHeartbeats 800000 in
 set_option synthInstance.maxHeartbeats 800000 in
-/-- The canonical map from global cohomology with support to the global section group of its
-cohomology sheaf. -/
+/-- This is the canonical map `H^n_Z(X;F) → Γ(X,𝓗^n_Z(F))` induced by the sheafification map. -/
 def supportHToSupportHCohomologySheafSection :
     H_[Z]^n(X; F) →+
       (supportHCohomologySheaf (Z := Z) F n).presheaf.obj (op ⊤) :=

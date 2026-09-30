@@ -52,7 +52,8 @@ abbrev CycleComponentSmoothCoclassSections (p : ℕ) : AddCommGrpCat :=
   (𝓗_[cycleComponentSupport X x]^(2 * p)(TopCat.of (ComplexPoint X); ℚ)).presheaf.obj
     (op (cycleComponentSmoothSupportAmbientOpen X x))
 
-/-- The restricted supported Ext group is the normalized coclass section group. -/
+/-- Purity below degree `2p` identifies supported Ext on `X(ℂ) \ Z_sing(ℂ)` with the sections of
+`𝓗_[Z]^(2p)` on that open. -/
 def cycleComponentSmoothSupportLowestSectionCohomologyEquiv :
     CategoryTheory.Sheaf.relH
         ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
@@ -67,13 +68,15 @@ def cycleComponentSmoothSupportLowestSectionCohomologyEquiv :
     (fun j hj => cycleComponentSmoothSupportCohomologySheaf_isZero_of_ne X x hx j
       (Nat.ne_of_lt hj))
 
-/-- Restriction to the smooth ambient open and passage to local sections. -/
+/-- Restriction to the smooth ambient open and passage to local relative-cohomology sections
+identifies the supported cycle-class group with its normalized coclass sections. -/
 def cycleComponentSupportedClassNormalizationIso :
     CycleComponentSupportedCohomology X x p ≃+ CycleComponentSmoothCoclassSections X x p :=
   cycleComponentSupportExtensionIso X x hx |>.trans <|
     cycleComponentSmoothSupportLowestSectionCohomologyEquiv (p := p) X x hx
 
-/-- The normalized supported class is obtained by inverting the normalization isomorphism. -/
+/-- The supported cycle class is the unique class whose restriction to the smooth ambient open is
+the normalized coclass section. -/
 def cycleComponentSupportedInjectiveClass : CycleComponentSupportedCohomology X x p :=
   (cycleComponentSupportedClassNormalizationIso X x hx).symm.toAddMonoidHom
     (cycleComponentSmoothSupportCoclassSection X x hx)

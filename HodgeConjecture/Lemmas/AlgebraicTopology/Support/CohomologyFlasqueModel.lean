@@ -129,7 +129,9 @@ theorem relHAddEquivSupportedSectionsHomologyOfFlasque_restrict (n : ℕ)
     Iso.symm_hom, asIso_inv, asIso_inv, hF]
 
 set_option maxHeartbeats 800000 in
-/-- Supported Ext on all opens is naturally the cohomology of a flasque supported complex. -/
+/-- If `F[0] → K` is a quasi-isomorphism to a bounded-below termwise-flasque complex, this
+identifies the presheaf `V ↦ H^n(V, V \ Z; F)` with the cohomology presheaf of its supported
+sections. -/
 def supportHOnOpenPresheafIsoOfFlasque
     (Z : Closeds X) (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)
     (K : CochainComplex (Sheaf AddCommGrpCat X) ℤ) [K.IsStrictlyGE 0]
@@ -164,7 +166,8 @@ def supportHOnOpenPresheafIsoOfFlasque
       (sectionCohomologyPresheafOnOpenIso_inv_naturality X K' (n : ℤ) f.unop) _
 
 set_option maxHeartbeats 800000 in
-/-- Global supported Ext is computed by the associated cohomology sheaf in the lowest degree. -/
+/-- If `H^j = 0` for `j < n`, this identifies global supported Ext `H_[Z]^n(X;F)` with global
+sections of the supplied degree-`n` cohomology sheaf `H n`. -/
 def supportHCohomologySheafSectionAddEquivOfFlasque
     (Z : Closeds X) (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)
     (K : CochainComplex (Sheaf AddCommGrpCat X) ℤ) [K.IsStrictlyGE 0]
@@ -191,7 +194,8 @@ def supportHCohomologySheafSectionAddEquivOfFlasque
       (s.symm.hom.app (op ⊤)).toAddCommGrpIso.addCommGroupIsoToAddEquiv)
 
 set_option maxHeartbeats 800000 in
-/-- Supported Ext on an open is computed by the associated cohomology sheaf in the lowest degree. -/
+/-- If the restrictions of `H^j` to `V` vanish for `j < n`, this identifies
+`H^n(V, V \ Z; F)` with sections on `V` of the supplied degree-`n` cohomology sheaf `H n`. -/
 def supportHCohomologySheafSectionAddEquivOfFlasqueOnOpen
     (Z : Closeds X) (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)
     (K : CochainComplex (Sheaf AddCommGrpCat X) ℤ) [K.IsStrictlyGE 0]

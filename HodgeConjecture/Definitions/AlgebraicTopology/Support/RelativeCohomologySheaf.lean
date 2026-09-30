@@ -66,7 +66,8 @@ def supportRelativeCohomologyPresheaf : TopCat.Presheaf AddCommGrpCat X where
             (W := (V.unop : Set X)) (V := (U.unop : Set X)) (leOfHom f.unop) S) a)
     rw [← LinearMap.comp_apply, ← relativeCohomologyMap_comp, neighborhoodSupportInclusionPairMap_comp]
 
-/-- The contravariant functor of relative singular cohomology on the opens of `X`. -/
+/-- The contravariant functor whose value on an open `V` is `H^n(V, V \ S; ℚ)` and whose maps
+are induced by inclusions of pairs. -/
 def supportRelativeCohomologyFunctor : Opens X ⥤ AddCommGrpCatᵒᵖ :=
   let P := supportRelativeCohomologyPresheaf X S n
   { obj U := op (P.obj (op U))

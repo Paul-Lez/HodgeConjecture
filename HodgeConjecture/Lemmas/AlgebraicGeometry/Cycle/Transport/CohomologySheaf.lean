@@ -29,7 +29,8 @@ open AlgebraicTopology.Singular
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-/-- The supported sections of the ambient rational injective resolution. -/
+/-- For a closed support `S`, this is the complex `Γ_S(I^•)` of subsheaves of the ambient rational
+injective resolution `I^•` whose sections vanish outside `S`. -/
 def complexSupportInjectiveComplex (S : Closeds (ComplexPoint X)) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
   ((TopCat.Sheaf.sheafSectionsSupportedOutside

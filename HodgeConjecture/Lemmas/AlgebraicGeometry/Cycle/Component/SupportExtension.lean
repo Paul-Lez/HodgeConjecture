@@ -27,7 +27,8 @@ variable (X : Over (Spec ↧ℂ))
 
 set_option maxHeartbeats 800000 in
 include hx in
-/-- `H_[Z]^{2p}(X; ℚ) ≃ relH ℚ (2p) (Z.compl ≤ U)`, where `U` is the smooth ambient open. -/
+/-- Vanishing on the singular boundary identifies `H_[Z]^(2p)(X;ℚ)` with the relative group
+`H^(2p)(U, U \ Z;ℚ)` on the smooth ambient open `U`. -/
 def cycleComponentSupportExtensionIso :
     H_[cycleComponentAnalyticClosedSupport X x]^(2 * p)(X; ℚ) ≃+
       CategoryTheory.Sheaf.relH

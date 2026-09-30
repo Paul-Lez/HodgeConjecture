@@ -110,7 +110,8 @@ def lowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
 set_option maxHeartbeats 800000 in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Lowest-degree section cohomology with an abstract cohomology-sheaf comparison. -/
+/-- If the terms of `K` are flasque, `K` is zero below `0`, and `H^j = 0` for `j < n`, this
+identifies `H^n(K(X))` with `Γ(X, H n)` through the supplied comparison `H^j(K) ≅ H j`. -/
 def lowestSectionCohomologyIsoOfNat
     (H : ℕ → Sheaf AddCommGrpCat.{u} X)
     (e : ∀ n : ℕ, K.homology (n : ℤ) ≅ H n) (n : ℕ)

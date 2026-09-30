@@ -40,7 +40,8 @@ variable (Z : Closeds (ComplexPoint X))
 set_option linter.auxLemma false in
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
   TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5 in
-/-- Supported Ext is computed by sections of the supported injective model. -/
+/-- For a closed `S`, this identifies `H_[S]^n(X(ℂ);ℚ)` with degree-`n` cohomology of global
+sections of the supported injective resolution of the constant sheaf `ℚ`. -/
 def rationalSupportAddEquivSupportedInjectiveHomology (n : ℕ) :
     TopCat.Sheaf.supportH (TopCat.of (ComplexPoint X)) Z
         ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ)) n ≃+
@@ -56,7 +57,8 @@ section Rational
 
 variable [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-/-- The augmentation from rational constants to sheafified singular cochains. -/
+/-- The quasi-isomorphic augmentation `ℚ[0] → C^•` from the constant rational sheaf to
+sheafified singular cochains on `X(ℂ)`. -/
 def rationalSingularAugmentation :
     (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj 𝓒(↧(ComplexPoint X); ℚ) ⟶
       rationalSingularCochainComplex (TopCat.of (ComplexPoint X)) :=
@@ -80,7 +82,8 @@ instance rationalSingularAugmentation_quasiIso : QuasiIso (rationalSingularAugme
       (exists_contractibleOpen_le X)))
 
 set_option maxHeartbeats 800000 in
-/-- Supported Ext is naturally the local relative singular cohomology presheaf. -/
+/-- For each open `V`, this identifies supported Ext `H^n(V,V \setminus S;ℚ)` with relative
+singular cohomology `H^n(V,V \setminus S;ℚ)`, naturally in `V`. -/
 def rationalSupportCohomologyPresheafIsoRelative
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
     TopCat.Sheaf.supportHOnOpenPresheaf
@@ -97,7 +100,8 @@ def rationalSupportCohomologyPresheafIsoRelative
     (AlgebraicTopology.Singular.supportedSingularCohomologyPresheafIsoRelative
       (TopCat.of (ComplexPoint X)) S S.isClosed n)
 
-/-- Supported Ext is naturally the singular relative cohomology sheaf. -/
+/-- The presheaf comparison sheafifies to an isomorphism between the supported cohomology sheaf
+`𝓗_[S]^n(X(ℂ);ℚ)` and the sheaf of local relative singular cohomology. -/
 def rationalSupportCohomologySheafIsoRelative
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
     TopCat.Sheaf.supportHCohomologySheaf
@@ -110,7 +114,8 @@ def rationalSupportCohomologySheafIsoRelative
     (rationalSupportCohomologyPresheafIsoRelative X S n)
 
 set_option maxHeartbeats 800000 in
-/-- Supported Ext is the global section group of its cohomology sheaf in the lowest degree. -/
+/-- If `𝓗_[S]^j(X(ℂ);ℚ) = 0` for `j < n`, this identifies `H_[S]^n(X(ℂ);ℚ)` with the global
+sections of the supported cohomology sheaf in degree `n`. -/
 def rationalSupportAddEquivSupportedCohomologySheafSection
     (S : Closeds (ComplexPoint X)) (n : ℕ)
     (hH : ∀ j : ℕ, j < n → IsZero
@@ -136,7 +141,8 @@ def rationalSupportAddEquivSupportedCohomologySheafSection
     n hH
 
 set_option maxHeartbeats 800000 in
-/-- Supported Ext is the global section group of the singular cohomology sheaf. -/
+/-- After the singular comparison, the same lower-degree vanishing identifies
+`H_[S]^n(X(ℂ);ℚ)` with global sections of the local relative singular cohomology sheaf. -/
 def rationalSupportAddEquivSupportedRelativeCohomologySheafSection
     (S : Closeds (ComplexPoint X)) (n : ℕ)
     (hH : ∀ j : ℕ, j < n → IsZero
@@ -152,7 +158,8 @@ def rationalSupportAddEquivSupportedRelativeCohomologySheafSection
       .addCommGroupIsoToAddEquiv
 
 set_option maxHeartbeats 800000 in
-/-- Supported Ext on an open is the corresponding singular cohomology-sheaf section group. -/
+/-- If the lower local relative cohomology sheaves vanish on `V`, this identifies
+`H^n(V,V \setminus S;ℚ)` with sections on `V` of the local relative singular cohomology sheaf. -/
 def rationalSupportAddEquivSupportedRelativeCohomologySheafSectionOnOpen
     (S : Closeds (ComplexPoint X)) (V W : Opens (ComplexPoint X))
     (hW : V ⊓ S.compl = W) (n : ℕ)
@@ -196,7 +203,8 @@ theorem rationalSupportAddEquivSupportedRelativeCohomologySheafSection_apply
             (AddCommGrpCat.of ℚ)) n z) := by
   rfl
 
-/-- The injective-model cohomology sheaf is the supported singular cohomology sheaf. -/
+/-- For the supported injective resolution, the degree-`n` cohomology sheaf is canonically the
+local relative singular cohomology sheaf `𝓗_[S]^n(X(ℂ);ℚ)`. -/
 def complexSupportInjectiveCohomologySheafIsoRelative
     (S : Closeds (ComplexPoint X)) (n : ℕ) :
     (complexSupportInjectiveComplex X S).homology (n : ℤ) ≅
@@ -208,7 +216,8 @@ def complexSupportInjectiveCohomologySheafIsoRelative
       supportedSingularCohomologySheafIsoRelative
         (TopCat.of (ComplexPoint X)) S S.isClosed n
 
-/-- Restriction carries the injective-model cohomology sheaf to the supported cohomology sheaf. -/
+/-- After restriction to an open `V`, the degree-`n` cohomology sheaf of the supported injective
+complex is the restriction of the local relative singular cohomology sheaf. -/
 def complexSupportInjectiveCohomologySheafIsoRelative_restrict
     (S : Closeds (ComplexPoint X)) (V : Opens (ComplexPoint X)) (n : ℕ) :
     (((V.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj

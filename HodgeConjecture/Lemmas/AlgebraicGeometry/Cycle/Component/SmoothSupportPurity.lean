@@ -108,7 +108,8 @@ theorem cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing
         (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl W
         ((ambientRationalInjectiveComplex X).X (q : ℤ)) inf_le_right
 
-/-- The supported injective complex restricted to the smooth ambient open. -/
+/-- For the smooth ambient open, this is the restriction of the complex of sheaves supported on the
+component. -/
 def cycleComponentSmoothRestrictedInjectiveComplex :
     CochainComplex (TopCat.Sheaf AddCommGrpCat
       (TopCat.of (cycleComponentSmoothSupportAmbientOpen X x))) ℤ :=
@@ -133,7 +134,8 @@ theorem cycleComponentSmoothRestrictedInjective_homology_isZero_of_ne
     (TopCat.of (ComplexPoint X)) _ _ n
     (cycleComponentSmoothSupport_exists_supportedInjectiveSection_vanishing X x hx n hn)
 
-/-- The model-level lowest-degree section comparison used by legacy normalization proofs. -/
+/-- Under purity, this identifies degree-`2p` cohomology of the supported section complex on the
+smooth ambient open with sections of its degree-`2p` cohomology sheaf. -/
 def cycleComponentSmoothSupportLowestSectionCohomologyComplexIso :
     ((((TopCat.Sheaf.supportEvaluation
       (TopCat.of (ComplexPoint X))

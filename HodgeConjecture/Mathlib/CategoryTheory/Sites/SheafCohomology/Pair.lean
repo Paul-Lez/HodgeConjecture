@@ -142,7 +142,8 @@ lemma pairSheafHomAddEquiv_pairSheafMap_comp {U V U' V' : C} (f : U ⟶ V) (f' :
     G.obj.map b.op (freeAbelianSheafHomAddEquiv V G (cokernel.π _ ≫ φ))
   rw [pairSheafMap, cokernel.π_desc_assoc, Category.assoc, freeAbelianSheafHomAddEquiv_map_comp]
 
-/-- The short complex of pair sheaves for composable morphisms. -/
+/-- For composable monomorphisms `W ⟶ U ⟶ V`, this is the sequence
+`ℤ[U,W] ⟶ ℤ[V,W] ⟶ ℤ[V,U]` of pair sheaves. -/
 def pairNestedShortComplex {W U V : C} (f : W ⟶ U) (g : U ⟶ V) :
     ShortComplex (Sheaf J AddCommGrpCat.{v}) :=
   ShortComplex.mk
@@ -254,7 +255,8 @@ theorem isIso_restrict_of_isZero {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f
     exact (hS.exact 1).epi_f (h₁.eq_zero_of_tgt _)
   exact isIso_of_mono_of_epi q
 
-/-- The restriction equivalence supplied by the nested localization sequence. -/
+/-- If `H^n(U,W;F)` and `H^(n+1)(U,W;F)` vanish, this identifies `H^n(V,W;F)` with
+`H^n(V,U;F)`. -/
 def restrictEquivOfIsZero {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mono g]
     (n : ℕ) (h₀ : IsZero (AddCommGrpCat.of (relH F n g)))
     (h₁ : IsZero (AddCommGrpCat.of (relH F (n + 1) g))) :

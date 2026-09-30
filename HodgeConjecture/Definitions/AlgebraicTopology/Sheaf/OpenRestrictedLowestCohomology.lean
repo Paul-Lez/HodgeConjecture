@@ -87,7 +87,9 @@ def openRestrictedLowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- Lowest-degree section cohomology with an abstract cohomology-sheaf comparison. -/
+/-- If the terms of `K` are flasque, `K` is zero below `0`, and the restrictions of `H^j` to `U`
+vanish for `j < n`, this identifies `H^n(K(U))` with `Γ(U, H n)` through the supplied comparison
+`H^j(K) ≅ H j`. -/
 def openRestrictedLowestSectionCohomologyIsoOfNat
     (H : ℕ → Sheaf AddCommGrpCat.{u} X)
     (e : ∀ n : ℕ, K.homology (n : ℤ) ≅ H n) (n : ℕ)

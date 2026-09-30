@@ -68,7 +68,8 @@ section Rational
 
 variable [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
-/-- Global sections of the relative cohomology sheaf compute supported Ext under lower vanishing. -/
+/-- If the lower relative cohomology sheaves with support in `S` vanish, this identifies
+`H_[S]^n(X; ℚ)` with the global sections of `𝓗_[S]^n(X; ℚ)`. -/
 def rationalSupportAddEquivSupportedGlobalSheafSection
     (S : Closeds (ComplexPoint X)) (n : ℕ)
     (hH : ∀ j : ℕ, j < n → IsZero (𝓗_[S]^j(TopCat.of (ComplexPoint X); ℚ))) :
