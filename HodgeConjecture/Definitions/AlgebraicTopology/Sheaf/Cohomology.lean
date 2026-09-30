@@ -23,32 +23,24 @@ namespace TopCat.Sheaf
 
 variable (X : TopCat.{u})
 
-/-- For a presheaf `P` of abelian groups on `X`, this is its associated sheaf. -/
-def cohomologySheafOfPresheaf (P : TopCat.Presheaf AddCommGrpCat X) :
-    TopCat.Sheaf AddCommGrpCat X :=
-  (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj P
-
-/-- For a presheaf `P`, this is the canonical map from `P` to its associated sheaf. -/
-def cohomologySheafOfPresheafToSheaf (P : TopCat.Presheaf AddCommGrpCat X) :
-    P ⟶ (cohomologySheafOfPresheaf X P).obj :=
-  toSheafify (Opens.grothendieckTopology X) P
-
 /-- For a contravariant functor `F` on topological spaces, this is the sheafification of the
 presheaf `V ↦ F(V)` on `X`. -/
 def CohomologySheaf (F : TopCat ⥤ AddCommGrpCatᵒᵖ) : TopCat.Sheaf AddCommGrpCat X :=
-  cohomologySheafOfPresheaf X ((TopologicalSpace.Opens.toTopCat X ⋙ F).op ⋙ unopUnop AddCommGrpCat)
+  (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj
+    ((TopologicalSpace.Opens.toTopCat X ⋙ F).op ⋙ unopUnop AddCommGrpCat)
 
 /-- For a contravariant functor `F` on topological spaces, this is the canonical map from the
 presheaf `V ↦ F(V)` on `X` to its associated sheaf. -/
 def cohomologySheafToSheaf (F : TopCat ⥤ AddCommGrpCatᵒᵖ) :
     ((TopologicalSpace.Opens.toTopCat X ⋙ F).op ⋙ unopUnop AddCommGrpCat) ⟶
       (CohomologySheaf X F).obj :=
-  cohomologySheafOfPresheafToSheaf X _
+  toSheafify (Opens.grothendieckTopology X) _
 
 /-- For a contravariant functor `F` on the opens of `X`, this is the sheafification of the presheaf
 `V ↦ F(V)`. -/
 def CohomologySheafOfOpens (F : Opens X ⥤ AddCommGrpCatᵒᵖ) : TopCat.Sheaf AddCommGrpCat X :=
-  cohomologySheafOfPresheaf X (F.op ⋙ unopUnop AddCommGrpCat)
+  (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj
+    (F.op ⋙ unopUnop AddCommGrpCat)
 
 /-- The constructions from all topological spaces and from the opens of `X` agree after restricting
 `F` to the opens of `X`. -/
@@ -61,7 +53,7 @@ def cohomologySheafRestrictionIso (F : TopCat ⥤ AddCommGrpCatᵒᵖ) :
 presheaf `V ↦ F(V)` to its associated sheaf. -/
 def cohomologySheafOfOpensToSheaf (F : Opens X ⥤ AddCommGrpCatᵒᵖ) :
     F.op ⋙ unopUnop AddCommGrpCat ⟶ (CohomologySheafOfOpens X F).obj :=
-  cohomologySheafOfPresheafToSheaf X _
+  toSheafify (Opens.grothendieckTopology X) _
 
 /-- For a contravariant functor `F` on topological spaces, this is the canonical map from the
 restricted presheaf `V ↦ F(V)` to its associated sheaf. -/
@@ -91,7 +83,7 @@ presheaf `V ↦ F(S,n,V)` to its associated sheaf. -/
 def supportedCohomologyToSheaf
     (F : Set X → ℕ → Opens X ⥤ AddCommGrpCatᵒᵖ) (n : ℕ) :
     (F S n).op ⋙ unopUnop AddCommGrpCat ⟶ (SupportedCohomologySheaf X S F n).obj :=
-  cohomologySheafOfOpensToSheaf X (F S n)
+  toSheafify (Opens.grothendieckTopology X) _
 
 end Supported
 
