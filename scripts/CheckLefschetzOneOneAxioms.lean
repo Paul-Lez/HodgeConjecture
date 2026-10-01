@@ -4,8 +4,8 @@ import Other.AlgebraicGeometry.LefschetzOneOne
 /-!
 # Lefschetz `(1, 1)` axiom boundary
 
-This file fails to build if either exported Lefschetz theorem starts depending on an axiom other
-than Lean's standard quotient, choice, or propositional-extensionality axioms.
+This file fails to build if the Lefschetz theorem starts depending on an axiom other than Lean's
+standard quotient, choice, or propositional-extensionality axioms.
 -/
 
 open Lean Elab Command
@@ -21,5 +21,4 @@ elab "assert_standard_axioms " declaration:ident : command => do
     throwErrorAt declaration
       m!"'{declarationName}' depends on disallowed axioms: {unexpected.toList}"
 
-assert_standard_axioms rationalLefschetzOneOne
 assert_standard_axioms lefschetzOneOne

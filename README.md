@@ -31,11 +31,11 @@ WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
 
 ## Lefschetz (1, 1) development
 
-`Other/AlgebraicGeometry/LefschetzOneOne.lean` contains the canonical rational proposition, the
-stronger explicit-cycle proposition, and their unconditional proofs. The proof combines the
-holomorphic exponential sequence, integral denominator clearing, the divisor–Chern comparison,
-and proper GAGA for line bundles. It proves the rational codimension-one result, not the stronger
-integral Picard/Chern-class formulation.
+`Other/AlgebraicGeometry/LefschetzOneOne.lean` contains the unconditional theorem
+`lefschetzOneOne`, whose type directly states the rational codimension-one result. Its proof
+combines the holomorphic exponential sequence, integral denominator clearing, the divisor–Chern
+comparison, and proper GAGA for line bundles. It does not prove the stronger integral
+Picard/Chern-class formulation.
 
 The adapted Oka dependency is isolated in
 [PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230). The completed proper-GAGA step and

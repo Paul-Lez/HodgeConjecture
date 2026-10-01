@@ -12,11 +12,11 @@ public import Other.AlgebraicGeometry.AnalytificationModules
 /-!
 # Reduction of the rational Lefschetz `(1, 1)` theorem to its remaining obligations
 
-This file does **not** prove `RationalLefschetzOneOne`. It isolates, as explicit propositions
-about a single smooth projective integral complex variety, exactly what is still missing after
-the analytic construction in `HolomorphicUnitExtension`, and proves that these propositions
-suffice. Each obligation is stated using only the definitions already in the repository, so
-that progress on any one of them can be checked independently.
+This file isolates, as explicit propositions about a single smooth projective integral complex
+variety, exactly what is still missing after the analytic construction in
+`HolomorphicUnitExtension`, and proves that these propositions suffice. Each obligation is stated
+using only the definitions already in the repository, so that progress on any one of them can be
+checked independently.
 
 * `HasIntegralDenominatorClearing X`: every rational degree-two class becomes integral after
   multiplication by a nonzero integer. Mathematically this is finite generation of `H²(X, ℤ)`.
@@ -30,8 +30,8 @@ that progress on any one of them can be checked independently.
 
 `HasDivisorOfUnitExtension X` is the conjunction of the last two, stated without reference to
 an algebraic model. `exists_rationalSheafCycleClassOnCycles_eq_of_obligations` constructs the
-required rational cycle from the first obligation and this conjunction. The global theorem
-wrapper is in `LefschetzOneOne.lean`.
+required rational cycle from the first obligation and this conjunction. `LefschetzOneOne.lean`
+applies this fixed-variety reduction to prove the final theorem.
 -/
 
 @[expose] public noncomputable section

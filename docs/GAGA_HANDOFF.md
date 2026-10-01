@@ -6,7 +6,7 @@ The projective GAGA input to rational Lefschetz `(1, 1)` is complete.
 `Other/AlgebraicGeometry/GAGAProper.lean` proves
 `analyticCoherentSheavesAlgebraize` and `analyticLineBundlesAlgebraize` for smooth projective
 integral complex schemes. `Other/AlgebraicGeometry/LefschetzOneOne.lean` applies the latter to
-prove the unconditional theorems `rationalLefschetzOneOne` and `lefschetzOneOne`.
+prove the unconditional theorem `lefschetzOneOne`.
 
 The completed route uses Oka's proper-GAGA development. Earlier experiments with a direct
 Serre-presentation proof were not part of the final proof closure and have been removed.
@@ -57,8 +57,8 @@ All unqualified names below are in `AlgebraicGeometry.ComplexPoint`.
    coherent algebraization, and reflects rank one through the faithfully flat stalk maps. This
    proves `analyticLineBundlesAlgebraize`.
 7. `GAGAtoLefschetz.lean` converts line-bundle algebraization into `HasAlgebraicModel`.
-8. `LefschetzOneOne.lean` supplies `analyticLineBundlesAlgebraize` to the reduction and maps the
-   explicit cycle into `algebraicCycleClassSpan`.
+8. `LefschetzOneOne.lean` supplies `analyticLineBundlesAlgebraize` to the fixed-variety reduction
+   and maps the resulting cycle into `algebraicCycleClassSpan`.
 
 The Oka theorems used at the decisive step are imported through
 `Other/Oka/Analytification/GAGA/Proper/Equivalence.lean` and
@@ -69,7 +69,8 @@ The Oka theorems used at the decisive step are imported through
 - `GAGAStatement.lean` states line-bundle algebraization without importing its proof.
 - `GAGACoherentStatement.lean` separately states the coherent-sheaf existence property.
 - `GAGAProper.lean` contains the proper-GAGA proof, but not the final Lefschetz declarations.
-- `LefschetzOneOne.lean` is the consolidated statement and proof boundary.
+- `LefschetzOneOne.lean` contains one declaration: the direct statement and proof of the final
+  theorem.
 - The result proves rational codimension-one algebraicity. It does not assert the stronger
   integral Picard/Chern-class formulation of the classical Lefschetz `(1, 1)` theorem.
 
