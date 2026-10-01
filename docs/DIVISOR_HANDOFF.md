@@ -66,13 +66,13 @@ Validation after each substantive change:
 
 ```text
 lake build
-lake env lean scripts/lefschetz_axiom_audit.lean
+lake build CheckLefschetzOneOneAxioms
 lake exe lint-style HodgeConjecture Other HodgeGuide
 python3 scripts/check_import_layers.py
 git diff --check
 ```
 
-The comparison audit includes the full uniform theorem and reports only
-`propext`, `Classical.choice`, and `Quot.sound`. The divisor–Chern comparison is
+The final-theorem axiom check accepts only `propext`, `Classical.choice`, and `Quot.sound`.
+The divisor–Chern comparison is
 complete; `GAGAProper.lean` supplies the separate algebraization input used by
-`LefschetzOneOneProof.lean`.
+`LefschetzOneOne.lean`.

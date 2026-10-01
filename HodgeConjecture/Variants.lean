@@ -15,16 +15,16 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.LefschetzOneOne
+public import HodgeConjecture.Statement
 public import Mathlib.CategoryTheory.Monoidal.Grp
 
 /-!
 # Further special cases of the Hodge conjecture
 
-This file collects special cases beyond the rational Lefschetz `(1, 1)` statement, whose
-proof-independent specification is in `HodgeConjecture.LefschetzOneOne`. The cases of varieties
-of dimension three or less and abelian varieties of dimension five or less are theorems. The case
-of all abelian varieties is open.
+This file collects further special cases of the Hodge conjecture. The cases of varieties of
+dimension three or less and abelian varieties of dimension five or less are theorems. The case of
+all abelian varieties is open. The rational Lefschetz `(1, 1)` theorem is developed separately in
+`Other.AlgebraicGeometry.LefschetzOneOne`.
 
 ## References
 

@@ -4,8 +4,6 @@ defaultTargets = [
   "HodgeConjecture",
   "Other",
   "CheckStatementImports",
-  "CheckLefschetzOneOneSpec",
-  "CheckLefschetzOneOneProof",
   "CheckLefschetzOneOneAxioms",
 ]
 
@@ -34,17 +32,9 @@ name = "Other"
 [[lean_lib]]
 name = "HodgeGuide"
 
-# Fails the build if the conjecture or Lefschetz specifications import `Other`.
+# Fails the build if `HodgeConjecture.Statement` depends on the `Other` library.
 [[lean_lib]]
 name = "CheckStatementImports"
-srcDir = "scripts"
-
-[[lean_lib]]
-name = "CheckLefschetzOneOneSpec"
-srcDir = "scripts"
-
-[[lean_lib]]
-name = "CheckLefschetzOneOneProof"
 srcDir = "scripts"
 
 [[lean_lib]]

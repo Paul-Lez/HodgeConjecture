@@ -4,44 +4,66 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.LefschetzOneOneStatement
+public import HodgeConjecture.Statement
+public import Other.AlgebraicGeometry.ChernRelativeFinalAssembly
+public import Other.AlgebraicGeometry.DivisorObligations
+public import Other.AlgebraicGeometry.GAGAProper
+public import Other.AlgebraicGeometry.GAGAtoLefschetz
+public import Other.AlgebraicGeometry.LefschetzOneOneReduction
+public import Other.AlgebraicGeometry.ProjectiveFiniteHomology
 
 /-!
-# Consequences of the Hodge conjecture for rational Lefschetz (1, 1)
+# Rational Lefschetz (1, 1)
 
-On a smooth projective integral complex variety, every rational cohomology class of degree two
-and Hodge type `(1, 1)` is the class of a rational divisor. Here a rational divisor is an element
-of `ℚ ⊗[ℤ] codimensionCycleSubgroup X 1`, and its class is given by the constructed cycle-class map.
+This file states and proves the rational Lefschetz `(1, 1)` theorem for smooth projective
+integral schemes over `ℂ`. The canonical statement says that every rational degree-two Hodge
+class lies in the span of codimension-one algebraic cycle classes. The stronger intermediate
+statement produces an explicit rational codimension-one cycle with the prescribed class.
 
-The proof specializes `HodgeConjecture` to codimension one and realizes the resulting span
-membership by a rational cycle. It uses the conjecture as an explicit hypothesis.
-`HodgeConjecture.rationalLefschetzOneOne_direct` copies the type of that implication with Lean's
-`type_of%` elaborator and gives a second proof by checking the divisor generators directly.
-The copied type retains the Hodge-conjecture hypothesis.
+The proof combines finite generation of integral homology, the divisor--Chern comparison, and
+proper GAGA for line bundles. It does not assert the stronger integral identification with the
+image of the first Chern class map from the Picard group, the reverse inclusion, or the theorem
+for compact Kähler manifolds.
 
-This is the rational algebraicity statement. The classical integral Lefschetz `(1, 1)` theorem
-asserts that every integral `(1, 1)` class is the first Chern class of a line bundle. Specializing
-the rational Hodge conjecture does not establish that stronger integral statement, nor does this
-file prove that divisor classes have Hodge type `(1, 1)` or descend the map to the Chow group.
+## Reference
 
-## References
-
-[P. Deligne, *The Hodge Conjecture*, §2(iii)]
-(https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf)
+* [P. Deligne, *The Hodge Conjecture*, §2(iii)]
+  (https://www.claymath.org/wp-content/uploads/2022/02/MPPc.pdf)
 -/
 
-open CategoryTheory AlgebraicGeometry ComplexPoint
+@[expose] public noncomputable section
 
-/-- The concrete rational-cycle formulation implies the repository's Lefschetz `(1, 1)`
+open CategoryTheory AlgebraicGeometry ComplexPoint TopologicalSpace Opposite
+open scoped TensorProduct
+
+/-- The rational Lefschetz `(1, 1)` statement proved in this repository.
+
+For every smooth projective integral scheme `X` over `ℂ`, each rational degree-two Hodge class is
+in the rational span of the classes of codimension-one algebraic subvarieties. -/
+def LefschetzOneOne : Prop :=
+  ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
+    Hdg^1(X; ℚ) ≤ algebraicCycleClassSpan X 1
+
+/-- The explicit-cycle rational Lefschetz `(1, 1)` statement for smooth projective integral
+complex schemes. -/
+def RationalLefschetzOneOne : Prop :=
+  ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    [IsProjective X.hom] (α : H^2(X; ℚ)),
+    α ∈ Hdg^1(X; ℚ) →
+      ∃ D : TensorProduct ℤ ℚ (codimensionCycleSubgroup X.left 1),
+        rationalSheafCycleClassOnCycles
+          { scheme := X.left, structureMap := X.hom } 1 D = α
+
+/-- The concrete rational-cycle formulation implies the canonical Lefschetz `(1, 1)`
 statement. -/
-public theorem RationalLefschetzOneOne.to_lefschetzOneOne
+theorem RationalLefschetzOneOne.to_lefschetzOneOne
     (h : RationalLefschetzOneOne) : LefschetzOneOne := by
   intro X _ _ _ α hα
   obtain ⟨D, rfl⟩ := h X α hα
   exact rationalSheafCycleClassOnCycles_mem_algebraicCycleClassSpan X 1 D
 
-/-- The Hodge conjecture implies the rational Lefschetz `(1, 1)` theorem. -/
-public theorem HodgeConjecture.rationalLefschetzOneOne
+/-- The Hodge conjecture implies the explicit-cycle rational Lefschetz `(1, 1)` statement. -/
+theorem HodgeConjecture.rationalLefschetzOneOne
     (hodge : HodgeConjecture) : RationalLefschetzOneOne := by
   intro X _ _ _ α hα
   have hspan : algebraicCycleClassSpan X 1 ≤
@@ -58,14 +80,10 @@ public theorem HodgeConjecture.rationalLefschetzOneOne
     rfl
   exact hspan (hodge X 1 hα)
 
-open scoped TensorProduct
-
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-/-- A second direct proof of the same implication, with its statement copied using `type_of%`.
-This still assumes the Hodge conjecture. The proof checks each divisor generator without using
-`HodgeConjecture.rationalLefschetzOneOne` or the general span-to-cycle lemma. -/
-public theorem HodgeConjecture.rationalLefschetzOneOne_direct :
+/-- A direct proof of the same implication that checks each divisor generator. -/
+theorem HodgeConjecture.rationalLefschetzOneOne_direct :
     type_of% HodgeConjecture.rationalLefschetzOneOne := by
   intro hodge X _ _ _ α hα
   have hspan : algebraicCycleClassSpan X 1 ≤
@@ -81,3 +99,75 @@ public theorem HodgeConjecture.rationalLefschetzOneOne_direct :
     rw [one_smul]
     rfl
   exact hspan (hodge X 1 hα)
+
+/-- Denominator clearing and divisors for unit-sheaf extensions imply the explicit-cycle
+statement. -/
+theorem RationalLefschetzOneOne.of_obligations
+    (hclear : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
+      HasIntegralDenominatorClearing X)
+    (hdivisor : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
+      HasDivisorOfUnitExtension X) :
+    RationalLefschetzOneOne := by
+  intro X _ _ _ α hα
+  exact exists_rationalSheafCycleClassOnCycles_eq_of_obligations
+    X (hclear X) (hdivisor X) α hα
+
+/-- Finite generation of second integral homology and divisors for unit-sheaf extensions imply
+the explicit-cycle statement. -/
+theorem RationalLefschetzOneOne.of_finiteSecondHomology_of_divisor
+    (hfin : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
+      HasFiniteSecondHomology X)
+    (hdivisor : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
+      HasDivisorOfUnitExtension X) :
+    RationalLefschetzOneOne :=
+  RationalLefschetzOneOne.of_obligations
+    (fun X _ _ _ ↦ hasIntegralDenominatorClearing_of_hasFiniteSecondHomology X (hfin X)) hdivisor
+
+/-- Finite good covers and divisors for unit-sheaf extensions imply the explicit-cycle
+statement. -/
+theorem RationalLefschetzOneOne.of_finiteGoodCover_of_divisor
+    (hcover : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
+      HasFiniteGoodCover X)
+    (hdivisor : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
+      HasDivisorOfUnitExtension X) :
+    RationalLefschetzOneOne :=
+  RationalLefschetzOneOne.of_obligations
+    (fun X _ _ _ ↦ hasIntegralDenominatorClearing_of_hasFiniteGoodCover X (hcover X)) hdivisor
+
+/-- Divisors for unit-sheaf extensions imply the explicit-cycle statement. -/
+theorem RationalLefschetzOneOne.of_divisor
+    (hdivisor : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
+      HasDivisorOfUnitExtension X) :
+    RationalLefschetzOneOne :=
+  RationalLefschetzOneOne.of_obligations
+    (fun X _ _ _ ↦ hasIntegralDenominatorClearing X) hdivisor
+
+/-- Algebraic models for the analytic line bundles imply the explicit-cycle statement. -/
+theorem RationalLefschetzOneOne.of_algebraicModel
+    (h : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
+      HasAlgebraicModel X) :
+    RationalLefschetzOneOne :=
+  RationalLefschetzOneOne.of_divisor fun X _ _ _ ↦
+    hasDivisorOfUnitExtension_of_algebraicModel X (h X)
+      (hasDivisorOfAlgebraicModel_of_divisorClass X
+        (hasDivisorClassOfSomeCartierData_of_cartierData X
+          (hasDivisorClassOfCartierData (X := X))))
+
+/-- Line-bundle GAGA implies the explicit-cycle statement. -/
+theorem RationalLefschetzOneOne.of_analyticLineBundlesAlgebraize
+    (h : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
+      AnalyticLineBundlesAlgebraize X) :
+    RationalLefschetzOneOne :=
+  RationalLefschetzOneOne.of_algebraicModel fun X _ _ _ ↦
+    hasAlgebraicModel_of_analyticLineBundlesAlgebraize X (h X)
+
+/-- The rational Lefschetz `(1, 1)` theorem in explicit-cycle form. -/
+theorem rationalLefschetzOneOne : RationalLefschetzOneOne :=
+  RationalLefschetzOneOne.of_analyticLineBundlesAlgebraize
+    analyticLineBundlesAlgebraize
+
+/-- The rational Lefschetz `(1, 1)` theorem in its canonical formulation. -/
+theorem lefschetzOneOne : LefschetzOneOne :=
+  rationalLefschetzOneOne.to_lefschetzOneOne
+
+end

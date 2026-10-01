@@ -5,8 +5,8 @@
 The projective GAGA input to rational Lefschetz `(1, 1)` is complete.
 `Other/AlgebraicGeometry/GAGAProper.lean` proves
 `analyticCoherentSheavesAlgebraize` and `analyticLineBundlesAlgebraize` for smooth projective
-integral complex schemes. `Other/AlgebraicGeometry/LefschetzOneOneProof.lean` applies the latter
-to prove the unconditional theorems `rationalLefschetzOneOne` and `lefschetzOneOne`.
+integral complex schemes. `Other/AlgebraicGeometry/LefschetzOneOne.lean` applies the latter to
+prove the unconditional theorems `rationalLefschetzOneOne` and `lefschetzOneOne`.
 
 The completed route uses Oka's proper-GAGA development. Earlier experiments with a direct
 Serre-presentation proof were not part of the final proof closure and have been removed.
@@ -56,10 +56,9 @@ All unqualified names below are in `AlgebraicGeometry.ComplexPoint`.
 6. `GAGACoherentReduction.lean` observes that an invertible analytic sheaf is coherent, applies
    coherent algebraization, and reflects rank one through the faithfully flat stalk maps. This
    proves `analyticLineBundlesAlgebraize`.
-7. `GAGAtoLefschetz.lean` converts line-bundle algebraization into `HasAlgebraicModel` and proves
-   `RationalLefschetzOneOne.of_analyticLineBundlesAlgebraize`.
-8. `LefschetzOneOneProof.lean` supplies `analyticLineBundlesAlgebraize` to that reduction and then
-   maps the explicit cycle into `algebraicCycleClassSpan`.
+7. `GAGAtoLefschetz.lean` converts line-bundle algebraization into `HasAlgebraicModel`.
+8. `LefschetzOneOne.lean` supplies `analyticLineBundlesAlgebraize` to the reduction and maps the
+   explicit cycle into `algebraicCycleClassSpan`.
 
 The Oka theorems used at the decisive step are imported through
 `Other/Oka/Analytification/GAGA/Proper/Equivalence.lean` and
@@ -70,7 +69,7 @@ The Oka theorems used at the decisive step are imported through
 - `GAGAStatement.lean` states line-bundle algebraization without importing its proof.
 - `GAGACoherentStatement.lean` separately states the coherent-sheaf existence property.
 - `GAGAProper.lean` contains the proper-GAGA proof, but not the final Lefschetz declarations.
-- `LefschetzOneOneProof.lean` is the final proof boundary.
+- `LefschetzOneOne.lean` is the consolidated statement and proof boundary.
 - The result proves rational codimension-one algebraicity. It does not assert the stronger
   integral Picard/Chern-class formulation of the classical Lefschetz `(1, 1)` theorem.
 
@@ -87,15 +86,13 @@ and the divisor–Chern comparison.
 
 ```bash
 lake build Other.AlgebraicGeometry.GAGAProper
-lake build CheckLefschetzOneOneSpec CheckLefschetzOneOneProof
+lake build Other.AlgebraicGeometry.LefschetzOneOne
 lake build CheckLefschetzOneOneAxioms
 lake build
 lake exe lint-style HodgeConjecture Other HodgeGuide
 python3 scripts/check_import_layers.py
-lake env lean scripts/gaga_axiom_audit.lean
-lake env lean scripts/lefschetz_axiom_audit.lean
 git diff --check
 ```
 
-The axiom audits cover the final theorem and its GAGA and divisor-comparison spines. Their current
-output contains only `propext`, `Classical.choice`, and `Quot.sound`.
+The enforced axiom check covers the final theorem and its GAGA and divisor-comparison spines. It
+accepts only `propext`, `Classical.choice`, and `Quot.sound`.

@@ -1,5 +1,5 @@
 import Mathlib.Util.AssertNoSorry
-import Other.AlgebraicGeometry.LefschetzOneOneProof
+import Other.AlgebraicGeometry.LefschetzOneOne
 
 /-!
 # Lefschetz `(1, 1)` axiom boundary
