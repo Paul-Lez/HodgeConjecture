@@ -70,7 +70,7 @@ attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_
 
 variable [HasExt.{0} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
 
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 400000 in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The flasque model is natural in the pair. -/
@@ -132,7 +132,6 @@ theorem relHAddEquivSupportedSectionsHomologyOfFlasque_restrict (n : ℕ)
     Iso.addCommGroupIsoToAddEquiv_apply, Iso.addCommGroupIsoToAddEquiv_apply, Iso.symm_hom,
     Iso.symm_hom, asIso_inv, asIso_inv, hF]
 
-set_option maxHeartbeats 800000 in
 /-- If `F[0] → K` is a quasi-isomorphism to a bounded-below termwise-flasque complex, this
 identifies the presheaf `V ↦ H^n(V, V \ Z; F)` with the cohomology presheaf of its supported
 sections. -/
@@ -198,7 +197,6 @@ def supportHOnOpenPresheafIsoOfFlasque
       rw [← h]
       simp)
 
-set_option maxHeartbeats 800000 in
 /-- If `H^j = 0` for `j < n`, this identifies global supported Ext `H_[Z]^n(X;F)` with global
 sections of the supplied degree-`n` cohomology sheaf `H n`. -/
 def supportHCohomologySheafSectionAddEquivOfFlasque
@@ -229,7 +227,6 @@ def supportHCohomologySheafSectionAddEquivOfFlasque
   b.trans (l.addCommGroupIsoToAddEquiv.trans <|
     (asIso (s.symm.hom.hom.app (op ⊤))).addCommGroupIsoToAddEquiv)
 
-set_option maxHeartbeats 800000 in
 /-- The flasque comparison sends a global supported class to its canonical cohomology-sheaf class.
 -/
 theorem supportHCohomologySheafSectionAddEquivOfFlasque_apply
@@ -326,7 +323,6 @@ theorem supportHCohomologySheafSectionAddEquivOfFlasque_apply
       (sectionCohomologyPresheaf X K' (n : ℤ))).app (op ⊤) x) hp).symm.trans
     (DFunLike.congr_fun hn (r z))
 
-set_option maxHeartbeats 800000 in
 /-- If the restrictions of `H^j` to `V` vanish for `j < n`, this identifies
 `H^n(V, V \ Z; F)` with sections on `V` of the supplied degree-`n` cohomology sheaf `H n`. -/
 def supportHCohomologySheafSectionAddEquivOfFlasqueOnOpen

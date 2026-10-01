@@ -25,7 +25,6 @@ variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
-set_option maxHeartbeats 800000 in
 include hx in
 /-- Vanishing on the singular boundary identifies `H_[Z]^(2p)(X;ℚ)` with the relative group
 `H^(2p)(U, U \ Z;ℚ)` on the smooth ambient open `U`. -/

@@ -106,7 +106,7 @@ local instance :
     HasDerivedCategory (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat) :=
   HasDerivedCategory.standard _
 
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 500000 in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The injective model is natural in the pair. -/

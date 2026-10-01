@@ -150,7 +150,6 @@ local instance derivedGlobalSectionsShiftHasDerivedCategory :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option maxHeartbeats 800000 in
 /-- The direct derived-morphism/global-section comparison commutes with
 target unshifting, with the canonical signed homology shift. -/
 lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
@@ -215,7 +214,7 @@ lemma hypercohomologyAddEquivGlobalSectionsKInjective_rightUnshift
       (DerivedCategory.Q.map (constantIntegerSheafComplexIntIsoSingle X).inv ≫
         hypercohomologyAddEquivDerived X (K⟦s⟧) n x)
 
-set_option maxHeartbeats 400000 in
+set_option maxHeartbeats 300000 in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- The hypercohomology/global-section comparison respects arbitrary

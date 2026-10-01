@@ -107,7 +107,6 @@ def lowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
   let := sectionCohomologyToSheafSection_isIso_lowest X K N n hK hflasque U
   asIso (sectionCohomologyToSheafSection X K n U)
 
-set_option maxHeartbeats 800000 in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- If the terms of `K` are flasque, `K` is zero below `0`, and `H^j = 0` for `j < n`, this

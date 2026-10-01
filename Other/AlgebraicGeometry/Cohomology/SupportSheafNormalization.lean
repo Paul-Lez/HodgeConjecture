@@ -162,25 +162,7 @@ theorem cycleComponentSupportedClassNormalizationIso_apply
           (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
         (homOfLE (show Z.compl ≤ Z.compl from le_rfl))
         (homOfLE (show U ≤ ⊤ from le_top)) (by apply Subsingleton.elim) n) a) = _
-  let bridge := @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology
-    T Z.compl U Z.compl hW inferInstance F (ambientRationalInjectiveComplex X)
-    (ambientRationalInjectiveComplex_isKInjective X)
-    (ambientRationalInjectiveSingleAugmentation X)
-    (ambientRationalInjectiveSingleAugmentation_quasiIso X) n
-  let lowest := TopCat.Sheaf.openRestrictedLowestSectionCohomologyIsoOfNat T U
-    (complexSupportInjectiveComplex X Z) (fun j => 𝓗_[Z]^j(T; ℚ))
-    (fun j => complexSupportInjectiveCohomologySheafIsoRelative X Z j) n hH
-    (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque T Z.compl
-      ((ambientRationalInjectiveComplex X).X j))
-  change (complexSupportInjectiveCohomologySheafIsoRelative X Z n).hom.hom.app (op U)
-      ((TopCat.Sheaf.openRestrictedLowestSectionCohomologyIso T U
-        (complexSupportInjectiveComplex X Z) 0 (n : ℤ) _ _).hom
-        (bridge
-          ((CategoryTheory.Sheaf.relH.restrict F (homOfLE (show Z.compl ≤ ⊤ from le_top))
-            (homOfLE (show Z.compl ≤ U from
-              (cycleComponentSupportComplement_le_smoothAmbientOpen X x)))
-            (homOfLE (show Z.compl ≤ Z.compl from le_rfl)) (homOfLE (show U ≤ ⊤ from le_top))
-            (by apply Subsingleton.elim) n) a))) = _
+  rw [rationalSupportAddEquivSupportedRelativeCohomologySheafSectionOnOpen_apply]
   have hbridge :=
     @relHAddEquivSupportedSectionsHomology_restrict T Z.compl
       (⊤ : Opens T) Z.compl Z.compl U Z.compl (top_inf_eq _) hW le_rfl le_top le_rfl
@@ -198,9 +180,6 @@ theorem cycleComponentSupportedClassNormalizationIso_apply
     rw [supportedSectionsRestriction_refl]
     rfl
   rw [hsupport]
-  dsimp [cycleComponentSupportSectionRestriction, cycleComponentSmoothRestrictedInjectiveComplex,
-    complexSupportInjectiveComplex, rationalSupportAddEquivSupportedInjectiveHomology]
-  simp [supportEvaluation, T, Z, U, n]
   rfl
 
 end AlgebraicGeometry.ComplexPoint

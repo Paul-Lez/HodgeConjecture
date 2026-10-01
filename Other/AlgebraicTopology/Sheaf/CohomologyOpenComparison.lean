@@ -137,7 +137,7 @@ def openRestrictionSectionCohomologyPresheafIso (n : ℤ) :
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 400000 in
 /-- The exact sheafification/counit comparison respects open restriction. -/
 @[reassoc]
 lemma openRestrictionSectionCohomologySheafificationIso (n : ℤ) :

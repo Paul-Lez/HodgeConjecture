@@ -141,8 +141,6 @@ induced by inclusions of pairs. -/
 def supportHOnOpenFunctor : Opens X ⥤ AddCommGrpCat.{w}ᵒᵖ :=
   opOp (Opens X) ⋙ (supportHOnOpenPresheaf (Z := Z) F n).op
 
-set_option maxHeartbeats 800000 in
-set_option synthInstance.maxHeartbeats 800000 in
 /-- For a closed support `Z`, this is the sheafification of the presheaf
 `V ↦ H^n(V, V \ Z; F)`. -/
 def supportHCohomologySheaf (Z : Closeds X)
@@ -151,8 +149,6 @@ def supportHCohomologySheaf (Z : Closeds X)
     TopCat.Sheaf AddCommGrpCat.{w} X :=
   CohomologySheafOfOpens X (supportHOnOpenFunctor (Z := Z) F n) (h := h)
 
-set_option maxHeartbeats 800000 in
-set_option synthInstance.maxHeartbeats 800000 in
 /-- This is the canonical map `H^n_Z(X;F) → Γ(X,𝓗^n_Z(F))` induced by the sheafification map. -/
 def supportHToSupportHCohomologySheafSection
     [h : HasSheafify (Opens.grothendieckTopology X) AddCommGrpCat.{w}] :

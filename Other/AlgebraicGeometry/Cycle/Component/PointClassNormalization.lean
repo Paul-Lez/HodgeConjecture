@@ -145,7 +145,6 @@ theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
-set_option maxHeartbeats 800000 in
 private theorem cycleComponentSupportedInjectiveClass_point_normalization_aux
     (hx : Order.coheight x = d) (a : CycleComponentSupportedCohomology X x d)
     (ha : (rationalSupportAddEquivSupportedInjectiveHomology X
@@ -173,7 +172,6 @@ private theorem cycleComponentSupportedInjectiveClass_point_normalization_aux
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.defeqAttrib.useBackward true in
-set_option maxHeartbeats 800000 in
 /-- The supported component class equals the normalized point class. -/
 theorem cycleComponentSupportedInjectiveClass_point_normalization
     (hx : Order.coheight x = d) :

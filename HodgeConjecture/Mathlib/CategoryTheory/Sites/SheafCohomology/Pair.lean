@@ -154,7 +154,6 @@ def pairNestedShortComplex {W U V : C} (f : W ⟶ U) (g : U ⟶ V) :
       dsimp [pairSheafMap, cokernel.map]
       simp)
 
-set_option maxHeartbeats 800000 in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency.types false in
 /-- The nested pair-sheaf short complex is short exact for composable monomorphisms. -/

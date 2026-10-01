@@ -163,7 +163,7 @@ lemma toCompactlySupportedCohomology_forget (K : CompactCloseds X)
       AddCommGrpCat.ofHom (forgetClosedSupport X K.1 F n) :=
   colimit.ι_desc _ K
 
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 400000 in
 /-- Forgetting compact support is natural in the coefficient sheaf. -/
 def forgetCompactSupportNatTrans (n : ℕ) :
     compactlySupportedCohomologyFunctor X n ⟶

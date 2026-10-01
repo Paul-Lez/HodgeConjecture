@@ -114,7 +114,6 @@ def complexSupportInjectiveCohomologySheafIsoRelative
       supportedSingularCohomologySheafIsoRelative
         (TopCat.of (ComplexPoint X)) S S.isClosed n
 
-set_option maxHeartbeats 800000 in
 /-- For each open `V`, this identifies supported Ext `H^n(V,V \setminus S;ℚ)` with relative
 singular cohomology `H^n(V,V \setminus S;ℚ)`, naturally in `V`. -/
 def rationalSupportCohomologyPresheafIsoRelative
@@ -146,7 +145,6 @@ def rationalSupportCohomologySheafIsoRelative
   (presheafToSheaf (Opens.grothendieckTopology (TopCat.of (ComplexPoint X))) AddCommGrpCat).mapIso
     (rationalSupportCohomologyPresheafIsoRelative X S n)
 
-set_option maxHeartbeats 800000 in
 /-- If `𝓗_[S]^j(X(ℂ);ℚ) = 0` for `j < n`, this identifies `H_[S]^n(X(ℂ);ℚ)` with the global
 sections of the supported cohomology sheaf in degree `n`. -/
 def rationalSupportAddEquivSupportedCohomologySheafSection
@@ -173,7 +171,6 @@ def rationalSupportAddEquivSupportedCohomologySheafSection
       (TopCat.of (ComplexPoint X)) S S.isClosed j)
     n hH
 
-set_option maxHeartbeats 800000 in
 /-- After the singular comparison, the same lower-degree vanishing identifies
 `H_[S]^n(X(ℂ);ℚ)` with global sections of the local relative singular cohomology sheaf. -/
 def rationalSupportAddEquivSupportedRelativeCohomologySheafSection
@@ -239,7 +236,6 @@ theorem rationalSupportAddEquivSupportedRelativeCohomologySheafSection_apply
       (TopCat.of (ComplexPoint X)) S S.isClosed j)
     n hH z
 
-set_option maxHeartbeats 800000 in
 /-- If the lower local relative cohomology sheaves vanish on `V`, this identifies
 `H^n(V,V \setminus S;ℚ)` with sections on `V` of the local relative singular cohomology sheaf. -/
 def rationalSupportAddEquivSupportedRelativeCohomologySheafSectionOnOpen
@@ -270,6 +266,35 @@ def rationalSupportAddEquivSupportedRelativeCohomologySheafSectionOnOpen
     (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
       (TopCat.of (ComplexPoint X)) S.compl ((ambientRationalInjectiveComplex X).X j))
   bridge.trans lowest.addCommGroupIsoToAddEquiv
+
+@[simp]
+theorem rationalSupportAddEquivSupportedRelativeCohomologySheafSectionOnOpen_apply
+    (S : Closeds (ComplexPoint X)) (V W : Opens (ComplexPoint X))
+    (hW : V ⊓ S.compl = W) (n : ℕ)
+    (hH : ∀ j : ℕ, j < n → IsZero
+      ((V.isOpenEmbedding.sheafPullback AddCommGrpCat).obj
+        (AlgebraicTopology.Singular.supportRelativeCohomologySheaf
+          (TopCat.of (ComplexPoint X)) S j)))
+    (z : CategoryTheory.Sheaf.relH
+      ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ))
+      n (homOfLE (hW ▸ (inf_le_left : V ⊓ S.compl ≤ V) : W ≤ V))) :
+    rationalSupportAddEquivSupportedRelativeCohomologySheafSectionOnOpen X S V W hW n hH z =
+      (TopCat.Sheaf.openRestrictedLowestSectionCohomologyIsoOfNat
+          (TopCat.of (ComplexPoint X)) V (complexSupportInjectiveComplex X S)
+          (fun j => AlgebraicTopology.Singular.supportRelativeCohomologySheaf
+            (TopCat.of (ComplexPoint X)) S j)
+          (fun j => complexSupportInjectiveCohomologySheafIsoRelative X S j) n hH
+          (fun j => TopCat.Sheaf.sheafSectionsSupportedOutside_isFlasque
+            (TopCat.of (ComplexPoint X)) S.compl
+              ((ambientRationalInjectiveComplex X).X j))).hom
+          (@TopCat.Sheaf.relHAddEquivSupportedSectionsHomology
+            (TopCat.of (ComplexPoint X)) S.compl V W hW inferInstance
+            ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj
+              (AddCommGrpCat.of ℚ)) (ambientRationalInjectiveComplex X)
+            (ambientRationalInjectiveComplex_isKInjective X)
+            (ambientRationalInjectiveSingleAugmentation X)
+            (ambientRationalInjectiveSingleAugmentation_quasiIso X) n z) := by
+  rfl
 
 /-- After restriction to an open `V`, the degree-`n` cohomology sheaf of the supported injective
 complex is the restriction of the local relative singular cohomology sheaf. -/
