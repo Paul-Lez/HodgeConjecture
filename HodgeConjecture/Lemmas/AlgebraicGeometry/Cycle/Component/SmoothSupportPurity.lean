@@ -9,6 +9,10 @@ import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Component.SmoothSupportPurity
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.WithSupport
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenRestrictedLowestCohomology
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.SmoothClosedLift
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.SmoothPair.OpenTransport
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 
 /-!
 # Purity along the smooth locus of an integral cycle component

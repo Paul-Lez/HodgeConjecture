@@ -111,7 +111,7 @@ variable {Z : Closeds X}
 
 /-- For an open `V`, this presheaf has value `H^n(V, V \ Z; F)` and restriction maps induced by
 inclusions of pairs. -/
-def supportHOnOpenPresheaf : TopCat.Presheaf AddCommGrpCat X where
+def supportHOnOpenPresheaf : TopCat.Presheaf AddCommGrpCat.{w} X where
   obj V := AddCommGrpCat.of (CategoryTheory.Sheaf.relH F n
     (homOfLE (inf_le_left : V.unop ⊓ Z.compl ≤ V.unop)))
   map {U V} f := AddCommGrpCat.ofHom
@@ -138,7 +138,7 @@ def supportHOnOpenPresheaf : TopCat.Presheaf AddCommGrpCat X where
 
 /-- The contravariant functor whose value on an open `V` is `H^n(V, V \ Z; F)` and whose maps are
 induced by inclusions of pairs. -/
-def supportHOnOpenFunctor : Opens X ⥤ AddCommGrpCatᵒᵖ :=
+def supportHOnOpenFunctor : Opens X ⥤ AddCommGrpCat.{w}ᵒᵖ :=
   opOp (Opens X) ⋙ (supportHOnOpenPresheaf (Z := Z) F n).op
 
 set_option maxHeartbeats 800000 in
@@ -147,16 +147,27 @@ set_option synthInstance.maxHeartbeats 800000 in
 `V ↦ H^n(V, V \ Z; F)`. -/
 def supportHCohomologySheaf (Z : Closeds X)
     (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
-    (n : ℕ) : TopCat.Sheaf AddCommGrpCat X :=
-  CohomologySheafOfOpens X (supportHOnOpenFunctor (Z := Z) F n)
+    (n : ℕ) [h : HasSheafify (Opens.grothendieckTopology X) AddCommGrpCat.{w}] :
+    TopCat.Sheaf AddCommGrpCat.{w} X :=
+  CohomologySheafOfOpens X (supportHOnOpenFunctor (Z := Z) F n) (h := h)
 
 set_option maxHeartbeats 800000 in
 set_option synthInstance.maxHeartbeats 800000 in
 /-- This is the canonical map `H^n_Z(X;F) → Γ(X,𝓗^n_Z(F))` induced by the sheafification map. -/
-def supportHToSupportHCohomologySheafSection :
+def supportHToSupportHCohomologySheafSection
+    [h : HasSheafify (Opens.grothendieckTopology X) AddCommGrpCat.{w}] :
     H_[Z]^n(X; F) →+
-      (supportHCohomologySheaf (Z := Z) F n).presheaf.obj (op ⊤) :=
-  (cohomologySheafOfOpensToSheaf X (supportHOnOpenFunctor (Z := Z) F n)).app (op ⊤)
+      (supportHCohomologySheaf (Z := Z) F n (h := h)).presheaf.obj (op ⊤) :=
+  (show H_[Z]^n(X; F) →+
+      ↑((CohomologySheafOfOpens X (supportHOnOpenFunctor (Z := Z) F n) (h := h)).obj.obj
+        (op ⊤)) from
+    ((cohomologySheafOfOpensToSheaf X
+      (supportHOnOpenFunctor (Z := Z) F n) (h := h)).app (op ⊤)).hom.comp
+      (CategoryTheory.Sheaf.relH.restrict F
+        (homOfLE (le_top : Z.compl ≤ ⊤))
+        (homOfLE (inf_le_left : (⊤ : Opens X) ⊓ Z.compl ≤ ⊤))
+        (homOfLE (inf_le_right : (⊤ : Opens X) ⊓ Z.compl ≤ Z.compl))
+        (homOfLE (le_rfl : (⊤ : Opens X) ≤ ⊤)) (Subsingleton.elim _ _) n))
 
 end TopCat.Sheaf
 

@@ -46,11 +46,14 @@ variable (X : TopCat.{0})
 def supportedSectionsIsoKer (U V W : Opens X) (hW : V ⊓ U = W)
     (G : Sheaf AddCommGrpCat X) :
     ((sheafSectionsSupportedOutside X U).obj G).obj.obj (op V) ≅
-      AddCommGrpCat.of (G.obj.map (homOfLE (hW ▸ inf_le_left : W ≤ V)).op).hom.ker :=
-  hW ▸ (sheafSectionsSupportedOutsideOnOpenIso X U V G ≪≫
-    (kernelCompMono _ (supportedOutsideIntersectionIso X U V G).hom).symm ≪≫
-    kernelIsoOfEq (toOpenRestrictionPushforward_intersection X U V G) ≪≫
-    AddCommGrpCat.kernelIsoKer _)
+      AddCommGrpCat.of (G.obj.map
+        (homOfLE (show W ≤ V from hW ▸ (inf_le_left : V ⊓ U ≤ V))).op).hom.ker :=
+  match hW with
+  | rfl =>
+    sheafSectionsSupportedOutsideOnOpenIso X U V G ≪≫
+      (kernelCompMono _ (supportedOutsideIntersectionIso X U V G).hom).symm ≪≫
+      kernelIsoOfEq (toOpenRestrictionPushforward_intersection X U V G) ≪≫
+      AddCommGrpCat.kernelIsoKer _
 
 lemma supportedSectionsIsoKer_hom_subtype (U V W : Opens X) (hW : V ⊓ U = W)
     (G : Sheaf AddCommGrpCat X) :
@@ -91,7 +94,8 @@ variable (U V W : Opens X) (hW : V ⊓ U = W)
 
 /-- The pair sheaf `ℤ[V, W]` for `W = V ⊓ U`, as an object of the site category. -/
 abbrev pairSheaf' : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat :=
-  CategoryTheory.Sheaf.pairSheaf (homOfLE (hW ▸ inf_le_left : W ≤ V))
+  CategoryTheory.Sheaf.pairSheaf
+    (homOfLE (hW ▸ (inf_le_left : V ⊓ U ≤ V) : W ≤ V))
 
 /-- Evaluation of a morphism `ℤ[V, W] ⟶ G` at the generator, as a section of `G` over `V`. -/
 def pairSheafHomEvaluation (G : Sheaf AddCommGrpCat X) :
@@ -151,7 +155,7 @@ def homComplexPairSheafIsoSupportedSections
       (fun n => pairSheafHomIsoSupportedSections X U V W hW (K.X n))
       (fun i j _ => pairSheafHomIsoSupportedSections_naturality X U V W hW (K.d i j))
 
-variable [HasExt.{1} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
+variable [HasExt.{0} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
 
 local instance :
     HasDerivedCategory (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat) :=
@@ -161,7 +165,8 @@ local instance :
 def relHAddEquivSupportedSectionsHomology (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)
     (I : CochainComplex (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat) ℤ) [I.IsKInjective]
     (ι : (CochainComplex.singleFunctor _ 0).obj F ⟶ I) [QuasiIso ι] (n : ℕ) :
-    CategoryTheory.Sheaf.relH F n (homOfLE (hW ▸ inf_le_left : W ≤ V)) ≃+
+    CategoryTheory.Sheaf.relH F n
+      (homOfLE (hW ▸ (inf_le_left : V ⊓ U ≤ V) : W ≤ V)) ≃+
       (((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).obj
         (((sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).obj
           I)).homology n :=

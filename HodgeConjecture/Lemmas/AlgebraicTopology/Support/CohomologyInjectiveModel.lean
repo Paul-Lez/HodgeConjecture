@@ -44,19 +44,22 @@ variable {U V W U' V' W' : Opens X} (hW : V ⊓ U = W) (hW' : V' ⊓ U' = W')
 
 lemma pairSheafHomEvaluation_restrict (G : Sheaf AddCommGrpCat X) :
     (preadditiveCoyoneda.map (CategoryTheory.Sheaf.pairSheafMap
-        (homOfLE (hW ▸ inf_le_left : W ≤ V)) (homOfLE (hW' ▸ inf_le_left : W' ≤ V'))
+        (homOfLE (hW ▸ (inf_le_left : V ⊓ U ≤ V) : W ≤ V))
+        (homOfLE (hW' ▸ (inf_le_left : V' ⊓ U' ≤ V') : W' ≤ V'))
         (homOfLE hWW) (homOfLE hV) (Subsingleton.elim _ _)).op).app G ≫
         pairSheafHomEvaluation X U' V' W' hW' G =
       pairSheafHomEvaluation X U V W hW G ≫ G.obj.map (homOfLE hV).op := by
   apply AddCommGrpCat.hom_ext
   refine AddMonoidHom.ext (fun φ => ?_)
   exact CategoryTheory.Sheaf.pairSheafHomAddEquiv_pairSheafMap_comp
-    (homOfLE (hW ▸ inf_le_left : W ≤ V)) (homOfLE (hW' ▸ inf_le_left : W' ≤ V'))
+    (homOfLE (hW ▸ (inf_le_left : V ⊓ U ≤ V) : W ≤ V))
+    (homOfLE (hW' ▸ (inf_le_left : V' ⊓ U' ≤ V') : W' ≤ V'))
     (homOfLE hWW) (homOfLE hV) (Subsingleton.elim _ _) G φ
 
 lemma pairSheafHomIsoSupportedSections_restrict (G : Sheaf AddCommGrpCat X) :
     (preadditiveCoyoneda.map (CategoryTheory.Sheaf.pairSheafMap
-        (homOfLE (hW ▸ inf_le_left : W ≤ V)) (homOfLE (hW' ▸ inf_le_left : W' ≤ V'))
+        (homOfLE (hW ▸ (inf_le_left : V ⊓ U ≤ V) : W ≤ V))
+        (homOfLE (hW' ▸ (inf_le_left : V' ⊓ U' ≤ V') : W' ≤ V'))
         (homOfLE hWW) (homOfLE hV) (Subsingleton.elim _ _)).op).app G ≫
         (pairSheafHomIsoSupportedSections X U' V' W' hW' G).hom =
       (pairSheafHomIsoSupportedSections X U V W hW G).hom ≫
@@ -83,7 +86,8 @@ lemma homComplexPairSheafIsoSupportedSections_restrict
     (K : CochainComplex (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat) ℤ) :
     CochainComplex.HomComplex.precompMap ((CochainComplex.singleFunctor _ 0).map
         (CategoryTheory.Sheaf.pairSheafMap
-          (homOfLE (hW ▸ inf_le_left : W ≤ V)) (homOfLE (hW' ▸ inf_le_left : W' ≤ V'))
+          (homOfLE (hW ▸ (inf_le_left : V ⊓ U ≤ V) : W ≤ V))
+          (homOfLE (hW' ▸ (inf_le_left : V' ⊓ U' ≤ V') : W' ≤ V'))
           (homOfLE hWW) (homOfLE hV) (Subsingleton.elim _ _))) K ≫
         (homComplexPairSheafIsoSupportedSections X U' V' W' hW' K).hom =
       (homComplexPairSheafIsoSupportedSections X U V W hW K).hom ≫
@@ -96,7 +100,7 @@ lemma homComplexPairSheafIsoSupportedSections_restrict
   refine HomologicalComplex.hom_ext _ _ (fun n => ?_)
   exact pairSheafHomIsoSupportedSections_restrict X hW hW' hU hV hWW (K.X n)
 
-variable [HasExt.{1} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
+variable [HasExt.{0} (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)]
 
 local instance :
     HasDerivedCategory (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat) :=
@@ -110,7 +114,8 @@ theorem relHAddEquivSupportedSectionsHomology_restrict
     (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat)
     (I : CochainComplex (CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat) ℤ)
     [I.IsKInjective] (ι : (CochainComplex.singleFunctor _ 0).obj F ⟶ I) [QuasiIso ι] (n : ℕ)
-    (x : CategoryTheory.Sheaf.relH F n (homOfLE (hW ▸ inf_le_left : W ≤ V))) :
+    (x : CategoryTheory.Sheaf.relH F n
+      (homOfLE (hW ▸ (inf_le_left : V ⊓ U ≤ V) : W ≤ V))) :
     relHAddEquivSupportedSectionsHomology X U' V' W' hW' F I ι n
         (CategoryTheory.Sheaf.relH.restrict F _ _ (homOfLE hWW) (homOfLE hV)
           (Subsingleton.elim _ _) n x) =
@@ -118,10 +123,12 @@ theorem relHAddEquivSupportedSectionsHomology_restrict
         (relHAddEquivSupportedSectionsHomology X U V W hW F I ι n x) := by
   obtain ⟨g, hg⟩ : ∃ g : pairSheaf' X U' V' W' hW' ⟶ pairSheaf' X U V W hW,
       g = CategoryTheory.Sheaf.pairSheafMap
-        (homOfLE (hW ▸ inf_le_left : W ≤ V)) (homOfLE (hW' ▸ inf_le_left : W' ≤ V'))
+        (homOfLE (hW ▸ (inf_le_left : V ⊓ U ≤ V) : W ≤ V))
+        (homOfLE (hW' ▸ (inf_le_left : V' ⊓ U' ≤ V') : W' ≤ V'))
         (homOfLE hWW) (homOfLE hV) (Subsingleton.elim _ _) := ⟨_, rfl⟩
   have hA : Ext.homAddEquiv (CategoryTheory.Sheaf.relH.restrict F
-      (homOfLE (hW ▸ inf_le_left : W ≤ V)) (homOfLE (hW' ▸ inf_le_left : W' ≤ V'))
+      (homOfLE (hW ▸ (inf_le_left : V ⊓ U ≤ V) : W ≤ V))
+      (homOfLE (hW' ▸ (inf_le_left : V' ⊓ U' ≤ V') : W' ≤ V'))
       (homOfLE hWW) (homOfLE hV) (Subsingleton.elim _ _) n x) =
       DerivedCategory.Q.map ((CochainComplex.singleFunctor _ 0).map g) ≫ Ext.homAddEquiv x := by
     rw [hg]
