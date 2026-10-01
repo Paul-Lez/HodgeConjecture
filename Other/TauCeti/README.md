@@ -9,3 +9,7 @@ and the identification of the free sheaf on one generator with the structure she
 The holomorphic line-bundle construction uses these interfaces without changing this
 repository's Lean or Mathlib versions. Local import paths and module documentation are
 adapted; any further compatibility changes remain visible in the corresponding files.
+
+`JacobsonLocalTriviality.lean` is an original downstream result in this repository and therefore
+carries the Formal Conjectures copyright. It proves local triviality from triviality near closed
+points.

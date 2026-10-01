@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Other.AlgebraicGeometry.LefschetzOneOne
 public import Other.AlgebraicGeometry.HolomorphicUnitExtensionHodgeClass
 public import Other.AlgebraicGeometry.LefschetzOneOneObligations
 public import Other.AlgebraicGeometry.HolomorphicLineBundleInvertible
@@ -13,11 +12,11 @@ public import Other.AlgebraicGeometry.AnalytificationModules
 /-!
 # Reduction of the rational Lefschetz `(1, 1)` theorem to its remaining obligations
 
-This file does **not** prove `RationalLefschetzOneOne`. It isolates, as explicit propositions
-about a single smooth projective integral complex variety, exactly what is still missing after
-the analytic construction in `HolomorphicUnitExtension`, and proves that these propositions
-suffice. Each obligation is stated using only the definitions already in the repository, so
-that progress on any one of them can be checked independently.
+This file isolates, as explicit propositions about a single smooth projective integral complex
+variety, exactly what is still missing after the analytic construction in
+`HolomorphicUnitExtension`, and proves that these propositions suffice. Each obligation is stated
+using only the definitions already in the repository, so that progress on any one of them can be
+checked independently.
 
 * `HasIntegralDenominatorClearing X`: every rational degree-two class becomes integral after
   multiplication by a nonzero integer. Mathematically this is finite generation of `H²(X, ℤ)`.
@@ -30,10 +29,9 @@ that progress on any one of them can be checked independently.
   with the comparison of the constructed cycle class and the exponential connecting map.
 
 `HasDivisorOfUnitExtension X` is the conjunction of the last two, stated without reference to
-an algebraic model; `rationalLefschetzOneOne_of_obligations` derives the theorem from the first
-obligation and this conjunction. What is proved unconditionally here is only the bookkeeping:
-Hodge classes are stable under scaling, the analytic lift exists for integral Hodge classes,
-and rational divisors may be divided by the integer denominator.
+an algebraic model. `exists_rationalSheafCycleClassOnCycles_eq_of_obligations` constructs the
+required rational cycle from the first obligation and this conjunction. `LefschetzOneOne.lean`
+applies this fixed-variety reduction to prove the final theorem.
 -/
 
 @[expose] public noncomputable section
@@ -80,17 +78,5 @@ theorem exists_rationalSheafCycleClassOnCycles_eq_of_obligations
   refine ⟨(1 / (m : ℚ)) ⊗ₜ[ℤ] D, ?_⟩
   rw [rationalSheafCycleClassOnCycles_tmul, hD, hE, hβ, ← Int.cast_smul_eq_zsmul ℚ, smul_smul,
     one_div, inv_mul_cancel₀ (Int.cast_ne_zero.mpr hm), one_smul]
-
-/-- The rational Lefschetz `(1, 1)` theorem follows from denominator clearing and the divisor
-representation of unit-sheaf extensions on every smooth projective integral complex variety.
-This is a reduction, not a proof of `RationalLefschetzOneOne`. -/
-theorem _root_.RationalLefschetzOneOne.of_obligations
-    (hclear : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
-      HasIntegralDenominatorClearing X)
-    (hdivisor : ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
-      HasDivisorOfUnitExtension X) :
-    RationalLefschetzOneOne := by
-  intro X _ _ _ α hα
-  exact exists_rationalSheafCycleClassOnCycles_eq_of_obligations X (hclear X) (hdivisor X) α hα
 
 end AlgebraicGeometry.ComplexPoint

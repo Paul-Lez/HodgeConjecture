@@ -238,6 +238,7 @@ public import Other.Geometry.Manifold.HolomorphicLogarithm
 public import Other.TauCeti.SheafOfModules.Free
 public import Other.TauCeti.SheafOfModules.Invertible
 public import Other.TauCeti.SheafOfModules.LocalTriviality
+public import Other.AlgebraicGeometry.LefschetzOneOne
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityDef
 public import Other.AlgebraicGeometry.Cohomology.SupportComparison
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyDef
@@ -258,5 +259,4 @@ public import Other.CategoryTheory.Abelian.ExtOneRepresentative
 public import Other.AlgebraicGeometry.CartierDataRepresents
 public import Other.AlgebraicGeometry.IntegralCohomology
 public import Other.AlgebraicGeometry.DivisorClassCompatibility
-public import Other.AlgebraicGeometry.LefschetzOneOneFiniteHomology
 public import Other.AlgebraicTopology.SupportedSingularSupportMap

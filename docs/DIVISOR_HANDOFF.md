@@ -3,8 +3,8 @@
 For an integral, smooth, projective complex scheme `X`,
 `AlgebraicGeometry.ComplexPoint.hasDivisorClassOfCartierData` in
 `Other/AlgebraicGeometry/ChernRelativeFinalAssembly.lean` proves the uniform
-divisor–Chern identity. The full build, import-layer check, and comparison audit pass.
-The audit reports only `propext`, `Classical.choice`, and `Quot.sound`.
+divisor–Chern identity. The full build, style check, import-layer check, and comparison
+audit pass. The audit reports only `propext`, `Classical.choice`, and `Quot.sound`.
 
 The proved proposition is the existing definition
 
@@ -19,8 +19,8 @@ def HasDivisorClassOfCartierData : Prop :=
 ```
 
 The proof has no GAGA hypothesis. GAGA is developed separately in
-[PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228), which uses the isolated Oka port in
-[PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230) for the Lefschetz `(1,1)` application.
+[PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228), which combines it with this
+comparison to prove the rational Lefschetz `(1,1)` theorem.
 
 The established route is:
 
@@ -66,12 +66,13 @@ Validation after each substantive change:
 
 ```text
 lake build
-lake env lean scripts/lefschetz_axiom_audit.lean
+lake build CheckLefschetzOneOneAxioms
 lake exe lint-style HodgeConjecture Other HodgeGuide
 python3 scripts/check_import_layers.py
 git diff --check
 ```
 
-The comparison audit includes the full uniform theorem and reports only
-`propext`, `Classical.choice`, and `Quot.sound`. The divisor–Chern comparison is
-complete; GAGA algebraization remains a separate input to the Lefschetz application.
+The final-theorem axiom check accepts only `propext`, `Classical.choice`, and `Quot.sound`.
+The divisor–Chern comparison is
+complete; `GAGAProper.lean` supplies the separate algebraization input used by
+`LefschetzOneOne.lean`.

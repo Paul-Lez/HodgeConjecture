@@ -1,7 +1,8 @@
 # Statement of the Hodge Conjecture
 
-This repo is work in progress towards stating the Hodge conjecture in Lean for the
-[Formal Conjectures project](https://github.com/google-deepmind/formal-conjectures).
+This repository formalizes the statement of the Hodge conjecture in Lean for the
+[Formal Conjectures project](https://github.com/google-deepmind/formal-conjectures) and develops
+supporting definitions and results.
 
 During the initial stages of this work, autoformalisation tools were used extensively.
 The bulk of the work is now directed towards cleaning up the code.
@@ -10,7 +11,7 @@ by Imperial College London 7-11 September 2026 thanks to a generous donation fro
 
 See [full list of contributors](https://github.com/Paul-Lez/HodgeConjecture/graphs/contributors?all=1).
 
-The short-term goal of this project is to be integrated to the Formal Conjectures repository.
+The short-term goal of this project is to be integrated into the Formal Conjectures repository.
 The medium-term goal is for all the prerequisites to the conjecture to be upstreamed to
 [Mathlib](https://github.com/leanprover-community/mathlib4).
 The long-term goal is to have either a proof or a disproof of the Hodge conjecture in Mathlib.
@@ -20,8 +21,8 @@ The remaining content of the project is sorted into four folders:
 
 - `HodgeConjecture/Mathlib`: Content that is on track to be upstreamed to Mathlib;
 - `HodgeConjecture/Definitions`: Definitions used in the statement of the conjecture;
-- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions. If these aren't used in `Lemmas` then they should go in `Other`. This folder can also contain definitions that are only used to in *proofs* of theorems that are needed to state the conjecture;
-- `Other`: Results that aren't needed to state the conjecture but may be useful as sanity checks.
+- `HodgeConjecture/Lemmas`: Supporting results needed by those definitions. If these aren't used in `Lemmas` then they should go in `Other`. This folder can also contain definitions that are only used in *proofs* of theorems that are needed to state the conjecture;
+- `Other`: Proofs and supporting results that aren't needed to state the conjecture.
 
 > [!WARNING]
 > This formalisation is still a work in progress, and is still in the process of being reviewed and improved.
@@ -30,21 +31,16 @@ WIP formalisation guide: <https://paul-lez.github.io/HodgeConjecture/>.
 
 ## Lefschetz (1, 1) development
 
-`Other/AlgebraicGeometry/LefschetzOneOne.lean` states the rational Lefschetz `(1, 1)` theorem
-and proves it assuming `HodgeConjecture`. The unconditional proof is in progress: the holomorphic
-exponential sequence, its connecting map, the vanishing of Hodge classes in `H²(𝒪)`, the
-resulting unit-sheaf extensions and their invertible holomorphic section sheaves, and the
-analytification functor on sheaves of modules are constructed in the `Holomorphic*` and
-`Analytification*` files of `Other/AlgebraicGeometry`.
-`Other/AlgebraicGeometry/LefschetzOneOneReduction.lean` states the remaining obligations
-(integral denominator clearing, projective GAGA for line bundles, and the divisor/cycle-class
-comparison) as explicit propositions and proves that they imply the theorem;
-`Other/AlgebraicGeometry/IntegralDenominatorClearing.lean` reduces denominator clearing to finite
-generation of `H₂(X^an, ℤ)`, and
-`Other/AlgebraicGeometry/ProjectiveFiniteHomology.lean` proves that finiteness (compact manifolds are
-neighbourhood retracts of Euclidean spaces). The divisor/cycle-class comparison is also proved, so
-only line-bundle GAGA remains on this branch. That final step is completed downstream in
-[PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228), using the isolated Oka port in
-[PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230).
+`Other/AlgebraicGeometry/LefschetzOneOne.lean` contains the unconditional theorem
+`lefschetzOneOne`, whose type directly states the rational codimension-one result. Its proof
+combines the holomorphic exponential sequence, integral denominator clearing, the divisor–Chern
+comparison, and proper GAGA for line bundles. It does not prove the stronger integral
+Picard/Chern-class formulation.
+
+The adapted Oka dependency is isolated in
+[PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230). The completed proper-GAGA step and
+final theorem are in [PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228), stacked on
+PR230 and the Lefschetz reduction in
+[PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9).
 See [the Lefschetz handoff](docs/LEFSCHETZ_HANDOFF.md) for the status, file map and
 verification commands.

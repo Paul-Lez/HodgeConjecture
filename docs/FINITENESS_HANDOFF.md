@@ -41,14 +41,14 @@ The same file proves finite generation in every degree and derives
 4. `Other/Geometry/Manifold/CompactManifoldFiniteHomology.lean` packages those results for compact
    manifolds, and `ProjectiveFiniteHomology.lean` applies them to `ComplexPoint X`.
 
-The proof introduces no project axiom. The diagnostic audit reports only `propext`,
+The proof introduces no project axiom. The build-enforced axiom check accepts only `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 ## Verification
 
 ```bash
 lake build
-lake env lean scripts/lefschetz_axiom_audit.lean
+lake build CheckLefschetzOneOneAxioms
 python3 scripts/check_import_layers.py
 git diff --check
 ```

@@ -1,13 +1,22 @@
-# Unconditional Lefschetz (1, 1): status and remaining obligations
+# Rational Lefschetz (1, 1)
 
-This is an incomplete proof development. The conditional statement
-`HodgeConjecture → RationalLefschetzOneOne` is proved; the unconditional theorem is **not**.
-A successful build of this branch does not establish the missing theorem.
+This development proves the unconditional theorem `lefschetzOneOne` in
+`Other/AlgebraicGeometry/LefschetzOneOne.lean`. Its type directly states that every rational
+degree-two Hodge class on a smooth projective integral complex scheme is algebraic. The proof
+contains no `sorry` or added axiom.
 
 ## Goal
 
-The target is `RationalLefschetzOneOne` in
+The repository's target is stated directly by `lefschetzOneOne` in
 [`Other/AlgebraicGeometry/LefschetzOneOne.lean`](../Other/AlgebraicGeometry/LefschetzOneOne.lean):
+
+```lean
+∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom],
+  Hdg^1(X; ℚ) ≤ algebraicCycleClassSpan X 1
+```
+
+There is no separate `Prop` abbreviation for this statement. The proof calls the fixed-variety
+reduction `exists_rationalSheafCycleClassOnCycles_eq_of_obligations`, which produces:
 
 ```lean
 ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
@@ -16,27 +25,26 @@ The target is `RationalLefschetzOneOne` in
       rationalSheafCycleClassOnCycles { scheme := X.left, structureMap := X.hom } 1 D = α
 ```
 
-Completion requires a theorem of this type without a `HodgeConjecture` hypothesis and without
-comparison axioms, using the existing cohomology, Hodge-class, codimension-cycle and constructed
-cycle-class definitions.
+The final line applies `rationalSheafCycleClassOnCycles_mem_algebraicCycleClassSpan` to this
+cycle. Thus the theorem has the canonical target type without a `HodgeConjecture` hypothesis or
+comparison axiom.
 
 ## PR split
 
-Validation: `lake build`, the comparison axiom audit, and the import-layer check pass.
-
-[PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9) contains the analytic construction,
-denominator clearing, and the divisor–Chern comparison.
+[The stack through PR9](https://github.com/Paul-Lez/HodgeConjecture/pull/9) contains the analytic
+construction, denominator clearing, and the divisor–Chern comparison.
 [PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230) isolates the adapted Oka dependency.
 [PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228) is stacked on PR230 and adds the
-project-specific proper-GAGA comparison and final theorem.
+project-specific proper-GAGA comparison in `GAGAProper.lean` and the final theorem in
+`LefschetzOneOne.lean`.
 
 The divisor–Chern comparison takes an algebraic line bundle and its analytic identification as
 inputs. The uniform comparison is proved without GAGA by
 `hasDivisorClassOfCartierData` in `ChernRelativeFinalAssembly.lean`; its proof route is in
 [DIVISOR_HANDOFF.md](DIVISOR_HANDOFF.md).
 
-The comparison audit is `scripts/lefschetz_axiom_audit.lean`. PR228 also contains the GAGA audit
-and a build-enforced axiom boundary for the final theorem.
+`scripts/CheckLefschetzOneOneAxioms.lean` is the build-enforced axiom boundary for the exported
+theorem.
 
 ## What is proved
 
@@ -44,7 +52,8 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 
 | Files | Result |
 | --- | --- |
-| `Other/AlgebraicGeometry/Cycle/SheafClass.lean`, `Other/AlgebraicGeometry/LefschetzOneOne.lean` | `algebraicCycleClassSpan_le_range_rationalSheafCycleClassOnCycles`; `HodgeConjecture.rationalLefschetzOneOne` and its `type_of%` copy. |
+| `Other/AlgebraicGeometry/LefschetzOneOne.lean` | Direct statement and unconditional proof of `lefschetzOneOne`. |
+| `Other/AlgebraicGeometry/Cycle/SheafClass.lean` | `rationalSheafCycleClassOnCycles_mem_algebraicCycleClassSpan`. |
 | `Other/Geometry/Manifold/HolomorphicLogarithm.lean` | Local holomorphic logarithms; local integer kernel of `exp(2πiz)`. |
 | `Other/AlgebraicGeometry/HolomorphicExponential.lean`, `HolomorphicExponentialSequence.lean` | `holomorphicExponentialSequence_shortExact`: `0 → ℤ → 𝒪 → 𝒪ˣ → 0` on the analytic space. |
 | `Other/AlgebraicGeometry/HolomorphicFirstChernClass.lean`, `HolomorphicFirstChernClassExactness.lean` | The connecting map `Ext¹(ℤ, 𝒪ˣ) → Ext²(ℤ, ℤ)` and `exists_holomorphicFirstChernClass_iff`. |
@@ -59,12 +68,12 @@ Names are in `AlgebraicGeometry.ComplexPoint` unless indicated.
 | `Other/AlgebraicGeometry/HolomorphicLineBundleCoordinates.lean`, `HolomorphicLineBundleInvertible.lean` | Local coordinate isomorphisms; `E.sectionSheafOfModules_isInvertible`. |
 | `Other/AlgebraicGeometry/RegularFunctionsHolomorphic.lean` | `regularToHolomorphicSheaf`, the structure-sheaf map over `underlyingContinuousMap`. |
 | `Other/AlgebraicGeometry/AnalytificationModules.lean` | `moduleAnalytification`, its adjunction and `moduleAnalytificationUnitIso`. |
-| [PR230 Oka port](https://github.com/Paul-Lez/HodgeConjecture/pull/230), [PR228 GAGA work](https://github.com/Paul-Lez/HodgeConjecture/pull/228) | Adapted Oka dependency; project-specific proper-GAGA comparison and final theorem. |
+| `Other/AlgebraicGeometry/HolomorphicAnalytificationLocalIso.lean`, `GAGAProper.lean` | Comparison with Oka's canonical analytification; coherent and line-bundle algebraization. |
 | `Other/LinearAlgebra/RationalDenominators.lean`, `Other/Algebra/Homology/RationalCochainDenominators.lean` | Denominator clearing for finitely generated abelian groups and for homology. |
 | `Other/AlgebraicGeometry/ChernRelativeFinalAssembly.lean` | `hasDivisorClassOfCartierData`: the uniform divisor–Chern identity. |
-| `Other/AlgebraicGeometry/LefschetzOneOneObligations.lean`, `Other/AlgebraicGeometry/LefschetzOneOneReduction.lean` | The reduction inputs as explicit propositions, and `RationalLefschetzOneOne.of_obligations`. |
+| `Other/AlgebraicGeometry/LefschetzOneOneObligations.lean`, `Other/AlgebraicGeometry/LefschetzOneOneReduction.lean` | The reduction inputs and the fixed-variety reduction theorem. |
 
-## Reduction obligations and status
+## Discharged obligations
 
 [`Other/AlgebraicGeometry/LefschetzOneOneObligations.lean`](../Other/AlgebraicGeometry/LefschetzOneOneObligations.lean)
 states, for a single smooth projective integral complex variety `X`:
@@ -79,16 +88,18 @@ states, for a single smooth projective integral complex variety `X`:
    uniform reach estimate for nearest points, with `ChartDifferential.lean` and
    `NormalReach.lean`), and compact neighbourhood retracts have finitely generated integral
    singular homology (`Other/AlgebraicTopology/RetractFiniteHomology.lean`, via a finite good cover
-   of a union of balls). Hence `RationalLefschetzOneOne.of_divisor`: the theorem follows from
-   `HasDivisorOfUnitExtension` alone.
+   of a union of balls). Thus the denominator-clearing input to the final reduction is
+   unconditional.
 2. `HasAlgebraicModel X`: for every `E : HolomorphicUnitExtension X (dim X.left)` there is an
    invertible `L : X.left.Modules` with `(moduleAnalytification X (dim X.left)).obj L ≅
    E.sectionSheafOfModules`. This is projective GAGA for line bundles. Its extension-free
    form `AnalyticLineBundlesAlgebraize X` (every invertible analytic sheaf is the
    analytification of an invertible algebraic one) implies it by
-   `hasAlgebraicModel_of_analyticLineBundlesAlgebraize`. This obligation is scoped for
-   downstream work in [PR228](https://github.com/Paul-Lez/HodgeConjecture/pull/228), using the
-   isolated Oka port in [PR230](https://github.com/Paul-Lez/HodgeConjecture/pull/230).
+   `hasAlgebraicModel_of_analyticLineBundlesAlgebraize`.
+   **Obligation (2) is discharged.** `GAGAProper.lean` proves
+   `analyticLineBundlesAlgebraize` by identifying the repository's holomorphic space with Oka's
+   analytification, applying proper GAGA to coherent sheaves, and reflecting rank one through
+   faithfully flat stalk maps.
 3. `HasDivisorOfAlgebraicModel X`: such an `L` is represented by `D : codimensionCycleSubgroup X.left 1`
    with `sheafCycleClassOnCycles (ofOver X) 1 D = integralToRationalCohomology X 2
    E.firstChernClass`. The algebraic half is proved: every invertible algebraic sheaf is
@@ -104,22 +115,25 @@ states, for a single smooth projective integral complex variety `X`:
    `hasDivisorOfAlgebraicModel_of_divisorClass`. See
    [DIVISOR_HANDOFF.md](DIVISOR_HANDOFF.md).
 
-`RationalLefschetzOneOne.of_obligations` proves the target from (1) and
-`HasDivisorOfUnitExtension`, which follows from (2) and (3) by
-`hasDivisorOfUnitExtension_of_algebraicModel`. Since (1) is now a theorem,
-`RationalLefschetzOneOne.of_divisor` (`LefschetzOneOneFiniteHomology.lean`) proves it from
-`HasDivisorOfUnitExtension` alone, i.e. from (2) and (3). The bookkeeping proved there is: rational Hodge
-classes are stable under integer scaling, integral Hodge classes lift to unit-sheaf extensions,
-and the resulting integral divisor is divided by the denominator.
+`exists_rationalSheafCycleClassOnCycles_eq_of_obligations` proves the fixed-variety explicit-cycle
+claim from (1) and `HasDivisorOfUnitExtension`, which follows from (2) and (3) by
+`hasDivisorOfUnitExtension_of_algebraicModel`. Its bookkeeping shows that rational Hodge classes
+are stable under integer scaling, integral Hodge classes lift to unit-sheaf extensions, and the
+resulting integral divisor can be divided by the denominator.
 
-Only obligation (2), algebraization by GAGA, remains on this branch. PR228 discharges it and proves
-the final theorem.
+All three obligations are discharged. `GAGACoherentReduction.lean` reduces line-bundle GAGA to
+coherent-sheaf algebraization and faithful flatness of analytification on stalks;
+`GAGAProper.lean` supplies both through Oka's proper GAGA development.
+`LefschetzOneOne.lean` supplies all three discharged obligations to that reduction and proves the
+final `lefschetzOneOne` theorem directly.
 
 ## Verification
 
 ```bash
 lake build
-lake env lean scripts/lefschetz_axiom_audit.lean
+lake build CheckLefschetzOneOneAxioms
+lake exe lint-style HodgeConjecture Other HodgeGuide
+python3 scripts/check_import_layers.py
 git diff --check
 ```
 
