@@ -24,6 +24,10 @@ name = "HodgeConjecture"
 name = "Other"
 
 [[lean_lib]]
+name = "Challenge"
+roots = ["Challenge.Constructed"]
+
+[[lean_lib]]
 name = "HodgeGuide"
 
 # Fails the build if `HodgeConjecture.Statement` depends on the `Other` library.
