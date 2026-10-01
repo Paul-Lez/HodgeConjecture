@@ -104,7 +104,35 @@ def lowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
     (U : Opens X) :
     (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology n ≅
       (K.homology n).presheaf.obj (op U) :=
-  let := sectionCohomologyToSheafSection_isIso_lowest X K N n hK hflasque U
+  letI := sectionCohomologyToSheafSection_isIso_lowest X K N n hK hflasque U
   asIso (sectionCohomologyToSheafSection X K n U)
+
+/-- The supplied comparison identifies the lower cohomology sheaves with zero. -/
+lemma lowestSectionCohomologyIsoOfNat_isZero
+    (H : ℕ → Sheaf AddCommGrpCat.{u} X)
+    (e : ∀ n : ℕ, K.homology (n : ℤ) ≅ H n) (n : ℕ)
+    (hH : ∀ j : ℕ, j < n → IsZero (H j)) [K.IsStrictlyGE 0] :
+    ∀ j : ℤ, j < (n : ℤ) → IsZero (K.homology j) := by
+  intro j hj
+  by_cases hj' : j < 0
+  · apply ShortComplex.isZero_homology_of_isZero_X₂
+    exact K.isZero_of_isStrictlyGE 0 j hj'
+  · obtain ⟨j, rfl⟩ := Int.eq_ofNat_of_zero_le (le_of_not_gt hj')
+    exact IsZero.of_iso (hH j (by omega)) (e j)
+
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
+/-- If the terms of `K` are flasque, `K` is zero below `0`, and `H^j = 0` for `j < n`, this
+identifies `H^n(K(X))` with `Γ(X, H n)` through the supplied comparison `H^j(K) ≅ H j`. -/
+def lowestSectionCohomologyIsoOfNat
+    (H : ℕ → Sheaf AddCommGrpCat.{u} X)
+    (e : ∀ n : ℕ, K.homology (n : ℤ) ≅ H n) (n : ℕ)
+    (hH : ∀ j : ℕ, j < n → IsZero (H j))
+    (hflasque : ∀ j, (K.X j).IsFlasque) [K.IsStrictlyGE 0] :
+    (((supportEvaluation X ⊤).mapHomologicalComplex ℤᵘᵖ).obj K).homology (n : ℤ) ≅
+      (H n).presheaf.obj (op ⊤) :=
+  lowestSectionCohomologyIso X K 0 (n : ℤ)
+      (lowestSectionCohomologyIsoOfNat_isZero X K H e n hH) hflasque ⊤ ≪≫
+    asIso ((e n).hom.hom.app (op ⊤))
 
 end TopCat.Sheaf

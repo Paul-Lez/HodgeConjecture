@@ -6,6 +6,8 @@ module
 
 public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
 public import Mathlib.CategoryTheory.Sites.MayerVietorisSquare
+public import Mathlib.CategoryTheory.Abelian.CommSq
+public import Mathlib.CategoryTheory.Abelian.DiagramLemmas.KernelCokernelComp
 public import Mathlib.Algebra.Homology.DerivedCategory.Ext.ExactSequences
 
 /-!
@@ -113,6 +115,24 @@ def pairSheafMap {U V U' V' : C} (f : U ⟶ V) (f' : U' ⟶ V') (a : U' ⟶ U) (
   cokernel.map _ _ ((freeAbelianSheaf J).map a) ((freeAbelianSheaf J).map b)
     (by rw [← Functor.map_comp, ← Functor.map_comp, w])
 
+@[simp]
+lemma pairSheafMap_id {U V : C} (f : U ⟶ V) :
+    pairSheafMap (J := J) f f (𝟙 _) (𝟙 _) (by simp) = 𝟙 _ := by
+  apply (cancel_epi (cokernel.π ((freeAbelianSheaf J).map f))).1
+  dsimp [pairSheafMap]
+  simp
+
+lemma pairSheafMap_comp {U V U' V' U'' V'' : C}
+    (f : U ⟶ V) (f' : U' ⟶ V') (f'' : U'' ⟶ V'')
+    (a : U' ⟶ U) (b : V' ⟶ V) (a' : U'' ⟶ U') (b' : V'' ⟶ V')
+    (w : f' ≫ b = a ≫ f) (w' : f'' ≫ b' = a' ≫ f') :
+    pairSheafMap (J := J) f f'' (a' ≫ a) (b' ≫ b) (by
+      rw [← Category.assoc, w', Category.assoc, w]; simp only [Category.assoc]) =
+      pairSheafMap f' f'' a' b' w' ≫ pairSheafMap f f' a b w := by
+  apply (cancel_epi (cokernel.π ((freeAbelianSheaf J).map f''))).1
+  dsimp [pairSheafMap]
+  simp [Category.assoc]
+
 lemma pairSheafHomAddEquiv_pairSheafMap_comp {U V U' V' : C} (f : U ⟶ V) (f' : U' ⟶ V')
     (a : U' ⟶ U) (b : V' ⟶ V) (w : f' ≫ b = a ≫ f) (G : Sheaf J AddCommGrpCat.{v})
     (φ : pairSheaf (J := J) f ⟶ G) :
@@ -121,6 +141,62 @@ lemma pairSheafHomAddEquiv_pairSheafMap_comp {U V U' V' : C} (f : U ⟶ V) (f' :
   change freeAbelianSheafHomAddEquiv V' G (cokernel.π _ ≫ pairSheafMap f f' a b w ≫ φ) =
     G.obj.map b.op (freeAbelianSheafHomAddEquiv V G (cokernel.π _ ≫ φ))
   rw [pairSheafMap, cokernel.π_desc_assoc, Category.assoc, freeAbelianSheafHomAddEquiv_map_comp]
+
+/-- For composable monomorphisms `W ⟶ U ⟶ V`, this is the sequence
+`ℤ[U,W] ⟶ ℤ[V,W] ⟶ ℤ[V,U]` of pair sheaves. -/
+def pairNestedShortComplex {W U V : C} (f : W ⟶ U) (g : U ⟶ V) :
+    ShortComplex (Sheaf J AddCommGrpCat.{v}) :=
+  ShortComplex.mk
+    (pairSheafMap (J := J) (f ≫ g) f (𝟙 _) g (by simp))
+    (pairSheafMap (J := J) g (f ≫ g) f (𝟙 _) (by simp))
+    (by
+      apply (cancel_epi (cokernel.π ((freeAbelianSheaf J).map f))).1
+      dsimp [pairSheafMap, cokernel.map]
+      simp)
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency.types false in
+/-- The nested pair-sheaf short complex is short exact for composable monomorphisms. -/
+lemma pairNestedShortComplex_shortExact {W U V : C} (f : W ⟶ U) (g : U ⟶ V)
+    [Mono f] [Mono g] :
+    (pairNestedShortComplex (J := J) f g).ShortExact := by
+  let F := freeAbelianSheaf J
+  have hmono : Mono (cokernel.map (F.map f) (F.map f ≫ F.map g) (𝟙 _) (F.map g)
+      (by simp)) := by
+    apply Abelian.mono_cokernel_map_of_isPullback
+    refine IsPullback.of_vert_isIso_mono (fst := F.map f) (snd := 𝟙 _)
+      (f := F.map g) (g := F.map f ≫ F.map g) ?_
+    exact ⟨by simp⟩
+  have hepi : Epi (cokernel.map (F.map f ≫ F.map g) (F.map g) (F.map f) (𝟙 _)
+      (by simp)) := by
+    dsimp [cokernel.map]
+    apply cokernel.desc_epi
+  let S : ShortComplex (Sheaf J AddCommGrpCat.{v}) := ShortComplex.mk
+    (cokernel.map (F.map f) (F.map f ≫ F.map g) (𝟙 _) (F.map g) (by simp))
+    (cokernel.map (F.map f ≫ F.map g) (F.map g) (F.map f) (𝟙 _) (by simp))
+    (by
+      apply (cancel_epi (cokernel.π (F.map f))).1
+      dsimp [cokernel.map]
+      simp)
+  let h : F.map f ≫ F.map g = F.map (f ≫ g) := (F.map_comp f g).symm
+  let e₂ : cokernel (F.map f ≫ F.map g) ≅ cokernel (F.map (f ≫ g)) := cokernelIsoOfEq h
+  let e : S ≅
+      pairNestedShortComplex (J := J) f g :=
+    ShortComplex.isoMk (Iso.refl _) e₂ (Iso.refl _) (by
+      apply (cancel_epi (cokernel.π (F.map f))).1
+      dsimp [S, pairNestedShortComplex, e₂, h, pairSheafMap, cokernel.map]
+      dsimp [F]
+      simp only [Category.id_comp]
+      rw [cokernel.π_desc, cokernel.π_desc_assoc]
+      simp [Category.assoc, π_comp_cokernelIsoOfEq_hom]) (by
+      apply (cancel_epi (cokernel.π (F.map f ≫ F.map g))).1
+      dsimp [S, pairNestedShortComplex, e₂, h, pairSheafMap, cokernel.map]
+      dsimp [F]
+      simp)
+  exact ShortComplex.shortExact_of_iso e
+    { exact := (kernelCokernelCompSequence_exact (F.map f) (F.map g)).exact 3 (by omega)
+      mono_f := hmono
+      epi_g := hepi }
 
 variable [HasExt.{w} (Sheaf J AddCommGrpCat.{v})]
 
@@ -154,6 +230,47 @@ lemma sequence_exact [Mono f] (n₀ n₁ : ℕ) (h : 1 + n₀ = n₁) :
     (Ext.contravariantSequence (pairShortComplex_shortExact (J := J) f) F n₀ n₁ h).Exact :=
   Ext.contravariantSequence_exact _ _ _ _ _
 
+/-- The long exact sequence associated with nested pair sheaves. -/
+lemma nestedSequence_exact {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mono g]
+    (n₀ n₁ : ℕ) (h : 1 + n₀ = n₁) :
+    (Ext.contravariantSequence (pairNestedShortComplex_shortExact (J := J) f g) F n₀ n₁ h).Exact :=
+  Ext.contravariantSequence_exact _ _ _ _ _
+
+/-- Restriction is an isomorphism when the two outer terms of the nested sequence vanish. -/
+theorem isIso_restrict_of_isZero {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mono g]
+    (n : ℕ) (h₀ : IsZero (AddCommGrpCat.of (relH F n g)))
+    (h₁ : IsZero (AddCommGrpCat.of (relH F (n + 1) g))) :
+    IsIso (AddCommGrpCat.ofHom
+      (restrict F (f ≫ g) f (𝟙 _) g (by simp) n)) := by
+  let S := Ext.contravariantSequence
+    (pairNestedShortComplex_shortExact (J := J) f g) F n (n + 1) (by omega)
+  have hS := nestedSequence_exact F f g n (n + 1) (by omega)
+  let q := AddCommGrpCat.ofHom (restrict F (f ≫ g) f (𝟙 _) g (by simp) n)
+  have hmono : Mono q := by
+    change Mono (S.map' 1 2 (by omega) (by omega))
+    exact (hS.exact 0).mono_g (h₀.eq_zero_of_src _)
+  have hepi : Epi q := by
+    change Epi (S.map' 1 2 (by omega) (by omega))
+    exact (hS.exact 1).epi_f (h₁.eq_zero_of_tgt _)
+  exact isIso_of_mono_of_epi q
+
+/-- If `H^n(U,W;F)` and `H^(n+1)(U,W;F)` vanish, this identifies `H^n(V,W;F)` with
+`H^n(V,U;F)`. -/
+def restrictEquivOfIsZero {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mono g]
+    (n : ℕ) (h₀ : IsZero (AddCommGrpCat.of (relH F n g)))
+    (h₁ : IsZero (AddCommGrpCat.of (relH F (n + 1) g))) :
+    relH F n (f ≫ g) ≃+ relH F n f :=
+  letI := isIso_restrict_of_isZero F f g n h₀ h₁
+  (asIso (AddCommGrpCat.ofHom
+    (restrict F (f ≫ g) f (𝟙 _) g (by simp) n))).addCommGroupIsoToAddEquiv
+
+@[simp]
+theorem restrictEquivOfIsZero_apply {W U V : C} (f : W ⟶ U) (g : U ⟶ V) [Mono f] [Mono g]
+    (n : ℕ) (h₀ : IsZero (AddCommGrpCat.of (relH F n g)))
+    (h₁ : IsZero (AddCommGrpCat.of (relH F (n + 1) g))) (x : relH F n (f ≫ g)) :
+    restrictEquivOfIsZero F f g n h₀ h₁ x = restrict F (f ≫ g) f (𝟙 _) g (by simp) n x := by
+  rfl
+
 end relH
 
 section Terminal
@@ -173,9 +290,7 @@ def freeAbelianSheafTerminalIso :
       apply AddCommGrpCat.hom_ext
       apply FreeAbelianGroup.lift_ext
       intro h
-      first
-        | rfl
-        | simp [FreeAbelianGroup.uniqueEquiv, AddCommGrpCat.free_map_coe, FreeAbelianGroup.map_of])
+      rfl)
 
 /-- Precomposition with an isomorphism is an additive equivalence of `Ext` groups. -/
 def _root_.CategoryTheory.Abelian.Ext.precompAddEquiv {A B : Sheaf J AddCommGrpCat.{v}} (e : A ≅ B)

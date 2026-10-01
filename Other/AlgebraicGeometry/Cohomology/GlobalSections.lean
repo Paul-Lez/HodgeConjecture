@@ -95,7 +95,7 @@ def globalSectionsSingularCochainComplexIntIsoExtend :
     (ComplexShape.embeddingUpNat.extendFunctor AddCommGrpCat).mapIso
       ((Functor.mapHomologicalComplexCompIso eComp (ComplexShape.up ℕ)).app K).symm
 
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 600000 in
 /-- The comparison with global sections is additive when computed from a K-injective
 resolution whose global-sections map is a quasi-isomorphism. -/
 def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution

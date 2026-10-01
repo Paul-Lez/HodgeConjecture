@@ -6,6 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.NormalProjectionCoclass
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.MapOfLocalStalks
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Cohomology
 /-!
 # The local relative-cohomology presheaf and its sheafification
 
@@ -65,14 +66,18 @@ def supportRelativeCohomologyPresheaf : TopCat.Presheaf AddCommGrpCat X where
             (W := (V.unop : Set X)) (V := (U.unop : Set X)) (leOfHom f.unop) S) a)
     rw [← LinearMap.comp_apply, ← relativeCohomologyMap_comp, neighborhoodSupportInclusionPairMap_comp]
 
+/-- The contravariant functor whose value on an open `V` is `H^n(V, V \ S; ℚ)` and whose maps
+are induced by inclusions of pairs. -/
+def supportRelativeCohomologyFunctor : Opens X ⥤ AddCommGrpCatᵒᵖ :=
+  opOp (Opens X) ⋙ (supportRelativeCohomologyPresheaf X S n).op
+
 /-- Let `X` be a topological space, `S ⊆ X` a subset, and `n` a natural number. The sheaf `𝓗^n_S` is
 the sheafification of `V ↦ H^n(V, V \ S; ℚ)`, rational relative singular cohomology on open
 subsets. Its sections are locally represented by these relative classes, with representatives
 identified when they agree on smaller neighborhoods. -/
-def supportRelativeCohomologySheaf : TopCat.Sheaf AddCommGrpCat X :=
-  -- The sheaf associated with `V ↦ H^n(V, V \ S; ℚ)`; write it `𝓗^n_S`.
-  (presheafToSheaf (Opens.grothendieckTopology X) AddCommGrpCat).obj
-    (supportRelativeCohomologyPresheaf X S n)
+def supportRelativeCohomologySheaf (S : Set X) (n : ℕ) : TopCat.Sheaf AddCommGrpCat X :=
+  TopCat.Sheaf.SupportedCohomologySheaf X S
+    (fun S n => supportRelativeCohomologyFunctor X S n) n
 
 /-- `𝓗_[S]^n(X; ℚ)` is the `n`-th rational relative-cohomology sheaf on `X` with support in `S`,
 the sheaf associated with `V ↦ H^n(V, V \ S; ℚ)`. -/
@@ -84,7 +89,8 @@ map from the presheaf `V ↦ H^n(V, V \ S; ℚ)` to its associated sheaf `𝓗^n
 relative singular class on an open `V` to the section represented by its germs. -/
 def supportRelativeCohomologyToSheaf :
     supportRelativeCohomologyPresheaf X S n ⟶ (𝓗_[S]^n(X; ℚ)).obj :=
-  toSheafify (Opens.grothendieckTopology X) _
+  TopCat.Sheaf.supportedCohomologyToSheaf X S
+    (fun S n => supportRelativeCohomologyFunctor X S n) n
 
 /-- Let `X` be a topological space, `S ⊆ X`, `V ⊆ X` open, and `x ∈ V`. For a natural number `n`,
 this sends a relative singular class in `H^n(V, V \ S; ℚ)` to its germ at `x` in the stalk of

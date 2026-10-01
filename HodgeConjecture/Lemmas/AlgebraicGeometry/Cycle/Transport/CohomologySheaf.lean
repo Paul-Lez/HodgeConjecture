@@ -6,13 +6,15 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedSingularModel
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportedInjectiveModel
+public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Local.LocalHomology
+public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSectionCohomology
 
 /-!
 # Cohomology-sheaf concentration for smooth closed supports
 
-Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Transport.CohomologySheaf`.
+Concentration lemmas for the supported injective model.
 -/
 
 /-! ### Constructions used only in proofs -/

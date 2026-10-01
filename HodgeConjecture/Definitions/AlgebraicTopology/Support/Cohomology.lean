@@ -15,7 +15,10 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Mathlib.CategoryTheory.Sites.SheafCohomology.Pair
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Cohomology
 public import Mathlib.Topology.Sheaves.Abelian
 public import Mathlib.Topology.Sets.Closeds
 
@@ -31,6 +34,7 @@ pair.
 @[expose] public noncomputable section
 
 open CategoryTheory Limits Abelian Opposite TopologicalSpace
+open TopCat.Presheaf
 
 namespace TopCat.Sheaf
 
@@ -100,6 +104,66 @@ def supportH.forget (n : ℕ) : H_[Z]^n(X; F) →+ F.H n :=
 def supportH.map {F G : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}}
     (g : F ⟶ G) (n : ℕ) : H_[Z]^n(X; F) →+ H_[Z]^n(X; G) :=
   CategoryTheory.Sheaf.relH.map _ g n
+
+variable {Z : Closeds X}
+  (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
+  (n : ℕ)
+
+/-- For an open `V`, this presheaf has value `H^n(V, V \ Z; F)` and restriction maps induced by
+inclusions of pairs. -/
+def supportHOnOpenPresheaf : TopCat.Presheaf AddCommGrpCat.{w} X where
+  obj V := AddCommGrpCat.of (CategoryTheory.Sheaf.relH F n
+    (homOfLE (inf_le_left : V.unop ⊓ Z.compl ≤ V.unop)))
+  map {U V} f := AddCommGrpCat.ofHom
+    (CategoryTheory.Sheaf.relH.restrict F
+      (homOfLE (inf_le_left : U.unop ⊓ Z.compl ≤ U.unop))
+      (homOfLE (inf_le_left : V.unop ⊓ Z.compl ≤ V.unop))
+      (homOfLE (inf_le_inf_right Z.compl (leOfHom f.unop))) (homOfLE (leOfHom f.unop))
+      (Subsingleton.elim _ _) n)
+  map_id V := by
+    apply AddCommGrpCat.hom_ext
+    apply AddMonoidHom.ext
+    intro a
+    simp [CategoryTheory.Sheaf.relH.restrict, CategoryTheory.Sheaf.pairSheafMap_id]
+  map_comp {U V W} f g := by
+    apply AddCommGrpCat.hom_ext
+    apply AddMonoidHom.ext
+    intro a
+    change (Ext.mk₀ _).comp a (zero_add n) =
+      (Ext.mk₀ _).comp ((Ext.mk₀ _).comp a (zero_add n)) (zero_add n)
+    rw [Ext.mk₀_comp_mk₀_assoc]
+    congr 1
+    congr 1
+    apply CategoryTheory.Sheaf.pairSheafMap_comp
+
+/-- The contravariant functor whose value on an open `V` is `H^n(V, V \ Z; F)` and whose maps are
+induced by inclusions of pairs. -/
+def supportHOnOpenFunctor : Opens X ⥤ AddCommGrpCat.{w}ᵒᵖ :=
+  opOp (Opens X) ⋙ (supportHOnOpenPresheaf (Z := Z) F n).op
+
+/-- For a closed support `Z`, this is the sheafification of the presheaf
+`V ↦ H^n(V, V \ Z; F)`. -/
+def supportHCohomologySheaf (Z : Closeds X)
+    (F : CategoryTheory.Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})
+    (n : ℕ) [h : HasSheafify (Opens.grothendieckTopology X) AddCommGrpCat.{w}] :
+    TopCat.Sheaf AddCommGrpCat.{w} X :=
+  CohomologySheafOfOpens X (supportHOnOpenFunctor (Z := Z) F n) (h := h)
+
+/-- This is the canonical map `H^n_Z(X;F) → Γ(X,𝓗^n_Z(F))` induced by the sheafification map. -/
+def supportHToSupportHCohomologySheafSection
+    [h : HasSheafify (Opens.grothendieckTopology X) AddCommGrpCat.{w}] :
+    H_[Z]^n(X; F) →+
+      (supportHCohomologySheaf (Z := Z) F n (h := h)).presheaf.obj (op ⊤) :=
+  (show H_[Z]^n(X; F) →+
+      ↑((CohomologySheafOfOpens X (supportHOnOpenFunctor (Z := Z) F n) (h := h)).obj.obj
+        (op ⊤)) from
+    ((cohomologySheafOfOpensToSheaf X
+      (supportHOnOpenFunctor (Z := Z) F n) (h := h)).app (op ⊤)).hom.comp
+      (CategoryTheory.Sheaf.relH.restrict F
+        (homOfLE (le_top : Z.compl ≤ ⊤))
+        (homOfLE (inf_le_left : (⊤ : Opens X) ⊓ Z.compl ≤ ⊤))
+        (homOfLE (inf_le_right : (⊤ : Opens X) ⊓ Z.compl ≤ Z.compl))
+        (homOfLE (le_rfl : (⊤ : Opens X) ≤ ⊤)) (Subsingleton.elim _ _) n))
 
 end TopCat.Sheaf
 

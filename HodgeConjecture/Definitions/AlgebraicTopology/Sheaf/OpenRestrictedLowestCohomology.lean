@@ -39,6 +39,24 @@ def openRestrictionTopSectionsIso :
 
 variable (K : CochainComplex (Sheaf AddCommGrpCat.{u} X) ℤ)
 
+/-- Restriction preserves the lower-degree vanishing supplied by the comparison. -/
+lemma openRestrictedLowestSectionCohomologyIsoOfNat_isZero
+    (H : ℕ → Sheaf AddCommGrpCat.{u} X)
+    (e : ∀ n : ℕ, K.homology (n : ℤ) ≅ H n) (n : ℕ)
+    (hH : ∀ j : ℕ, j < n → IsZero
+      ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj (H j))) [K.IsStrictlyGE 0] :
+    ∀ j : ℤ, j < (n : ℤ) → IsZero
+      ((((U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapHomologicalComplex ℤᵘᵖ).obj K).homology j) := by
+  intro j hj
+  by_cases hj' : j < 0
+  · apply ShortComplex.isZero_homology_of_isZero_X₂
+    exact (U.isOpenEmbedding.sheafPullback AddCommGrpCat).map_isZero
+      (K.isZero_of_isStrictlyGE 0 j hj')
+  · obtain ⟨j, rfl⟩ := Int.eq_ofNat_of_zero_le (le_of_not_gt hj')
+    exact IsZero.of_iso (hH j (by omega))
+      ((K.sc (j : ℤ)).mapHomologyIso (U.isOpenEmbedding.sheafPullback AddCommGrpCat) ≪≫
+        (U.isOpenEmbedding.sheafPullback AddCommGrpCat).mapIso (e j))
+
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
 /-- Let `X` be a topological space and `K` an integer-indexed cochain complex of sheaves of abelian
@@ -78,11 +96,28 @@ def openRestrictedLowestSectionCohomologyIso (N n : ℤ) [K.IsStrictlyGE N]
       (K.homology n).presheaf.obj (op U) :=
   let L := ((U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}).mapHomologicalComplex
     ℤᵘᵖ).obj K
-  have hLF (j : ℤ) : (L.X j).IsFlasque := by
-    let := hflasque j
-    exact openSheafRestriction_isFlasque X U (K.X j)
+  let hLF : ∀ j : ℤ, (L.X j).IsFlasque := fun j =>
+    letI := hflasque j
+    openSheafRestriction_isFlasque X U (K.X j)
   (HomologicalComplex.homologyMapIso (openRestrictionTopSectionComplexIso X U K) n).symm ≪≫
     lowestSectionCohomologyIso (TopCat.of U) L N n hK hLF ⊤ ≪≫
       openRestrictionHomologyTopSectionsIso X U K n
+
+set_option backward.isDefEq.respectTransparency false in
+set_option backward.defeqAttrib.useBackward true in
+/-- If the terms of `K` are flasque, `K` is zero below `0`, and the restrictions of `H^j` to `U`
+vanish for `j < n`, this identifies `H^n(K(U))` with `Γ(U, H n)` through the supplied comparison
+`H^j(K) ≅ H j`. -/
+def openRestrictedLowestSectionCohomologyIsoOfNat
+    (H : ℕ → Sheaf AddCommGrpCat.{u} X)
+    (e : ∀ n : ℕ, K.homology (n : ℤ) ≅ H n) (n : ℕ)
+    (hH : ∀ j : ℕ, j < n → IsZero
+      ((U.isOpenEmbedding.sheafPullback AddCommGrpCat).obj (H j)))
+    (hflasque : ∀ j, (K.X j).IsFlasque) [K.IsStrictlyGE 0] :
+    (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).obj K).homology (n : ℤ) ≅
+      (H n).presheaf.obj (op U) :=
+  openRestrictedLowestSectionCohomologyIso X U K 0 (n : ℤ)
+      (openRestrictedLowestSectionCohomologyIsoOfNat_isZero X U K H e n hH) hflasque ≪≫
+    asIso ((e n).hom.hom.app (op U))
 
 end TopCat.Sheaf
