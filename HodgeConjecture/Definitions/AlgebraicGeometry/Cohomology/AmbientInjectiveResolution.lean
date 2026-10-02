@@ -50,7 +50,7 @@ def ambientRationalInjectiveComplex :
 resolution of the constant rational sheaf on the analytic space `X(ℂ)`, with both complexes
 indexed by integers. -/
 def ambientRationalInjectiveAugmentation :
-    constantFieldSheafComplexInt ℚ X ⟶
+    (constantFieldSheafComplexIntPlus ℚ X).obj ⟶
       ambientRationalInjectiveComplex X :=
   HomologicalComplex.extendMap
     (TopCat.Sheaf.ambientConstantInjectiveResolution

@@ -4,7 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.OpenInjectiveResolution
+public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLocalization
+public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
+public import Other.AlgebraicGeometry.Cohomology.WithSupport
+public import Other.AlgebraicGeometry.Cohomology.SupportComparisonLemmas
+public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturalityDef
 
 /-!
 # Normalized injective models for the rational support cone
@@ -42,14 +49,33 @@ def ambientRationalInjectiveRestriction
       (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩
       (AddCommGrpCat.of ℚ)) ComplexShape.embeddingUpNat
 
+/- The ambient injective resolution with its bounded-below presentation. -/
+abbrev ambientRationalInjectiveComplexPlus : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
+  ⟨ambientRationalInjectiveComplex X, ⟨0, ambientRationalInjectiveComplex_isStrictlyGE X⟩⟩
+
+instance ambientRationalInjectiveComplexPlus_injective (i : ℤ) :
+    Injective ((ambientRationalInjectiveComplexPlus X).obj.X i) :=
+  ambientRationalInjectiveComplex_injective X i
+
+/- The ambient augmentation with the bounded-below source presentation used by the support cone.
+This is definitionally the compatibility augmentation above. -/
+def ambientRationalInjectiveAugmentationPlus :
+    constantFieldSheafComplexIntPlus ℚ X ⟶ ambientRationalInjectiveComplexPlus X :=
+  ⟨ambientRationalInjectiveAugmentation X⟩
+
+instance ambientRationalInjectiveAugmentationPlus_quasiIso :
+    QuasiIso (ambientRationalInjectiveAugmentationPlus X).hom :=
+  ambientRationalInjectiveAugmentation_quasiIso X
+
 set_option backward.isDefEq.respectTransparency false in
 /-- The comparison extends the original rational restriction strictly. -/
 @[reassoc]
 lemma ambientRationalAugmentation_comp_restriction
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    ambientRationalInjectiveAugmentation X ≫
+    (ambientRationalInjectiveAugmentationPlus X).hom ≫
       ambientRationalInjectiveRestriction X Z hZ =
         rationalRestrictionComplexInt X Z := by
+  dsimp only [ambientRationalInjectiveAugmentationPlus, rationalRestrictionComplexInt]
   change (ComplexShape.embeddingUpNat.extendFunctor
     (AnalyticAdditiveSheaf X)).map _ ≫
       (ComplexShape.embeddingUpNat.extendFunctor
@@ -69,7 +95,7 @@ def rationalSupportConeToAmbientInjectiveCone
       CochainComplex.mappingCone
         (ambientRationalInjectiveRestriction X Z hZ) :=
   CochainComplex.mappingCone.map _ _
-    (ambientRationalInjectiveAugmentation X) (𝟙 _)
+    (ambientRationalInjectiveAugmentationPlus X).hom (𝟙 _)
     (by simpa using (ambientRationalAugmentation_comp_restriction X Z hZ).symm)
 
 instance rationalSupportConeToAmbientInjectiveCone_quasiIso
@@ -269,7 +295,7 @@ resolution. The shift `n - 1` in the old cone model is reconciled by the
 explicit homology/shift isomorphism. The final negation corrects the
 standard cone triangle's negative connecting projection, so that the
 comparison preserves the actual support-forgetting inclusion. -/
-def rationalSupportAddEquivSupportedInjectiveHomology
+def rationalSupportAddEquivSupportedInjectiveHomologyAmbient
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex

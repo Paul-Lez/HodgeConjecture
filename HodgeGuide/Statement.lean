@@ -27,7 +27,7 @@ open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
 noncomputable section
 universe u u_1
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
-  (d p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
+  (p : ℕ) (x : X.left) (hx : coheight x = p) (n : ℤ)
 ```
 
 # From subvarieties to cycles
@@ -72,15 +72,14 @@ example : @Guide.Statement.D6.rationalSheafCycleClassOnCycles = @AlgebraicGeomet
 #check AlgebraicGeometry.ComplexPoint.rationalSheafCycleClassOnCycles_tmul_single
 ```
 
-These maps take a {name}`SmoothProjectiveComplexVariety`, a scheme with its structure morphism to
-$`\operatorname{Spec}\mathbb C`, together with a natural number {lean}`d` and an instance saying
-that the structure morphism is smooth of relative dimension {lean}`d`. The construction of the
-class of a subvariety needs that dimension. For a smooth integral complex scheme the instance
-holds at {lean}`dim X.left`, so a caller supplies {lean}`dim X.left` and typeclass search finds the
-certificate.
+These maps take a {name}`SmoothProjectiveComplexVariety` and a natural number {lean}`p` recording
+the codimension. The smooth and projective hypotheses are packaged in the variety, while each
+component class is constructed from its coheight proof; no separate dimension argument is part of
+these APIs.
 
-{name}`algebraicCycleClassSpan`, defined next, evaluates each class at {lean}`dim X.left` directly,
-so the statement mentions the scheme and its structure morphism alone.
+{name}`algebraicCycleClassSpan`, defined next, likewise uses the coheight-
+{lean}`p` components directly, so the statement mentions the scheme and its structure morphism
+alone.
 
 # The algebraic subspace
 
@@ -100,8 +99,8 @@ namespace Guide.Statement.D2
 ```lean
 def algebraicCycleClassSpan (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     [IsProjective X.hom] (p : ℕ) : Submodule ℚ (H^(2 * (p : ℤ))(X; ℚ)) :=
-  ⨆ (x : X.left) (hx : coheight x = p),
-    Submodule.span ℚ {cycleComponentSheafClass X x hx}
+  sSup {Submodule.span ℚ {cycleComponentSheafClass X x hx} |
+    (x : X.left) (hx : coheight x = p)}
 ```
 ```lean -show
 end Guide.Statement.D2
@@ -112,10 +111,9 @@ example : @Guide.Statement.D2.algebraicCycleClassSpan = @AlgebraicGeometry.Compl
 #check AlgebraicGeometry.ComplexPoint.cycleComponentSheafClass_mem_algebraicCycleClassSpan
 ```
 
-In Lean the span is the supremum, over all points {lean}`x` and all proofs {lean}`hx` of
+In Lean the span is an `sSup`, over all points {lean}`x` and all proofs {lean}`hx` of
 {lean}`coheight x = p`, of the line spanned by
-{lean}`cycleComponentSheafClass X x hx`, where the named argument fixes the
-dimension at {lean}`dim X.left`.
+{lean}`cycleComponentSheafClass X x hx`.
 
 # The proposition
 
@@ -214,18 +212,16 @@ The shortest route through the implementation is:
 1. `HodgeConjecture/Statement.lean`, the statement;
 2. `HodgeConjecture/Definitions/AlgebraicGeometry/Hodge/Filtration.lean`, cohomology and the Hodge
    filtration;
-3. `HodgeConjecture/Lemmas/AlgebraicGeometry/Cohomology/WithSupport.lean`, the mapping-cone
-   model of cohomology with support;
+3. `HodgeConjecture/Definitions/AlgebraicGeometry/Cohomology/WithSupport.lean`, the supported
+   cohomology groups and their support-forgetting map;
 4. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SmoothSupportCoclassSection.lean`,
    the class on the smooth locus;
 5. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SupportExtension.lean`, its
    extension across the singular locus;
-6. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/FundamentalClass.lean`, the class of a
-   subvariety;
-7. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/ClassSpan.lean`, the span the
-   statement compares against;
-8. `Other/AlgebraicGeometry/Cycle/SheafClass.lean`, the maps on cycles;
-9. `Other/AlgebraicGeometry/Hodge/CodimensionZeroComparison.lean` and
+6. `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/FundamentalClass.lean`, the fundamental
+   class of a subvariety and the span the statement compares against;
+7. `Other/AlgebraicGeometry/Cycle/SheafClass.lean`, the maps on cycles;
+8. `Other/AlgebraicGeometry/Hodge/CodimensionZeroComparison.lean` and
    `CodimensionZeroNonvanishing.lean`, the codimension-zero case.
 
 Things to keep track of while reading: integer versus natural-number degrees, real versus complex

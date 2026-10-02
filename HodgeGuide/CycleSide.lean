@@ -134,56 +134,19 @@ its class in the next section handles that case from the start.
 # Cohomology with support
 
 Let $`Z\subseteq X(\mathbb C)` be closed, with open complement $`j:U\hookrightarrow X(\mathbb C)`.
-Cohomology with support in $`Z` sits in the distinguished triangle
+Cohomology with support in $`Z` is exposed by the public supported-cohomology API. Its
+implementation uses injective resolutions of the constant sheaf and the canonical comparison with
+hypercohomology. It sits in the distinguished triangle
 
 $$`R\Gamma_Z(X,\mathbb Q_X)\longrightarrow R\Gamma(X,\mathbb Q_X)
   \longrightarrow R\Gamma(U,\mathbb Q_U)\xrightarrow{+1}.`
 
-The formalization builds the first term as a homotopy fibre. It resolves the constant sheaf
-$`\underline{\mathbb Q}_U` injectively, pushes the resolution forward along $`j`, maps
-$`\underline{\mathbb Q}_X` to the result, and takes the mapping cone shifted by $`-1`.
-Hypercohomology of this complex is $`H^n_Z(X;\mathbb Q)`, and the connecting map of the triangle
-is {name}`forgetSupport`, the map $`H^n_Z(X;\mathbb Q)\to H^n(X;\mathbb Q)`.
+The supported group is written directly as `H_[Z]^n(X; ℚ)`, and {name}`forgetSupport` is the
+canonical additive map to ordinary hypercohomology:
 
-```lean -show
-namespace Guide.Cycles.D8
-```
 ```lean
-abbrev rationalCohomologyWithSupportComplex (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) :
-    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
-  CochainComplex.mappingCone (rationalRestrictionComplexInt X Z)
-```
-```lean -show
-end Guide.Cycles.D8
-example : @Guide.Cycles.D8.rationalCohomologyWithSupportComplex = @AlgebraicGeometry.ComplexPoint.rationalCohomologyWithSupportComplex := rfl
-```
-```lean -show
-namespace Guide.Cycles.D9
-```
-```lean
-abbrev RationalCohomologyWithSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
-    Type :=
-  ↥((TopCat.Sheaf.hypercohomologyFunctor AddCommGrpCat
-    (TopCat.of (ComplexPoint X)) n).obj
-      (rationalCohomologyWithSupportComplexPlus X Z))
-```
-```lean -show
-end Guide.Cycles.D9
-example : @Guide.Cycles.D9.RationalCohomologyWithSupport = @AlgebraicGeometry.ComplexPoint.RationalCohomologyWithSupport := rfl
-```
-```lean -show
-namespace Guide.Cycles.D10
-```
-```lean
-def forgetSupport (X : Over (Spec ↧ℂ)) (Z : Set (ComplexPoint X)) (n : ℤ) :
-    RationalCohomologyWithSupport X Z n →+ H^n(X; ℚ) :=
-  ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
-    (⟨forgetSupportComplex X Z⟩ : rationalCohomologyWithSupportComplexPlus X Z ⟶
-      constantFieldSheafComplexIntPlus ℚ X)).hom
-```
-```lean -show
-end Guide.Cycles.D10
-example : @Guide.Cycles.D10.forgetSupport = @AlgebraicGeometry.ComplexPoint.forgetSupport := rfl
+#check AlgebraicGeometry.ComplexPoint.forgetSupport
+#check AlgebraicGeometry.ComplexPoint.forgetSupport_injective_of_eq_top
 ```
 
 For the triangle and the exact sequence of a pair see Goresky,

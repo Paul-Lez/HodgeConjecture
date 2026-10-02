@@ -15,9 +15,10 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportHypercohomology
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyDef
 import Mathlib.Algebra.Homology.HomotopyCategory.Plus
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportHypercohomology
+public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyLemmas
 public import Other.AlgebraicGeometry.Cohomology.GlobalSections
 public import Other.AlgebraicGeometry.Cohomology.SupportSingularGlobal
 

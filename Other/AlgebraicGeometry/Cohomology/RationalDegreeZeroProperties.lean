@@ -59,14 +59,13 @@ induced by `n ↦ n q`. -/
   let Y := TopCat.of (ComplexPoint X)
   let K := constantFieldSheafComplexIntPlus ℚ X
   let F := ℍ[AddCommGrpCat]^0(Y)
-  let G := CochainComplex.Plus.ι (AnalyticAdditiveSheaf X) ⋙
-    (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex (.up ℤ) ⋙
+  let G := (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex (.up ℤ) ⋙
     HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0
   let s := TopCat.Sheaf.integerConstantHomAddEquivGlobalSections
     𝓒(↧(ComplexPoint X); ℚ)
       ((TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
         (AddCommGrpCat.ofHom (zmultiplesAddHom ℚ 1)))
-  let t : G.obj K :=
+  let t : G.obj K.obj :=
     (TopCat.Sheaf.globalSectionsSingle₀HomologyIso AddCommGrpCat Y
       𝓒(↧(ComplexPoint X); ℚ)).inv s
   let m := fieldScalarComplex ℚ X q
@@ -214,14 +213,14 @@ induced by `n ↦ n q`. -/
     simp
   have hmt :
       (TopCat.Sheaf.globalSectionsSingle₀HomologyIso AddCommGrpCat Y Q).hom
-          (G.map m t) =
+          (G.map m.hom t) =
         TopCat.Sheaf.integerConstantHomAddEquivGlobalSections Q u := by
     have hn := ConcreteCategory.congr_hom
       (TopCat.Sheaf.globalSectionsSingle₀HomologyIso_hom_naturality
         AddCommGrpCat Y v) t
     simp only [ConcreteCategory.comp_apply] at hn
     change (TopCat.Sheaf.globalSectionsSingle₀HomologyIso AddCommGrpCat Y Q).hom
-        (G.map m t) = Γ.map v
+        (G.map m.hom t) = Γ.map v
           ((TopCat.Sheaf.globalSectionsSingle₀HomologyIso AddCommGrpCat Y Q).hom t) at hn
     rw [hn]
     have ht := ConcreteCategory.congr_hom
@@ -238,7 +237,7 @@ induced by `n ↦ n q`. -/
           ((CochainComplex.HomComplex.homologyAddEquiv _ K.obj 0).symm
             (CochainComplex.HomComplex.CohomologyClass.mk
               (CochainComplex.HomComplex.Cocycle.ofHom j))) =
-        G.map m t := by
+        G.map m.hom t := by
     apply (ConcreteCategory.bijective_of_isIso
       (TopCat.Sheaf.globalSectionsSingle₀HomologyIso AddCommGrpCat Y Q).hom).1
     rw [hj, hmt]
@@ -278,7 +277,7 @@ induced by `n ↦ n q`. -/
           ((CochainComplex.HomComplex.homologyAddEquiv A I 0).symm
             (CochainComplex.HomComplex.CohomologyClass.mk
               (CochainComplex.HomComplex.Cocycle.ofHom (j ≫ a)))) =
-        HomologicalComplex.homologyMap Γa 0 (G.map m t) := by
+        HomologicalComplex.homologyMap Γa 0 (G.map m.hom t) := by
     rw [hx]
     change ConcreteCategory.hom (HomologicalComplex.homologyMap hciI.hom 0)
       (HomologicalComplex.homologyMap p 0 x) = _
@@ -288,12 +287,12 @@ induced by `n ↦ n q`. -/
       (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective Y I 0).symm
           (HomologicalComplex.homologyMap
             (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
-              (.up ℤ)).map a) 0 (G.map m t)) =
+              (.up ℤ)).map a) 0 (G.map m.hom t)) =
         ShiftedHom.mk₀ 0 rfl (DerivedCategory.Q.map (j ≫ a)) := by
     rw [← hrepI]
     exact derivedHomAddEquivGlobalSectionsKInjective_symm_hom X I (j ≫ a)
   have hclass : fieldCohomologyClass ℚ X q =
-      ((TopCat.Sheaf.toHypercohomology AddCommGrpCat Y 0).app K).hom (G.map m t) := by
+      ((TopCat.Sheaf.toHypercohomology AddCommGrpCat Y 0).app K).hom (G.map m.hom t) := by
     change F.map m
         (((TopCat.Sheaf.toHypercohomology AddCommGrpCat Y 0).app K).hom t) = _
     exact (ConcreteCategory.congr_hom
@@ -319,7 +318,10 @@ induced by `n ↦ n q`. -/
   dsimp only [I, a, Y] at hderivedI
   set_option backward.isDefEq.respectTransparency.types true in
     set_option backward.isDefEq.respectTransparency true in
-      rw [hderivedI]
+      change (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective
+          (TopCat.of (ComplexPoint X)) (ambientRationalInjectiveComplex X) 0).symm
+        (HomologicalComplex.homologyMap Γa 0 (G.map m.hom t)) ≫ _ = _
+  rw [hderivedI]
   simp only [ShiftedHom.mk₀, Functor.map_comp, Category.assoc]
   let D := DerivedCategory
     (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))

@@ -21,6 +21,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueQuasiIso
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.InjectiveFlasque
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
+public import HodgeConjecture.Mathlib.Algebra.Homology.HomComplexSingle
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 public import Mathlib.Algebra.Homology.Factorizations.CM5a
 public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexSingle
@@ -43,45 +44,6 @@ theorem is assumed.
 @[expose] public noncomputable section
 
 open CategoryTheory Limits TopologicalSpace
-
-namespace CochainComplex.HomComplex
-
-universe u v
-
-variable {C : Type u} [Category.{v} C] [Preadditive C] [HasZeroObject C]
-
-set_option backward.isDefEq.respectTransparency.types false in
-set_option backward.isDefEq.respectTransparency false in
-/-- The Hom complex from an object placed in degree zero is the degreewise preadditive
-coyoneda functor applied to the target complex. -/
-def fromSingleZeroIsoPreadditiveCoyoneda (X : C) (K : CochainComplex C ℤ) :
-    CochainComplex.HomComplex ((CochainComplex.singleFunctor C 0).obj X) K ≅
-      ((preadditiveCoyoneda.obj (.op X)).mapHomologicalComplex
-        (ComplexShape.up ℤ)).obj K :=
-  HomologicalComplex.Hom.isoOfComponents
-    (fun n ↦ (Cochain.fromSingleEquiv (p := 0) (q := n) (n := n)
-      (zero_add n)).toAddCommGrpIso)
-    (by
-      intro i j hij
-      apply AddCommGrpCat.hom_ext
-      ext z
-      obtain ⟨f, rfl⟩ := Cochain.fromSingleMk_surjective z i (zero_add i)
-      have he : Cochain.fromSingleEquiv (zero_add j)
-          (CochainComplex.HomComplex.δ i j
-            (Cochain.fromSingleMk f (zero_add i))) = f ≫ K.d i j := by
-        rw [Cochain.δ_fromSingleMk f (zero_add i) j j (zero_add j)]
-        simp
-      have hleft : (preadditiveCoyoneda.obj (.op X)).map (K.d i j)
-          (Cochain.fromSingleEquiv (zero_add i)
-            (Cochain.fromSingleMk f (zero_add i))) = f ≫ K.d i j := by
-        rw [Cochain.fromSingleEquiv_fromSingleMk]
-        rfl
-      have hcalc := hleft.trans he.symm
-      simp only [AddCommGrpCat.comp_apply, AddEquiv.toAddCommGrpIso_hom,
-        Functor.mapHomologicalComplex_obj_d]
-      convert hcalc using 1 <;> rfl)
-
-end CochainComplex.HomComplex
 
 namespace TopCat.Sheaf
 
@@ -176,14 +138,5 @@ variable (X : Over (Spec ↧ℂ))
 local instance bettiGlobalSectionsHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
-
-/-- The integer constant-sheaf complex used to define hypercohomology is the degree-zero
-integer constant sheaf, after extending its natural-number grading to integer degrees. -/
-def constantIntegerSheafComplexIntIsoSingle :
-    constantIntegerSheafComplexInt X ≅
-      TopCat.Sheaf.integerConstantSingleComplex
-        (TopCat.of (ComplexPoint X)) :=
-  HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℤ) 0 0 rfl
 
 end AlgebraicGeometry.ComplexPoint

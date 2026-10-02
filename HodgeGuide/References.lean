@@ -50,7 +50,7 @@ formalization.
 * `Other/AlgebraicGeometry/Cycle/Codimension.lean`,
   `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Support.lean`,
   and `HodgeConjecture/Definitions/AlgebraicGeometry/Cohomology/WithSupport.lean`: cycles, their
-  supports, and cohomology with support;
+  supports, and the public supported-cohomology and support-forgetting maps;
 * `HodgeConjecture/Definitions/AlgebraicGeometry/Cycle/Component/SmoothSupportCoclassSection.lean`
   and `SupportExtension.lean`: the class on the smooth locus and its extension
   across the singular locus;

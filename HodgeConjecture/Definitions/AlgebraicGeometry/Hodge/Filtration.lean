@@ -74,6 +74,14 @@ abbrev constantFieldSheafComplexIntPlus :
   (CochainComplex.Plus.single₀ (AnalyticAdditiveSheaf X)).obj
     𝓒(↧(ComplexPoint X); K)
 
+/-- The original constant-field complex is canonically the degree-zero complex. -/
+def constantFieldSheafComplexIntIsoSingle :
+    (constantFieldSheafComplexIntPlus K X).obj ≅
+      (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj
+        𝓒(↧(ComplexPoint X); K) :=
+  HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
+    𝓒(↧(ComplexPoint X); K) 0 0 rfl
+
 /-- The holomorphic de Rham complex as a bounded-below complex. -/
 abbrev holomorphicDeRhamComplexIntPlus [IsIntegral X.left] [Smooth X.hom] :
     CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
@@ -90,13 +98,6 @@ def fieldToHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
     constantFieldSheafComplexIntPlus K X ⟶ holomorphicDeRhamComplexIntPlus X :=
   fieldToComplexConstantSheafComplexInt K X ≫
     ⟨constantsToHolomorphicDeRhamComplexInt X⟩
-
-/-- The constant integer sheaf complex, extended by zero to integer degrees. -/
-@[implicit_reducible]
-def constantIntegerSheafComplexInt :
-    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
-  ((CochainComplex.single₀ (AnalyticAdditiveSheaf X)).obj
-    𝓒(↧(ComplexPoint X); ℤ)).extend ComplexShape.embeddingUpNat
 
 /-- Scalar multiplication on the rational constant sheaf. -/
 abbrev fieldScalarSheaf (q : K) :

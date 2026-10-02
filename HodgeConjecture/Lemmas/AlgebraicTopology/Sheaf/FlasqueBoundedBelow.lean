@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.GlobalSections
+public import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Topology.Sheaves.Flasque
 

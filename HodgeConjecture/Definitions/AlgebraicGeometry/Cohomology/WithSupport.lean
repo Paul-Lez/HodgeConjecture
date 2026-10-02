@@ -43,6 +43,14 @@ open Point
 
 variable (K : Type) [Field K] (X : Over (Spec ↧ℂ))
 
+local instance withSupportAnalyticHasDerivedCategory :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+
+local instance withSupportAdditiveGroupsHasDerivedCategory :
+    HasDerivedCategory AddCommGrpCat :=
+  HasDerivedCategory.standard AddCommGrpCat
+
 set_option quotPrecheck false in
 /-- `H_[Z]^n(X; K)` is the sheaf cohomology of the analytic space `X(ℂ)` with support in the closed
 set `Z ⊆ X(ℂ)` and coefficients in the constant sheaf `K`, in degree `n`. -/
@@ -52,17 +60,91 @@ scoped notation:max "H_[" Z "]^" n:max "(" X "; " K ")" =>
 
 variable (Z : Closeds (ComplexPoint X))
 
-/-- `H^n_Z(X(ℂ); K) → H^n(X(ℂ); K)`, forgetting the support. -/
+/-- The supported-section model of the support-forgetting map, before identifying the target with
+hypercohomology. -/
+def forgetSupportToGlobalSectionsHomology (n : ℕ) :
+    H_[Z]^n(X; K) →+
+      (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat (TopCat.of (ComplexPoint X))
+        (TopCat.Sheaf.injectiveResolutionComplex
+          (TopCat.of (ComplexPoint X))
+          ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj
+            (AddCommGrpCat.of K)))).homology n := by
+  let Y := TopCat.of (ComplexPoint X)
+  let F := (TopCat.Sheaf.constantFunctor Y).obj (AddCommGrpCat.of K)
+  let I := TopCat.Sheaf.injectiveResolutionComplex Y F
+  let S := TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y Z.compl ⊤ I
+  let e := @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology Y Z.compl ⊤ Z.compl
+    (top_inf_eq _) inferInstance F I
+    (TopCat.Sheaf.injectiveResolutionComplex_isKInjective Y F)
+    (TopCat.Sheaf.injectiveResolutionAugmentation Y F)
+    (TopCat.Sheaf.injectiveResolutionAugmentation_quasiIso Y F) n
+  exact (HomologicalComplex.homologyMap S.f n).hom.comp e.toAddMonoidHom
+
+/-- `H_[Z]^n(X(ℂ); K) → H^n(X(ℂ); K)`, forgetting the support. The target is the new
+hypercohomology object, reached through the canonical injective-resolution comparison. -/
 def forgetSupport (n : ℕ) : H_[Z]^n(X; K) →+ H^n(X; K) :=
-  (Sheaf.H'.addEquivTerminal isTerminalTop _ n).toAddMonoidHom.comp
-    (Sheaf.relH.forget _ (homOfLE (le_top : Z.compl ≤ ⊤)) n)
+  let Y := TopCat.of (ComplexPoint X)
+  let F := (TopCat.Sheaf.constantFunctor Y).obj (AddCommGrpCat.of K)
+  let I := TopCat.Sheaf.injectiveResolutionComplex Y F
+  let IP : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
+    ⟨I, ⟨0, TopCat.Sheaf.injectiveResolutionComplex_isStrictlyGE Y F⟩⟩
+  letI : QuasiIso (constantFieldSheafComplexIntIsoSingle K X).hom := by
+    letI : IsIso (constantFieldSheafComplexIntIsoSingle K X).hom :=
+      (constantFieldSheafComplexIntIsoSingle K X).isIso_hom
+    exact quasiIso_of_isIso _
+  letI : QuasiIso (TopCat.Sheaf.injectiveResolutionAugmentation Y F) :=
+    TopCat.Sheaf.injectiveResolutionAugmentation_quasiIso Y F
+  letI (i : ℤ) : Injective (IP.obj.X i) := by
+    dsimp [IP]
+    exact TopCat.Sheaf.injectiveResolutionComplex_injective Y F i
+  let f : constantFieldSheafComplexIntPlus K X ⟶ IP :=
+    ⟨(constantFieldSheafComplexIntIsoSingle K X).hom ≫
+      TopCat.Sheaf.injectiveResolutionAugmentation Y F⟩
+  letI : QuasiIso f.hom := by
+    change QuasiIso ((constantFieldSheafComplexIntIsoSingle K X).hom ≫
+      TopCat.Sheaf.injectiveResolutionAugmentation Y F)
+    infer_instance
+  let e := TopCat.Sheaf.hypercohomologyIsoOfQuasiIsoToInjective
+    AddCommGrpCat Y f n
+  (e.addCommGroupIsoToAddEquiv.symm.toAddMonoidHom).comp
+    (forgetSupportToGlobalSectionsHomology K X Z n)
 
 /-- Forgetting the support `X(ℂ)` itself is injective. -/
 lemma forgetSupport_injective_of_eq_top (hZ : Z = ⊤) (n : ℕ) :
-    Function.Injective (forgetSupport K X Z n) :=
-  (Sheaf.H'.addEquivTerminal isTerminalTop _ n).injective.comp
-    (TopCat.Sheaf.relH.forget_injective_of_eq_bot (TopCat.of (ComplexPoint X)) _ _
-      (by rw [hZ]; ext; simp) n)
+    Function.Injective (forgetSupport K X Z n) := by
+  subst Z
+  let Y := TopCat.of (ComplexPoint X)
+  let F := (TopCat.Sheaf.constantFunctor Y).obj (AddCommGrpCat.of K)
+  let I := TopCat.Sheaf.injectiveResolutionComplex Y F
+  let U : Opens Y := (⊤ : Closeds (ComplexPoint X)).compl
+  let S := TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex Y U ⊤ I
+  letI (i : ℤ) : IsIso (S.f.f i) := by
+    dsimp [S, U, TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex,
+      TopCat.Sheaf.supportRestrictionComplexShortComplex]
+    have hU : (⊤ : Closeds (ComplexPoint X)).compl = (⊥ : Opens Y) := by
+      ext
+      simp
+    rw [hU]
+    change IsIso ((TopCat.Sheaf.supportEvaluation Y ⊤).map
+      ((TopCat.Sheaf.sheafSectionsSupportedOutsideInclusion Y ⊥).app (I.X i)))
+    letI : IsIso ((TopCat.Sheaf.sheafSectionsSupportedOutsideInclusion Y ⊥).app (I.X i)) := by
+      change IsIso (kernel.ι ((TopCat.Sheaf.toOpenRestrictionPushforward Y ⊥).app (I.X i)))
+      rw [(TopCat.Sheaf.isZero_openRestrictionPushforward_bot Y (I.X i)).eq_zero_of_tgt
+        ((TopCat.Sheaf.toOpenRestrictionPushforward Y ⊥).app (I.X i))]
+      infer_instance
+    exact Functor.map_isIso _ _
+  letI : IsIso S.f := HomologicalComplex.Hom.isIso_of_components S.f
+  let e := @TopCat.Sheaf.relHAddEquivSupportedSectionsHomology Y U ⊤ U
+    (top_inf_eq _) inferInstance F I
+    (TopCat.Sheaf.injectiveResolutionComplex_isKInjective Y F)
+    (TopCat.Sheaf.injectiveResolutionAugmentation Y F)
+    (TopCat.Sheaf.injectiveResolutionAugmentation_quasiIso Y F) n
+  have hSupported :
+      Function.Injective (forgetSupportToGlobalSectionsHomology K X (⊤ : Closeds (ComplexPoint X)) n) := by
+    change Function.Injective ((HomologicalComplex.homologyMap S.f n).hom.comp e.toAddMonoidHom)
+    exact ((AddCommGrpCat.mono_iff_injective _).mp inferInstance).comp e.injective
+  dsimp [forgetSupport]
+  exact (AddEquiv.injective _).comp hSupported
 
 section Rational
 

@@ -43,7 +43,7 @@ namespace Guide.Overview.D1
 ```lean
 def HodgeConjecture : Prop :=
   ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ),
-    Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p
+    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p
 ```
 ```lean -show
 end Guide.Overview.D1
@@ -218,13 +218,10 @@ sheaf are global.
   two pending Mathlib pull requests and kept under `HodgeConjecture/Mathlib/` until those land.
 * `𝓒(T; R)` is the constant sheaf of additive groups on the space `T` with value `R`, and
   `𝓒[T; A]` the same for an object `A` of `AddCommGrpCat`.
-* `Ω•(X)` is the holomorphic de Rham complex of `X`, indexed by the integers, and `F^p Ω•(X)` its
-  stupid truncation in form degrees at least `p`.
-* `ℍ^n(X; 𝒦)` is the hypercohomology of a complex of sheaves `𝒦`, and `H^n(X; K)` the case of the
-  constant sheaf `K` in degree zero, that is, cohomology of $`X(\mathbb C)` with coefficients in
-  `K`.
+* `H^n(X; K)` is the hypercohomology of the constant sheaf `K` in degree zero. The named
+  definition `DeRhamHypercohomology` gives the hypercohomology of the holomorphic de Rham complex.
 * `H_[Z]^n(X; ℚ)` is rational cohomology with support in a closed set `Z`.
-* `F^p H_dR^n(X)` is the Hodge filtration on de Rham cohomology, and `Hdg^p(X; K)` the Hodge
+* `hodgeFiltration` gives the Hodge filtration on de Rham cohomology, and `Hdg^p(K; f)` the Hodge
   classes of codimension `p` with coefficients in `K`.
 
 In the cohomology notations the literature would name the variety; the argument written here is

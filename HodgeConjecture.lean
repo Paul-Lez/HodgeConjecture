@@ -37,7 +37,6 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicDeRham
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.Hypercohomology
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.GlobalSections
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ProjectiveSpace

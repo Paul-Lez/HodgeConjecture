@@ -4,9 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeForget
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModelLemmas
 public import Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNaturality
+public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyShift
 public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
 
@@ -77,7 +78,7 @@ lemma rationalSupportConeToAmbientInjectiveConePlus_forgetSupport
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     (rationalSupportConeToAmbientInjectiveConePlus X Z hZ).hom ≫
         ambientRationalInjectiveForgetSupportComplex X Z hZ =
-      forgetSupportComplex X Z ≫ ambientRationalInjectiveAugmentation X := by
+      forgetSupportComplex X Z ≫ (ambientRationalInjectiveAugmentationPlus X).hom := by
   dsimp only [rationalSupportConeToAmbientInjectiveConePlus,
     ambientRationalInjectiveForgetSupportComplex, forgetSupportComplex]
   rw [← Category.assoc, ← Functor.map_comp,
@@ -125,7 +126,7 @@ private lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_n
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
     (x : RationalCohomologyWithSupport X Z n) :
     rationalCohomologyAddEquivAmbientInjectiveHomology X n
-        (forgetSupport X Z n x) =
+        (rationalForgetSupport X Z n x) =
       HomologicalComplex.homologyMap
         (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
@@ -140,12 +141,11 @@ private lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_n
   let F := ℍ[AddCommGrpCat]^n(Y)
   let A := constantFieldSheafComplexIntPlus ℚ X
   let I := ambientRationalInjectiveConePlus X Z hZ
-  let J : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
-    ⟨ambientRationalInjectiveComplex X, ⟨0, inferInstance⟩⟩
+  let J := ambientRationalInjectiveComplexPlus X
   let f := rationalSupportConeToAmbientInjectiveConePlus X Z hZ
   let g : rationalCohomologyWithSupportComplexPlus X Z ⟶ A :=
     ⟨forgetSupportComplex X Z⟩
-  let a : A ⟶ J := ⟨ambientRationalInjectiveAugmentation X⟩
+  let a : A ⟶ J := ambientRationalInjectiveAugmentationPlus X
   let h : I ⟶ J := ⟨ambientRationalInjectiveForgetSupportComplex X Z hZ⟩
   let eI := TopCat.Sheaf.hypercohomologyIsoOfInjective AddCommGrpCat Y I n
   let eJ := TopCat.Sheaf.hypercohomologyIsoOfInjective AddCommGrpCat Y J n
@@ -219,7 +219,7 @@ lemma rationalCohomologyAddEquivAmbientInjectiveHomology_forgetSupport_cone
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
     (x : RationalCohomologyWithSupport X Z n) :
     rationalCohomologyAddEquivAmbientInjectiveHomology X n
-      (forgetSupport X Z n x) =
+      (rationalForgetSupport X Z n x) =
     (HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftMap
       (ShiftedHom.map
         (CochainComplex.mappingCone.triangle
@@ -377,12 +377,12 @@ lemma rationalSupportAddEquivSupportedInjectiveHomology_forgetSupport
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ)
     (x : RationalCohomologyWithSupport X Z n) :
     rationalCohomologyAddEquivAmbientInjectiveHomology X n
-      (forgetSupport X Z n x) =
+      (rationalForgetSupport X Z n x) =
     HomologicalComplex.homologyMap
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
         (TopCat.of (ComplexPoint X)) ⟨Zᶜ, hZ.isOpen_compl⟩ ⊤
         (ambientRationalInjectiveComplex X)).f n
-      (rationalSupportAddEquivSupportedInjectiveHomology X Z hZ n x) := by
+      (rationalSupportAddEquivSupportedInjectiveHomologyAmbient X Z hZ n x) := by
   let Y := TopCat.of (ComplexPoint X)
   let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
   let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y

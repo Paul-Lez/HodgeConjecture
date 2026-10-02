@@ -16,8 +16,8 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
-public import HodgeConjecture.Mathlib.Topology.Category.TopCat.Basic
-public import HodgeConjecture.Lemmas.Algebra.Homology.ShiftedExact
+public import Other.Mathlib.Topology.Category.TopCat.Basic
+public import Other.Algebra.Homology.ShiftedExact
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 public import Mathlib.CategoryTheory.Abelian.Injective.Resolution
 
@@ -253,7 +253,7 @@ def forgetSupportComplex (Z : Set (ComplexPoint X)) :
     (shiftFunctorCompIsoId _ (1 : ℤ) (-1) (by simp)).hom.app _
 
 /-- Forget support, using the connecting morphism of the mapping-cone triangle. -/
-def forgetSupport (Z : Set (ComplexPoint X)) (n : ℤ) :
+def rationalForgetSupport (Z : Set (ComplexPoint X)) (n : ℤ) :
     RationalCohomologyWithSupport X Z n →+
       H^n(X; ℚ) :=
   ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
@@ -324,6 +324,6 @@ attribute [local instance] analyticSupportHasDerivedCategory
     (α : RationalCohomologyWithSupport X
       (Set.univ : Set (ComplexPoint X)) n) :
     forgetSupportEquivUniv X n α =
-      forgetSupport X Set.univ n α := rfl
+      rationalForgetSupport X Set.univ n α := rfl
 
 end AlgebraicGeometry.ComplexPoint

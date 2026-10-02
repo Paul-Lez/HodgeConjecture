@@ -15,8 +15,9 @@ limitations under the License.
 -/
 module
 
-public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
-public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cohomology.SupportConeInjectiveModel
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.AmbientInjectiveResolution
+public import Other.AlgebraicGeometry.Cohomology.SupportConeInjectiveModelLemmas
 
 /-!
 # SupportConeInjectiveModel, the part the statement does not need
@@ -41,9 +42,9 @@ lemma rationalSupportConeToAmbientInjectiveCone_connecting
       (CochainComplex.mappingCone.triangle
         (ambientRationalInjectiveRestriction X Z hZ)).mor₃ =
     (CochainComplex.mappingCone.triangle (rationalRestrictionComplexInt X Z)).mor₃ ≫
-      (ambientRationalInjectiveAugmentation X)⟦(1 : ℤ)⟧' :=
+      (ambientRationalInjectiveAugmentationPlus X).hom⟦(1 : ℤ)⟧' :=
   (CochainComplex.mappingCone.triangleMap _ _
-    (ambientRationalInjectiveAugmentation X) (𝟙 _)
+    (ambientRationalInjectiveAugmentationPlus X).hom (𝟙 _)
     (by simpa using (ambientRationalAugmentation_comp_restriction X Z hZ).symm)).comm₃.symm
 
 set_option backward.isDefEq.respectTransparency false in

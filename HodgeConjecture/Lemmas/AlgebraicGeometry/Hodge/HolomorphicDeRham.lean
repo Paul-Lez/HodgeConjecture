@@ -122,7 +122,7 @@ variable (X : Over (Spec ↧ℂ)) (d : ℕ)
 
 /-- Scalar multiplication on the constant complex presheaf. -/
 def complexScalarPresheaf (c : ℂ) :
-    𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶ 𝓒ᵖ(↧(ComplexPoint X); ℂ) where
+    constantComplexAddCommGrpPresheaf X ⟶ constantComplexAddCommGrpPresheaf X where
   app _ := AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ c)
   naturality {U V} i := by
     ext x
