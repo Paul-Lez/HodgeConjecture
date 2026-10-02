@@ -18,8 +18,9 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.Constant
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.AnalyticDifferentialForms
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
+public import HodgeConjecture.Mathlib.Algebra.Homology.CochainComplexPlus
+public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
 public import Mathlib.Algebra.Homology.Embedding.CochainComplex
-public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.Algebra.Homology.SingleHomology
 public import Mathlib.Topology.Sheaves.Abelian
 
@@ -133,7 +134,8 @@ from the constant complex presheaf to holomorphic zero-forms assigns to `c ∈ �
 the class of the constant function `c` among Kähler zero-forms modulo forms with zero coordinate
 evaluations. -/
 def constantsToHolomorphicDeRhamZero [SmoothOfRelativeDimension d X.hom] :
-    𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶ holomorphicDeRhamPresheaf X d 0 where
+    𝓒ᵖ(↧(ComplexPoint X); ℂ) ⟶
+      holomorphicDeRhamPresheaf X d 0 where
   app U := AddCommGrpCat.ofHom
     (holomorphicFormOfConstant X d U).toAddMonoidHom
   naturality {U V} i := by
@@ -525,16 +527,25 @@ instance constantsToHolomorphicDeRhamComplex_quasiIso
     · exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_zero X d
     · exact constantsToHolomorphicDeRhamComplex_quasiIsoAt_succ X d p
 
+/-- The complex constant sheaf as a bounded-below complex supported in degree zero. -/
+abbrev constantComplexSheafComplexIntPlus :
+    CochainComplex.Plus
+      (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) :=
+  (CochainComplex.Plus.single₀
+    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
+      𝓒(↧(ComplexPoint X); ℂ)
+
 /-- Let `X` be a complex scheme. This integer-indexed complex of sheaves of abelian groups on `X(ℂ)`
 has the constant complex sheaf in degree zero, zero in every other degree, and zero
 differentials. -/
-@[implicit_reducible]
-def constantComplexSheafComplexInt :
+abbrev constantComplexSheafComplexInt :
     CochainComplex
       (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) ℤ :=
-  ((CochainComplex.single₀
-    (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))).obj
-      𝓒(↧(ComplexPoint X); ℂ)).extend ComplexShape.embeddingUpNat
+  (constantComplexSheafComplexIntPlus X).obj
+
+instance : (constantComplexSheafComplexInt X).IsStrictlyGE 0 := by
+  unfold constantComplexSheafComplexInt
+  infer_instance
 
 /-- Let `X` be a complex scheme. This endomorphism of the nonnegative sheaf complex `ℂ_X[0]`
 conjugates locally constant functions in degree zero; every positive-degree term is zero. -/
@@ -552,8 +563,7 @@ conjugates locally constant functions in degree zero, with zero terms in all oth
 is additive and conjugate-linear. -/
 def conjConstantComplexSheafComplexInt :
     constantComplexSheafComplexInt X ⟶ constantComplexSheafComplexInt X :=
-  HomologicalComplex.extendMap (conjConstantComplexComplex X)
-    ComplexShape.embeddingUpNat
+  ((CochainComplex.Plus.single₀ _).map (conjConstantComplexSheaf X)).hom
 
 /-- Let `X` be a smooth integral scheme over `ℂ`. This integer-indexed complex on `X(ℂ)` has the
 sheaf of holomorphic `p`-forms in each degree `p ≥ 0`, exterior differentiation as differential,
@@ -598,7 +608,8 @@ noncomputable instance holomorphicDeRhamComplexInt_isStrictlyLE
 complexes includes locally constant functions as holomorphic zero-forms. The source is
 concentrated in degree zero and the holomorphic de Rham complex is zero in negative degrees. -/
 def constantsToHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
-    constantComplexSheafComplexInt X ⟶ Ω•(X) :=
+    constantComplexSheafComplexInt X ⟶
+      Ω•(X) :=
   HomologicalComplex.extendMap
     (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat
 
@@ -606,11 +617,9 @@ def constantsToHolomorphicDeRhamComplexInt [IsIntegral X.left] [Smooth X.hom] :
 degree. -/
 instance constantsToHolomorphicDeRhamComplexInt_quasiIso
     [IsIntegral X.left] [Smooth X.hom] :
-    QuasiIso (constantsToHolomorphicDeRhamComplexInt X) := by
-  change QuasiIso (HomologicalComplex.extendMap
-    (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat)
-  exact (HomologicalComplex.quasiIso_extendMap_iff
+    QuasiIso (constantsToHolomorphicDeRhamComplexInt X) :=
+  (HomologicalComplex.quasiIso_extendMap_iff
     (constantsToHolomorphicDeRhamComplex X (dim X.left)) ComplexShape.embeddingUpNat).2
-      inferInstance
+    inferInstance
 
 end AlgebraicGeometry.ComplexPoint

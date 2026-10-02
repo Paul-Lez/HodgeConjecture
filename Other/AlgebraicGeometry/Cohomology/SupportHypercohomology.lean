@@ -16,7 +16,6 @@ limitations under the License.
 module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
-
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyDef
 import Mathlib.Algebra.Homology.HomotopyCategory.Plus
 public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyLemmas
@@ -34,6 +33,7 @@ nothing in the statement's dependency chain uses these results, only material in
 
 @[expose] public noncomputable section
 open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra
+open scoped TopCat.Sheaf
 namespace AlgebraicGeometry.ComplexPoint
 open Point
 universe u v
@@ -101,6 +101,7 @@ end
 
 @[expose] public noncomputable section
 open CategoryTheory Limits TopologicalSpace HomotopicalAlgebra
+open scoped TopCat.Sheaf
 namespace AlgebraicGeometry.ComplexPoint
 open Point
 universe u v
@@ -109,45 +110,31 @@ attribute [local instance] bettiSupportHypercohomologyComparisonHasDerivedCatego
 attribute [local instance] bettiSupportHypercohomologyAddCommGrpHasDerivedCategory
 open AlgebraicTopology.Singular
 
-/-- Additive form of the hypercohomology/global-sections comparison for a fixed K-injective
-resolution. -/
+/-- Hypercohomology/global-sections comparison through a fixed termwise-injective resolution. -/
 def hypercohomologyAddEquivGlobalSectionsOfResolution
-    (K I : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
-    [I.IsKInjective]
-    (i : K ⟶ I) [QuasiIso i]
-    [QuasiIso (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
+    (K I : CochainComplex.Plus (AnalyticAdditiveSheaf X))
+    [∀ q, Injective (I.obj.X q)]
+    (i : K ⟶ I) [QuasiIso i.hom]
+    [QuasiIso (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        ℤᵘᵖ).map i)]
+        ℤᵘᵖ).map i.hom)]
     (n : ℤ) :
-    Hypercohomology X K n ≃+
-      (TopCat.Sheaf.globalSectionsComplexInt
-        (TopCat.of (ComplexPoint X)) K).homology n :=
-  let Y := TopCat.of (ComplexPoint X)
-  let A := constantIntegerSheafComplexInt X
-  let A' := TopCat.Sheaf.integerConstantSingleComplex Y
-  let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
-  let e : A ≅ A' := constantIntegerSheafComplexIntIsoSingle X
-  let e₀ := hypercohomologyAddEquivDerived X K n
-  let eI : (DerivedCategory.Q.obj K)⟦n⟧ ≅
-      (DerivedCategory.Q.obj I)⟦n⟧ :=
-    (shiftFunctor (DerivedCategory (AnalyticAdditiveSheaf X)) n).mapIso
-      (asIso (DerivedCategory.Q.map i))
-  let e₁ : ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj K) n ≃+
-      ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj I) n :=
-    isoHomCongrAddEquiv (Iso.refl _) eI
-  let e₂ : ShiftedHom (DerivedCategory.Q.obj A) (DerivedCategory.Q.obj I) n ≃+
-      ShiftedHom (DerivedCategory.Q.obj A') (DerivedCategory.Q.obj I) n :=
-    isoHomCongrAddEquiv (DerivedCategory.Q.mapIso e) (Iso.refl _)
-  let e₃ := CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A' I n
-  let e₄ := (CochainComplex.HomComplex.homologyAddEquiv A' I n).symm
-  let e₅ := (HomologicalComplex.homologyMapIso
-    (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I) n)
-      |>.addCommGroupIsoToAddEquiv
-  letI : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map i) := inferInstance
-  let e₆ := (asIso (HomologicalComplex.homologyMap
-    ((Γ.mapHomologicalComplex ℤᵘᵖ).map i) n)).symm
-      |>.addCommGroupIsoToAddEquiv
-  e₀.trans <| e₁.trans <| e₂.trans <| e₃.trans <| e₄.trans <| e₅.trans e₆
+    ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj K) ≃+
+      (TopCat.Sheaf.globalSectionsComplex
+        (TopCat.of (ComplexPoint X)) K.obj).homology n :=
+  letI Y := TopCat.of (ComplexPoint X)
+  letI Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
+  letI F := ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))
+  letI : IsIso (DerivedCategory.Plus.Q.map i) := inferInstance
+  letI : IsIso (F.map i) := by
+    dsimp only [F, Functor.comp_map]
+    infer_instance
+  letI e₀ := (asIso (F.map i)).addCommGroupIsoToAddEquiv
+  letI e₁ := (TopCat.Sheaf.hypercohomologyIsoOfInjective AddCommGrpCat Y I n
+    ).addCommGroupIsoToAddEquiv
+  letI e₂ := (asIso (HomologicalComplex.homologyMap
+    ((Γ.mapHomologicalComplex ℤᵘᵖ).map i.hom) n)).symm.addCommGroupIsoToAddEquiv
+  e₀.trans <| e₁.trans e₂
 
 /-- Additive hypercohomology/global-sections comparison for a bounded-below termwise-flasque
 complex. -/
@@ -155,43 +142,46 @@ def hypercohomologyAddEquivGlobalSections
     (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     (N : ℤ) [K.IsStrictlyGE N]
     (hKflasque : ∀ q, (K.X q).IsFlasque) (n : ℤ) :
-    Hypercohomology X K n ≃+
-      (TopCat.Sheaf.globalSectionsComplexInt
+    ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
+      (⟨K, ⟨N, inferInstance⟩⟩ : CochainComplex.Plus (AnalyticAdditiveSheaf X))) ≃+
+      (TopCat.Sheaf.globalSectionsComplex
         (TopCat.of (ComplexPoint X)) K).homology n :=
-  let Y := TopCat.of (ComplexPoint X)
-  let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective K N
-  let I := hres.choose
-  let i := hres.choose_spec.choose
+  letI Y := TopCat.of (ComplexPoint X)
+  letI hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective K N
+  letI I := hres.choose
+  letI i := hres.choose_spec.choose
   haveI : QuasiIso i := hres.choose_spec.choose_spec.choose
   haveI : ∀ q, Injective (I.X q) := hres.choose_spec.choose_spec.choose_spec.choose
   haveI : I.IsStrictlyGE N := hres.choose_spec.choose_spec.choose_spec.choose_spec
   haveI : I.IsKInjective := CochainComplex.isKInjective_of_injective I N
   have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
   haveI : QuasiIso
-      (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
+      (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
         ).mapHomologicalComplex ℤᵘᵖ).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i N N hKflasque hIflasque
-  hypercohomologyAddEquivGlobalSectionsOfResolution
-    X K I i n
+  letI K' : CochainComplex.Plus (AnalyticAdditiveSheaf X) := ⟨K, ⟨N, inferInstance⟩⟩
+  letI I' : CochainComplex.Plus (AnalyticAdditiveSheaf X) := ⟨I, ⟨N, inferInstance⟩⟩
+  letI i' : K' ⟶ I' := ⟨i⟩
+  hypercohomologyAddEquivGlobalSectionsOfResolution X K' I' i' n
 
 /-- Global sections of a mapping cone are canonically isomorphic to the mapping cone of the
 global-sections map. -/
 def globalSectionsNaturalSingularConeIsoMappingCone
     [IsIntegral X.left] [Smooth X.hom]
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
-    TopCat.Sheaf.globalSectionsComplexInt
+    TopCat.Sheaf.globalSectionsComplex
         (TopCat.of (ComplexPoint X))
         (CochainComplex.mappingCone
           (naturalSingularResolutionRestriction X Z hZ)) ≅
       CochainComplex.mappingCone
-        (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
+        (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex
             ℤᵘᵖ).map
           (naturalSingularResolutionRestriction X Z hZ)) :=
   CochainComplex.mappingCone.mapHomologicalComplexIso
     (naturalSingularResolutionRestriction X Z hZ)
-    (TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor
+    (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
       (TopCat.of (ComplexPoint X)))
 
 /-- Replacing rational constants by the natural singular resolution identifies the two support
@@ -200,14 +190,30 @@ def rationalSupportHypercohomologyAddEquivNaturalSingularCone
     [IsIntegral X.left] [Smooth X.hom]
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
-      Hypercohomology X
-        (CochainComplex.mappingCone
-          (naturalSingularResolutionRestriction X Z hZ)) (n - 1) where
-  toEquiv := Localization.SmallShiftedHom.postcompEquiv
-    (rationalSupportConeToNaturalSingularCone X Z hZ)
-    (rationalSupportConeToNaturalSingularCone_quasiIso X Z hZ)
-  map_add' α β := (hypercohomologyMap X
-    (rationalSupportConeToNaturalSingularCone X Z hZ) (n - 1)).map_add α β
+      ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
+        (⟨(shiftFunctor _ (-1 : ℤ)).obj (CochainComplex.mappingCone
+          (naturalSingularResolutionRestriction X Z hZ)),
+          ⟨0, by
+            letI _ := naturalSingularSupportCone_isStrictlyGE X Z hZ
+            exact CochainComplex.isStrictlyGE_shift _ (-1) (-1) 0 (by norm_num)⟩⟩ :
+            CochainComplex.Plus (AnalyticAdditiveSheaf X))) :=
+  letI L : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
+    ⟨(shiftFunctor _ (-1 : ℤ)).obj (CochainComplex.mappingCone
+      (naturalSingularResolutionRestriction X Z hZ)),
+      ⟨0, by
+        letI _ := naturalSingularSupportCone_isStrictlyGE X Z hZ
+        exact CochainComplex.isStrictlyGE_shift _ (-1) (-1) 0 (by norm_num)⟩⟩
+  letI f : rationalCohomologyWithSupportComplexPlus X Z ⟶ L :=
+    ⟨(shiftFunctor _ (-1 : ℤ)).map
+      (rationalSupportConeToNaturalSingularCone X Z hZ)⟩
+  letI : QuasiIso f.hom := (CochainComplex.quasiIso_shift_iff
+    (rationalSupportConeToNaturalSingularCone X Z hZ) (-1)).2 inferInstance
+  letI : IsIso (DerivedCategory.Plus.Q.map f) := inferInstance
+  letI F := ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))
+  letI : IsIso (F.map f) := by
+    dsimp only [F, Functor.comp_map]
+    infer_instance
+  (asIso (F.map f)).addCommGroupIsoToAddEquiv
 
 /-- Additive form of the computation of rational constant-sheaf cohomology with support by
 global sections of the natural singular support cone. -/
@@ -217,18 +223,35 @@ def rationalSupportHypercohomologyAddEquivNaturalSingularConeGlobalSections
     [∀ U : Opens (ComplexPoint X), ParacompactSpace U]
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (n : ℤ) :
     RationalCohomologyWithSupport X Z n ≃+
-      (TopCat.Sheaf.globalSectionsComplexInt
+      (TopCat.Sheaf.globalSectionsComplex
         (TopCat.of (ComplexPoint X))
         (CochainComplex.mappingCone
           (naturalSingularResolutionRestriction X Z hZ))).homology (n - 1) :=
-  let K := CochainComplex.mappingCone
+  letI K := CochainComplex.mappingCone
     (naturalSingularResolutionRestriction X Z hZ)
   letI : K.IsStrictlyGE (-1) :=
     naturalSingularSupportCone_isStrictlyGE X Z hZ
-  (rationalSupportHypercohomologyAddEquivNaturalSingularCone
-      X Z hZ n).trans
-    (hypercohomologyAddEquivGlobalSections X K (-1)
-      (naturalSingularSupportCone_term_isFlasque X Z hZ) (n - 1))
+  letI L := (shiftFunctor _ (-1 : ℤ)).obj K
+  letI : L.IsStrictlyGE 0 :=
+    CochainComplex.isStrictlyGE_shift _ (-1) (-1) 0 (by norm_num)
+  have hLflasque : ∀ q, (L.X q).IsFlasque := by
+    intro q
+    letI e := K.shiftFunctorObjXIso (-1) q (q - 1) (by omega)
+    exact @TopCat.Presheaf.IsFlasque.of_iso _ _ _
+      ((TopCat.Sheaf.forget AddCommGrpCat (TopCat.of (ComplexPoint X))).mapIso e.symm)
+      (naturalSingularSupportCone_term_isFlasque X Z hZ (q - 1))
+  letI e₀ := rationalSupportHypercohomologyAddEquivNaturalSingularCone X Z hZ n
+  letI e₁ := hypercohomologyAddEquivGlobalSections X L 0 hLflasque n
+  letI Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat (TopCat.of (ComplexPoint X))
+  letI G := (Γ.mapHomologicalComplex ℤᵘᵖ).obj K
+  letI e₂ : ((Γ.mapHomologicalComplex ℤᵘᵖ).obj L).homology n ≅
+      ((shiftFunctor _ (-1 : ℤ)).obj G).homology n :=
+    HomologicalComplex.homologyMapIso
+      (((Γ.mapHomologicalComplex ℤᵘᵖ).commShiftIso (-1)).app K) n
+  letI e₃ : ((shiftFunctor _ (-1 : ℤ)).obj G).homology n ≅ G.homology (n - 1) :=
+    ((HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftIso
+      (-1) n (n - 1) (by omega)).app G
+  e₀.trans <| e₁.trans <| (e₂ ≪≫ e₃).addCommGroupIsoToAddEquiv
 
 /-- Additive singular comparison for rational cohomology with closed support. -/
 def rationalCohomologyWithSupportAddEquivSingular

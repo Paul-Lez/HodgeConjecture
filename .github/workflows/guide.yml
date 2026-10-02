@@ -33,6 +33,8 @@ jobs:
         run: lake exe lint-style HodgeConjecture Other HodgeGuide
       - name: Build the Lean libraries and the statement-import check
         run: lake build
+      - name: Build the guide libraries
+        run: lake build HodgeGuide
       - name: Check the import layering
         run: python3 scripts/check_import_layers.py
 

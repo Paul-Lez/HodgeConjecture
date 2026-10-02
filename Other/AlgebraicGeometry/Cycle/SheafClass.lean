@@ -13,8 +13,8 @@ public import Other.AlgebraicGeometry.SmoothProjectiveVariety
 An integral codimension-`p` cycle is sent to the sum of the constructed
 component classes with its exact integer multiplicities. Rational scalar
 extension then gives a rational linear map on `ℚ ⊗[ℤ] codimensionCycleSubgroup X p`.
-The maps take a smooth projective complex variety, its relative dimension, and
-a codimension; no orientation, fundamental class, duality, or principal-divisor
+The maps take a smooth projective complex variety and a codimension; no orientation, fundamental
+class, duality, or principal-divisor
 theorem is an argument. Components may be singular and have arbitrary dimension.
 
 These are the additive and rational extensions of the constructed component classes.

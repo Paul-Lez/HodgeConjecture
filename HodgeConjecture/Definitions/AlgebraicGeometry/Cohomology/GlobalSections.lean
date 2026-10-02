@@ -23,9 +23,10 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueQuasiIso
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.InjectiveFlasque
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
 public import HodgeConjecture.Mathlib.Algebra.Homology.MapExtend
+public import HodgeConjecture.Mathlib.Algebra.Homology.HomComplexSingle
 public import Mathlib.Algebra.Homology.DerivedCategory.KInjective
 public import Mathlib.Algebra.Homology.Factorizations.CM5a
-public import HodgeConjecture.Mathlib.Algebra.Homology.HomComplexSingle
+public import Mathlib.Algebra.Homology.HomotopyCategory.HomComplexSingle
 
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
@@ -45,7 +46,6 @@ quasi-isomorphism after taking global sections.
 
 open CategoryTheory Limits TopologicalSpace
 
-
 namespace TopCat.Sheaf
 
 section
@@ -58,19 +58,26 @@ equivalence `Hom(ℤ_Y, F) ≃ Γ(Y, F)` evaluates a sheaf morphism at the const
 corresponding multiple of `s`. -/
 def integerConstantHomAddEquivGlobalSections
     (F : TopCat.Sheaf AddCommGrpCat Y) :
-    letI : AddCommGroup ((constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) :=
+    letI : AddCommGroup
+        ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
+          (AddCommGrpCat.of ℤ) ⟶ F) :=
       (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y)).homGroup _ _
-    ((constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) ≃+ F.presheaf.obj (.op (⊤ : Opens Y)) := by
-  letI : AddCommGroup ((constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) :=
+    ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
+        (AddCommGrpCat.of ℤ) ⟶ F) ≃+
+      F.presheaf.obj (.op (⊤ : Opens Y)) :=
+  letI : AddCommGroup
+      ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
+        (AddCommGrpCat.of ℤ) ⟶ F) :=
     (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y)).homGroup _ _
-  exact ((constantSheafAdj (Opens.grothendieckTopology Y) AddCommGrpCat
+  ((constantSheafAdj (Opens.grothendieckTopology Y) AddCommGrpCat
       isTerminalTop).homAddEquiv (AddCommGrpCat.of ℤ) F).trans <|
     AddCommGrpCat.homAddEquiv.trans (zmultiplesAddHom (F.presheaf.obj (.op ⊤))).symm
 
 /-- The constant-integer/global-sections equivalence is natural in the sheaf. -/
 lemma integerConstantHomAddEquivGlobalSections_naturality
     {F G : TopCat.Sheaf AddCommGrpCat Y} (f : F ⟶ G)
-    (g : (constantFunctor Y).obj (AddCommGrpCat.of ℤ) ⟶ F) :
+    (g : (constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
+      (AddCommGrpCat.of ℤ) ⟶ F) :
     integerConstantHomAddEquivGlobalSections G (g ≫ f) =
       f.hom.app (.op (⊤ : Opens Y))
         (integerConstantHomAddEquivGlobalSections F g) := rfl
@@ -80,19 +87,11 @@ end
 /-- Let `Y` be a topological space. This integer-indexed complex of sheaves of abelian groups on `Y`
 has the constant integer sheaf `ℤ_Y` in degree zero, zero sheaves in every other degree, and
 zero differentials. -/
-def integerConstantSingleComplex (Y : TopCat.{0}) :
+abbrev integerConstantSingleComplex (Y : TopCat.{0}) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ :=
   (CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat Y) 0).obj
-    ((constantFunctor Y).obj (AddCommGrpCat.of ℤ))
-
-/-- Let `Y` be a topological space and `K` an integer-indexed complex of sheaves of abelian groups
-on `Y`. The complex `Γ(Y, K)` has `Γ(Y, K^n)` in degree `n`; its differentials are the maps on
-global sections induced by those of `K`. -/
-def globalSectionsComplexInt (Y : TopCat.{0})
-    (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
-    -- `Γ(Y, K^•)`.
-    CochainComplex AddCommGrpCat ℤ :=
-  IsFlasque.BoundedBelowComplex.globalSectionsComplex K
+    ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
+      (AddCommGrpCat.of ℤ))
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
@@ -100,8 +99,10 @@ set_option backward.isDefEq.respectTransparency false in
 F)` and `F ↦ Γ(Y, F)` on sheaves of abelian groups, by evaluating each morphism at the constant
 section `1`. -/
 def integerConstantHomIsoGlobalSectionsFunctor (Y : TopCat.{0}) :
-    preadditiveCoyoneda.obj (.op ((constantFunctor Y).obj (AddCommGrpCat.of ℤ))) ≅
-      IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y :=
+    preadditiveCoyoneda.obj
+        (.op ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
+          (AddCommGrpCat.of ℤ))) ≅
+      TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y :=
   NatIso.ofComponents
     (fun F ↦ (integerConstantHomAddEquivGlobalSections F).toAddCommGrpIso)
     (fun {F G} f ↦ by
@@ -119,13 +120,14 @@ Evaluation at `1` gives this isomorphism of complexes `Hom^•(ℤ_Y[0], K) ≅ 
 def homComplexSingleIntegerIsoGlobalSections
     (Y : TopCat.{0}) (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
     CochainComplex.HomComplex (integerConstantSingleComplex Y) K ≅
-      globalSectionsComplexInt Y K :=
-  let pre := (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y))
+      globalSectionsComplex Y K :=
+  letI pre := (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y))
   letI : Preadditive (TopCat.Sheaf AddCommGrpCat Y) := pre
-  letI : (IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y).PreservesZeroMorphisms :=
+  letI : (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
   CochainComplex.HomComplex.fromSingleZeroIsoPreadditiveCoyoneda
-      ((constantFunctor Y).obj (AddCommGrpCat.of ℤ)) K ≪≫
+      ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
+        (AddCommGrpCat.of ℤ)) K ≪≫
     (NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y)
       ℤᵘᵖ).app K
 
@@ -140,15 +142,5 @@ variable (X : Over (Spec ↧ℂ))
 local instance bettiGlobalSectionsHasDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
-
-/-- Let `X` be a scheme over `ℂ`. This identifies two complexes on its analytic space: the constant
-integer sheaf in degree zero first indexed by natural numbers and then extended by zero, and the
-same sheaf placed directly in degree zero of an integer-indexed complex. -/
-def constantIntegerSheafComplexIntIsoSingle :
-    constantIntegerSheafComplexInt X ≅
-      TopCat.Sheaf.integerConstantSingleComplex
-        (TopCat.of (ComplexPoint X)) :=
-  HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
-    𝓒(↧(ComplexPoint X); ℤ) 0 0 rfl
 
 end AlgebraicGeometry.ComplexPoint

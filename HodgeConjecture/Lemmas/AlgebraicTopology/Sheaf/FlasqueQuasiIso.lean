@@ -63,10 +63,10 @@ lemma biprod (F G : TopCat.Presheaf AddCommGrpCat.{u} X) [F.IsFlasque] [G.IsFlas
     let : evalU.PreservesZeroMorphisms := evalU.preservesZeroMorphisms_of_additive
     let : evalV.PreservesZeroMorphisms := evalV.preservesZeroMorphisms_of_additive
     let : PreservesLimit (pair F G) evalU := by
-      letI : PreservesLimitsOfShape (Discrete WalkingPair) evalU := by infer_instance
+      let : PreservesLimitsOfShape (Discrete WalkingPair) evalU := by infer_instance
       exact PreservesLimitsOfShape.preservesLimit
     let : PreservesLimit (pair F G) evalV := by
-      letI : PreservesLimitsOfShape (Discrete WalkingPair) evalV := by infer_instance
+      let : PreservesLimitsOfShape (Discrete WalkingPair) evalV := by infer_instance
       exact PreservesLimitsOfShape.preservesLimit
     let : PreservesBinaryBiproduct F G evalU :=
       preservesBinaryBiproduct_of_preservesBinaryProduct _
@@ -121,7 +121,7 @@ set_option linter.style.haveILetI false in
 lemma of_iso {F G : TopCat.Sheaf AddCommGrpCat.{u} X} (e : F ≅ G)
     [hG : G.IsFlasque] :
     F.IsFlasque := by
-  letI : TopCat.Presheaf.IsFlasque G.obj := hG
+  let : TopCat.Presheaf.IsFlasque G.obj := hG
   exact TopCat.Presheaf.IsFlasque.of_iso (G := G.obj)
     ((TopCat.Sheaf.forget AddCommGrpCat.{u} X).mapIso e)
 
@@ -130,7 +130,7 @@ set_option linter.style.haveILetI false in
 lemma biprod (F G : TopCat.Sheaf AddCommGrpCat.{u} X)
     [hF : F.IsFlasque] [hG : G.IsFlasque] :
     (F ⊞ G).IsFlasque := by
-  letI : TopCat.Presheaf.IsFlasque (F.obj ⊞ G.obj) :=
+  let : TopCat.Presheaf.IsFlasque (F.obj ⊞ G.obj) :=
     TopCat.Presheaf.IsFlasque.biprod F.obj G.obj
   let forget := TopCat.Sheaf.forget AddCommGrpCat.{u} X
   let : PreservesBinaryBiproduct F G forget :=
@@ -191,7 +191,7 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
     (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
     (hK : ∀ i, (K.X i).IsFlasque) (hL : ∀ i, (L.X i).IsFlasque) :
     QuasiIso
-      (((globalSectionsFunctor X).mapHomologicalComplex ℤᵘᵖ).map f) := by
+      (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X).mapHomologicalComplex ℤᵘᵖ).map f) := by
   let M := CochainComplex.mappingCone f
   let n := min nK nL - 1
   let : M.IsStrictlyGE n := by
@@ -205,9 +205,9 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
     intro i
     dsimp [M]
     exact mappingCone_term_isFlasque f hK hL i
-  have hglobal : (globalSectionsComplex M).Acyclic :=
+  have hglobal : (TopCat.Sheaf.globalSectionsComplex X M).Acyclic :=
     globalSectionsComplex_acyclic M n hM hMflasque
-  let F := globalSectionsFunctor X
+  let F := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X
   have hcone :
       (CochainComplex.mappingCone
         ((F.mapHomologicalComplex ℤᵘᵖ).map f)).Acyclic :=
@@ -216,5 +216,3 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
 
 end BoundedBelowComplex
 end TopCat.Sheaf.IsFlasque
-
-end

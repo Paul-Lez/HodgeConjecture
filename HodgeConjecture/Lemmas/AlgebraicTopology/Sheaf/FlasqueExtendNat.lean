@@ -59,9 +59,9 @@ theorem globalSectionsNat_map_quasiIso
     (f : K ⟶ L) [QuasiIso f]
     (hK : ∀ m, (K.X m).IsFlasque) (hL : ∀ m, (L.X m).IsFlasque) :
     QuasiIso
-      (((TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
+      (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
         ).mapHomologicalComplex (ComplexShape.up ℕ)).map f) := by
-  let Γ := TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsFunctor Y
+  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
   let KInt : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ :=
     K.extend ComplexShape.embeddingUpNat
   let LInt : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ :=

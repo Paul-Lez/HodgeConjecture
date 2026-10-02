@@ -6,6 +6,7 @@ module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.Cycle.Component.PointCoclassNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafNormalization
 public import Other.AlgebraicGeometry.Cycle.SheafClass
@@ -16,11 +17,11 @@ public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.Cycle.Support
 
 /-!
-# Positive-kernel point normalization of the actual general cycle class
+# Positive-kernel point normalization of the general cycle class
 
-The comparison target is the old exactly normalized point coclass transported
-through the actual relative/supported-injective comparison and the literal
-positive supported-kernel inclusion. It is NOT a point branch in the cycle map.
+The comparison target is the old normalized point coclass transported through
+the relative/supported-injective comparison and the positive supported-kernel inclusion.
+It is not a point branch in the cycle map.
 The separate comparison with the legacy ordinary class has its own cone sign.
 -/
 
@@ -37,8 +38,8 @@ variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (x : X.left)
   {p : ℕ} (hx : Order.coheight x = p)
 
-/-- Actual restriction followed by the cohomology-sheaf comparison is the
-restriction of the literal relative sheafification unit. -/
+/-- Restriction followed by the cohomology-sheaf comparison is the
+restriction of the relative sheafification unit. -/
 theorem complexSupportInjectiveCohomologySheafIsoRelative_restriction_section
     (S : Closeds (ComplexPoint X)) (n : ℕ)
     {V W : Opens (ComplexPoint X)} (a : W ⟶ V) :
@@ -60,8 +61,8 @@ section Point
 variable (d : ℕ) [SmoothOfRelativeDimension d X.hom]
   (z : ComplexPoint (Over.mk (cycleComponentι X.left x ≫ X.hom)))
 
-/-- The OLD point coclass on the literal whole-open/full-component pair.
-The pair map simply forgets all removed support except the chosen point. -/
+/-- The old point coclass on the whole-open/full-component pair.
+The pair map forgets all removed support except the chosen point. -/
 def analyticComponentPointRelativeCoclass :
     RelativeCohomology ℚ
       (neighborhoodSupportComplementPair
@@ -74,7 +75,7 @@ def analyticComponentPointRelativeCoclass :
       (range_cycleComponentMap_subset X x ⟨z, rfl⟩))
     (analyticPointLocalCoclass X d (cycleComponentMap X x z))
 
-/-- The old point coclass transported through the ACTUAL relative/supported-injective
+/-- The old point coclass transported through the relative/supported-injective
 comparison; this is an explicit comparison target, not the definition of the general class. -/
 def analyticComponentPointSupportedInjectiveCoclass :
     (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
@@ -84,15 +85,50 @@ def analyticComponentPointSupportedInjectiveCoclass :
     (cycleComponentAnalyticClosedSupport X x) ⊤ (2 * d)).symm
       (analyticComponentPointRelativeCoclass X x d z)
 
-/-- The positive literal supported-kernel inclusion of the old point coclass, in
-the repository's ordinary rational cohomology. No legacy cone-sign equality is claimed. -/
-def analyticComponentPointPositiveKernelClass : H^(2 * d)(X; ℚ) :=
-  (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * d)).symm
+/-- The point coclass included into ordinary rational cohomology through the independent
+    ambient-injective support-forgetting model. -/
+def analyticComponentPointPositiveKernelClass : H^(2 * (d : ℤ))(X; ℚ) :=
+  (rationalCohomologyAddEquivAmbientInjectiveHomology X (2 * (d : ℤ))).symm
     (HomologicalComplex.homologyMap
       (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
         (TopCat.of (ComplexPoint X)) (cycleComponentAnalyticClosedSupport X x).compl ⊤
         (ambientRationalInjectiveComplex X)).f (2 * (d : ℤ))
       (analyticComponentPointSupportedInjectiveCoclass X x d z))
+
+private lemma forgetSupportToGlobalSectionsHomology_supportedInjective
+    (Z : Closeds (ComplexPoint X)) (n : ℕ)
+    (c : (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X Z)).homology n) :
+    forgetSupportToGlobalSectionsHomology ℚ X Z n
+        ((rationalSupportAddEquivSupportedInjectiveHomology X Z n).symm c) =
+      HomologicalComplex.homologyMap
+      (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
+        (TopCat.of (ComplexPoint X)) Z.compl ⊤ (ambientRationalInjectiveComplex X)).f n c := by
+  change HomologicalComplex.homologyMap
+      (TopCat.Sheaf.supportRestrictionSectionsComplexShortComplex
+        (TopCat.of (ComplexPoint X)) Z.compl ⊤ (ambientRationalInjectiveComplex X)).f n
+      ((rationalSupportAddEquivSupportedInjectiveHomology X Z n)
+        ((rationalSupportAddEquivSupportedInjectiveHomology X Z n).symm c)) = _
+  rw [AddEquiv.apply_symm_apply]
+
+private lemma constantFieldInjectiveResolutionAugmentation_eq_ambient
+    (X : Over (Spec ↧ℂ)) :
+    (constantFieldSheafComplexIntIsoSingle ℚ X).hom ≫
+        TopCat.Sheaf.injectiveResolutionAugmentation (TopCat.of (ComplexPoint X))
+          ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ)) =
+      ambientRationalInjectiveAugmentation X := by
+  let e := HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
+    𝓒(↧(ComplexPoint X); ℚ) 0 0 (by simp)
+  change e.hom ≫ e.inv ≫
+      HomologicalComplex.extendMap
+        (TopCat.Sheaf.ambientConstantInjectiveResolution
+          (TopCat.of (ComplexPoint X)) (AddCommGrpCat.of ℚ)).ι
+        ComplexShape.embeddingUpNat =
+    HomologicalComplex.extendMap
+      (TopCat.Sheaf.ambientConstantInjectiveResolution
+        (TopCat.of (ComplexPoint X)) (AddCommGrpCat.of ℚ)).ι
+      ComplexShape.embeddingUpNat
+  simp
 
 /-- The comparison target retains exactly the old normalized relative point coclass. -/
 @[simp]
@@ -103,7 +139,7 @@ theorem analyticComponentPointSupportedInjectiveCoclass_relative :
         analyticComponentPointRelativeCoclass X x d z :=
   AddEquiv.apply_symm_apply _ _
 
-/-- Its literal sheafification image is the old point section on the whole ambient open. -/
+/-- Its sheafification image is the old point section on the whole ambient open. -/
 theorem analyticComponentPointRelativeCoclass_toSheaf :
     (supportRelativeCohomologyToSheaf (TopCat.of (ComplexPoint X))
       (cycleComponentSupport X x) (2 * d)).app (op ⊤)
@@ -111,8 +147,8 @@ theorem analyticComponentPointRelativeCoclass_toSheaf :
       analyticPointCoclassSupportSection X d (cycleComponentSupport X x)
         (cycleComponentMap X x z) (range_cycleComponentMap_subset X x ⟨z, rfl⟩) ⊤ := rfl
 
-/-- The old point candidate has the EXACT general smooth-locus section as its
-canonical sheaf normalization, using actual maps throughout. -/
+/-- The old point candidate has the general smooth-locus section as its
+canonical sheaf normalization. -/
 theorem analyticComponentPointSupportedInjectiveCoclass_section_normalization
     (hx : Order.coheight x = d) :
     (complexSupportInjectiveCohomologySheafIsoRelative X
@@ -171,7 +207,6 @@ private theorem cycleComponentSupportedInjectiveClass_point_normalization_aux
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.isDefEq.respectTransparency.types false in
-set_option backward.defeqAttrib.useBackward true in
 /-- The supported component class equals the normalized point class. -/
 theorem cycleComponentSupportedInjectiveClass_point_normalization
     (hx : Order.coheight x = d) :
@@ -193,16 +228,72 @@ theorem cycleComponentSupportedInjectiveClass_point_normalization
     exact AddEquiv.apply_symm_apply _ _
   exact cycleComponentSupportedInjectiveClass_point_normalization_aux X x d z hx a ha
 
-/-- Exact positive-kernel point normalization of the mapping-cone class. -/
-theorem coneCycleComponentSheafClass_point_normalization
+/-- The cycle-component class of a point has the positive-kernel normalization. -/
+theorem cycleComponentSheafClass_point_normalization
     (hx : Order.coheight x = d) :
-    coneCycleComponentSheafClass X x hx =
+    cycleComponentSheafClass X x hx =
       analyticComponentPointPositiveKernelClass X x d z := by
-  rw [coneCycleComponentSheafClass_eq_injectiveModel,
+  rw [cycleComponentSheafClass_eq_forgetSupport,
     cycleComponentSupportedInjectiveClass_point_normalization X x d z hx]
-  simp
+  dsimp [forgetSupport]
+  rw [forgetSupportToGlobalSectionsHomology_supportedInjective]
+  dsimp [forgetSupport, rationalCohomologyAddEquivAmbientInjectiveHomology,
+    analyticComponentPointPositiveKernelClass]
+  simp [constantFieldInjectiveResolutionAugmentation_eq_ambient,
+    ambientRationalInjectiveAugmentationPlus]
   rfl
 
 end Point
+
+variable (V : SmoothProjectiveComplexVariety) (d : ℕ)
+  [SmoothOfRelativeDimension d V.structureMap]
+
+/-- The sheaf cycle class of a point component records its integer multiplicity. -/
+theorem sheafCycleClassOnCycles_single_point_normalization
+    (x : V.scheme) (hx : Order.coheight x = d)
+    (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
+    (n : ℤ) :
+    sheafCycleClassOnCycles V d (codimensionCycleSubgroup.single x hx n) =
+      n • analyticComponentPointPositiveKernelClass V.over x d z := by
+  rw [sheafCycleClassOnCycles_single,
+    cycleComponentSheafClass_point_normalization V.over x d z hx]
+
+/-- The sheaf cycle class records multiplicities in a finite integral point cycle. -/
+theorem sheafCycleClassOnCycles_sum_single_point_normalization
+    {ι : Type*} (t : Finset ι)
+    (x : ι → V.scheme) (hx : ∀ i, Order.coheight (x i) = d)
+    (z : ∀ i, ComplexPoint (Over.mk
+      (cycleComponentι V.scheme (x i) ≫ V.structureMap))) (n : ι → ℤ) :
+    sheafCycleClassOnCycles V d
+      (∑ i ∈ t, codimensionCycleSubgroup.single (x i) (hx i) (n i)) =
+      ∑ i ∈ t, n i • analyticComponentPointPositiveKernelClass
+        V.over (x i) d (z i) := by
+  rw [sheafCycleClassOnCycles_sum_single]
+  refine Finset.sum_congr rfl fun i _ ↦ ?_
+  rw [cycleComponentSheafClass_point_normalization V.over (x i) d (z i) (hx i)]
+
+/-- The rational sheaf cycle class of a point component records its rational multiplicity. -/
+theorem rationalSheafCycleClassOnCycles_tmul_single_point_normalization
+    (x : V.scheme) (hx : Order.coheight x = d)
+    (z : ComplexPoint (Over.mk (cycleComponentι V.scheme x ≫ V.structureMap)))
+    (q : ℚ) :
+    rationalSheafCycleClassOnCycles V d (q ⊗ₜ[ℤ] codimensionCycleSubgroup.single x hx 1) =
+      q • analyticComponentPointPositiveKernelClass V.over x d z := by
+  rw [rationalSheafCycleClassOnCycles_tmul_single,
+    cycleComponentSheafClass_point_normalization V.over x d z hx]
+
+/-- The rational sheaf cycle class records multiplicities in a finite rational point cycle. -/
+theorem rationalSheafCycleClassOnCycles_sum_tmul_single_point_normalization
+    {ι : Type*} (t : Finset ι)
+    (x : ι → V.scheme) (hx : ∀ i, Order.coheight (x i) = d)
+    (z : ∀ i, ComplexPoint (Over.mk
+      (cycleComponentι V.scheme (x i) ≫ V.structureMap))) (q : ι → ℚ) :
+    rationalSheafCycleClassOnCycles V d
+      (∑ i ∈ t, q i ⊗ₜ[ℤ] codimensionCycleSubgroup.single (x i) (hx i) 1) =
+      ∑ i ∈ t, q i • analyticComponentPointPositiveKernelClass
+        V.over (x i) d (z i) := by
+  rw [rationalSheafCycleClassOnCycles_sum_tmul_single]
+  refine Finset.sum_congr rfl fun i _ ↦ ?_
+  rw [cycleComponentSheafClass_point_normalization V.over (x i) d (z i) (hx i)]
 
 end AlgebraicGeometry.ComplexPoint

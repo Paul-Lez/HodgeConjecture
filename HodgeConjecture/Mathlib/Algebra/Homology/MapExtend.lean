@@ -21,9 +21,11 @@ open CategoryTheory Limits
 
 namespace HomologicalComplex
 
+universe u v
+
 section Single
 
-variable {C : Type*} [Category* C] [Preadditive C] [HasZeroObject C]
+variable {C : Type u} [Category.{v} C] [Preadditive C] [HasZeroObject C]
   {I J : Type*} {c : ComplexShape I} {c' : ComplexShape J}
 
 /-- Extending a complex supported in one degree is natural in the object placed there. -/
