@@ -35,7 +35,7 @@ theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_zero
   · subst p
     rw [rationalHodgeClasses_zero_eq_algebraicCycleClassSpan]
   · have hdim : dim X.left < p := by omega
-    letI _ : SmoothOfRelativeDimension (dim X.left) X.hom := inferInstance
+    let _ : SmoothOfRelativeDimension (dim X.left) X.hom := inferInstance
     rw [hodgeClasses_eq_bot_of_lt ℚ X hdim,
       algebraicCycleClassSpan_eq_bot_of_lt X (dim X.left) p hdim]
 

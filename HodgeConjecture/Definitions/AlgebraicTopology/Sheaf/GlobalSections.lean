@@ -36,7 +36,7 @@ instance globalSectionsFunctor_additive : (globalSectionsFunctor C X).Additive w
 
 instance globalSectionsFunctor_preservesFiniteLimits (X : TopCat.{w}) :
     PreservesFiniteLimits (globalSectionsFunctor AddCommGrpCat.{w} X) := by
-  letI : PreservesFiniteLimits
+  let : PreservesFiniteLimits
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{w}).obj (op (⊤ : Opens X))) :=
     inferInstance
   exact comp_preservesFiniteLimits (TopCat.Sheaf.forget AddCommGrpCat.{w} X)

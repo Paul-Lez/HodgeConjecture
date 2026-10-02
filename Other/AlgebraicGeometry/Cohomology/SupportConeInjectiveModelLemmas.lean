@@ -108,7 +108,7 @@ instance ambientRationalInjectiveCone_isStrictlyGE
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     (CochainComplex.mappingCone
       (ambientRationalInjectiveRestriction X Z hZ)).IsStrictlyGE (-1) := by
-  letI : (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE 0 := by
+  let : (derivedPushforwardComplementConstantRationalComplexInt X Z).IsStrictlyGE 0 := by
     dsimp only [derivedPushforwardComplementConstantRationalComplexInt]
     infer_instance
   exact CochainComplex.isStrictlyGE_mappingCone _ 0 0 (-1) (by omega) (by omega)
@@ -119,7 +119,7 @@ instance ambientRationalInjectiveCone_injective
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (q : ℤ) :
     Injective ((CochainComplex.mappingCone
       (ambientRationalInjectiveRestriction X Z hZ)).X q) := by
-  letI : Injective
+  let : Injective
       ((derivedPushforwardComplementConstantRationalComplexInt X Z).X q) :=
     derivedPushforwardComplementConstantRationalComplexInt_injective X Z hZ q
   exact Injective.of_iso
@@ -242,14 +242,14 @@ set_option backward.isDefEq.respectTransparency false in
 instance globalAmbientRationalOpenResolutionComparison_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalAmbientRationalOpenResolutionComparison X Z hZ) := by
-  letI Y := TopCat.of (ComplexPoint X)
-  letI U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
-  letI Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
-  letI k := ((TopCat.Sheaf.pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex
+  let Y := TopCat.of (ComplexPoint X)
+  let U : Opens Y := ⟨Zᶜ, hZ.isOpen_compl⟩
+  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
+  let k := ((TopCat.Sheaf.pushforward AddCommGrpCat U.inclusion').mapHomologicalComplex
     (.up ℕ)).map (TopCat.Sheaf.restrictedAmbientToOpenResolution Y U (AddCommGrpCat.of ℚ))
-  letI : QuasiIso ((Γ.mapHomologicalComplex (.up ℕ)).map k) :=
+  let : QuasiIso ((Γ.mapHomologicalComplex (.up ℕ)).map k) :=
     TopCat.Sheaf.globalRestrictedAmbientToOpenResolution_quasiIso Y U (AddCommGrpCat.of ℚ)
-  letI : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map
+  let : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map
       (HomologicalComplex.extendMap k ComplexShape.embeddingUpNat)) :=
     CochainComplex.quasiIso_map_extendMap_nat Γ k
   dsimp only [globalAmbientRationalOpenResolutionComparison,

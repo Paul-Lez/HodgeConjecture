@@ -58,26 +58,26 @@ induced by `n ↦ n q`. -/
     rationalCohomologyZeroEquivSheafHom X (fieldCohomologyClass ℚ X q) =
       (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
         (AddCommGrpCat.ofHom (zmultiplesAddHom ℚ q)) := by
-  letI Y := TopCat.of (ComplexPoint X)
-  letI K := constantFieldSheafComplexIntPlus ℚ X
-  letI F := ℍ[AddCommGrpCat]^0(Y)
-  letI G := (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex ℤᵘᵖ ⋙
+  let Y := TopCat.of (ComplexPoint X)
+  let K := constantFieldSheafComplexIntPlus ℚ X
+  let F := ℍ[AddCommGrpCat]^0(Y)
+  let G := (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex ℤᵘᵖ ⋙
     HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
-  letI s := TopCat.Sheaf.integerConstantHomAddEquivGlobalSections
+  let s := TopCat.Sheaf.integerConstantHomAddEquivGlobalSections
     𝓒(↧(ComplexPoint X); ℚ)
       ((TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
         (AddCommGrpCat.ofHom (zmultiplesAddHom ℚ 1)))
-  letI t : G.obj K.obj :=
+  let t : G.obj K.obj :=
     (TopCat.Sheaf.globalSectionsSingle₀HomologyIso AddCommGrpCat Y
       𝓒(↧(ComplexPoint X); ℚ)).inv s
-  letI m := fieldScalarComplex ℚ X q
-  letI Z := 𝓒(↧(ComplexPoint X); ℤ)
-  letI Q := 𝓒(↧(ComplexPoint X); ℚ)
-  letI u : Z ⟶ Q := (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+  let m := fieldScalarComplex ℚ X q
+  let Z := 𝓒(↧(ComplexPoint X); ℤ)
+  let Q := 𝓒(↧(ComplexPoint X); ℚ)
+  let u : Z ⟶ Q := (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
     (AddCommGrpCat.ofHom (zmultiplesAddHom ℚ q))
-  letI eQ : K.obj ≅ (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj Q :=
+  let eQ : K.obj ≅ (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).obj Q :=
     HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat Q 0 0 rfl
-  letI j : TopCat.Sheaf.integerConstantSingleComplex Y ⟶ K.obj :=
+  let j : TopCat.Sheaf.integerConstantSingleComplex Y ⟶ K.obj :=
     (CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map u ≫ eQ.inv
   have hj :
       (TopCat.Sheaf.globalSectionsSingle₀HomologyIso AddCommGrpCat Y Q).hom
@@ -87,22 +87,22 @@ induced by `n ↦ n q`. -/
             (CochainComplex.HomComplex.CohomologyClass.mk
               (CochainComplex.HomComplex.Cocycle.ofHom j)))) =
         TopCat.Sheaf.integerConstantHomAddEquivGlobalSections Q u := by
-    letI Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
-    letI e := ComplexShape.embeddingUpNat
-    letI KN := (CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat Y)).obj Q
-    letI E : (Γ.mapHomologicalComplex ℤᵘᵖ).obj K.obj ≅
+    let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
+    let e := ComplexShape.embeddingUpNat
+    let KN := (CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat Y)).obj Q
+    let E : (Γ.mapHomologicalComplex ℤᵘᵖ).obj K.obj ≅
         (HomologicalComplex.single AddCommGrpCat ℤᵘᵖ 0).obj (Γ.obj Q) :=
       HomologicalComplex.mapExtendCanonicalIso Γ KN e ≪≫
         (e.extendFunctor AddCommGrpCat).mapIso
           ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).app Q) ≪≫
         HomologicalComplex.extendSingleIso e (Γ.obj Q) 0 0 rfl
-    letI z := CochainComplex.HomComplex.Cocycle.ofHom j
-    letI H := CochainComplex.HomComplex
+    let z := CochainComplex.HomComplex.Cocycle.ofHom j
+    let H := CochainComplex.HomComplex
       (TopCat.Sheaf.integerConstantSingleComplex Y) K.obj
-    letI hD := CochainComplex.HomComplex.leftHomologyData
+    let hD := CochainComplex.HomComplex.leftHomologyData
       (TopCat.Sheaf.integerConstantSingleComplex Y) K.obj 0
-    letI zD : hD.K := z
-    letI c : H.cycles 0 := hD.cyclesIso.inv zD
+    let zD : hD.K := z
+    let c : H.cycles 0 := hD.cyclesIso.inv zD
     have hw :
         (CochainComplex.HomComplex.homologyAddEquiv _ K.obj 0).symm
             (CochainComplex.HomComplex.CohomologyClass.mk z) =
@@ -122,13 +122,13 @@ induced by `n ↦ n q`. -/
       HomologicalComplex.homologyMap E.hom 0 ≫
         (HomologicalComplex.singleObjHomologySelfIso ℤᵘᵖ 0 (Γ.obj Q)).hom from rfl]
     simp only [ConcreteCategory.comp_apply]
-    letI c' := (HomologicalComplex.cyclesMap
+    let c' := (HomologicalComplex.cyclesMap
       (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y K.obj).hom 0) c
     have hnE := ConcreteCategory.congr_hom
       (HomologicalComplex.homologyπ_naturality E.hom 0) c'
     simp only [ConcreteCategory.comp_apply] at hnE
     rw [hnE]
-    letI c'' := HomologicalComplex.cyclesMap E.hom 0 c'
+    let c'' := HomologicalComplex.cyclesMap E.hom 0 c'
     have hs := ConcreteCategory.congr_hom
       (HomologicalComplex.homologyπ_singleObjHomologySelfIso_hom
         (C := AddCommGrpCat) ℤᵘᵖ 0 (Γ.obj Q)) c''
@@ -139,8 +139,8 @@ induced by `n ↦ n q`. -/
           (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y K.obj).hom 0 ≫
         HomologicalComplex.cyclesMap E.hom 0 ≫
         (HomologicalComplex.singleObjCyclesSelfIso ℤᵘᵖ 0 (Γ.obj Q)).hom) c = _
-    rw [HomologicalComplex.singleObjCyclesSelfIso_hom]
-    rw [HomologicalComplex.cyclesMap_i_assoc,
+    rw [HomologicalComplex.singleObjCyclesSelfIso_hom,
+      HomologicalComplex.cyclesMap_i_assoc,
       HomologicalComplex.cyclesMap_i_assoc]
     simp only [ConcreteCategory.comp_apply]
     have hc := ConcreteCategory.congr_hom
@@ -165,7 +165,7 @@ induced by `n ↦ n q`. -/
           TopCat.Sheaf.integerConstantHomAddEquivGlobalSections (K.obj.X 0) (j.f 0) := by
       rfl
     rw [hhci]
-    letI f₀ : K.obj.X 0 ⟶ Q :=
+    let f₀ : K.obj.X 0 ⟶ Q :=
       eQ.hom.f 0 ≫ (HomologicalComplex.singleObjXSelf ℤᵘᵖ 0 Q).hom
     have hE : E.hom.f 0 ≫
           (HomologicalComplex.singleObjXSelf ℤᵘᵖ 0 (Γ.obj Q)).hom =
@@ -180,11 +180,10 @@ induced by `n ↦ n q`. -/
               ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).app Q).hom).f 0 =
             (HomologicalComplex.extendMap
               ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).hom.app Q) e).f 0 := rfl
-      rw [hB]
-      rw [HomologicalComplex.mapExtendCanonicalIso_hom_f Γ KN e
-        (i := 0) (j := 0) rfl]
-      rw [HomologicalComplex.extendMap_f _ e (i := 0) (i' := 0) rfl]
-      rw [HomologicalComplex.singleMapHomologicalComplex_hom_app_self]
+      rw [hB, HomologicalComplex.mapExtendCanonicalIso_hom_f Γ KN e
+        (i := 0) (j := 0) rfl,
+        HomologicalComplex.extendMap_f _ e (i := 0) (i' := 0) rfl,
+        HomologicalComplex.singleMapHomologicalComplex_hom_app_self]
       dsimp only [KN, CochainComplex.single₀]
       simp
       rfl
@@ -195,16 +194,16 @@ induced by `n ↦ n q`. -/
     have hju : j.f 0 ≫ f₀ = u := by
       dsimp only [f₀, j]
       rw [HomologicalComplex.comp_f]
-      letI eQ₀ := (HomologicalComplex.eval (AnalyticAdditiveSheaf X) ℤᵘᵖ 0).mapIso eQ
+      let eQ₀ := (HomologicalComplex.eval (AnalyticAdditiveSheaf X) ℤᵘᵖ 0).mapIso eQ
       change ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map u).f 0 ≫
         eQ₀.inv ≫ eQ₀.hom ≫
           (HomologicalComplex.singleObjXSelf ℤᵘᵖ 0 Q).hom = u
       rw [Iso.inv_hom_id_assoc]
       rfl
     rw [hju]
-  letI Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
-  letI v := fieldScalarSheaf ℚ X q
-  letI u₁ : Z ⟶ Q := (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
+  let v := fieldScalarSheaf ℚ X q
+  let u₁ : Z ⟶ Q := (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
     (AddCommGrpCat.ofHom (zmultiplesAddHom ℚ 1))
   have hu : u₁ ≫ v = u := by
     dsimp only [u₁, v, u, fieldScalarSheaf]
@@ -243,16 +242,16 @@ induced by `n ↦ n q`. -/
     apply (ConcreteCategory.bijective_of_isIso
       (TopCat.Sheaf.globalSectionsSingle₀HomologyIso AddCommGrpCat Y Q).hom).1
     rw [hj, hmt]
-  letI I := ambientRationalInjectiveComplex X
-  letI a : K.obj ⟶ I := ambientRationalInjectiveAugmentation X
-  letI A := TopCat.Sheaf.integerConstantSingleComplex Y
-  letI x := (CochainComplex.HomComplex.homologyAddEquiv A K.obj 0).symm
+  let I := ambientRationalInjectiveComplex X
+  let a : K.obj ⟶ I := ambientRationalInjectiveAugmentation X
+  let A := TopCat.Sheaf.integerConstantSingleComplex Y
+  let x := (CochainComplex.HomComplex.homologyAddEquiv A K.obj 0).symm
     (CochainComplex.HomComplex.CohomologyClass.mk
       (CochainComplex.HomComplex.Cocycle.ofHom j))
-  letI p := CochainComplex.HomComplex.postcompMap A a
-  letI hciK := TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y K.obj
-  letI hciI := TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I
-  letI Γa := ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
+  let p := CochainComplex.HomComplex.postcompMap A a
+  let hciK := TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y K.obj
+  let hciI := TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I
+  let Γa := ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
     ℤᵘᵖ).map a
   have hx :
       (CochainComplex.HomComplex.homologyAddEquiv A I 0).symm
@@ -325,9 +324,9 @@ induced by `n ↦ n q`. -/
         (HomologicalComplex.homologyMap Γa 0 (G.map m.hom t)) ≫ _ = _
   rw [hderivedI]
   simp only [ShiftedHom.mk₀, Functor.map_comp, Category.assoc]
-  letI D := DerivedCategory
+  let D := DerivedCategory
     (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X)))
-  letI z₀ := shiftFunctorZero' D (0 : ℤ) rfl
+  let z₀ := shiftFunctorZero' D (0 : ℤ) rfl
   have hn := z₀.inv.naturality
     (DerivedCategory.Q.map (ambientRationalInjectiveAugmentation X))
   simp only [Functor.id_map] at hn
@@ -382,7 +381,7 @@ degree-zero cohomology classes. -/
 theorem rationalCohomologyClass_injective
     [Nonempty (ComplexPoint X)] :
     Function.Injective (fieldCohomologyClass ℚ X) := by
-  letI : (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).Faithful :=
+  let : (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).Faithful :=
     TopCat.constantSheaf_faithful_of_nonempty _
   exact rationalCohomologyClass_injective_of_constantSheaf_faithful X
 
@@ -392,14 +391,14 @@ theorem rationalCohomologyClass_surjective
     [ConnectedSpace (ComplexPoint X)] :
     Function.Surjective (fieldCohomologyClass ℚ X) := by
   intro α
-  letI F := TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)
-  letI ff := TopCat.constantSheafFullyFaithfulOfConnected
+  let F := TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)
+  let ff := TopCat.constantSheafFullyFaithfulOfConnected
     (TopCat.of (ComplexPoint X))
-  letI : F.Full := ff.full
-  letI : F.Faithful := ff.faithful
-  letI e := rationalCohomologyZeroEquivSheafHom X
+  let : F.Full := ff.full
+  let : F.Faithful := ff.faithful
+  let e := rationalCohomologyZeroEquivSheafHom X
   obtain ⟨f, hf⟩ := F.map_surjective (e α)
-  letI q : ℚ := f (1 : ℤ)
+  let q : ℚ := f (1 : ℤ)
   refine ⟨q, e.injective ?_⟩
   rw [rationalCohomologyZeroEquivSheafHom_class, ← hf]
   change F.map (AddCommGrpCat.ofHom (zmultiplesAddHom ℚ q)) = F.map f
@@ -414,7 +413,7 @@ analytic complex-point space. -/
 theorem rationalCohomologyClass_bijective
     [ConnectedSpace (ComplexPoint X)] :
     Function.Bijective (fieldCohomologyClass ℚ X) := by
-  letI : Nonempty (ComplexPoint X) := inferInstance
+  let : Nonempty (ComplexPoint X) := inferInstance
   exact ⟨rationalCohomologyClass_injective X,
     rationalCohomologyClass_surjective X⟩
 

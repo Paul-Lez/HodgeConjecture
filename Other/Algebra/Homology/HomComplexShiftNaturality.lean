@@ -47,8 +47,8 @@ lemma map_rightUnshift {X Y : C} (f : X ⟶ Y⟦(1 : ℤ)⟧) :
       (F.commShiftIso (-1)).hom.app X ≫
         ((ShiftedHom.map f F)⟦(-1 : ℤ)⟧' ≫
           (shiftFunctorCompIsoId D (1 : ℤ) (-1) (by simp)).hom.app (F.obj Y)) := by
-  rw [Functor.map_comp, Functor.map_shiftFunctorCompIsoId_hom_app]
-  rw [← Category.assoc, Functor.commShiftIso_hom_naturality]
+  rw [Functor.map_comp, Functor.map_shiftFunctorCompIsoId_hom_app,
+    ← Category.assoc, Functor.commShiftIso_hom_naturality]
   simp only [ShiftedHom.map, Category.assoc]
   rw [Functor.map_comp, Category.assoc]
 

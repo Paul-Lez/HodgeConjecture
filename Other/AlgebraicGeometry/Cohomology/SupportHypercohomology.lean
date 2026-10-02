@@ -60,15 +60,15 @@ theorem derivedPushforwardComplementConstantRationalComplexInt_term_isFlasque
     (derivedPushforwardComplementConstantRationalComplexInt X Z).X q |>.IsFlasque := by
   by_cases hq : ∃ m : ℕ, (m : ℤ) = q
   · obtain ⟨m, rfl⟩ := hq
-    letI K := derivedPushforwardComplementConstantRationalComplexNat X Z
-    letI e := K.extendXIso ComplexShape.embeddingUpNat (i := m) rfl
-    letI hP : TopCat.Presheaf.IsFlasque (K.X m).obj := by
-      letI F :=
+    let K := derivedPushforwardComplementConstantRationalComplexNat X Z
+    let e := K.extendXIso ComplexShape.embeddingUpNat (i := m) rfl
+    let hP : TopCat.Presheaf.IsFlasque (K.X m).obj := by
+      let F :=
         (complementConstantRationalInjectiveResolution X Z).cocomplex.X m
-      letI : Injective F := by
+      let : Injective F := by
         dsimp [F]
         infer_instance
-      letI : TopCat.Sheaf.IsFlasque F :=
+      let : TopCat.Sheaf.IsFlasque F :=
         TopCat.Sheaf.injective_isFlasque _ F
       exact TopCat.Sheaf.IsFlasque.pushforward_isFlasque F
         (analyticComplementInclusion X Z)

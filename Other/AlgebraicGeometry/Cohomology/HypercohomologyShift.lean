@@ -19,12 +19,7 @@ import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 public import Other.Algebra.Homology.HomComplexShiftNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 
-/-!
-# Global-sections and derived-Hom shift comparisons
-
-These results describe the compatibility of derived-Hom and global-section comparisons with
-shifts.
--/
+/-! # Shift normalization of hypercohomology and global sections -/
 
 @[expose] public noncomputable section
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
@@ -152,8 +147,8 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_rightUnshift
       (x.comp ((DerivedCategory.Q.commShiftIso s).hom.app K) (by omega)) =
     ShortComplex.homologyMap (globalSectionsShiftShortComplex Y K s n n' h)
       (derivedHomAddEquivGlobalSectionsKInjective Y (K⟦s⟧) n x) := by
-  letI A := integerConstantSingleComplex Y
-  letI y := (CochainComplex.HomComplex.homologyAddEquiv A (K⟦s⟧) n).symm
+  let A := integerConstantSingleComplex Y
+  let y := (CochainComplex.HomComplex.homologyAddEquiv A (K⟦s⟧) n).symm
     (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass
       A (K⟦s⟧) n x)
   have hH : ShortComplex.homologyMap

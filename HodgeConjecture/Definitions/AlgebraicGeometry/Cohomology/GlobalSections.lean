@@ -64,12 +64,12 @@ def integerConstantHomAddEquivGlobalSections
       (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y)).homGroup _ _
     ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
         (AddCommGrpCat.of ℤ) ⟶ F) ≃+
-      F.presheaf.obj (.op (⊤ : Opens Y)) := by
+      F.presheaf.obj (.op (⊤ : Opens Y)) :=
   letI : AddCommGroup
       ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
         (AddCommGrpCat.of ℤ) ⟶ F) :=
     (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y)).homGroup _ _
-  exact ((constantSheafAdj (Opens.grothendieckTopology Y) AddCommGrpCat
+  ((constantSheafAdj (Opens.grothendieckTopology Y) AddCommGrpCat
       isTerminalTop).homAddEquiv (AddCommGrpCat.of ℤ) F).trans <|
     AddCommGrpCat.homAddEquiv.trans (zmultiplesAddHom (F.presheaf.obj (.op ⊤))).symm
 

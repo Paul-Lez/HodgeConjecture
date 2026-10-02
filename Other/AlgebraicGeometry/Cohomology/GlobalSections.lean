@@ -56,10 +56,10 @@ theorem singularCochainSheafComplexInt_isFlasque
     TopCat.Sheaf.IsFlasque ((singularCochainSheafComplexInt X ℚ).X n) := by
   by_cases hn : ∃ m : ℕ, (m : ℤ) = n
   · obtain ⟨m, rfl⟩ := hn
-    letI e := (AlgebraicTopology.Singular.singularCochainSheafComplex ℚ
+    let e := (AlgebraicTopology.Singular.singularCochainSheafComplex ℚ
       (TopCat.of (ComplexPoint X))).extendXIso
         ComplexShape.embeddingUpNat (i := m) rfl
-    letI hP : TopCat.Presheaf.IsFlasque
+    let hP : TopCat.Presheaf.IsFlasque
         ((AlgebraicTopology.Singular.singularCochainSheafComplex ℚ
           (TopCat.of (ComplexPoint X))).X m).obj := by
       change TopCat.Sheaf.IsFlasque
@@ -182,37 +182,37 @@ lemma rationalSingularCochainHypercohomologyAddEquivGlobalSections_toHypercohomo
         (((TopCat.Sheaf.toHypercohomology AddCommGrpCat
           (TopCat.of (ComplexPoint X)) n).app
           (rationalSingularCochainComplexIntPlus X)).hom x) = x := by
-  letI Y := TopCat.of (ComplexPoint X)
-  letI S := singularCochainSheafComplexInt X ℚ
-  letI _ : S.IsStrictlyGE 0 := by
+  let Y := TopCat.of (ComplexPoint X)
+  let S := singularCochainSheafComplexInt X ℚ
+  let _ : S.IsStrictlyGE 0 := by
     dsimp [S, singularCochainSheafComplexInt]
     infer_instance
-  letI hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
-  letI I := hres.choose
-  letI i := hres.choose_spec.choose
-  letI _ : QuasiIso i := hres.choose_spec.choose_spec.choose
-  letI _ : ∀ q, Injective (I.X q) := hres.choose_spec.choose_spec.choose_spec.choose
-  letI _ : I.IsStrictlyGE 0 := hres.choose_spec.choose_spec.choose_spec.choose_spec
-  letI _ : I.IsKInjective := CochainComplex.isKInjective_of_injective I 0
+  let hres := CochainComplex.Plus.modelCategoryQuillen.exists_quasiIso_injective S 0
+  let I := hres.choose
+  let i := hres.choose_spec.choose
+  let _ : QuasiIso i := hres.choose_spec.choose_spec.choose
+  let _ : ∀ q, Injective (I.X q) := hres.choose_spec.choose_spec.choose_spec.choose
+  let _ : I.IsStrictlyGE 0 := hres.choose_spec.choose_spec.choose_spec.choose_spec
+  let _ : I.IsKInjective := CochainComplex.isKInjective_of_injective I 0
   have hSflasque : ∀ q, (S.X q).IsFlasque :=
     fun q ↦ singularCochainSheafComplexInt_isFlasque X q
   have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
-  letI _ : QuasiIso
+  let _ : QuasiIso
       (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
         ).mapHomologicalComplex ℤᵘᵖ).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i 0 0 hSflasque hIflasque
-  letI Splus : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
+  let Splus : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
     ⟨S, ⟨0, inferInstance⟩⟩
-  letI Iplus : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
+  let Iplus : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
     ⟨I, ⟨0, inferInstance⟩⟩
-  letI f : Splus ⟶ Iplus := ⟨i⟩
-  letI F := ℍ[AddCommGrpCat]^n(Y)
-  letI G := CochainComplex.Plus.ι (AnalyticAdditiveSheaf X) ⋙
+  let f : Splus ⟶ Iplus := ⟨i⟩
+  let F := ℍ[AddCommGrpCat]^n(Y)
+  let G := CochainComplex.Plus.ι (AnalyticAdditiveSheaf X) ⋙
     (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex ℤᵘᵖ ⋙
     HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ n
-  letI x' : G.obj Splus := x
-  letI _ : IsIso (G.map f) := by
+  let x' : G.obj Splus := x
+  let _ : IsIso (G.map f) := by
     change IsIso (HomologicalComplex.homologyMap
       (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
         ℤᵘᵖ).map i) n)
@@ -365,14 +365,14 @@ lemma rationalCohomologyAddEquivSingularGlobalSections_toHypercohomology
         (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ).map
             (rationalToSingularCochainComplexInt X)) n x := by
-  letI Y := TopCat.of (ComplexPoint X)
-  letI K := constantFieldSheafComplexIntPlus ℚ X
-  letI S := rationalSingularCochainComplexIntPlus X
-  letI f : K ⟶ S := ⟨rationalToSingularCochainComplexInt X⟩
-  letI G := CochainComplex.Plus.ι (AnalyticAdditiveSheaf X) ⋙
+  let Y := TopCat.of (ComplexPoint X)
+  let K := constantFieldSheafComplexIntPlus ℚ X
+  let S := rationalSingularCochainComplexIntPlus X
+  let f : K ⟶ S := ⟨rationalToSingularCochainComplexInt X⟩
+  let G := CochainComplex.Plus.ι (AnalyticAdditiveSheaf X) ⋙
     (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex ℤᵘᵖ ⋙
     HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ n
-  letI x' : G.obj K := x
+  let x' : G.obj K := x
   change rationalSingularCochainHypercohomologyAddEquivGlobalSections X n
       ((ℍ[AddCommGrpCat]^n(Y)).map f
         (((TopCat.Sheaf.toHypercohomology AddCommGrpCat Y n).app K).hom x')) =
@@ -386,7 +386,7 @@ lemma rationalCohomologyAddEquivSingularGlobalSections_toHypercohomology
           (((TopCat.Sheaf.toHypercohomology AddCommGrpCat Y n).app K).hom x') := by
     simpa only [ConcreteCategory.comp_apply] using h
   rw [← h']
-  letI y : (TopCat.Sheaf.globalSectionsComplex
+  let y : (TopCat.Sheaf.globalSectionsComplex
       (TopCat.of (ComplexPoint X))
       (singularCochainSheafComplexInt X ℚ)).homology n := (G.map f) x'
   exact rationalSingularCochainHypercohomologyAddEquivGlobalSections_toHypercohomology

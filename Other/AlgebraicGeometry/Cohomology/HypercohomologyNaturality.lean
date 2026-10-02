@@ -66,11 +66,11 @@ lemma homComplexSingleIntegerIsoGlobalSections_naturality
     (homComplexSingleIntegerIsoGlobalSections Y K).hom ≫
       ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
         ℤᵘᵖ).map f := by
-  letI A : Sheaf AddCommGrpCat Y :=
+  let A : Sheaf AddCommGrpCat Y :=
     𝓒(Y; ℤ)
-  letI : (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).PreservesZeroMorphisms :=
+  let : (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
-  letI e := NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y) ℤᵘᵖ
+  let e := NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y) ℤᵘᵖ
   have h := CochainComplex.HomComplex.fromSingleZeroIsoPreadditiveCoyoneda_naturality_assoc
     A f (e.hom.app L)
   have h' := congrArg (fun g =>
@@ -166,8 +166,8 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_naturality
     HomologicalComplex.homologyMap
       (((globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex ℤᵘᵖ).map f) n
       (derivedHomAddEquivGlobalSectionsKInjective Y K n x) := by
-  letI A := integerConstantSingleComplex Y
-  letI y := (CochainComplex.HomComplex.homologyAddEquiv A K n).symm
+  let A := integerConstantSingleComplex Y
+  let y := (CochainComplex.HomComplex.homologyAddEquiv A K n).symm
     (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A K n x)
   have hH : HomologicalComplex.homologyMap
       (CochainComplex.HomComplex.postcompMap A f) n y =

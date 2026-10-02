@@ -117,7 +117,7 @@ private lemma constantFieldInjectiveResolutionAugmentation_eq_ambient
         TopCat.Sheaf.injectiveResolutionAugmentation (TopCat.of (ComplexPoint X))
           ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ)) =
       ambientRationalInjectiveAugmentation X := by
-  letI e := HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
+  let e := HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
     𝓒(↧(ComplexPoint X); ℚ) 0 0 (by simp)
   change e.hom ≫ e.inv ≫
       HomologicalComplex.extendMap
@@ -214,7 +214,7 @@ theorem cycleComponentSupportedInjectiveClass_point_normalization
       (rationalSupportAddEquivSupportedInjectiveHomology X
         (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
         (analyticComponentPointSupportedInjectiveCoclass X x d z) := by
-  letI a : CycleComponentSupportedCohomology X x d :=
+  let a : CycleComponentSupportedCohomology X x d :=
     (rationalSupportAddEquivSupportedInjectiveHomology X
       (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
       (analyticComponentPointSupportedInjectiveCoclass X x d z)

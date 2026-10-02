@@ -33,7 +33,7 @@ open CategoryTheory CategoryTheory.Limits TopologicalSpace
 namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
 
-/-- The old-cone comparison preserves the connecting morphism used to
+/-- The support-cone comparison preserves the connecting morphism used to
 forget support, with the ambient augmentation on its target. -/
 @[reassoc]
 lemma rationalSupportConeToAmbientInjectiveCone_connecting
@@ -71,7 +71,7 @@ lemma actualSupportConeToAmbientInjectiveGlobalCone_connecting
         (ambientRationalInjectiveRestriction X Z hZ)) (𝟙 _)
     (globalAmbientRationalOpenResolutionComparison X Z hZ)
     (show _ = _ from by
-      letI Γ := (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
+      let Γ := (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
         (TopCat.of (ComplexPoint X))).mapHomologicalComplex ℤᵘᵖ
       change Γ.map _ ≫ Γ.map _ = 𝟙 _ ≫ Γ.map _
       rw [Category.id_comp, ← Functor.map_comp,

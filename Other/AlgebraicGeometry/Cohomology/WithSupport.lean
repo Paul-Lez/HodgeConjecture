@@ -201,7 +201,7 @@ noncomputable instance isIso_mappingConeTriangleh_mor₃_univ :
     IsIso ((CochainComplex.mappingCone.triangleh
       (rationalRestrictionComplexInt X
         (Set.univ : Set (ComplexPoint X)))).mor₃) := by
-  letI f := rationalRestrictionComplexInt X
+  let f := rationalRestrictionComplexInt X
     (Set.univ : Set (ComplexPoint X))
   have hdist : CochainComplex.mappingCone.triangleh f ∈
       HomotopyCategory.Pretriangulated.distinguishedTriangles
@@ -218,7 +218,7 @@ noncomputable instance isIso_derivedMappingConeTriangle_mor₃_univ :
       (CochainComplex.mappingCone.triangle
         (rationalRestrictionComplexInt X
           (Set.univ : Set (ComplexPoint X))))).mor₃) := by
-  letI f := rationalRestrictionComplexInt X
+  let f := rationalRestrictionComplexInt X
     (Set.univ : Set (ComplexPoint X))
   exact (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _
     (DerivedCategory.mappingCone_triangle_distinguished f)).1
@@ -268,27 +268,27 @@ section
 isomorphism. -/
 instance forgetSupportComplex_univ_quasiIso :
     QuasiIso (forgetSupportComplex X (Set.univ : Set (ComplexPoint X))) := by
-  letI t := CochainComplex.mappingCone.triangle
+  let t := CochainComplex.mappingCone.triangle
       (rationalRestrictionComplexInt X (Set.univ : Set (ComplexPoint X)))
   have ht : QuasiIso t.mor₃ :=
     (DerivedCategory.isIso_Q_map_iff_quasiIso
       (C := AnalyticAdditiveSheaf X) t.mor₃).1 (by
-      letI c := (DerivedCategory.Q.commShiftIso (1 : ℤ)).hom.app t.obj₁
-      letI _ : IsIso (DerivedCategory.Q.map t.mor₃ ≫ c) := by
+      let c := (DerivedCategory.Q.commShiftIso (1 : ℤ)).hom.app t.obj₁
+      let _ : IsIso (DerivedCategory.Q.map t.mor₃ ≫ c) := by
         change IsIso ((DerivedCategory.Q.mapTriangle.obj t).mor₃)
         infer_instance
       exact IsIso.of_isIso_comp_right (DerivedCategory.Q.map t.mor₃) c)
   have hs : QuasiIso (t.mor₃⟦(-1 : ℤ)⟧') :=
     (CochainComplex.quasiIso_shift_iff t.mor₃ (-1)).2 ht
-  letI c := (shiftFunctorCompIsoId (CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+  let c := (shiftFunctorCompIsoId (CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     (1 : ℤ) (-1) (by simp)).hom.app t.obj₁
   have hc : QuasiIso c := inferInstance
   dsimp only [forgetSupportComplex]
-  letI e := shiftFunctorCompIsoId (CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+  let e := shiftFunctorCompIsoId (CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     (1 : ℤ) (-1) (by simp)
   change QuasiIso (t.mor₃⟦(-1 : ℤ)⟧' ≫ e.hom.app t.obj₁)
-  letI _ : QuasiIso (t.mor₃⟦(-1 : ℤ)⟧') := hs
-  letI _ : QuasiIso (e.hom.app t.obj₁) := by infer_instance
+  let _ : QuasiIso (t.mor₃⟦(-1 : ℤ)⟧') := hs
+  let _ : QuasiIso (e.hom.app t.obj₁) := by infer_instance
   infer_instance
 
 end

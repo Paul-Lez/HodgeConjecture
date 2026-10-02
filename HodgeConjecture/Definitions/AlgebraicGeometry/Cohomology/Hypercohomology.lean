@@ -46,6 +46,8 @@ universe u v w
 variable (C : Type u) [Category.{v} C] [Abelian C]
   (X : TopCat.{w}) [HasSheafify (Opens.grothendieckTopology X) C]
 
+section DerivedCategory
+
 variable [HasDerivedCategory C] [HasDerivedCategory (Sheaf C X)]
   [EnoughInjectives (Sheaf C X)]
 
@@ -80,6 +82,8 @@ instance hypercohomologyFunctor_map_isIso
   dsimp only [Functor.comp_map]
   infer_instance
 
+end DerivedCategory
+
 /-- The cohomology in degree zero of the global sections of an object placed in degree zero is
 canonically its object of global sections. -/
 def globalSectionsSingle₀HomologyIso (A : Sheaf C X) :
@@ -96,11 +100,7 @@ def globalSectionsSingle₀HomologyIso (A : Sheaf C X) :
         HomologicalComplex.extendSingleIso e (Γ.obj A) 0 0 rfl) 0 ≪≫
     HomologicalComplex.singleObjHomologySelfIso ℤᵘᵖ 0 ((globalSectionsFunctor C X).obj A)
 
-set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-set_option backward.isDefEq.respectTransparency.types false in
-omit [HasDerivedCategory C] [HasDerivedCategory (Sheaf C X)]
-  [EnoughInjectives (Sheaf C X)] in
 /-- The degree-zero comparison for an object placed in degree zero is natural in that object. -/
 @[reassoc]
 lemma globalSectionsSingle₀HomologyIso_hom_naturality
@@ -111,16 +111,16 @@ lemma globalSectionsSingle₀HomologyIso_hom_naturality
         (globalSectionsSingle₀HomologyIso C X B).hom =
       (globalSectionsSingle₀HomologyIso C X A).hom ≫
         (globalSectionsFunctor C X).map f := by
-  letI Γ := globalSectionsFunctor C X
-  letI e := ComplexShape.embeddingUpNat
-  letI KA := (CochainComplex.single₀ (Sheaf C X)).obj A
-  letI KB := (CochainComplex.single₀ (Sheaf C X)).obj B
-  letI g : KA ⟶ KB := (CochainComplex.single₀ (Sheaf C X)).map f
-  letI EA := HomologicalComplex.mapExtendCanonicalIso Γ KA e ≪≫
+  let Γ := globalSectionsFunctor C X
+  let e := ComplexShape.embeddingUpNat
+  let KA := (CochainComplex.single₀ (Sheaf C X)).obj A
+  let KB := (CochainComplex.single₀ (Sheaf C X)).obj B
+  let g : KA ⟶ KB := (CochainComplex.single₀ (Sheaf C X)).map f
+  let EA := HomologicalComplex.mapExtendCanonicalIso Γ KA e ≪≫
     (e.extendFunctor C).mapIso
       ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).app A) ≪≫
     HomologicalComplex.extendSingleIso e (Γ.obj A) 0 0 rfl
-  letI EB := HomologicalComplex.mapExtendCanonicalIso Γ KB e ≪≫
+  let EB := HomologicalComplex.mapExtendCanonicalIso Γ KB e ≪≫
       (e.extendFunctor C).mapIso
         ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).app B) ≪≫
       HomologicalComplex.extendSingleIso e (Γ.obj B) 0 0 rfl
@@ -161,16 +161,20 @@ lemma globalSectionsSingle₀HomologyIso_hom_naturality
     exact HomologicalComplex.extendSingleIso_hom_naturality e (Γ.map f) 0 0 rfl
   rw [show (globalSectionsSingle₀HomologyIso C X B).hom =
       HomologicalComplex.homologyMap EB.hom 0 ≫
-        (HomologicalComplex.singleObjHomologySelfIso ℤᵘᵖ 0 (Γ.obj B)).hom from rfl]
-  rw [show (globalSectionsSingle₀HomologyIso C X A).hom =
+        (HomologicalComplex.singleObjHomologySelfIso ℤᵘᵖ 0 (Γ.obj B)).hom from rfl,
+    show (globalSectionsSingle₀HomologyIso C X A).hom =
       HomologicalComplex.homologyMap EA.hom 0 ≫
-        (HomologicalComplex.singleObjHomologySelfIso ℤᵘᵖ 0 (Γ.obj A)).hom from rfl]
-  rw [← Category.assoc]
+        (HomologicalComplex.singleObjHomologySelfIso ℤᵘᵖ 0 (Γ.obj A)).hom from rfl,
+    ← Category.assoc]
   have hH := congrArg (fun k => HomologicalComplex.homologyMap k 0) hE
   rw [HomologicalComplex.homologyMap_comp, HomologicalComplex.homologyMap_comp] at hH
-  rw [hH]
-  rw [Category.assoc, HomologicalComplex.singleObjHomologySelfIso_hom_naturality]
-  rw [← Category.assoc]
+  rw [hH, Category.assoc, HomologicalComplex.singleObjHomologySelfIso_hom_naturality,
+    ← Category.assoc]
+
+section DerivedCategory
+
+variable [HasDerivedCategory C] [HasDerivedCategory (Sheaf C X)]
+  [EnoughInjectives (Sheaf C X)]
 
 /-- Passing the ordinary global-sections complex through the bounded derived category does not
 change its homology, naturally in the bounded-below complex. -/
@@ -291,5 +295,7 @@ lemma hypercohomologyIsoOfInjective_hom_naturality
     rw [(toHypercohomology C X n).naturality f]
   slice_rhs 1 2 => rw [IsIso.inv_hom_id]
   simp only [Category.id_comp]
+
+end DerivedCategory
 
 end TopCat.Sheaf

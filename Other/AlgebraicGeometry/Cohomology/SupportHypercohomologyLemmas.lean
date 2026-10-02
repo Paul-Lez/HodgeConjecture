@@ -55,7 +55,7 @@ lemma opens_paracompactSpace_of_isOpenEmbedding
     {U Y : TopCat.{0}} (j : U ⟶ Y) (hj : Topology.IsOpenEmbedding j)
     (hY : ∀ V : Opens Y, ParacompactSpace V) (W : Opens U) :
     ParacompactSpace W := by
-  letI Wi : Opens Y := ⟨j '' (W : Set U), (hj.isOpen_iff_image_isOpen).mp W.2⟩
+  let Wi : Opens Y := ⟨j '' (W : Set U), (hj.isOpen_iff_image_isOpen).mp W.2⟩
   have hWi : ParacompactSpace Wi := hY Wi
   exact (hj.toIsEmbedding.homeomorphImage (W : Set U)).paracompactSpace_iff.mpr hWi
 
@@ -81,11 +81,11 @@ theorem globalRawComplementToSingularSheaf_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalRawPushforwardToSingularSheaf ℚ
       (analyticComplementInclusion X Z)) := by
-  letI U := TopCat.of ↥Zᶜ
-  letI j := analyticComplementInclusion X Z
-  letI Uopen : Opens (TopCat.of (ComplexPoint X)) :=
+  let U := TopCat.of ↥Zᶜ
+  let j := analyticComplementInclusion X Z
+  let Uopen : Opens (TopCat.of (ComplexPoint X)) :=
     ⟨Zᶜ, hZ.isOpen_compl⟩
-  letI : ParacompactSpace U := hpara Uopen
+  let : ParacompactSpace U := hpara Uopen
   rw [globalRawPushforwardToSingularSheaf_eq_topOpen j]
   exact topOpenToGlobalSingularCochainSheafComplex_quasiIso
 
@@ -136,16 +136,16 @@ theorem globalComplementSingularToInjectiveResolutionNat_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalComplementSingularToInjectiveResolutionNat
       X Z hZ) := by
-  letI U := TopCat.of ↥Zᶜ
-  letI j := analyticComplementInclusion X Z
-  letI : ∀ W : Opens U, ParacompactSpace W := fun W ↦
+  let U := TopCat.of ↥Zᶜ
+  let j := analyticComplementInclusion X Z
+  let : ∀ W : Opens U, ParacompactSpace W := fun W ↦
     opens_paracompactSpace_of_isOpenEmbedding j
       (analyticComplementInclusion_isOpenEmbedding X Z hZ) hpara W
   change QuasiIso
     (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat U
       ).mapHomologicalComplex (ComplexShape.up ℕ)).map
       (complementSingularToInjectiveResolution X Z hZ))
-  letI : QuasiIso
+  let : QuasiIso
       (complementSingularToInjectiveResolution X Z hZ) :=
     complementSingularToInjectiveResolution_quasiIso X Z hZ
   apply TopCat.Sheaf.globalSectionsNat_map_quasiIso
@@ -164,10 +164,10 @@ theorem globalRawComplementToDerivedPushforwardNat_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalRawComplementToDerivedPushforwardNat
       X Z hZ) := by
-  letI : QuasiIso (globalRawPushforwardToSingularSheaf ℚ
+  let : QuasiIso (globalRawPushforwardToSingularSheaf ℚ
       (analyticComplementInclusion X Z)) :=
     globalRawComplementToSingularSheaf_quasiIso X Z hZ
-  letI : QuasiIso (globalComplementSingularToInjectiveResolutionNat
+  let : QuasiIso (globalComplementSingularToInjectiveResolutionNat
       X Z hZ) :=
     globalComplementSingularToInjectiveResolutionNat_quasiIso
       X Z hZ
@@ -257,21 +257,21 @@ theorem globalRawToSingularSheafInt_quasiIso
     [T2Space (ComplexPoint X)]
     [hpara : ∀ U : Opens (ComplexPoint X), ParacompactSpace U] :
     QuasiIso (globalRawToSingularSheafInt X) := by
-  letI Y := TopCat.of (ComplexPoint X)
-  letI Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
-  letI f := topOpenToGlobalSingularCochainSheafComplex ℚ Y
-  letI fInt := HomologicalComplex.extendMap f ComplexShape.embeddingUpNat
-  letI e := HomologicalComplex.mapExtendCanonicalIso Γ
+  let Y := TopCat.of (ComplexPoint X)
+  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
+  let f := topOpenToGlobalSingularCochainSheafComplex ℚ Y
+  let fInt := HomologicalComplex.extendMap f ComplexShape.embeddingUpNat
+  let e := HomologicalComplex.mapExtendCanonicalIso Γ
     (singularCochainSheafComplex ℚ Y) ComplexShape.embeddingUpNat
-  letI : ParacompactSpace (ComplexPoint X) :=
+  let : ParacompactSpace (ComplexPoint X) :=
     (Homeomorph.Set.univ (ComplexPoint X)).paracompactSpace_iff.mp
       (hpara (⊤ : Opens (ComplexPoint X)))
-  letI : QuasiIso f :=
+  let : QuasiIso f :=
     topOpenToGlobalSingularCochainSheafComplex_quasiIso
-  letI hfInt : QuasiIso fInt :=
+  let hfInt : QuasiIso fInt :=
     (HomologicalComplex.quasiIso_extendMap_iff f ComplexShape.embeddingUpNat).mpr
       inferInstance
-  letI he : QuasiIso e.inv := inferInstance
+  let he : QuasiIso e.inv := inferInstance
   refine ⟨fun i ↦ ?_⟩
   exact quasiIsoAt_comp fInt e.inv i
 
@@ -286,20 +286,20 @@ theorem globalRawComplementToDerivedPushforwardInt_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalRawComplementToDerivedPushforwardInt
       X Z hZ) := by
-  letI Y := TopCat.of (ComplexPoint X)
-  letI Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
-  letI f := globalRawComplementToDerivedPushforwardNat X Z hZ
-  letI fInt := HomologicalComplex.extendMap f ComplexShape.embeddingUpNat
-  letI e := HomologicalComplex.mapExtendCanonicalIso Γ
+  let Y := TopCat.of (ComplexPoint X)
+  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
+  let f := globalRawComplementToDerivedPushforwardNat X Z hZ
+  let fInt := HomologicalComplex.extendMap f ComplexShape.embeddingUpNat
+  let e := HomologicalComplex.mapExtendCanonicalIso Γ
     (derivedPushforwardComplementConstantRationalComplexNat X Z)
       ComplexShape.embeddingUpNat
-  letI : QuasiIso f :=
+  let : QuasiIso f :=
     globalRawComplementToDerivedPushforwardNat_quasiIso
       X Z hZ
-  letI hfInt : QuasiIso fInt :=
+  let hfInt : QuasiIso fInt :=
     (HomologicalComplex.quasiIso_extendMap_iff f ComplexShape.embeddingUpNat).mpr
       inferInstance
-  letI he : QuasiIso e.inv := inferInstance
+  let he : QuasiIso e.inv := inferInstance
   refine ⟨fun i ↦ ?_⟩
   exact quasiIsoAt_comp fInt e.inv i
 
@@ -317,17 +317,17 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
           (TopCat.of (ComplexPoint X))
           Zᶜ ≫
         globalRawComplementToDerivedPushforwardInt X Z hZ := by
-  letI Y := TopCat.of (ComplexPoint X)
-  letI Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
-  letI S := singularCochainSheafComplex ℚ Y
-  letI D := derivedPushforwardComplementConstantRationalComplexNat X Z
-  letI g := naturalSingularResolutionRestrictionNat X Z hZ
-  letI a := topOpenToGlobalSingularCochainSheafComplex ℚ Y
-  letI f := globalRawSingularRestriction ℚ
+  let Y := TopCat.of (ComplexPoint X)
+  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
+  let S := singularCochainSheafComplex ℚ Y
+  let D := derivedPushforwardComplementConstantRationalComplexNat X Z
+  let g := naturalSingularResolutionRestrictionNat X Z hZ
+  let a := topOpenToGlobalSingularCochainSheafComplex ℚ Y
+  let f := globalRawSingularRestriction ℚ
     (analyticComplementInclusion X Z)
-  letI b := globalRawComplementToDerivedPushforwardNat X Z hZ
-  letI eS := HomologicalComplex.mapExtendCanonicalIso Γ S ComplexShape.embeddingUpNat
-  letI eD := HomologicalComplex.mapExtendCanonicalIso Γ D ComplexShape.embeddingUpNat
+  let b := globalRawComplementToDerivedPushforwardNat X Z hZ
+  let eS := HomologicalComplex.mapExtendCanonicalIso Γ S ComplexShape.embeddingUpNat
+  let eD := HomologicalComplex.mapExtendCanonicalIso Γ D ComplexShape.embeddingUpNat
   have hg : HomologicalComplex.extendMap
         ((Γ.mapHomologicalComplex (ComplexShape.up ℕ)).map g)
           ComplexShape.embeddingUpNat ≫ eD.inv =
@@ -383,9 +383,9 @@ noncomputable instance globalRawSupportConeToGlobalNaturalSingularCone_quasiIso
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) :
     QuasiIso (globalRawSupportConeToGlobalNaturalSingularCone
       X Z hZ) := by
-  letI : QuasiIso (globalRawToSingularSheafInt X) :=
+  let : QuasiIso (globalRawToSingularSheafInt X) :=
     globalRawToSingularSheafInt_quasiIso X
-  letI : QuasiIso (globalRawComplementToDerivedPushforwardInt
+  let : QuasiIso (globalRawComplementToDerivedPushforwardInt
       X Z hZ) :=
     globalRawComplementToDerivedPushforwardInt_quasiIso
       X Z hZ

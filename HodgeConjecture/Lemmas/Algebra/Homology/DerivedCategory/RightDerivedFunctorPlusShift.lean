@@ -43,15 +43,16 @@ instance : F.rightDerivedFunctorPlusOnInjectives.CommShift ℤ :=
     (((InjectiveObject.ι C).mapHomotopyCategoryPlus ⋙
       F.mapHomotopyCategoryPlus ⋙ DerivedCategory.Plus.Qh).CommShift ℤ)
 
-/-- Coherent shift compatibility of the bounded-below right derived functor. Its zero and
-addition coherence laws are inherited by localization from the termwise complex-level shift
-compatibility. -/
+/-- Coherent shift compatibility of the bounded-below right derived
+functor. Its zero and addition coherence laws are inherited by localization
+from the termwise complex-level shift compatibility. -/
 instance rightDerivedFunctorPlusCommShift : F.rightDerivedFunctorPlus.CommShift ℤ :=
   Functor.commShiftOfLocalization (HomotopyCategory.Plus.injectiveToDerived C)
     (MorphismProperty.isomorphisms (HomotopyCategory.Plus (InjectiveObject C))) ℤ
     F.rightDerivedFunctorPlusOnInjectives F.rightDerivedFunctorPlus
 
-/-- The injective-resolution comparison is compatible with the constructed coherent shifts. -/
+/-- The injective-resolution comparison is compatible with the coherent shifts, which pins it to
+the derived unit. -/
 instance rightDerivedFunctorPlusOnInjectivesIso_commShift :
     NatTrans.CommShift F.rightDerivedFunctorPlusOnInjectivesIso.hom ℤ :=
   NatTrans.commShift_iso_hom_of_localization
@@ -76,8 +77,8 @@ instance rightDerivedFunctorPlusUnit_whiskerLeft_injectives_commShift :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The full right-derived unit commutes with the constructed coherent shifts, including on
-complexes which are not termwise injective. -/
+/-- The full right-derived unit commutes with the coherent shifts,
+including on complexes which are not termwise injective. -/
 instance rightDerivedFunctorPlusUnitCommShift :
     NatTrans.CommShift F.rightDerivedFunctorPlusUnit ℤ where
   shift_comm a := by
