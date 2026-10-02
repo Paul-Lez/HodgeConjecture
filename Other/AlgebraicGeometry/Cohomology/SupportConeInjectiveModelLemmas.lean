@@ -113,7 +113,7 @@ instance ambientRationalInjectiveCone_isStrictlyGE
     infer_instance
   exact CochainComplex.isStrictlyGE_mappingCone _ 0 0 (-1) (by omega) (by omega)
 
-/-- The replacement cone is genuinely termwise injective: its terms are
+/-- The replacement cone is termwise injective: its terms are
 finite biproducts of ambient injectives and open direct images of injectives. -/
 instance ambientRationalInjectiveCone_injective
     (Z : Set (ComplexPoint X)) (hZ : IsClosed Z) (q : ℤ) :

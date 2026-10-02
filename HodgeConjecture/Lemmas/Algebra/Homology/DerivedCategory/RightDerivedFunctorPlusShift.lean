@@ -10,9 +10,11 @@ public import Mathlib.CategoryTheory.Shift.Localization
 /-!
 # Coherent shifts on bounded-below right derived functors
 
-The bounded-below homotopy category of injective objects is equivalent to the bounded-below
-derived category. We descend the existing coherent shifts through this equivalence using
-Mathlib's localization construction.
+The bounded-below homotopy category of injective objects is equivalent to the
+bounded-below derived category. The right-derived unit becomes an isomorphism
+on this category. The coherent shifts descend through this equivalence, using
+Mathlib's localization construction. Boundedness is explicit in all source and target
+categories.
 -/
 
 @[expose] public noncomputable section

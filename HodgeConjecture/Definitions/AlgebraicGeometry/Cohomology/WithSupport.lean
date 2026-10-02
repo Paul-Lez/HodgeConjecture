@@ -80,8 +80,8 @@ def forgetSupportToGlobalSectionsHomology (n : ℕ) :
     (TopCat.Sheaf.injectiveResolutionAugmentation_quasiIso Y F) n
   exact (HomologicalComplex.homologyMap S.f n).hom.comp e.toAddMonoidHom
 
-/-- `H_[Z]^n(X(ℂ); K) → H^n(X(ℂ); K)`, forgetting the support. The target is the new
-hypercohomology object, reached through the canonical injective-resolution comparison. -/
+/-- `H_[Z]^n(X(ℂ); K) → H^n(X(ℂ); K)`, forgetting the support through the canonical
+injective-resolution comparison. -/
 def forgetSupport (n : ℕ) : H_[Z]^n(X; K) →+ H^n(X; K) :=
   letI Y := TopCat.of (ComplexPoint X)
   letI F := (TopCat.Sheaf.constantFunctor Y).obj (AddCommGrpCat.of K)

@@ -28,8 +28,7 @@ section Single
 variable {C : Type u} [Category.{v} C] [Preadditive C] [HasZeroObject C]
   {I J : Type*} {c : ComplexShape I} {c' : ComplexShape J}
 
-/-- Extending a complex supported in one degree is naturally isomorphic to placing the object in
-the corresponding target degree. -/
+/-- Extending a complex supported in one degree is natural in the object placed there. -/
 @[reassoc]
 lemma extendSingleIso_hom_naturality
     [DecidableEq I] [DecidableEq J] (e : c.Embedding c') {A B : C} (f : A ⟶ B)
@@ -77,8 +76,8 @@ def mapExtendCanonicalIso :
 
 set_option backward.isDefEq.respectTransparency false in
 set_option backward.defeqAttrib.useBackward true in
-/-- In an old degree the comparison is the identity through the canonical extension
-identifications, including any grading transports. -/
+/-- In a degree coming from the original complex, the comparison is the identity through the
+canonical extension identifications, including any grading transports. -/
 lemma mapExtendCanonicalIso_hom_f {i : I} {j : J} (h : e.f i = j) :
     (mapExtendCanonicalIso F K e).hom.f j =
       F.map (K.extendXIso e h).hom ≫

@@ -154,7 +154,7 @@ def rightUnshiftCocycle : Cocycle A (K⟦s⟧) n →+ Cocycle A K n' where
   map_zero' := by ext; simp [Cocycle.rightUnshift]
   map_add' _ _ := by ext; simp [Cocycle.rightUnshift, Cochain.rightUnshift_add]
 
-/-- Target unshifting descends through actual coboundaries. The factor
+/-- Target unshifting descends through coboundaries. The factor
 `(-1)^s` is included in the witnessing primitive. -/
 def rightUnshiftClass : CohomologyClass A (K⟦s⟧) n →+ CohomologyClass A K n' :=
   CohomologyClass.descAddMonoidHom
@@ -176,7 +176,7 @@ lemma rightUnshiftClass_mk (z : Cocycle A (K⟦s⟧) n) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual three-term map for unshifting a target. The outer components
+/-- The three-term map for unshifting a target. The outer components
 have the standard `(-1)^s` factors; its middle component has no sign. -/
 def rightUnshiftShortComplex :
     (HomComplex A (K⟦s⟧)).sc n ⟶ (HomComplex A K).sc n' where
@@ -231,7 +231,7 @@ lemma homologyAddEquiv_rightUnshift (x : (HomComplex A (K⟦s⟧)).homology n) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Unshifting cocycles corresponds to the actual shift-composition
+/-- Unshifting cocycles corresponds to the shift-composition
 isomorphism on their representing chain maps. -/
 lemma equivHomShift_symm_rightUnshift (z : Cocycle A (K⟦s⟧) n) :
     Cocycle.equivHomShift.symm (z.rightUnshift n' h) =
