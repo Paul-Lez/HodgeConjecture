@@ -38,9 +38,9 @@ displayed explicitly. -/
 def globalSectionsShiftShortComplex :
     (globalSectionsComplex AddCommGrpCat Y (K⟦s⟧)).sc n ⟶
       (globalSectionsComplex AddCommGrpCat Y K).sc n' :=
-  (HomologicalComplex.shortComplexFunctor AddCommGrpCat (.up ℤ) n).map
+  (HomologicalComplex.shortComplexFunctor AddCommGrpCat (ℤᵘᵖ) n).map
     ((((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
-      (.up ℤ)).commShiftIso s).hom.app K) ≫
+      (ℤᵘᵖ)).commShiftIso s).hom.app K) ≫
     (CochainComplex.shiftShortComplexFunctorIso AddCommGrpCat s n n' (by omega)).hom.app
       (globalSectionsComplex AddCommGrpCat Y K)
 
@@ -50,32 +50,32 @@ lemma globalSectionsShiftShortComplex_homologyMap :
     ShortComplex.homologyMap (globalSectionsShiftShortComplex Y K s n n' h) =
     HomologicalComplex.homologyMap
       ((((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
-        (.up ℤ)).commShiftIso s).hom.app K) n ≫
-      ((HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0).shiftIso
+        (ℤᵘᵖ)).commShiftIso s).hom.app K) n ≫
+      ((HomologicalComplex.homologyFunctor AddCommGrpCat (ℤᵘᵖ) 0).shiftIso
         s n n' (by omega)).hom.app (globalSectionsComplex AddCommGrpCat Y K) :=
   (ShortComplex.homologyMap_comp _ _).trans
     (congrArg (fun f => HomologicalComplex.homologyMap
       ((((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
-        (.up ℤ)).commShiftIso s).hom.app K) n ≫ f)
+        (ℤᵘᵖ)).commShiftIso s).hom.app K) n ≫ f)
       (CochainComplex.ShiftSequence.shiftIso_hom_app s n n' (by omega)
         (globalSectionsComplex AddCommGrpCat Y K)).symm)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 lemma homComplexSingleIntegerGlobalSections_rightUnshift_middle :
-    ((HomologicalComplex.shortComplexFunctor AddCommGrpCat (.up ℤ) n).map
+    ((HomologicalComplex.shortComplexFunctor AddCommGrpCat (ℤᵘᵖ) n).map
       (homComplexSingleIntegerIsoGlobalSections Y (K⟦s⟧)).hom ≫
         globalSectionsShiftShortComplex Y K s n n' h).τ₂ =
     (CochainComplex.HomComplex.rightUnshiftShortComplex
       (integerConstantSingleComplex Y) K s n n' h ≫
-      (HomologicalComplex.shortComplexFunctor AddCommGrpCat (.up ℤ) n').map
+      (HomologicalComplex.shortComplexFunctor AddCommGrpCat (ℤᵘᵖ) n').map
         (homComplexSingleIntegerIsoGlobalSections Y K).hom).τ₂ := by
   subst n'
   ext z
   exact congrArg
     (fun f : (integerConstantSingleComplex Y).X 0 ⟶ K.X (n + s) =>
       integerConstantHomAddEquivGlobalSections (K.X (n + s))
-        ((HomologicalComplex.singleObjXSelf (.up ℤ) 0 𝓒(Y; ℤ)).inv ≫ f))
+        ((HomologicalComplex.singleObjXSelf (ℤᵘᵖ) 0 𝓒(Y; ℤ)).inv ≫ f))
     (CochainComplex.HomComplex.rightUnshift_v_zero
       (integerConstantSingleComplex Y) K s n z).symm
 

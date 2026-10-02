@@ -311,7 +311,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
     globalRawToSingularSheafInt X ≫
         ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-            (ComplexShape.up ℤ)).map
+            (ℤᵘᵖ)).map
           (naturalSingularResolutionRestriction X Z hZ) =
       globalRawSingularRestrictionInt ℚ
           (TopCat.of (ComplexPoint X))
@@ -331,7 +331,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
   have hg : HomologicalComplex.extendMap
         ((Γ.mapHomologicalComplex (ComplexShape.up ℕ)).map g)
           ComplexShape.embeddingUpNat ≫ eD.inv =
-      eS.inv ≫ (Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map
+      eS.inv ≫ (Γ.mapHomologicalComplex (ℤᵘᵖ)).map
         (HomologicalComplex.extendMap g ComplexShape.embeddingUpNat) :=
     HomologicalComplex.mapExtendCanonicalIso_inv_naturality Γ g ComplexShape.embeddingUpNat
   have hab : a ≫
@@ -339,7 +339,7 @@ lemma globalNaturalSingularResolutionRestrictionInt_naturality
     globalNaturalSingularResolutionRestrictionNat_naturality
       X Z hZ
   change (HomologicalComplex.extendMap a ComplexShape.embeddingUpNat ≫ eS.inv) ≫
-      (Γ.mapHomologicalComplex (ComplexShape.up ℤ)).map
+      (Γ.mapHomologicalComplex (ℤᵘᵖ)).map
         (HomologicalComplex.extendMap g ComplexShape.embeddingUpNat) =
     HomologicalComplex.extendMap f ComplexShape.embeddingUpNat ≫
       (HomologicalComplex.extendMap b ComplexShape.embeddingUpNat ≫ eD.inv)
@@ -359,7 +359,7 @@ def globalRawSupportConeToGlobalNaturalSingularCone
       CochainComplex.mappingCone
         (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
           (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-            (ComplexShape.up ℤ)).map
+            (ℤᵘᵖ)).map
           (naturalSingularResolutionRestriction X Z hZ)) :=
   CochainComplex.mappingCone.map
     (globalRawSingularRestrictionInt ℚ
@@ -367,7 +367,7 @@ def globalRawSupportConeToGlobalNaturalSingularCone
       Zᶜ)
     (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map
+        (ℤᵘᵖ)).map
       (naturalSingularResolutionRestriction X Z hZ))
     (globalRawToSingularSheafInt X)
     (globalRawComplementToDerivedPushforwardInt X Z hZ)
@@ -395,7 +395,7 @@ noncomputable instance globalRawSupportConeToGlobalNaturalSingularCone_quasiIso
       Zᶜ)
     (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map
+        (ℤᵘᵖ)).map
       (naturalSingularResolutionRestriction X Z hZ))
     (globalRawToSingularSheafInt X)
     (globalRawComplementToDerivedPushforwardInt X Z hZ) _)

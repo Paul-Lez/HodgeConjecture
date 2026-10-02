@@ -27,7 +27,7 @@ local instance derivedGlobalSectionsHasDerivedCategory :
   HasDerivedCategory.standard (Sheaf AddCommGrpCat Y)
 
 /-- On a K-injective sheaf complex, derived morphisms from the integer
-constant sheaf are computed by actual global sections, with no further
+constant sheaf are computed by global sections, with no further
 replacement complex. -/
 def derivedHomAddEquivGlobalSectionsKInjective
     (K : CochainComplex (Sheaf AddCommGrpCat Y) ℤ) [K.IsKInjective] (n : ℤ) :

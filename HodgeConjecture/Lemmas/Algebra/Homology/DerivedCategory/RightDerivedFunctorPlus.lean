@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Mathlib.Algebra.Homology.DerivedCategory.RightDerivedFunctorPlus
 
 /-!
@@ -149,7 +151,7 @@ set_option backward.isDefEq.respectTransparency false in
 instance mapHomotopyCategoryPlusAdditive : F.mapHomotopyCategoryPlus.Additive where
   map_add {K L} f g := by
     apply (HomotopyCategory.Plus.ι D).map_injective
-    exact (F.mapHomotopyCategory (ComplexShape.up ℤ)).map_add
+    exact (F.mapHomotopyCategory (ℤᵘᵖ)).map_add
 
 variable [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
 

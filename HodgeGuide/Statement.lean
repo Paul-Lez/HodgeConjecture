@@ -127,7 +127,7 @@ namespace Guide.Statement.D1
 ```lean
 def HodgeConjecture : Prop :=
   ∀ (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom] (p : ℕ),
-    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p
+    Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p
 ```
 ```lean -show
 end Guide.Statement.D1

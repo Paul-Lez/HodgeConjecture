@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Other.AlgebraicGeometry.Cohomology.RationalDegreeZero
 
 /-!
@@ -59,8 +61,8 @@ induced by `n ↦ n q`. -/
   let Y := TopCat.of (ComplexPoint X)
   let K := constantFieldSheafComplexIntPlus ℚ X
   let F := ℍ[AddCommGrpCat]^0(Y)
-  let G := (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex (.up ℤ) ⋙
-    HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) 0
+  let G := (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex (ℤᵘᵖ) ⋙
+    HomologicalComplex.homologyFunctor AddCommGrpCat (ℤᵘᵖ) 0
   let s := TopCat.Sheaf.integerConstantHomAddEquivGlobalSections
     𝓒(↧(ComplexPoint X); ℚ)
       ((TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
@@ -88,8 +90,8 @@ induced by `n ↦ n q`. -/
     let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
     let e := ComplexShape.embeddingUpNat
     let KN := (CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat Y)).obj Q
-    let E : (Γ.mapHomologicalComplex (.up ℤ)).obj K.obj ≅
-        (HomologicalComplex.single AddCommGrpCat (.up ℤ) 0).obj (Γ.obj Q) :=
+    let E : (Γ.mapHomologicalComplex (ℤᵘᵖ)).obj K.obj ≅
+        (HomologicalComplex.single AddCommGrpCat (ℤᵘᵖ) 0).obj (Γ.obj Q) :=
       HomologicalComplex.mapExtendCanonicalIso Γ KN e ≪≫
         (e.extendFunctor AddCommGrpCat).mapIso
           ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).app Q) ≪≫
@@ -118,7 +120,7 @@ induced by `n ↦ n q`. -/
     rw [hn]
     rw [show (TopCat.Sheaf.globalSectionsSingle₀HomologyIso AddCommGrpCat Y Q).hom =
       HomologicalComplex.homologyMap E.hom 0 ≫
-        (HomologicalComplex.singleObjHomologySelfIso (.up ℤ) 0 (Γ.obj Q)).hom from rfl]
+        (HomologicalComplex.singleObjHomologySelfIso (ℤᵘᵖ) 0 (Γ.obj Q)).hom from rfl]
     simp only [ConcreteCategory.comp_apply]
     let c' := (HomologicalComplex.cyclesMap
       (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y K.obj).hom 0) c
@@ -129,14 +131,14 @@ induced by `n ↦ n q`. -/
     let c'' := HomologicalComplex.cyclesMap E.hom 0 c'
     have hs := ConcreteCategory.congr_hom
       (HomologicalComplex.homologyπ_singleObjHomologySelfIso_hom
-        (C := AddCommGrpCat) (.up ℤ) 0 (Γ.obj Q)) c''
+        (C := AddCommGrpCat) (ℤᵘᵖ) 0 (Γ.obj Q)) c''
     simp only [ConcreteCategory.comp_apply] at hs
     rw [hs]
     change ConcreteCategory.hom
       (HomologicalComplex.cyclesMap
           (TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y K.obj).hom 0 ≫
         HomologicalComplex.cyclesMap E.hom 0 ≫
-        (HomologicalComplex.singleObjCyclesSelfIso (.up ℤ) 0 (Γ.obj Q)).hom) c = _
+        (HomologicalComplex.singleObjCyclesSelfIso (ℤᵘᵖ) 0 (Γ.obj Q)).hom) c = _
     rw [HomologicalComplex.singleObjCyclesSelfIso_hom]
     rw [HomologicalComplex.cyclesMap_i_assoc,
       HomologicalComplex.cyclesMap_i_assoc]
@@ -149,7 +151,7 @@ induced by `n ↦ n q`. -/
       change (H.iCycles 0).hom (hD.cyclesIso.inv.hom zD) = hD.i.hom zD
       exact hc
     rw [hc']
-    change (HomologicalComplex.singleObjXSelf (.up ℤ) 0 (Γ.obj Q)).hom.hom
+    change (HomologicalComplex.singleObjXSelf (ℤᵘᵖ) 0 (Γ.obj Q)).hom.hom
       ((E.hom.f 0).hom
         (((TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y K.obj).hom.f 0).hom
           (CochainComplex.HomComplex.Cocycle.ofHom j :
@@ -164,9 +166,9 @@ induced by `n ↦ n q`. -/
       rfl
     rw [hhci]
     let f₀ : K.obj.X 0 ⟶ Q :=
-      eQ.hom.f 0 ≫ (HomologicalComplex.singleObjXSelf (.up ℤ) 0 Q).hom
+      eQ.hom.f 0 ≫ (HomologicalComplex.singleObjXSelf (ℤᵘᵖ) 0 Q).hom
     have hE : E.hom.f 0 ≫
-          (HomologicalComplex.singleObjXSelf (.up ℤ) 0 (Γ.obj Q)).hom =
+          (HomologicalComplex.singleObjXSelf (ℤᵘᵖ) 0 (Γ.obj Q)).hom =
         Γ.map f₀ := by
       dsimp only [E, f₀, eQ]
       simp only [Iso.trans_hom, HomologicalComplex.comp_f,
@@ -193,10 +195,10 @@ induced by `n ↦ n q`. -/
     have hju : j.f 0 ≫ f₀ = u := by
       dsimp only [f₀, j]
       rw [HomologicalComplex.comp_f]
-      let eQ₀ := (HomologicalComplex.eval (AnalyticAdditiveSheaf X) (.up ℤ) 0).mapIso eQ
+      let eQ₀ := (HomologicalComplex.eval (AnalyticAdditiveSheaf X) (ℤᵘᵖ) 0).mapIso eQ
       change ((CochainComplex.singleFunctor (AnalyticAdditiveSheaf X) 0).map u).f 0 ≫
         eQ₀.inv ≫ eQ₀.hom ≫
-          (HomologicalComplex.singleObjXSelf (.up ℤ) 0 Q).hom = u
+          (HomologicalComplex.singleObjXSelf (ℤᵘᵖ) 0 Q).hom = u
       rw [Iso.inv_hom_id_assoc]
       rfl
     rw [hju]
@@ -251,7 +253,7 @@ induced by `n ↦ n q`. -/
   let hciK := TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y K.obj
   let hciI := TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I
   let Γa := ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
-    (.up ℤ)).map a
+    (ℤᵘᵖ)).map a
   have hx :
       (CochainComplex.HomComplex.homologyAddEquiv A I 0).symm
           (CochainComplex.HomComplex.CohomologyClass.mk
@@ -287,7 +289,7 @@ induced by `n ↦ n q`. -/
       (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective Y I 0).symm
           (HomologicalComplex.homologyMap
             (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
-              (.up ℤ)).map a) 0 (G.map m.hom t)) =
+              (ℤᵘᵖ)).map a) 0 (G.map m.hom t)) =
         ShiftedHom.mk₀ 0 rfl (DerivedCategory.Q.map (j ≫ a)) := by
     rw [← hrepI]
     exact derivedHomAddEquivGlobalSectionsKInjective_symm_hom X I (j ≫ a)

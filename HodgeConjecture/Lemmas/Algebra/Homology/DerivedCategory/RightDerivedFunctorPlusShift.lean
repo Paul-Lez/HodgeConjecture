@@ -41,7 +41,7 @@ instance : F.rightDerivedFunctorPlusOnInjectives.CommShift ℤ :=
     (((InjectiveObject.ι C).mapHomotopyCategoryPlus ⋙
       F.mapHomotopyCategoryPlus ⋙ DerivedCategory.Plus.Qh).CommShift ℤ)
 
-/-- Coherent shift compatibility of the actual bounded-below right derived functor. Its zero and
+/-- Coherent shift compatibility of the bounded-below right derived functor. Its zero and
 addition coherence laws are inherited by localization from the termwise complex-level shift
 compatibility. -/
 instance rightDerivedFunctorPlusCommShift : F.rightDerivedFunctorPlus.CommShift ℤ :=

@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.Cycle.Component.PointCoclassNormalization
 public import Other.AlgebraicGeometry.Cohomology.SupportSheafNormalization
@@ -42,7 +44,7 @@ theorem complexSupportInjectiveCohomologySheafIsoRelative_restriction_section
     (S : Closeds (ComplexPoint X)) (n : ℕ)
     {V W : Opens (ComplexPoint X)} (a : W ⟶ V) :
     HomologicalComplex.homologyMap
-      (TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) (.up ℤ)
+      (TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) (ℤᵘᵖ)
         (complexSupportInjectiveComplex X S) a) (n : ℤ) ≫
       TopCat.Sheaf.sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X))
         (complexSupportInjectiveComplex X S) (n : ℤ) W ≫
@@ -77,7 +79,7 @@ def analyticComponentPointRelativeCoclass :
 comparison; this is an explicit comparison target, not the definition of the general class. -/
 def analyticComponentPointSupportedInjectiveCoclass :
     (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X
+      (ℤᵘᵖ)).obj (complexSupportInjectiveComplex X
         (cycleComponentAnalyticClosedSupport X x))).homology (2 * (d : ℤ)) :=
   (complexSupportInjectiveSectionCohomologyEquiv X
     (cycleComponentAnalyticClosedSupport X x) ⊤ (2 * d)).symm
@@ -96,7 +98,7 @@ def analyticComponentPointPositiveKernelClass : H^(2 * (d : ℤ))(X; ℚ) :=
 private lemma forgetSupportToGlobalSectionsHomology_supportedInjective
     (Z : Closeds (ComplexPoint X)) (n : ℕ)
     (c : (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (.up ℤ)).obj (complexSupportInjectiveComplex X Z)).homology n) :
+      (ℤᵘᵖ)).obj (complexSupportInjectiveComplex X Z)).homology n) :
     forgetSupportToGlobalSectionsHomology ℚ X Z n
         ((rationalSupportAddEquivSupportedInjectiveHomology X Z n).symm c) =
       HomologicalComplex.homologyMap

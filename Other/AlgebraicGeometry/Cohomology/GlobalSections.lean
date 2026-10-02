@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.GlobalSections
 
 /-!
@@ -105,7 +107,7 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
     (i : singularCochainSheafComplexInt X ℚ ⟶ I) [QuasiIso i]
     [QuasiIso (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
       (TopCat.of (ComplexPoint X))).mapHomologicalComplex
-        (ComplexShape.up ℤ)).map i)]
+        (ℤᵘᵖ)).map i)]
     (n : ℤ) :
     ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
       (rationalSingularCochainComplexIntPlus X)) ≃+
@@ -128,9 +130,9 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
   let e₂ := (TopCat.Sheaf.hypercohomologyIsoOfInjective AddCommGrpCat Y Iplus n)
     |>.addCommGroupIsoToAddEquiv
   let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
-  let _ : QuasiIso ((Γ.mapHomologicalComplex (.up ℤ)).map i) := inferInstance
+  let _ : QuasiIso ((Γ.mapHomologicalComplex (ℤᵘᵖ)).map i) := inferInstance
   let e₃ := (asIso (HomologicalComplex.homologyMap
-    ((Γ.mapHomologicalComplex (.up ℤ)).map i) n)).symm.addCommGroupIsoToAddEquiv
+    ((Γ.mapHomologicalComplex (ℤᵘᵖ)).map i) n)).symm.addCommGroupIsoToAddEquiv
   e₁.trans (e₂.trans e₃)
 
 /-- The canonical hypercohomology comparison with the global-section complex, bundled as an
@@ -161,7 +163,7 @@ def rationalSingularCochainHypercohomologyAddEquivGlobalSections
   have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
   haveI : QuasiIso
       (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
-        ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
+        ).mapHomologicalComplex (ℤᵘᵖ)).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i 0 0 hSflasque hIflasque
   rationalSingularCochainHypercohomologyAddEquivGlobalSectionsOfResolution
@@ -197,7 +199,7 @@ lemma rationalSingularCochainHypercohomologyAddEquivGlobalSections_toHypercohomo
   have hIflasque : ∀ q, (I.X q).IsFlasque := fun _ ↦ inferInstance
   let _ : QuasiIso
       (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
-        ).mapHomologicalComplex (ComplexShape.up ℤ)).map i) :=
+        ).mapHomologicalComplex (ℤᵘᵖ)).map i) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       i 0 0 hSflasque hIflasque
   let Splus : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
@@ -207,19 +209,19 @@ lemma rationalSingularCochainHypercohomologyAddEquivGlobalSections_toHypercohomo
   let f : Splus ⟶ Iplus := ⟨i⟩
   let F := ℍ[AddCommGrpCat]^n(Y)
   let G := CochainComplex.Plus.ι (AnalyticAdditiveSheaf X) ⋙
-    (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex (.up ℤ) ⋙
-    HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) n
+    (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex (ℤᵘᵖ) ⋙
+    HomologicalComplex.homologyFunctor AddCommGrpCat (ℤᵘᵖ) n
   let x' : G.obj Splus := x
   let _ : IsIso (G.map f) := by
     change IsIso (HomologicalComplex.homologyMap
       (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
-        (.up ℤ)).map i) n)
+        (ℤᵘᵖ)).map i) n)
     infer_instance
   change ((asIso (F.map f)).hom ≫
       (TopCat.Sheaf.hypercohomologyIsoOfInjective AddCommGrpCat Y Iplus n).hom ≫
       inv (HomologicalComplex.homologyMap
         (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
-          (.up ℤ)).map i) n))
+          (ℤᵘᵖ)).map i) n))
       (((TopCat.Sheaf.toHypercohomology AddCommGrpCat Y n).app Splus).hom x') = x'
   rw [ConcreteCategory.comp_apply, ConcreteCategory.comp_apply]
   have h := ConcreteCategory.congr_hom
@@ -361,15 +363,15 @@ lemma rationalCohomologyAddEquivSingularGlobalSections_toHypercohomology
           (constantFieldSheafComplexIntPlus ℚ X)).hom x) =
       HomologicalComplex.homologyMap
         (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat
-          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (.up ℤ)).map
+          (TopCat.of (ComplexPoint X))).mapHomologicalComplex (ℤᵘᵖ)).map
             (rationalToSingularCochainComplexInt X)) n x := by
   let Y := TopCat.of (ComplexPoint X)
   let K := constantFieldSheafComplexIntPlus ℚ X
   let S := rationalSingularCochainComplexIntPlus X
   let f : K ⟶ S := ⟨rationalToSingularCochainComplexInt X⟩
   let G := CochainComplex.Plus.ι (AnalyticAdditiveSheaf X) ⋙
-    (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex (.up ℤ) ⋙
-    HomologicalComplex.homologyFunctor AddCommGrpCat (.up ℤ) n
+    (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex (ℤᵘᵖ) ⋙
+    HomologicalComplex.homologyFunctor AddCommGrpCat (ℤᵘᵖ) n
   let x' : G.obj K := x
   change rationalSingularCochainHypercohomologyAddEquivGlobalSections X n
       ((ℍ[AddCommGrpCat]^n(Y)).map f

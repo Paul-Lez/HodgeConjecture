@@ -517,7 +517,7 @@ $$`\operatorname{Hdg}^p(X;K)
  =\{\alpha\in H^{2p}(X;K):\alpha_{\mathrm{dR}}\in H^{p,p}\}.`
 
 In Lean this is the preimage of {name}`hodgePiece` under the comparison map, and the notation
-{lean}`Hdg^p(ℚ; X)` abbreviates the case $`K=\mathbb Q`.
+{lean}`Hdg^p(X; ℚ)` abbreviates the case $`K=\mathbb Q`.
 
 ```lean -show
 namespace Guide.Hodge.D11

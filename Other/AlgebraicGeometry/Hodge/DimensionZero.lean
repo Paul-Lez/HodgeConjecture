@@ -30,7 +30,7 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjecti
 variety of complex dimension zero. -/
 theorem rationalHodgeClasses_le_algebraicCycleClassSpan_of_dimension_zero
     (hd : dim X.left = 0) (p : ℕ) :
-    Hdg^p(ℚ; X) ≤ algebraicCycleClassSpan X p := by
+    Hdg^p(X; ℚ) ≤ algebraicCycleClassSpan X p := by
   by_cases hp : p = 0
   · subst p
     rw [rationalHodgeClasses_zero_eq_algebraicCycleClassSpan]

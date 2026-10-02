@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import Other.Mathlib.Topology.Category.TopCat.Basic
 public import Other.Algebra.Homology.ShiftedExact
@@ -206,7 +208,7 @@ noncomputable instance isIso_mappingConeTriangleh_mor₃_univ :
         (AnalyticAdditiveSheaf X) :=
     ⟨_, _, f, ⟨Iso.refl _⟩⟩
   exact (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _ hdist).1
-    ((HomotopyCategory.quotient (AnalyticAdditiveSheaf X) (ComplexShape.up ℤ)).map_isZero
+    ((HomotopyCategory.quotient (AnalyticAdditiveSheaf X) (ℤᵘᵖ)).map_isZero
       (isZero_derivedPushforwardComplement_univ_int X))
 
 /-- The same whole-support connecting morphism is an isomorphism in the derived category used by

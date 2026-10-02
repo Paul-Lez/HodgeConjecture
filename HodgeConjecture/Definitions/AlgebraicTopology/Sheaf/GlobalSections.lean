@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+
 public import Mathlib.Algebra.Homology.Additive
 public import Mathlib.Topology.Sheaves.Abelian
 
@@ -43,6 +45,6 @@ instance globalSectionsFunctor_preservesFiniteLimits (X : TopCat.{w}) :
 /-- The cochain complex obtained by applying global sections degreewise. -/
 abbrev globalSectionsComplex (K : CochainComplex (Sheaf C X) ℤ) :
     CochainComplex C ℤ :=
-  ((globalSectionsFunctor C X).mapHomologicalComplex (.up ℤ)).obj K
+  ((globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ)).obj K
 
 end TopCat.Sheaf

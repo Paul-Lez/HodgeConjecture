@@ -60,7 +60,7 @@ universe u₁ u₂ v₁ v₂
 
 variable {C : Type u₁} [Category.{v₁} C] [HasShift C ℤ]
   {D : Type u₂} [Category.{v₂} D] [Abelian D]
-  (F : C ⥤ HomologicalComplex D (.up ℤ)) [F.CommShift ℤ]
+  (F : C ⥤ HomologicalComplex D (ℤᵘᵖ)) [F.CommShift ℤ]
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -71,13 +71,13 @@ lemma map_rightUnshift {X Y : C} (f : X ⟶ Y⟦(1 : ℤ)⟧) (n : ℤ) :
       HomologicalComplex.homologyMapIso ((F.commShiftIso (-1)).app X) n
     let e₂ : ((shiftFunctor _ (-1)).obj (F.obj X)).homology n ≅
         (F.obj X).homology (n - 1) :=
-      ((HomologicalComplex.homologyFunctor D (.up ℤ) 0).shiftIso
+      ((HomologicalComplex.homologyFunctor D (ℤᵘᵖ) 0).shiftIso
         (-1) n (n - 1) (by omega)).app (F.obj X)
     HomologicalComplex.homologyMap
         (F.map (f⟦(-1 : ℤ)⟧' ≫
           (shiftFunctorCompIsoId _ (1 : ℤ) (-1) (by simp)).hom.app Y)) n =
       (e₁ ≪≫ e₂).hom ≫
-        (HomologicalComplex.homologyFunctor D (.up ℤ) 0).shiftMap
+        (HomologicalComplex.homologyFunctor D (ℤᵘᵖ) 0).shiftMap
           (ShiftedHom.map f F) (n - 1) n (by omega) := by
   dsimp only
   rw [CategoryTheory.Functor.map_rightUnshift,
@@ -91,7 +91,7 @@ lemma map_rightUnshift {X Y : C} (f : X ⟶ Y⟦(1 : ℤ)⟧) (n : ℤ) :
   apply (cancel_epi (HomologicalComplex.homologyMap
     ((F.commShiftIso (-1)).hom.app X) n)).2
   rw [← HomologicalComplex.homologyMap_comp]
-  exact ((HomologicalComplex.homologyFunctor D (.up ℤ) 0
+  exact ((HomologicalComplex.homologyFunctor D (ℤᵘᵖ) 0
     ).shiftIso_hom_app_comp_shiftMap_of_add_eq_zero
       (ShiftedHom.map f F) (-1) (by omega) (n - 1) n (by omega)).symm
 
