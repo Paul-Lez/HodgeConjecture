@@ -28,9 +28,9 @@ variable (C : Type*) [Category* C] [Abelian C]
 /-- The quotient functor from bounded-below complexes to the bounded-below homotopy category is
 additive. -/
 instance quotientAdditive : (quotient C).Additive := by
-  let _ : (CochainComplex.Plus.ι C).Additive := { map_add := rfl }
-  let _ : (ι C).Additive := { map_add := rfl }
-  let _ : (quotient C ⋙ ι C).Additive :=
+  letI _ : (CochainComplex.Plus.ι C).Additive := { map_add := rfl }
+  letI _ : (ι C).Additive := { map_add := rfl }
+  letI _ : (quotient C ⋙ ι C).Additive :=
     Functor.additive_of_iso (quotientCompιIso C).symm
   exact Functor.additive_of_comp_faithful _ (ι C)
 
@@ -42,9 +42,9 @@ variable (C : Type*) [Category* C] [Abelian C] [HasDerivedCategory C]
 
 /-- The localization functor from the bounded-below homotopy category is additive. -/
 instance QhAdditive : (Qh (C := C)).Additive := by
-  let _ : (HomotopyCategory.Plus.ι C).Additive := { map_add := rfl }
-  let _ : (ι (C := C)).Additive := { map_add := rfl }
-  let _ : (Qh ⋙ ι).Additive :=
+  letI _ : (HomotopyCategory.Plus.ι C).Additive := { map_add := rfl }
+  letI _ : (ι (C := C)).Additive := { map_add := rfl }
+  letI _ : (Qh ⋙ ι).Additive :=
     Functor.additive_of_iso (QhCompιIsoιCompQh C).symm
   exact Functor.additive_of_comp_faithful _ ι
 
@@ -66,7 +66,7 @@ def QCompιIsoιCompQ : Q ⋙ ι ≅ CochainComplex.Plus.ι C ⋙ DerivedCategor
 /-- A quasi-isomorphism of bounded-below complexes becomes an isomorphism in the bounded-below
 derived category. -/
 instance {K L : CochainComplex.Plus C} (f : K ⟶ L) [QuasiIso f.hom] : IsIso (Q.map f) := by
-  let e := QCompιIsoιCompQ C
+  letI e := QCompιIsoιCompQ C
   have hi : IsIso (ι.map (Q.map f)) := by
     have : IsIso (ι.map (Q.map f) ≫ e.hom.app L) := by
       change IsIso ((Q ⋙ ι).map f ≫ e.hom.app L)
@@ -97,7 +97,7 @@ set_option backward.isDefEq.respectTransparency false in
 lemma injectiveToDerived_map_bijective
     (K L : HomotopyCategory.Plus (InjectiveObject C)) :
     Function.Bijective ((injectiveToDerived C).map : (K ⟶ L) → _) := by
-  let incl := (InjectiveObject.ι C).mapHomotopyCategoryPlus
+  letI incl := (InjectiveObject.ι C).mapHomotopyCategoryPlus
   have hL : CochainComplex.IsKInjective (incl.obj L).obj.as := by
     obtain ⟨n, hn⟩ : CochainComplex.plus C (incl.obj L).obj.as := by
       have h := (incl.obj L).property
@@ -135,7 +135,7 @@ lemma natTrans_ext_on_injectives {H : Type*} [Category* H]
       α.app ((InjectiveObject.ι C).mapHomotopyCategoryPlus.obj K) =
         β.app ((InjectiveObject.ι C).mapHomotopyCategoryPlus.obj K)) : α = β := by
   ext K : 2
-  let r := Classical.arbitrary ((HomotopyCategory.Plus.localizerMorphism C).RightResolution K)
+  letI r := Classical.arbitrary ((HomotopyCategory.Plus.localizerMorphism C).RightResolution K)
   have : IsIso (G.map r.w) := hG r.w r.hw
   rw [← cancel_mono (G.map r.w), ← α.naturality, ← β.naturality, h]
 
@@ -151,7 +151,7 @@ set_option backward.isDefEq.respectTransparency false in
 instance mapHomotopyCategoryPlusAdditive : F.mapHomotopyCategoryPlus.Additive where
   map_add {K L} f g := by
     apply (HomotopyCategory.Plus.ι D).map_injective
-    exact (F.mapHomotopyCategory (ℤᵘᵖ)).map_add
+    exact (F.mapHomotopyCategory ℤᵘᵖ).map_add
 
 variable [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
 
@@ -183,7 +183,7 @@ instance : IsIso F.rightDerivedFunctorPlusOnInjectivesUnit := by
     (HomotopyCategory.Plus.localizerMorphism_derives
       (F.mapHomotopyCategoryPlus ⋙ DerivedCategory.Plus.Qh)).isIso_of_isRightDerivedFunctor
         F.rightDerivedFunctorPlusUnit K
-  let _ : ∀ K, IsIso (F.rightDerivedFunctorPlusOnInjectivesUnit.app K) := fun K => by
+  letI _ : ∀ K, IsIso (F.rightDerivedFunctorPlusOnInjectivesUnit.app K) := fun K => by
     simpa only [rightDerivedFunctorPlusOnInjectivesUnit, NatTrans.comp_app,
       whiskerLeft_app, Functor.associator_inv_app, Category.comp_id] using h K
   exact NatIso.isIso_of_isIso_app _
@@ -196,7 +196,7 @@ def rightDerivedFunctorPlusOnInjectivesIso :
 
 /-- A bounded-below right derived functor of an additive functor is additive. -/
 instance rightDerivedFunctorPlusAdditive : F.rightDerivedFunctorPlus.Additive := by
-  let _ : (HomotopyCategory.Plus.injectiveToDerived C ⋙
+  letI _ : (HomotopyCategory.Plus.injectiveToDerived C ⋙
       F.rightDerivedFunctorPlus).Additive :=
     Functor.additive_of_iso F.rightDerivedFunctorPlusOnInjectivesIso.symm
   exact Functor.additive_of_full_essSurj_comp

@@ -58,24 +58,24 @@ set_option linter.style.haveILetI false in
 lemma biprod (F G : TopCat.Presheaf AddCommGrpCat.{u} X) [F.IsFlasque] [G.IsFlasque] :
     (F ⊞ G).IsFlasque where
   epi {U V} i := by
-    let evalU := (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj U
-    let evalV := (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj V
-    let : evalU.PreservesZeroMorphisms := evalU.preservesZeroMorphisms_of_additive
-    let : evalV.PreservesZeroMorphisms := evalV.preservesZeroMorphisms_of_additive
-    let : PreservesLimit (pair F G) evalU := by
+    letI evalU := (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj U
+    letI evalV := (evaluation (Opens X)ᵒᵖ AddCommGrpCat.{u}).obj V
+    letI : evalU.PreservesZeroMorphisms := evalU.preservesZeroMorphisms_of_additive
+    letI : evalV.PreservesZeroMorphisms := evalV.preservesZeroMorphisms_of_additive
+    letI : PreservesLimit (pair F G) evalU := by
       letI : PreservesLimitsOfShape (Discrete WalkingPair) evalU := by infer_instance
       exact PreservesLimitsOfShape.preservesLimit
-    let : PreservesLimit (pair F G) evalV := by
+    letI : PreservesLimit (pair F G) evalV := by
       letI : PreservesLimitsOfShape (Discrete WalkingPair) evalV := by infer_instance
       exact PreservesLimitsOfShape.preservesLimit
-    let : PreservesBinaryBiproduct F G evalU :=
+    letI : PreservesBinaryBiproduct F G evalU :=
       preservesBinaryBiproduct_of_preservesBinaryProduct _
-    let : PreservesBinaryBiproduct F G evalV :=
+    letI : PreservesBinaryBiproduct F G evalV :=
       preservesBinaryBiproduct_of_preservesBinaryProduct _
-    let eU := evalU.mapBiprod F G
-    let eV := evalV.mapBiprod F G
-    let pF : (F ⊞ G) ⟶ F := Limits.biprod.fst
-    let pG : (F ⊞ G) ⟶ G := Limits.biprod.snd
+    letI eU := evalU.mapBiprod F G
+    letI eV := evalV.mapBiprod F G
+    letI pF : (F ⊞ G) ⟶ F := Limits.biprod.fst
+    letI pG : (F ⊞ G) ⟶ G := Limits.biprod.snd
     have hmap : (F ⊞ G).map i =
         eU.hom ≫ Limits.biprod.map (F.map i) (G.map i) ≫ eV.inv := by
       apply (cancel_mono eV.hom).1
@@ -132,8 +132,8 @@ lemma biprod (F G : TopCat.Sheaf AddCommGrpCat.{u} X)
     (F ⊞ G).IsFlasque := by
   letI : TopCat.Presheaf.IsFlasque (F.obj ⊞ G.obj) :=
     TopCat.Presheaf.IsFlasque.biprod F.obj G.obj
-  let forget := TopCat.Sheaf.forget AddCommGrpCat.{u} X
-  let : PreservesBinaryBiproduct F G forget :=
+  letI forget := TopCat.Sheaf.forget AddCommGrpCat.{u} X
+  letI : PreservesBinaryBiproduct F G forget :=
     preservesBinaryBiproduct_of_preservesBinaryProduct forget
   exact TopCat.Presheaf.IsFlasque.of_iso (G := F.obj ⊞ G.obj) (forget.mapBiprod F G)
 
@@ -149,8 +149,8 @@ lemma mappingCone_acyclic_of_quasiIso
     (CochainComplex.mappingCone.triangleh f)
     (HomotopyCategory.mappingCone_triangleh_distinguished f)).mp
   rw [← HomotopyCategory.quasiIso_eq_trW_subcategoryAcyclic]
-  change HomotopyCategory.quasiIso C (ℤᵘᵖ)
-    ((HomotopyCategory.quotient C (ℤᵘᵖ)).map f)
+  change HomotopyCategory.quasiIso C ℤᵘᵖ
+    ((HomotopyCategory.quotient C ℤᵘᵖ).map f)
   rw [HomotopyCategory.quotient_map_mem_quasiIso_iff, HomologicalComplex.mem_quasiIso_iff]
   infer_instance
 
@@ -165,7 +165,7 @@ lemma quasiIso_of_mappingCone_acyclic
     (CochainComplex.mappingCone.triangleh f)
     (HomotopyCategory.mappingCone_triangleh_distinguished f)).mpr
   change (HomotopyCategory.subcategoryAcyclic C)
-    ((HomotopyCategory.quotient C (ℤᵘᵖ)).obj
+    ((HomotopyCategory.quotient C ℤᵘᵖ).obj
       (CochainComplex.mappingCone f))
   rw [HomotopyCategory.quotient_obj_mem_subcategoryAcyclic_iff_acyclic]
   exact h
@@ -182,7 +182,7 @@ variable {K L : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ}
 lemma mappingCone_term_isFlasque (f : K ⟶ L)
     (hK : ∀ i, (K.X i).IsFlasque) (hL : ∀ i, (L.X i).IsFlasque) (i : ℤ) :
     ((CochainComplex.mappingCone f).X i).IsFlasque := by
-  let : (K.X (i + 1) ⊞ L.X i).IsFlasque := biprod _ _
+  letI : (K.X (i + 1) ⊞ L.X i).IsFlasque := biprod _ _
   exact of_iso (HomologicalComplex.homotopyCofiber.XIsoBiprod f i (i + 1) rfl)
 
 /-- A quasi-isomorphism between bounded-below termwise-flasque complexes remains a
@@ -191,10 +191,10 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
     (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
     (hK : ∀ i, (K.X i).IsFlasque) (hL : ∀ i, (L.X i).IsFlasque) :
     QuasiIso
-      (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X).mapHomologicalComplex (ℤᵘᵖ)).map f) := by
-  let M := CochainComplex.mappingCone f
-  let n := min nK nL - 1
-  let : M.IsStrictlyGE n := by
+      (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X).mapHomologicalComplex ℤᵘᵖ).map f) := by
+  letI M := CochainComplex.mappingCone f
+  letI n := min nK nL - 1
+  letI : M.IsStrictlyGE n := by
     dsimp [M, n]
     exact CochainComplex.isStrictlyGE_mappingCone f nK nL (min nK nL - 1)
       (by lia) (by lia)
@@ -205,12 +205,12 @@ theorem globalSectionsComplex_map_quasiIso (f : K ⟶ L) [QuasiIso f]
     intro i
     dsimp [M]
     exact mappingCone_term_isFlasque f hK hL i
-  have hglobal : (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat X M).Acyclic :=
+  have hglobal : (TopCat.Sheaf.globalSectionsComplex X M).Acyclic :=
     globalSectionsComplex_acyclic M n hM hMflasque
-  let F := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X
+  letI F := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X
   have hcone :
       (CochainComplex.mappingCone
-        ((F.mapHomologicalComplex (ℤᵘᵖ)).map f)).Acyclic :=
+        ((F.mapHomologicalComplex ℤᵘᵖ).map f)).Acyclic :=
     acyclic_of_iso hglobal (CochainComplex.mappingCone.mapHomologicalComplexIso f F)
   exact quasiIso_of_mappingCone_acyclic _ hcone
 

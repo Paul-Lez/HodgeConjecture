@@ -71,7 +71,7 @@ def rationalCohomologySingularCochainAddEquiv
     H^n(X; ℚ) ≃+
       ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
         (rationalSingularCochainComplexIntPlus X)) :=
-  let f : constantFieldSheafComplexIntPlus ℚ X ⟶
+  letI f : constantFieldSheafComplexIntPlus ℚ X ⟶
       rationalSingularCochainComplexIntPlus X :=
     ⟨rationalToSingularCochainComplexInt X⟩
   letI : QuasiIso f.hom := rationalToSingularCochainComplexInt_quasiIso X

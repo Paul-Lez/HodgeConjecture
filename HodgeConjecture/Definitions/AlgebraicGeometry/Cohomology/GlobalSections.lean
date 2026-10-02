@@ -65,14 +65,14 @@ def integerConstantHomAddEquivGlobalSections
       (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y)).homGroup _ _
     ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
         (AddCommGrpCat.of ℤ) ⟶ F) ≃+
-      F.obj.obj (.op (⊤ : Opens Y)) := by
+      F.presheaf.obj (.op (⊤ : Opens Y)) := by
   letI : AddCommGroup
       ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
         (AddCommGrpCat.of ℤ) ⟶ F) :=
     (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y)).homGroup _ _
   exact ((constantSheafAdj (Opens.grothendieckTopology Y) AddCommGrpCat
       isTerminalTop).homAddEquiv (AddCommGrpCat.of ℤ) F).trans <|
-    AddCommGrpCat.homAddEquiv.trans (zmultiplesAddHom (F.obj.obj (.op ⊤))).symm
+    AddCommGrpCat.homAddEquiv.trans (zmultiplesAddHom (F.presheaf.obj (.op ⊤))).symm
 
 /-- The constant-integer/global-sections equivalence is natural in the sheaf. -/
 lemma integerConstantHomAddEquivGlobalSections_naturality
@@ -118,8 +118,8 @@ sections. -/
 def homComplexSingleIntegerIsoGlobalSections
     (Y : TopCat.{0}) (K : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ) :
     CochainComplex.HomComplex (integerConstantSingleComplex Y) K ≅
-      globalSectionsComplex AddCommGrpCat Y K :=
-  let pre := (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y))
+      globalSectionsComplex Y K :=
+  letI pre := (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y))
   letI : Preadditive (TopCat.Sheaf AddCommGrpCat Y) := pre
   letI : (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
@@ -127,7 +127,7 @@ def homComplexSingleIntegerIsoGlobalSections
       ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
         (AddCommGrpCat.of ℤ)) K ≪≫
     (NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y)
-      (ℤᵘᵖ)).app K
+      ℤᵘᵖ).app K
 
 end TopCat.Sheaf
 

@@ -83,18 +83,18 @@ instance hypercohomologyFunctor_map_isIso
 /-- The cohomology in degree zero of the global sections of an object placed in degree zero is
 canonically its object of global sections. -/
 def globalSectionsSingle₀HomologyIso (A : Sheaf C X) :
-    (((globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ)).obj
+    (((globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ).obj
       ((CochainComplex.Plus.single₀ (Sheaf C X)).obj A).obj).homology 0 ≅
       (globalSectionsFunctor C X).obj A :=
-  let Γ := globalSectionsFunctor C X
-  let e := ComplexShape.embeddingUpNat
-  let K := (CochainComplex.single₀ (Sheaf C X)).obj A
+  letI Γ := globalSectionsFunctor C X
+  letI e := ComplexShape.embeddingUpNat
+  letI K := (CochainComplex.single₀ (Sheaf C X)).obj A
   HomologicalComplex.homologyMapIso
       (HomologicalComplex.mapExtendCanonicalIso Γ K e ≪≫
         (e.extendFunctor C).mapIso
           ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).app A) ≪≫
         HomologicalComplex.extendSingleIso e (Γ.obj A) 0 0 rfl) 0 ≪≫
-    HomologicalComplex.singleObjHomologySelfIso (ℤᵘᵖ) 0 ((globalSectionsFunctor C X).obj A)
+    HomologicalComplex.singleObjHomologySelfIso ℤᵘᵖ 0 ((globalSectionsFunctor C X).obj A)
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -106,32 +106,32 @@ omit [HasDerivedCategory C] [HasDerivedCategory (Sheaf C X)]
 lemma globalSectionsSingle₀HomologyIso_hom_naturality
     {A B : Sheaf C X} (f : A ⟶ B) :
     HomologicalComplex.homologyMap
-        (((globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ)).map
+        (((globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ).map
           ((CochainComplex.Plus.single₀ (Sheaf C X)).map f).hom) 0 ≫
         (globalSectionsSingle₀HomologyIso C X B).hom =
       (globalSectionsSingle₀HomologyIso C X A).hom ≫
         (globalSectionsFunctor C X).map f := by
-  let Γ := globalSectionsFunctor C X
-  let e := ComplexShape.embeddingUpNat
-  let KA := (CochainComplex.single₀ (Sheaf C X)).obj A
-  let KB := (CochainComplex.single₀ (Sheaf C X)).obj B
-  let g : KA ⟶ KB := (CochainComplex.single₀ (Sheaf C X)).map f
-  let EA := HomologicalComplex.mapExtendCanonicalIso Γ KA e ≪≫
+  letI Γ := globalSectionsFunctor C X
+  letI e := ComplexShape.embeddingUpNat
+  letI KA := (CochainComplex.single₀ (Sheaf C X)).obj A
+  letI KB := (CochainComplex.single₀ (Sheaf C X)).obj B
+  letI g : KA ⟶ KB := (CochainComplex.single₀ (Sheaf C X)).map f
+  letI EA := HomologicalComplex.mapExtendCanonicalIso Γ KA e ≪≫
     (e.extendFunctor C).mapIso
       ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).app A) ≪≫
     HomologicalComplex.extendSingleIso e (Γ.obj A) 0 0 rfl
-  let EB := HomologicalComplex.mapExtendCanonicalIso Γ KB e ≪≫
+  letI EB := HomologicalComplex.mapExtendCanonicalIso Γ KB e ≪≫
       (e.extendFunctor C).mapIso
         ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).app B) ≪≫
       HomologicalComplex.extendSingleIso e (Γ.obj B) 0 0 rfl
   have hE :
-      (Γ.mapHomologicalComplex (ℤᵘᵖ)).map
+      (Γ.mapHomologicalComplex ℤᵘᵖ).map
           ((CochainComplex.Plus.single₀ (Sheaf C X)).map f).hom ≫ EB.hom =
         EA.hom ≫
-          (HomologicalComplex.single C (ℤᵘᵖ) 0).map (Γ.map f) := by
-    change (Γ.mapHomologicalComplex (ℤᵘᵖ)).map
+          (HomologicalComplex.single C ℤᵘᵖ 0).map (Γ.map f) := by
+    change (Γ.mapHomologicalComplex ℤᵘᵖ).map
         (HomologicalComplex.extendMap g e) ≫ EB.hom =
-      EA.hom ≫ (HomologicalComplex.single C (ℤᵘᵖ) 0).map (Γ.map f)
+      EA.hom ≫ (HomologicalComplex.single C ℤᵘᵖ 0).map (Γ.map f)
     dsimp only [EA, EB, Iso.trans_hom]
     rw [HomologicalComplex.mapExtendCanonicalIso_naturality_assoc Γ KA e g]
     simp only [Category.assoc]
@@ -143,7 +143,7 @@ lemma globalSectionsSingle₀HomologyIso_hom_naturality
       (e.extendFunctor C).map
           ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).hom.app A) ≫
         (HomologicalComplex.extendSingleIso e (Γ.obj A) 0 0 rfl).hom ≫
-        (HomologicalComplex.single C (ℤᵘᵖ) 0).map (Γ.map f)
+        (HomologicalComplex.single C ℤᵘᵖ 0).map (Γ.map f)
     have hS := congrArg (fun k => (e.extendFunctor C).map k)
       ((HomologicalComplex.singleMapHomologicalComplex Γ (.up ℕ) 0).hom.naturality f)
     rw [Functor.map_comp, Functor.map_comp] at hS
@@ -161,10 +161,10 @@ lemma globalSectionsSingle₀HomologyIso_hom_naturality
     exact HomologicalComplex.extendSingleIso_hom_naturality e (Γ.map f) 0 0 rfl
   rw [show (globalSectionsSingle₀HomologyIso C X B).hom =
       HomologicalComplex.homologyMap EB.hom 0 ≫
-        (HomologicalComplex.singleObjHomologySelfIso (ℤᵘᵖ) 0 (Γ.obj B)).hom from rfl]
+        (HomologicalComplex.singleObjHomologySelfIso ℤᵘᵖ 0 (Γ.obj B)).hom from rfl]
   rw [show (globalSectionsSingle₀HomologyIso C X A).hom =
       HomologicalComplex.homologyMap EA.hom 0 ≫
-        (HomologicalComplex.singleObjHomologySelfIso (ℤᵘᵖ) 0 (Γ.obj A)).hom from rfl]
+        (HomologicalComplex.singleObjHomologySelfIso ℤᵘᵖ 0 (Γ.obj A)).hom from rfl]
   rw [← Category.assoc]
   have hH := congrArg (fun k => HomologicalComplex.homologyMap k 0) hE
   rw [HomologicalComplex.homologyMap_comp, HomologicalComplex.homologyMap_comp] at hH
@@ -179,8 +179,8 @@ def globalSectionsHomologyIso (n : ℤ) :
         (globalSectionsFunctor C X).mapHomotopyCategoryPlus ⋙
         DerivedCategory.Plus.Qh ⋙ DerivedCategory.Plus.homologyFunctor C n ≅
       CochainComplex.Plus.ι (Sheaf C X) ⋙
-        (globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ) ⋙
-        HomologicalComplex.homologyFunctor C (ℤᵘᵖ) n :=
+        (globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ ⋙
+        HomologicalComplex.homologyFunctor C ℤᵘᵖ n :=
   Functor.isoWhiskerRight
       (Functor.isoWhiskerLeft
         (HomotopyCategory.Plus.quotient (Sheaf C X) ⋙
@@ -193,11 +193,11 @@ def globalSectionsHomologyIso (n : ℤ) :
         HomotopyCategory.Plus.ι C)
       (DerivedCategory.homologyFunctorFactorsh C n) ≪≫
     Functor.isoWhiskerRight (Iso.refl _)
-      (HomotopyCategory.homologyFunctor C (ℤᵘᵖ) n) ≪≫
+      (HomotopyCategory.homologyFunctor C ℤᵘᵖ n) ≪≫
     Functor.isoWhiskerLeft
       (CochainComplex.Plus.ι (Sheaf C X) ⋙
-        (globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ))
-      (HomotopyCategory.homologyFunctorFactors C (ℤᵘᵖ) n)
+        (globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ)
+      (HomotopyCategory.homologyFunctorFactors C ℤᵘᵖ n)
 
 /-- The canonical natural transformation from the cohomology of global sections to
 hypercohomology.
@@ -205,12 +205,12 @@ hypercohomology.
 This is the right-derived unit followed by degree-`n` cohomology. -/
 def toHypercohomology (n : ℤ) :
     CochainComplex.Plus.ι (Sheaf C X) ⋙
-        (globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ) ⋙
-        HomologicalComplex.homologyFunctor C (ℤᵘᵖ) n ⟶
+        (globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ ⋙
+        HomologicalComplex.homologyFunctor C ℤᵘᵖ n ⟶
       hypercohomologyFunctor C X n :=
   show CochainComplex.Plus.ι (Sheaf C X) ⋙
-        (globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ) ⋙
-        HomologicalComplex.homologyFunctor C (ℤᵘᵖ) n ⟶
+        (globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ ⋙
+        HomologicalComplex.homologyFunctor C ℤᵘᵖ n ⟶
       DerivedCategory.Plus.Q ⋙ derivedGlobalSectionsFunctor C X ⋙
         DerivedCategory.Plus.homologyFunctor C n from
     (globalSectionsHomologyIso C X n).inv ≫
@@ -235,7 +235,7 @@ instance toHypercohomology_app_isIso (K : CochainComplex.Plus (Sheaf C X)) (n : 
 def hypercohomologyIsoOfInjective (K : CochainComplex.Plus (Sheaf C X)) (n : ℤ)
     [∀ i, Injective (K.obj.X i)] :
     (hypercohomologyFunctor C X n).obj K ≅
-      (((globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ)).obj K.obj).homology n :=
+      (((globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ).obj K.obj).homology n :=
   (asIso ((toHypercohomology C X n).app K)).symm
 
 /-- A quasi-isomorphism to a termwise-injective bounded-below complex computes
@@ -244,7 +244,7 @@ def hypercohomologyIsoOfQuasiIsoToInjective
     {K I : CochainComplex.Plus (Sheaf C X)} (f : K ⟶ I)
     [QuasiIso f.hom] [∀ i, Injective (I.obj.X i)] (n : ℤ) :
     (hypercohomologyFunctor C X n).obj K ≅
-      (((globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ)).obj I.obj).homology n :=
+      (((globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ).obj I.obj).homology n :=
   asIso ((hypercohomologyFunctor C X n).map f) ≪≫
     hypercohomologyIsoOfInjective C X I n
 
@@ -257,8 +257,8 @@ lemma toHypercohomology_hypercohomologyIsoOfQuasiIsoToInjective_hom
     (toHypercohomology C X n).app K ≫
         (hypercohomologyIsoOfQuasiIsoToInjective C X f n).hom =
       (CochainComplex.Plus.ι (Sheaf C X) ⋙
-        (globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ) ⋙
-        HomologicalComplex.homologyFunctor C (ℤᵘᵖ) n).map f := by
+        (globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ ⋙
+        HomologicalComplex.homologyFunctor C ℤᵘᵖ n).map f := by
   change (toHypercohomology C X n).app K ≫
       (hypercohomologyFunctor C X n).map f ≫
       inv ((toHypercohomology C X n).app I) = _
@@ -276,14 +276,14 @@ lemma hypercohomologyIsoOfInjective_hom_naturality
         (hypercohomologyIsoOfInjective C X L n).hom =
       (hypercohomologyIsoOfInjective C X K n).hom ≫
         (CochainComplex.Plus.ι (Sheaf C X) ⋙
-          (globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ) ⋙
-          HomologicalComplex.homologyFunctor C (ℤᵘᵖ) n).map f := by
+          (globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ ⋙
+          HomologicalComplex.homologyFunctor C ℤᵘᵖ n).map f := by
   change (hypercohomologyFunctor C X n).map f ≫
       inv ((toHypercohomology C X n).app L) =
     inv ((toHypercohomology C X n).app K) ≫
       (CochainComplex.Plus.ι (Sheaf C X) ⋙
-        (globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ) ⋙
-        HomologicalComplex.homologyFunctor C (ℤᵘᵖ) n).map f
+        (globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ ⋙
+        HomologicalComplex.homologyFunctor C ℤᵘᵖ n).map f
   apply (cancel_mono ((toHypercohomology C X n).app L)).1
   rw [Category.assoc, IsIso.inv_hom_id]
   simp only [Category.comp_id]

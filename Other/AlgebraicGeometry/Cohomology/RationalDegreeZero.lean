@@ -50,8 +50,8 @@ local instance rationalDegreeZeroHasDerivedCategorySheaf :
 the constant rational sheaf. -/
 def rationalCohomologyZeroEquivSheafHom :
     H^0(X; ℚ) ≃+ (𝓒(↧(ComplexPoint X); ℤ) ⟶ 𝓒(↧(ComplexPoint X); ℚ)) :=
-  let I := ambientRationalInjectiveComplexPlus X
-  let eTarget : DerivedCategory.Q.obj I.obj ≅
+  letI I := ambientRationalInjectiveComplexPlus X
+  letI eTarget : DerivedCategory.Q.obj I.obj ≅
       DerivedCategory.Q.obj
         ((CochainComplex.singleFunctor
           (TopCat.Sheaf AddCommGrpCat (TopCat.of (ComplexPoint X))) 0).obj
@@ -61,10 +61,10 @@ def rationalCohomologyZeroEquivSheafHom :
       DerivedCategory.Q.mapIso
         (HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
           𝓒(↧(ComplexPoint X); ℚ) 0 0 rfl)
-  let e₁ := rationalCohomologyAddEquivAmbientInjectiveHomology X 0
-  let e₂ := (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective
+  letI e₁ := rationalCohomologyAddEquivAmbientInjectiveHomology X 0
+  letI e₂ := (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective
     (TopCat.of (ComplexPoint X)) I.obj 0).symm
-  let e₃ := isoHomCongrAddEquiv (Iso.refl _)
+  letI e₃ := isoHomCongrAddEquiv (Iso.refl _)
     ((shiftFunctor _ (0 : ℤ)).mapIso eTarget)
   e₁.trans <| e₂.trans <| e₃.trans <|
     (Abelian.Ext.homAddEquiv (X := 𝓒(↧(ComplexPoint X); ℤ))

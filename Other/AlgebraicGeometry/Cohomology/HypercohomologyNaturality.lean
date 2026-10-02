@@ -41,7 +41,7 @@ lemma fromSingleZeroIsoPreadditiveCoyoneda_naturality :
     postcompMap ((CochainComplex.singleFunctor C 0).obj A) f ≫
       (fromSingleZeroIsoPreadditiveCoyoneda A L).hom =
     (fromSingleZeroIsoPreadditiveCoyoneda A K).hom ≫
-      ((preadditiveCoyoneda.obj (.op A)).mapHomologicalComplex (ℤᵘᵖ)).map f := by
+      ((preadditiveCoyoneda.obj (.op A)).mapHomologicalComplex ℤᵘᵖ).map f := by
   ext n z
   change Cochain.fromSingleEquiv (zero_add n)
       (z.comp (Cochain.ofHom f) (add_zero n)) =
@@ -65,12 +65,12 @@ lemma homComplexSingleIntegerIsoGlobalSections_naturality
       (homComplexSingleIntegerIsoGlobalSections Y L).hom =
     (homComplexSingleIntegerIsoGlobalSections Y K).hom ≫
       ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
-        (ℤᵘᵖ)).map f := by
-  let A : Sheaf AddCommGrpCat Y :=
+        ℤᵘᵖ).map f := by
+  letI A : Sheaf AddCommGrpCat Y :=
     𝓒(Y; ℤ)
-  let : (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).PreservesZeroMorphisms :=
+  letI : (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
-  let e := NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y) (ℤᵘᵖ)
+  letI e := NatIso.mapHomologicalComplex (integerConstantHomIsoGlobalSectionsFunctor Y) ℤᵘᵖ
   have h := CochainComplex.HomComplex.fromSingleZeroIsoPreadditiveCoyoneda_naturality_assoc
     A f (e.hom.app L)
   have h' := congrArg (fun g =>
@@ -164,10 +164,10 @@ lemma derivedHomAddEquivGlobalSectionsKInjective_naturality
     derivedHomAddEquivGlobalSectionsKInjective Y L n
       (x ≫ (DerivedCategory.Q.map f)⟦n⟧') =
     HomologicalComplex.homologyMap
-      (((globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex (ℤᵘᵖ)).map f) n
+      (((globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex ℤᵘᵖ).map f) n
       (derivedHomAddEquivGlobalSectionsKInjective Y K n x) := by
-  let A := integerConstantSingleComplex Y
-  let y := (CochainComplex.HomComplex.homologyAddEquiv A K n).symm
+  letI A := integerConstantSingleComplex Y
+  letI y := (CochainComplex.HomComplex.homologyAddEquiv A K n).symm
     (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass A K n x)
   have hH : HomologicalComplex.homologyMap
       (CochainComplex.HomComplex.postcompMap A f) n y =

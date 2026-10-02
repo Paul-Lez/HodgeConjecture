@@ -71,7 +71,7 @@ lemma of_isZero (F : TopCat.Sheaf AddCommGrpCat.{u} X) (hF : IsZero F) : F.IsFla
   epi {U V} i := by
     have hobj : IsZero F.obj :=
       (TopCat.Sheaf.forget AddCommGrpCat X).map_isZero hF
-    have hV : IsZero (F.obj.obj V) :=
+    have hV : IsZero (F.presheaf.obj V) :=
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat).obj V).map_isZero hobj
     exact hV.epi (F.obj.map i)
 
@@ -81,7 +81,7 @@ variable (K : CochainComplex (TopCat.Sheaf AddCommGrpCat.{u} X) ℤ)
 
 lemma cyclesShortComplex_shortExact (i : ℤ) (hK : K.ExactAt (i + 1)) :
     (cyclesShortComplex K i).ShortExact := by
-  let S := cyclesShortComplex K i
+  letI S := cyclesShortComplex K i
   have hkerD := K.cyclesIsKernel i (i + 1) (by simp)
   have hker : IsLimit (KernelFork.ofι S.f S.zero) :=
     Limits.isKernelOfComp (K.iCycles (i + 1)) (K.d i (i + 1)) hkerD
@@ -95,11 +95,11 @@ lemma cyclesShortComplex_shortExact (i : ℤ) (hK : K.ExactAt (i + 1)) :
     have hepi' : Epi ((K.sc' i (i + 1) (i + 2)).toCycles) :=
       hsc'.epi_toCycles
     rw [← K.toCycles_cyclesIsoSc'_hom i (i + 1) (i + 2) (by simp) hnext] at hepi'
-    let e := K.cyclesIsoSc' i (i + 1) (i + 2) (by simp) hnext
+    letI e := K.cyclesIsoSc' i (i + 1) (i + 2) (by simp) hnext
     have hfac : K.toCycles i (i + 1) =
         (K.toCycles i (i + 1) ≫ e.hom) ≫ e.inv := by
       simp only [Category.assoc, Iso.hom_inv_id, Category.comp_id]
-    let : Epi (K.toCycles i (i + 1) ≫ e.hom) := hepi'
+    letI : Epi (K.toCycles i (i + 1) ≫ e.hom) := hepi'
     rw [hfac]
     infer_instance
   have hmono : Mono S.f := by
@@ -116,26 +116,26 @@ lemma cycles_isFlasque_add_nat (N : ℤ) [K.IsStrictlyGE N]
     (K.cycles (N + (m : ℤ))).IsFlasque := by
   induction m with
   | zero =>
-      let S := cyclesShortComplex K (N - 1)
+      letI S := cyclesShortComplex K (N - 1)
       have hS : S.ShortExact := by
         apply cyclesShortComplex_shortExact K (N - 1)
         simpa only [sub_add_cancel] using hK N
       have hsource : IsZero S.X₂ := by
         dsimp [S, cyclesShortComplex]
         exact K.isZero_of_isStrictlyGE N (N - 1) (by lia)
-      let : Epi S.g := hS.epi_g
+      letI : Epi S.g := hS.epi_g
       have htarget : IsZero S.X₃ := IsZero.of_epi S.g hsource
       have hzero : IsZero (K.cycles N) := by
         simpa only [S, cyclesShortComplex, sub_add_cancel] using htarget
       simpa using of_isZero (K.cycles N) hzero
   | succ m ih =>
-      let i : ℤ := N + (m : ℤ)
-      let S := cyclesShortComplex K i
+      letI i : ℤ := N + (m : ℤ)
+      letI S := cyclesShortComplex K i
       have hS : S.ShortExact := cyclesShortComplex_shortExact K i (hK (i + 1))
-      let : S.X₁.IsFlasque := by
+      letI : S.X₁.IsFlasque := by
         dsimp [S, cyclesShortComplex, i]
         exact ih
-      let : S.X₂.IsFlasque := by
+      letI : S.X₂.IsFlasque := by
         dsimp [S, cyclesShortComplex]
         exact hflasque i
       have htarget : S.X₃.IsFlasque := of_shortExact_of_isFlasque₁₂ hS
@@ -147,7 +147,7 @@ lemma cycles_isFlasque (N : ℤ) [K.IsStrictlyGE N]
     (K.cycles i).IsFlasque := by
   by_cases hi : i < N
   · exact of_isZero _ (IsZero.of_mono (K.iCycles i) (K.isZero_of_isStrictlyGE N i hi))
-  · let m : ℕ := (i - N).toNat
+  · letI m : ℕ := (i - N).toNat
     have hm : i = N + (m : ℤ) := by
       dsimp [m]
       rw [Int.toNat_of_nonneg (by lia)]
@@ -158,11 +158,11 @@ lemma cycles_isFlasque (N : ℤ) [K.IsStrictlyGE N]
 /-- Global sections preserve exactness of an acyclic bounded-below complex of flasque sheaves. -/
 theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
     (hK : K.Acyclic) (hflasque : ∀ i, (K.X i).IsFlasque) :
-    (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat X K).Acyclic := by
+    (TopCat.Sheaf.globalSectionsComplex X K).Acyclic := by
   intro i
-  let F := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X
-  let L := TopCat.Sheaf.globalSectionsComplex AddCommGrpCat X K
-  let A : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
+  letI F := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X
+  letI L := TopCat.Sheaf.globalSectionsComplex X K
+  letI A : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
     ShortComplex.mk (K.iCycles i) (K.d i (i + 1)) (K.iCycles_d i (i + 1))
   have hA : A.Exact ∧ Mono A.f := by
     have hker := K.cyclesIsKernel i (i + 1) (by simp)
@@ -174,11 +174,11 @@ theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
     have hleft := ((Functor.preservesFiniteLimits_tfae F).out 3 1).mp
       (inferInstance : PreservesFiniteLimits F)
     exact (hleft A hA).1
-  let Sprev := cyclesShortComplex K (i - 1)
+  letI Sprev := cyclesShortComplex K (i - 1)
   have hSprev : Sprev.ShortExact := by
     apply cyclesShortComplex_shortExact K (i - 1)
     simpa only [sub_add_cancel] using hK i
-  let : Sprev.X₁.IsFlasque := by
+  letI : Sprev.X₁.IsFlasque := by
     dsimp [Sprev, cyclesShortComplex]
     exact cycles_isFlasque K N hK hflasque (i - 1)
   have hepiTop : Epi (Sprev.g.hom.app (op (⊤ : Opens X))) :=
@@ -194,14 +194,14 @@ theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
     (ℤᵘᵖ).prev_eq' (ComplexShape.up_mk _ _ (by lia))
   have hnext : (ℤᵘᵖ).next i = i + 1 :=
     (ℤᵘᵖ).next_eq' (ComplexShape.up_mk _ _ rfl)
-  let T : ShortComplex AddCommGrpCat.{u} :=
+  letI T : ShortComplex AddCommGrpCat.{u} :=
     ShortComplex.mk (F.map (K.d (i - 1) i)) (F.map (K.d i (i + 1))) (by
       rw [← F.map_comp, K.d_comp_d, F.map_zero])
-  let B : ShortComplex AddCommGrpCat.{u} :=
+  letI B : ShortComplex AddCommGrpCat.{u} :=
     ShortComplex.mk (F.map (K.iCycles i)) (F.map (K.d i (i + 1))) (by
       rw [← F.map_comp, K.iCycles_d, F.map_zero])
   have hB : B.Exact := hFA
-  let φ : T ⟶ B :=
+  letI φ : T ⟶ B :=
     { τ₁ := F.map (K.toCycles (i - 1) i)
       τ₂ := 𝟙 _
       τ₃ := 𝟙 _

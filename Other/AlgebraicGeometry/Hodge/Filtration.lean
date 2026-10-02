@@ -58,14 +58,14 @@ def complexToFieldConstantSheafComplexInt :
 
 /-- The unit in degree-zero field-valued cohomology, via the derived global-sections unit. -/
 def fieldCohomologyUnit : H^0(X; K) :=
-  let Y := TopCat.of (ComplexPoint X)
-  let A := 𝓒(↧(ComplexPoint X); K)
-  let s := TopCat.Sheaf.integerConstantHomAddEquivGlobalSections A
+  letI Y := TopCat.of (ComplexPoint X)
+  letI A := 𝓒(↧(ComplexPoint X); K)
+  letI s := TopCat.Sheaf.integerConstantHomAddEquivGlobalSections A
     ((TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
       (AddCommGrpCat.ofHom (zmultiplesAddHom K 1)))
-  let t : ↥((CochainComplex.Plus.ι (AnalyticAdditiveSheaf X) ⋙
-      (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex (ℤᵘᵖ) ⋙
-      HomologicalComplex.homologyFunctor AddCommGrpCat (ℤᵘᵖ) 0).obj
+  letI t : ↥((CochainComplex.Plus.ι (AnalyticAdditiveSheaf X) ⋙
+      (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex ℤᵘᵖ ⋙
+      HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).obj
         (constantFieldSheafComplexIntPlus K X)) :=
     (TopCat.Sheaf.globalSectionsSingle₀HomologyIso AddCommGrpCat Y A).inv s
   ((TopCat.Sheaf.toHypercohomology AddCommGrpCat (TopCat.of (ComplexPoint X)) 0).app
@@ -132,7 +132,7 @@ local instance : HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard
 lemma fieldToComplexConstantSheaf_comp_complexToFieldConstantSheaf :
     fieldToComplexConstantSheaf K X ≫
       complexToFieldConstantSheaf K X = 𝟙 _ := by
-  let F := TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)
+  letI F := TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)
   change F.map (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
     F.map (AddCommGrpCat.ofHom (complexToFieldLinear K).toAddMonoidHom) = 𝟙 _
   rw [← Functor.map_comp]
@@ -169,10 +169,10 @@ lemma complexToFieldCohomology_leftInverse (n : ℤ) :
       (fieldToComplexCohomology K X n) := by
   intro α
   unfold complexToFieldCohomology fieldToComplexCohomology
-  let f : constantFieldSheafComplexIntPlus K X ⟶
+  letI f : constantFieldSheafComplexIntPlus K X ⟶
       constantComplexSheafComplexIntPlus X :=
     fieldToComplexConstantSheafComplexInt K X
-  let g : constantComplexSheafComplexIntPlus X ⟶
+  letI g : constantComplexSheafComplexIntPlus X ⟶
       constantFieldSheafComplexIntPlus K X :=
     complexToFieldConstantSheafComplexInt K X
   change (ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map g
@@ -253,10 +253,10 @@ lemma deRhamConj_involutive [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     Function.Involutive (deRhamConj X n) := by
   intro α
   rw [deRhamConj_apply, deRhamConj_apply, AddEquiv.symm_apply_apply]
-  let F := ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))
-  let f : constantComplexSheafComplexIntPlus X ⟶
+  letI F := ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))
+  letI f : constantComplexSheafComplexIntPlus X ⟶
       constantComplexSheafComplexIntPlus X := ⟨conjConstantComplexSheafComplexInt X⟩
-  let β := (complexConstantCohomologyDeRhamAddEquiv X n).symm α
+  letI β := (complexConstantCohomologyDeRhamAddEquiv X n).symm α
   have h : f ≫ f = 𝟙 _ := by
     apply ObjectProperty.hom_ext
     exact conjConstantComplexSheafComplexInt_comp_self X
@@ -276,7 +276,7 @@ lemma fieldToComplexConstantSheaf_comp_conj
     (hK : ∀ q : K, starRingEnd ℂ (algebraMap K ℂ q) = algebraMap K ℂ q) :
     fieldToComplexConstantSheaf K X ≫ conjConstantComplexSheaf X =
       fieldToComplexConstantSheaf K X := by
-  let F := TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)
+  letI F := TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)
   change F.map (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
     F.map (AddCommGrpCat.ofHom (starRingEnd ℂ).toAddMonoidHom) =
     F.map (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
@@ -311,10 +311,10 @@ lemma conj_fieldToComplexCohomology
         (fieldToComplexCohomology K X n α) =
       fieldToComplexCohomology K X n α := by
   unfold fieldToComplexCohomology
-  let f : constantFieldSheafComplexIntPlus K X ⟶
+  letI f : constantFieldSheafComplexIntPlus K X ⟶
       constantComplexSheafComplexIntPlus X :=
     fieldToComplexConstantSheafComplexInt K X
-  let g : constantComplexSheafComplexIntPlus X ⟶
+  letI g : constantComplexSheafComplexIntPlus X ⟶
       constantComplexSheafComplexIntPlus X :=
     ⟨conjConstantComplexSheafComplexInt X⟩
   change (ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map g

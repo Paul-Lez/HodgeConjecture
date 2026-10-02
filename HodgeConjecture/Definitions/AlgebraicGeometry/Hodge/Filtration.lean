@@ -281,7 +281,7 @@ def complexConstantCohomologyDeRhamAddEquiv
     ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
       (constantComplexSheafComplexIntPlus X)) ≃+
       DeRhamHypercohomology X n :=
-  let f : (constantComplexSheafComplexIntPlus X :
+  letI f : (constantComplexSheafComplexIntPlus X :
       CochainComplex.Plus (AnalyticAdditiveSheaf X)) ⟶
       holomorphicDeRhamComplexIntPlus X :=
     ⟨constantsToHolomorphicDeRhamComplexInt X⟩
@@ -545,7 +545,7 @@ private lemma complexConstantCohomologyDeRhamAddEquiv_scalar [IsIntegral X.left]
       constantComplexSheafComplexIntPlus X ⟶ holomorphicDeRhamComplexIntPlus X) := by
     apply ObjectProperty.hom_ext
     exact (constantsToHolomorphicDeRhamComplexInt_scalar X c).symm
-  let F := ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))
+  letI F := ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))
   rw [congrArg F.map h,
     Functor.map_comp_apply, deRham_complex_smul_eq]
 
@@ -586,14 +586,14 @@ lemma deRhamConj_smul [IsIntegral X.left] [Smooth X.hom] (n : ℤ) (c : ℂ)
     deRhamConj X n (c • α) = (starRingEnd ℂ) c • deRhamConj X n α := by
   rw [deRhamConj_apply, deRhamConj_apply,
     complexConstantCohomologyDeRhamAddEquiv_symm_scalar]
-  let F := ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))
-  let s : constantComplexSheafComplexIntPlus X ⟶ constantComplexSheafComplexIntPlus X :=
+  letI F := ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))
+  letI s : constantComplexSheafComplexIntPlus X ⟶ constantComplexSheafComplexIntPlus X :=
     ⟨complexScalarComplexInt X c⟩
-  let j : constantComplexSheafComplexIntPlus X ⟶ constantComplexSheafComplexIntPlus X :=
+  letI j : constantComplexSheafComplexIntPlus X ⟶ constantComplexSheafComplexIntPlus X :=
     ⟨conjConstantComplexSheafComplexInt X⟩
-  let s' : constantComplexSheafComplexIntPlus X ⟶ constantComplexSheafComplexIntPlus X :=
+  letI s' : constantComplexSheafComplexIntPlus X ⟶ constantComplexSheafComplexIntPlus X :=
     ⟨complexScalarComplexInt X (starRingEnd ℂ c)⟩
-  let β := (complexConstantCohomologyDeRhamAddEquiv X n).symm α
+  letI β := (complexConstantCohomologyDeRhamAddEquiv X n).symm α
   have h : s ≫ j = j ≫ s' := by
     apply ObjectProperty.hom_ext
     exact complexScalarComplexInt_comp_conj X c

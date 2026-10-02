@@ -44,7 +44,7 @@ theorem complexSupportInjectiveCohomologySheafIsoRelative_restriction_section
     (S : Closeds (ComplexPoint X)) (n : ℕ)
     {V W : Opens (ComplexPoint X)} (a : W ⟶ V) :
     HomologicalComplex.homologyMap
-      (TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) (ℤᵘᵖ)
+      (TopCat.Sheaf.sectionComplexRestriction (TopCat.of (ComplexPoint X)) ℤᵘᵖ
         (complexSupportInjectiveComplex X S) a) (n : ℤ) ≫
       TopCat.Sheaf.sectionCohomologyToSheafSection (TopCat.of (ComplexPoint X))
         (complexSupportInjectiveComplex X S) (n : ℤ) W ≫
@@ -79,7 +79,7 @@ def analyticComponentPointRelativeCoclass :
 comparison; this is an explicit comparison target, not the definition of the general class. -/
 def analyticComponentPointSupportedInjectiveCoclass :
     (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (ℤᵘᵖ)).obj (complexSupportInjectiveComplex X
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X
         (cycleComponentAnalyticClosedSupport X x))).homology (2 * (d : ℤ)) :=
   (complexSupportInjectiveSectionCohomologyEquiv X
     (cycleComponentAnalyticClosedSupport X x) ⊤ (2 * d)).symm
@@ -98,7 +98,7 @@ def analyticComponentPointPositiveKernelClass : H^(2 * (d : ℤ))(X; ℚ) :=
 private lemma forgetSupportToGlobalSectionsHomology_supportedInjective
     (Z : Closeds (ComplexPoint X)) (n : ℕ)
     (c : (((TopCat.Sheaf.supportEvaluation (TopCat.of (ComplexPoint X)) ⊤).mapHomologicalComplex
-      (ℤᵘᵖ)).obj (complexSupportInjectiveComplex X Z)).homology n) :
+      ℤᵘᵖ).obj (complexSupportInjectiveComplex X Z)).homology n) :
     forgetSupportToGlobalSectionsHomology ℚ X Z n
         ((rationalSupportAddEquivSupportedInjectiveHomology X Z n).symm c) =
       HomologicalComplex.homologyMap
@@ -117,7 +117,7 @@ private lemma constantFieldInjectiveResolutionAugmentation_eq_ambient
         TopCat.Sheaf.injectiveResolutionAugmentation (TopCat.of (ComplexPoint X))
           ((TopCat.Sheaf.constantFunctor (TopCat.of (ComplexPoint X))).obj (AddCommGrpCat.of ℚ)) =
       ambientRationalInjectiveAugmentation X := by
-  let e := HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
+  letI e := HomologicalComplex.extendSingleIso ComplexShape.embeddingUpNat
     𝓒(↧(ComplexPoint X); ℚ) 0 0 (by simp)
   change e.hom ≫ e.inv ≫
       HomologicalComplex.extendMap
@@ -214,7 +214,7 @@ theorem cycleComponentSupportedInjectiveClass_point_normalization
       (rationalSupportAddEquivSupportedInjectiveHomology X
         (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
         (analyticComponentPointSupportedInjectiveCoclass X x d z) := by
-  let a : CycleComponentSupportedCohomology X x d :=
+  letI a : CycleComponentSupportedCohomology X x d :=
     (rationalSupportAddEquivSupportedInjectiveHomology X
       (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
       (analyticComponentPointSupportedInjectiveCoclass X x d z)

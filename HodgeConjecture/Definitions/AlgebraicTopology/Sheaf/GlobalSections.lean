@@ -36,15 +36,17 @@ instance globalSectionsFunctor_additive : (globalSectionsFunctor C X).Additive w
 
 instance globalSectionsFunctor_preservesFiniteLimits (X : TopCat.{w}) :
     PreservesFiniteLimits (globalSectionsFunctor AddCommGrpCat.{w} X) := by
-  let : PreservesFiniteLimits
+  letI : PreservesFiniteLimits
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{w}).obj (op (⊤ : Opens X))) :=
     inferInstance
   exact comp_preservesFiniteLimits (TopCat.Sheaf.forget AddCommGrpCat.{w} X)
     ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{w}).obj (op (⊤ : Opens X)))
 
 /-- The cochain complex obtained by applying global sections degreewise. -/
-abbrev globalSectionsComplex (K : CochainComplex (Sheaf C X) ℤ) :
+abbrev globalSectionsComplex {C : Type u} [Category.{v} C] (X : TopCat.{w}) [Abelian C]
+    [HasSheafify (Opens.grothendieckTopology X) C]
+    (K : CochainComplex (Sheaf C X) ℤ) :
     CochainComplex C ℤ :=
-  ((globalSectionsFunctor C X).mapHomologicalComplex (ℤᵘᵖ)).obj K
+  ((globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ).obj K
 
 end TopCat.Sheaf

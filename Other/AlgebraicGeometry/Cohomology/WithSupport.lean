@@ -74,8 +74,8 @@ def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
     (Functor.const (Opens (TopCat.of (ComplexPoint X)))ᵒᵖ).obj
         (AddCommGrpCat.of ℚ) ⟶
       (pushforwardComplementConstantRationalSheaf X Z).obj :=
-  let U := TopCat.of ↥Zᶜ
-  let J := Opens.grothendieckTopology U
+  letI U := TopCat.of ↥Zᶜ
+  letI J := Opens.grothendieckTopology U
   Functor.whiskerLeft (Opens.map (analyticComplementInclusion X Z)).op
     ((sheafificationAdjunction J AddCommGrpCat).unit.app
       ((Functor.const (Opens U)ᵒᵖ).obj (AddCommGrpCat.of ℚ)))
@@ -84,7 +84,7 @@ def rationalRestrictionPresheaf (Z : Set (ComplexPoint X)) :
 def rationalRestrictionSheaf (Z : Set (ComplexPoint X)) :
     𝓒(↧(ComplexPoint X); ℚ) ⟶
       pushforwardComplementConstantRationalSheaf X Z :=
-  let J := Opens.grothendieckTopology
+  letI J := Opens.grothendieckTopology
     (TopCat.of (ComplexPoint X))
   ⟨sheafifyLift J (rationalRestrictionPresheaf X Z)
     (pushforwardComplementConstantRationalSheaf X Z).property⟩
@@ -201,14 +201,14 @@ noncomputable instance isIso_mappingConeTriangleh_mor₃_univ :
     IsIso ((CochainComplex.mappingCone.triangleh
       (rationalRestrictionComplexInt X
         (Set.univ : Set (ComplexPoint X)))).mor₃) := by
-  let f := rationalRestrictionComplexInt X
+  letI f := rationalRestrictionComplexInt X
     (Set.univ : Set (ComplexPoint X))
   have hdist : CochainComplex.mappingCone.triangleh f ∈
       HomotopyCategory.Pretriangulated.distinguishedTriangles
         (AnalyticAdditiveSheaf X) :=
     ⟨_, _, f, ⟨Iso.refl _⟩⟩
   exact (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _ hdist).1
-    ((HomotopyCategory.quotient (AnalyticAdditiveSheaf X) (ℤᵘᵖ)).map_isZero
+    ((HomotopyCategory.quotient (AnalyticAdditiveSheaf X) ℤᵘᵖ).map_isZero
       (isZero_derivedPushforwardComplement_univ_int X))
 
 /-- The same whole-support connecting morphism is an isomorphism in the derived category used by
@@ -218,7 +218,7 @@ noncomputable instance isIso_derivedMappingConeTriangle_mor₃_univ :
       (CochainComplex.mappingCone.triangle
         (rationalRestrictionComplexInt X
           (Set.univ : Set (ComplexPoint X))))).mor₃) := by
-  let f := rationalRestrictionComplexInt X
+  letI f := rationalRestrictionComplexInt X
     (Set.univ : Set (ComplexPoint X))
   exact (Pretriangulated.Triangle.isZero₂_iff_isIso₃ _
     (DerivedCategory.mappingCone_triangle_distinguished f)).1
@@ -236,7 +236,7 @@ abbrev rationalCohomologyWithSupportComplexPlus
     (Z : Set (ComplexPoint X)) : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
   ⟨(shiftFunctor _ (-1 : ℤ)).obj (rationalCohomologyWithSupportComplex X Z),
     ⟨0, by
-      let _ : (rationalCohomologyWithSupportComplex X Z).IsStrictlyGE (-1) :=
+      letI _ : (rationalCohomologyWithSupportComplex X Z).IsStrictlyGE (-1) :=
         CochainComplex.isStrictlyGE_mappingCone _ 0 0 (-1)
       exact CochainComplex.isStrictlyGE_shift _ (-1) (-1) 0 (by norm_num)⟩⟩
 
@@ -268,27 +268,27 @@ section
 isomorphism. -/
 instance forgetSupportComplex_univ_quasiIso :
     QuasiIso (forgetSupportComplex X (Set.univ : Set (ComplexPoint X))) := by
-  let t := CochainComplex.mappingCone.triangle
+  letI t := CochainComplex.mappingCone.triangle
       (rationalRestrictionComplexInt X (Set.univ : Set (ComplexPoint X)))
   have ht : QuasiIso t.mor₃ :=
     (DerivedCategory.isIso_Q_map_iff_quasiIso
       (C := AnalyticAdditiveSheaf X) t.mor₃).1 (by
-      let c := (DerivedCategory.Q.commShiftIso (1 : ℤ)).hom.app t.obj₁
-      let _ : IsIso (DerivedCategory.Q.map t.mor₃ ≫ c) := by
+      letI c := (DerivedCategory.Q.commShiftIso (1 : ℤ)).hom.app t.obj₁
+      letI _ : IsIso (DerivedCategory.Q.map t.mor₃ ≫ c) := by
         change IsIso ((DerivedCategory.Q.mapTriangle.obj t).mor₃)
         infer_instance
       exact IsIso.of_isIso_comp_right (DerivedCategory.Q.map t.mor₃) c)
   have hs : QuasiIso (t.mor₃⟦(-1 : ℤ)⟧') :=
     (CochainComplex.quasiIso_shift_iff t.mor₃ (-1)).2 ht
-  let c := (shiftFunctorCompIsoId (CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+  letI c := (shiftFunctorCompIsoId (CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     (1 : ℤ) (-1) (by simp)).hom.app t.obj₁
   have hc : QuasiIso c := inferInstance
   dsimp only [forgetSupportComplex]
-  let e := shiftFunctorCompIsoId (CochainComplex (AnalyticAdditiveSheaf X) ℤ)
+  letI e := shiftFunctorCompIsoId (CochainComplex (AnalyticAdditiveSheaf X) ℤ)
     (1 : ℤ) (-1) (by simp)
   change QuasiIso (t.mor₃⟦(-1 : ℤ)⟧' ≫ e.hom.app t.obj₁)
-  let _ : QuasiIso (t.mor₃⟦(-1 : ℤ)⟧') := hs
-  let _ : QuasiIso (e.hom.app t.obj₁) := by infer_instance
+  letI _ : QuasiIso (t.mor₃⟦(-1 : ℤ)⟧') := hs
+  letI _ : QuasiIso (e.hom.app t.obj₁) := by infer_instance
   infer_instance
 
 end
@@ -299,7 +299,7 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
     RationalCohomologyWithSupport X
         (Set.univ : Set (ComplexPoint X)) n ≃
       H^n(X; ℚ) :=
-  let f : rationalCohomologyWithSupportComplexPlus X Set.univ ⟶
+  letI f : rationalCohomologyWithSupportComplexPlus X Set.univ ⟶
       constantFieldSheafComplexIntPlus ℚ X :=
     ⟨forgetSupportComplex X Set.univ⟩
   letI : QuasiIso f.hom := forgetSupportComplex_univ_quasiIso X

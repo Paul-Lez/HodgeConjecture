@@ -41,8 +41,8 @@ theorem extendNat_term_isFlasque
     ((K.extend ComplexShape.embeddingUpNat).X q).IsFlasque := by
   by_cases hq : ∃ m : ℕ, (m : ℤ) = q
   · obtain ⟨m, rfl⟩ := hq
-    let e := K.extendXIso ComplexShape.embeddingUpNat (i := m) rfl
-    let hP : TopCat.Presheaf.IsFlasque (K.X m).obj := hK m
+    letI e := K.extendXIso ComplexShape.embeddingUpNat (i := m) rfl
+    letI hP : TopCat.Presheaf.IsFlasque (K.X m).obj := hK m
     change TopCat.Presheaf.IsFlasque
       ((K.extend ComplexShape.embeddingUpNat).X (m : ℤ)).obj
     exact @TopCat.Presheaf.IsFlasque.of_iso _ _ _
@@ -61,16 +61,16 @@ theorem globalSectionsNat_map_quasiIso
     QuasiIso
       (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
         ).mapHomologicalComplex (ComplexShape.up ℕ)).map f) := by
-  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
-  let KInt : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ :=
+  letI Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
+  letI KInt : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ :=
     K.extend ComplexShape.embeddingUpNat
-  let LInt : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ :=
+  letI LInt : CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ :=
     L.extend ComplexShape.embeddingUpNat
-  let fInt : KInt ⟶ LInt :=
+  letI fInt : KInt ⟶ LInt :=
     HomologicalComplex.extendMap f ComplexShape.embeddingUpNat
-  let eK := HomologicalComplex.mapExtendCanonicalIso Γ K ComplexShape.embeddingUpNat
-  let eL := HomologicalComplex.mapExtendCanonicalIso Γ L ComplexShape.embeddingUpNat
-  let : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map fInt) :=
+  letI eK := HomologicalComplex.mapExtendCanonicalIso Γ K ComplexShape.embeddingUpNat
+  letI eL := HomologicalComplex.mapExtendCanonicalIso Γ L ComplexShape.embeddingUpNat
+  letI : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map fInt) :=
     TopCat.Sheaf.IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso
       fInt 0 0 (extendNat_term_isFlasque K hK) (extendNat_term_isFlasque L hL)
   have h : HomologicalComplex.extendMap

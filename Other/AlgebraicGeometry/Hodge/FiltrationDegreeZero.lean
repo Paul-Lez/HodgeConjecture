@@ -45,7 +45,7 @@ def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
   letI : IsIso (hodgeFilteredDeRhamInclusion X 0) := by
     unfold hodgeFilteredDeRhamInclusion hodgeFilteredDeRhamComplex
     infer_instance
-  let f : hodgeFilteredDeRhamComplexPlus X 0 ⟶ holomorphicDeRhamComplexIntPlus X :=
+  letI f : hodgeFilteredDeRhamComplexPlus X 0 ⟶ holomorphicDeRhamComplexIntPlus X :=
     ⟨hodgeFilteredDeRhamInclusion X 0⟩
   letI : QuasiIso f.hom := by
     change QuasiIso (hodgeFilteredDeRhamInclusion X 0)

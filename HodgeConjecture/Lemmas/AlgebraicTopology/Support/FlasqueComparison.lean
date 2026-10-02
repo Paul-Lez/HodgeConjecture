@@ -54,23 +54,23 @@ theorem supportEvaluation_map_quasiIso_of_flasque
     (nK nL : ℤ) [K.IsStrictlyGE nK] [L.IsStrictlyGE nL]
     (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
     QuasiIso (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).map f) := by
-  let R := U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}
-  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat (TopCat.of U)
-  let K' : CochainComplex (Sheaf AddCommGrpCat.{u} (TopCat.of U)) ℤ :=
+  letI R := U.isOpenEmbedding.sheafPullback AddCommGrpCat.{u}
+  letI Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat (TopCat.of U)
+  letI K' : CochainComplex (Sheaf AddCommGrpCat.{u} (TopCat.of U)) ℤ :=
     (R.mapHomologicalComplex ℤᵘᵖ).obj K
-  let L' : CochainComplex (Sheaf AddCommGrpCat.{u} (TopCat.of U)) ℤ :=
+  letI L' : CochainComplex (Sheaf AddCommGrpCat.{u} (TopCat.of U)) ℤ :=
     (R.mapHomologicalComplex ℤᵘᵖ).obj L
-  let f' : K' ⟶ L' := (R.mapHomologicalComplex ℤᵘᵖ).map f
-  let : QuasiIso f' := openSheafRestriction_map_quasiIso X U f
+  letI f' : K' ⟶ L' := (R.mapHomologicalComplex ℤᵘᵖ).map f
+  letI : QuasiIso f' := openSheafRestriction_map_quasiIso X U f
   have hK' (n : ℤ) : (K'.X n).IsFlasque := by
-    let : (K.X n).IsFlasque := hK n
+    letI : (K.X n).IsFlasque := hK n
     exact openSheafRestriction_isFlasque X U _
   have hL' (n : ℤ) : (L'.X n).IsFlasque := by
-    let : (L.X n).IsFlasque := hL n
+    letI : (L.X n).IsFlasque := hL n
     exact openSheafRestriction_isFlasque X U _
-  let : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map f') :=
+  letI : QuasiIso ((Γ.mapHomologicalComplex ℤᵘᵖ).map f') :=
     IsFlasque.BoundedBelowComplex.globalSectionsComplex_map_quasiIso f' nK nL hK' hL'
-  let e := NatIso.mapHomologicalComplex (openRestrictionGlobalSectionsIso X U) ℤᵘᵖ
+  letI e := NatIso.mapHomologicalComplex (openRestrictionGlobalSectionsIso X U) ℤᵘᵖ
   apply (quasiIso_iff_of_arrow_mk_iso ((Γ.mapHomologicalComplex ℤᵘᵖ).map f')
     (((supportEvaluation X U).mapHomologicalComplex ℤᵘᵖ).map f)
     (Arrow.isoMk (e.app K) (e.app L) (e.hom.naturality f).symm)).mp
@@ -121,7 +121,7 @@ theorem supportedSections_map_quasiIso_of_flasque
     (hK : ∀ n, (K.X n).IsFlasque) (hL : ∀ n, (L.X n).IsFlasque) :
     QuasiIso (((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).map
       (((sheafSectionsSupportedOutside X U).mapHomologicalComplex ℤᵘᵖ).map f)) := by
-  let φ := (((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).mapShortComplex).map
+  letI φ := (((supportEvaluation X V).mapHomologicalComplex ℤᵘᵖ).mapShortComplex).map
     (supportRestrictionComplexShortComplexMap X U f)
   have h₂ : QuasiIso φ.τ₂ :=
     supportEvaluation_map_quasiIso_of_flasque X V f nK nL hK hL

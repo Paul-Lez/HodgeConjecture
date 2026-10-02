@@ -33,7 +33,7 @@ def derivedHomAddEquivGlobalSectionsKInjective
     (K : CochainComplex (Sheaf AddCommGrpCat Y) ℤ) [K.IsKInjective] (n : ℤ) :
     ShiftedHom
       (DerivedCategory.Q.obj (integerConstantSingleComplex Y)) (DerivedCategory.Q.obj K) n ≃+
-    (globalSectionsComplex AddCommGrpCat Y K).homology n :=
+    (globalSectionsComplex Y K).homology n :=
   (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass _ K n).trans
     ((CochainComplex.HomComplex.homologyAddEquiv _ K n).symm.trans
       (HomologicalComplex.homologyMapIso
@@ -58,7 +58,7 @@ def hypercohomologyAddEquivGlobalSectionsKInjective
     (K : CochainComplex.Plus (AnalyticAdditiveSheaf X))
     [∀ i, Injective (K.obj.X i)] (n : ℤ) :
     ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj K) ≃+
-      (TopCat.Sheaf.globalSectionsComplex AddCommGrpCat
+      (TopCat.Sheaf.globalSectionsComplex
         (TopCat.of (ComplexPoint X)) K.obj).homology n :=
   (TopCat.Sheaf.hypercohomologyIsoOfInjective AddCommGrpCat
     (TopCat.of (ComplexPoint X)) K n).addCommGroupIsoToAddEquiv
