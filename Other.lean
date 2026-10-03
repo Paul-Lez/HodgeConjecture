@@ -70,6 +70,8 @@ public import Other.AlgebraicGeometry.ComplexPoint.SmoothLocalHomeomorph
 public import Other.AlgebraicGeometry.ComplexPoint.StandardEtaleDerivative
 public import Other.AlgebraicGeometry.Cycle.AnalyticSupport
 public import Other.AlgebraicGeometry.Cycle.BorelMooreClass
+public import Other.AlgebraicGeometry.Cycle.ChowClass
+public import Other.AlgebraicGeometry.Cycle.ChowGroup
 public import Other.AlgebraicGeometry.Cycle.ClassDimension
 public import Other.AlgebraicGeometry.Cycle.ClassOnCycles
 public import Other.AlgebraicGeometry.Cycle.Codimension
@@ -94,6 +96,7 @@ public import Other.AlgebraicGeometry.Cycle.FundamentalClass
 public import Other.AlgebraicGeometry.Cycle.Local.LocalHomology
 public import Other.AlgebraicGeometry.Cycle.Local.Purity
 public import Other.AlgebraicGeometry.Cycle.PointClass
+public import Other.AlgebraicGeometry.Cycle.SheafChowClass
 public import Other.AlgebraicGeometry.Cycle.SheafClass
 public import Other.AlgebraicGeometry.Cycle.SingularClass
 public import Other.AlgebraicGeometry.Cycle.SmoothPair.CoclassNonzero
@@ -226,6 +229,7 @@ public import Other.AlgebraicGeometry.HolomorphicUnitExtension
 public import Other.AlgebraicGeometry.HolomorphicUnitTransition
 public import Other.AlgebraicGeometry.InvertibleSheafRationalSection
 public import Other.AlgebraicGeometry.OrderOfVanishing
+public import Other.AlgebraicGeometry.PrincipalDivisorCycleClass
 public import Other.AlgebraicGeometry.ProjectiveFiniteHomology
 public import Other.AlgebraicGeometry.RegularFunctionsHolomorphic
 public import Other.AlgebraicTopology.LinearDualConnecting
