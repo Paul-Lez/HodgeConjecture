@@ -34,6 +34,15 @@ local instance guideHodgeHasDerivedCategory (X : Over (Spec ↧ℂ)) :
 local instance guideHodgeAddCommGrpHasDerivedCategory :
     HasDerivedCategory AddCommGrpCat :=
   HasDerivedCategory.standard AddCommGrpCat
+
+local instance guideHodgeModuleHasDerivedCategory :
+    HasDerivedCategory (ModuleCat ℂ) :=
+  HasDerivedCategory.standard (ModuleCat ℂ)
+
+local instance guideHodgeModuleSheafHasDerivedCategory (X : Over (Spec ↧ℂ)) :
+    HasDerivedCategory
+      (TopCat.Sheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X))) :=
+  HasDerivedCategory.standard _
 ```
 
 # The variety and its complex points
@@ -264,10 +273,20 @@ written with the notation $`H^n(X;K)`:
 namespace Guide.Hodge.D4
 ```
 ```lean
+local instance guideFieldModuleHasDerivedCategory (K : Type) [Field K] :
+    HasDerivedCategory (ModuleCat K) :=
+  HasDerivedCategory.standard (ModuleCat K)
+
+local instance guideFieldModuleSheafHasDerivedCategory (K : Type) [Field K]
+    (X : Over (Spec ↧ℂ)) :
+    HasDerivedCategory
+      (TopCat.Sheaf (ModuleCat K) (TopCat.of (ComplexPoint X))) :=
+  HasDerivedCategory.standard _
+
 example (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (n : ℤ) :
     H^n(X; K) =
-      ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
-        (constantFieldSheafComplexIntPlus K X)) := rfl
+      ↥((ℍ[ModuleCat K]^n(TopCat.of (ComplexPoint X))).obj
+        (constantModuleSheafComplexIntPlus X K)) := rfl
 ```
 ```lean -show
 end Guide.Hodge.D4
@@ -278,8 +297,8 @@ namespace Guide.Hodge.D5
 ```lean
 abbrev DeRhamHypercohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     (n : ℤ) :=
-  ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
-    (holomorphicDeRhamComplexIntPlus X))
+  ↥((ℍ[ModuleCat ℂ]^n(TopCat.of (ComplexPoint X))).obj
+    (holomorphicDeRhamModuleComplexPlus X))
 ```
 ```lean -show
 end Guide.Hodge.D5
@@ -289,16 +308,14 @@ example : @Guide.Hodge.D5.DeRhamHypercohomology = @AlgebraicGeometry.ComplexPoin
 namespace Guide.Hodge.D6
 ```
 ```lean
-def fieldToDeRhamCohomologyLinear (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ))
+abbrev fieldToDeRhamCohomology (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ))
     [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    H^n(X; K) →ₗ[K] DeRhamHypercohomology X n where
-  toFun := fieldToDeRhamCohomology K X n
-  map_add' := (fieldToDeRhamCohomology K X n).map_add
-  map_smul' := fieldToDeRhamCohomology_smul K X n
+    H^n(X; K) →ₗ[K] DeRhamHypercohomology X n :=
+  AlgebraicGeometry.ComplexPoint.fieldToDeRhamCohomology K X n
 ```
 ```lean -show
 end Guide.Hodge.D6
-example : @Guide.Hodge.D6.fieldToDeRhamCohomologyLinear = @AlgebraicGeometry.ComplexPoint.fieldToDeRhamCohomologyLinear := rfl
+example : @Guide.Hodge.D6.fieldToDeRhamCohomology = @AlgebraicGeometry.ComplexPoint.fieldToDeRhamCohomology := rfl
 ```
 
 The comparison map $`H^n(X;\mathbb Q)\to H^n_{\mathrm{dR}}(X)` is induced by the composite
@@ -325,8 +342,9 @@ namespace Guide.Hodge.D7
 ```
 ```lean
 def hodgeFilteredDeRhamComplex (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (p : ℤ) :
-    CochainComplex (AnalyticAdditiveSheaf X) ℤ :=
-  (holomorphicDeRhamComplexInt X).stupidTrunc (ComplexShape.embeddingUpIntGE p)
+    CochainComplex
+      (TopCat.Sheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X))) ℤ :=
+  (holomorphicDeRhamModuleComplexInt X).stupidTrunc (ComplexShape.embeddingUpIntGE p)
 ```
 ```lean -show
 end Guide.Hodge.D7
@@ -337,9 +355,9 @@ namespace Guide.Hodge.D8
 ```
 ```lean
 def hodgeFilteredDeRhamInclusion (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    (p : ℤ) : hodgeFilteredDeRhamComplex X p ⟶ holomorphicDeRhamComplexInt X :=
+    (p : ℤ) : hodgeFilteredDeRhamComplex X p ⟶ holomorphicDeRhamModuleComplexInt X :=
   HomologicalComplex.stupidTruncInclusion
-    (holomorphicDeRhamComplexInt X) (ComplexShape.embeddingUpIntGE p)
+    (holomorphicDeRhamModuleComplexInt X) (ComplexShape.embeddingUpIntGE p)
 ```
 ```lean -show
 end Guide.Hodge.D8
@@ -350,10 +368,10 @@ namespace Guide.Hodge.D9
 ```
 ```lean
 def filteredToDeRhamCohomology (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) : FilteredDeRhamHypercohomology X p n →+ DeRhamHypercohomology X n :=
-  ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
+    (p n : ℤ) : FilteredDeRhamHypercohomology X p n →ₗ[ℂ] DeRhamHypercohomology X n :=
+  ((ℍ[ModuleCat ℂ]^n(TopCat.of (ComplexPoint X))).map
     (⟨hodgeFilteredDeRhamInclusion X p⟩ : hodgeFilteredDeRhamComplexPlus X p ⟶
-      holomorphicDeRhamComplexIntPlus X)).hom
+      holomorphicDeRhamModuleComplexPlus X)).hom
 ```
 ```lean -show
 end Guide.Hodge.D9
@@ -363,27 +381,24 @@ example : @Guide.Hodge.D9.filteredToDeRhamCohomology = @AlgebraicGeometry.Comple
 namespace Guide.Hodge.D19
 ```
 ```lean
-def hodgeFiltrationComplexSubmodule (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
-    (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) where
-  carrier := hodgeFiltration X p n
-  zero_mem' := (hodgeFiltration X p n).zero_mem
-  add_mem' := (hodgeFiltration X p n).add_mem
-  smul_mem' := fun c _ h => hodgeFiltration_complex_smul_mem X p n c h
+abbrev hodgeFiltration (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
+    (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) :=
+  AlgebraicGeometry.ComplexPoint.hodgeFiltration X p n
 ```
 ```lean -show
 end Guide.Hodge.D19
-example : @Guide.Hodge.D19.hodgeFiltrationComplexSubmodule = @AlgebraicGeometry.ComplexPoint.hodgeFiltrationComplexSubmodule := rfl
+example : @Guide.Hodge.D19.hodgeFiltration = @AlgebraicGeometry.ComplexPoint.hodgeFiltration := rfl
 ```
 
-The image is a priori an additive subgroup. Compatibility with complex scalars is proved, and
-{name}`hodgeFiltrationComplexSubmodule` bundles the image as a $`\mathbb C`-subspace, which
+The image is a complex subspace, and
+{name}`hodgeFiltration` is the image as a $`\mathbb C`-subspace, which
 restricts to a subspace over any coefficient field contained in $`\mathbb C`. Two sanity checks
 are also proved: $`F^0` is all of $`H^n_{\mathrm{dR}}(X)`, and $`F^p=0` for $`p>\dim X`. Both are
 used later — the first is what makes every degree-zero class a Hodge class, the second is what
 makes the conjecture vacuous above the dimension.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeFiltrationComplexSubmodule_zero_eq_top
+#check AlgebraicGeometry.ComplexPoint.hodgeFiltration_zero_eq_top
 #check AlgebraicGeometry.ComplexPoint.hodgeFiltration_eq_bot_of_lt
 ```
 
@@ -433,31 +448,14 @@ namespace Guide.Hodge.D14
 ```lean
 def complexConstantCohomologyDeRhamAddEquiv (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (n : ℤ) :
-    ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
-      (constantComplexSheafComplexIntPlus X)) ≃+ DeRhamHypercohomology X n :=
+    ↥((ℍ[ModuleCat ℂ]^n(TopCat.of (ComplexPoint X))).obj
+      (constantComplexModuleSheafIntPlus X)) ≃+ DeRhamHypercohomology X n :=
   AlgebraicGeometry.ComplexPoint.complexConstantCohomologyDeRhamAddEquiv X n
 ```
 ```lean -show
 end Guide.Hodge.D14
 example : @Guide.Hodge.D14.complexConstantCohomologyDeRhamAddEquiv = @AlgebraicGeometry.ComplexPoint.complexConstantCohomologyDeRhamAddEquiv := rfl
 ```
-```lean -show
-namespace Guide.Hodge.D15
-```
-```lean
-def deRhamConj (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    DeRhamHypercohomology X n →+ DeRhamHypercohomology X n :=
-  ((complexConstantCohomologyDeRhamAddEquiv X n).toAddMonoidHom).comp
-    (((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
-      (⟨conjConstantComplexSheafComplexInt X⟩ : constantComplexSheafComplexIntPlus X ⟶
-        constantComplexSheafComplexIntPlus X)).hom.comp
-      (complexConstantCohomologyDeRhamAddEquiv X n).symm.toAddMonoidHom)
-```
-```lean -show
-end Guide.Hodge.D15
-example : @Guide.Hodge.D15.deRhamConj = @AlgebraicGeometry.ComplexPoint.deRhamConj := rfl
-```
-
 The result is an involution and is conjugate-linear, so it can be bundled as a semilinear map;
 $`\overline{F^q}` is then the preimage of $`F^q` under it.
 
@@ -471,10 +469,10 @@ namespace Guide.Hodge.D16
 ```
 ```lean
 def deRhamConjSemilinear (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    DeRhamHypercohomology X n →ₛₗ[starRingEnd ℂ] DeRhamHypercohomology X n where
-  toFun := deRhamConj X n
-  map_add' := (deRhamConj X n).map_add
-  map_smul' := deRhamConj_smul X n
+    DeRhamHypercohomology X n →ₛₗ[starRingEnd ℂ] DeRhamHypercohomology X n :=
+  letI e := complexConstantCohomologyDeRhamLinearEquiv X n
+  letI g := complexConjugationSemilinear X n
+  e.toLinearMap.comp (g.comp e.symm.toLinearMap)
 ```
 ```lean -show
 end Guide.Hodge.D16
@@ -486,7 +484,7 @@ namespace Guide.Hodge.D17
 ```lean
 def conjHodgeFiltrationComplexSubmodule (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom]
     (p n : ℤ) : Submodule ℂ (DeRhamHypercohomology X n) :=
-  (hodgeFiltrationComplexSubmodule X p n).comap (deRhamConjSemilinear X n)
+  (hodgeFiltration X p n).comap (deRhamConjSemilinear X n)
 ```
 ```lean -show
 end Guide.Hodge.D17
@@ -497,8 +495,8 @@ namespace Guide.Hodge.D18
 ```
 ```lean
 def hodgePiece (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] (p q n : ℤ) :
-    Submodule ℂ (DeRhamHypercohomology X n) :=
-  hodgeFiltrationComplexSubmodule X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
+  Submodule ℂ (DeRhamHypercohomology X n) :=
+  hodgeFiltration X p n ⊓ conjHodgeFiltrationComplexSubmodule X q n
 ```
 ```lean -show
 end Guide.Hodge.D18
@@ -526,7 +524,7 @@ namespace Guide.Hodge.D11
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p)).restrictScalars K).comap
-    (fieldToDeRhamCohomologyLinear K X (2 * p))
+    (fieldToDeRhamCohomology K X (2 * p))
 ```
 ```lean -show
 end Guide.Hodge.D11
@@ -556,8 +554,8 @@ lemma below proves this for any such $`K`; the second specializes it to $`\mathb
 coefficient field of the conjecture.
 
 ```lean
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_comap_hodgeFiltrationComplexSubmodule
-#check AlgebraicGeometry.ComplexPoint.hodgeClasses_rat_eq_comap_hodgeFiltrationComplexSubmodule
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_eq_comap_hodgeFiltration
+#check AlgebraicGeometry.ComplexPoint.hodgeClasses_rat_eq_comap_hodgeFiltration
 ```
 
 The same argument in an abstract pure Hodge structure of weight $`2p` is the lemma below, from

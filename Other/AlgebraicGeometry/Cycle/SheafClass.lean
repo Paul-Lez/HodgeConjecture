@@ -89,6 +89,7 @@ theorem rationalSheafCycleClassOnCycles_tmul (p : ℕ) (q : ℚ)
     rationalSheafCycleClassOnCycles V p (q ⊗ₜ[ℤ] c) =
       q • sheafCycleClassOnCycles V p c := rfl
 
+set_option maxHeartbeats 2000000 in
 /-- Exact evaluation of a component with rational multiplicity. -/
 @[simp]
 theorem rationalSheafCycleClassOnCycles_tmul_single (p : ℕ) (q : ℚ)

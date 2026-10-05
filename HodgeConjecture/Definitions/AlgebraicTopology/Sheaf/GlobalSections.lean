@@ -7,6 +7,8 @@ module
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import Mathlib.Algebra.Homology.Additive
+public import Mathlib.CategoryTheory.Linear.FunctorCategory
+public import Mathlib.CategoryTheory.Linear.LinearFunctor
 public import Mathlib.Topology.Sheaves.Abelian
 
 /-! # Global sections of sheaves and sheaf complexes -/
@@ -22,20 +24,33 @@ universe u v w
 variable (C : Type u) [Category.{v} C] (X : TopCat.{w})
 
 /-- Evaluation of a sheaf on the top open subset. -/
-def globalSectionsFunctor : Sheaf C X ⥤ C :=
+def globalSections : Sheaf C X ⥤ C :=
   (sheafSections (Opens.grothendieckTopology X) C).obj (op (⊤ : Opens X))
+
+/-- Notation for the global sections functor. -/
+scoped notation3:max "Γ[" C "](" X ")" => globalSections C X
+
+open scoped TopCat.Sheaf
 
 variable [Abelian C] [HasSheafify (Opens.grothendieckTopology X) C]
 
-instance globalSectionsFunctor_additive : (globalSectionsFunctor C X).Additive where
+instance sheaf_linear (R : Type*) [Semiring R] [Linear R C] : Linear R (Sheaf C X) := by
+  change Linear R (CategoryTheory.Sheaf (Opens.grothendieckTopology X) C)
+  infer_instance
+
+instance globalSections_additive : (globalSections C X).Additive where
   map_add {A B} f g := by
     change (((evaluation (Opens X)ᵒᵖ C).obj (op (⊤ : Opens X))).map
       ((TopCat.Sheaf.forget C X).map (f + g))) = _
     rw [Functor.map_add, Functor.map_add]
     rfl
 
-instance globalSectionsFunctor_preservesFiniteLimits (X : TopCat.{w}) :
-    PreservesFiniteLimits (globalSectionsFunctor AddCommGrpCat.{w} X) := by
+instance globalSections_linear (R : Type*) [Semiring R] [Linear R C] :
+    Functor.Linear R (globalSections C X) where
+  map_smul _ _ := rfl
+
+instance globalSections_preservesFiniteLimits (X : TopCat.{w}) :
+    PreservesFiniteLimits (globalSections AddCommGrpCat.{w} X) := by
   let : PreservesFiniteLimits
       ((evaluation (Opens X)ᵒᵖ AddCommGrpCat.{w}).obj (op (⊤ : Opens X))) :=
     inferInstance
@@ -47,6 +62,6 @@ abbrev globalSectionsComplex {C : Type u} [Category.{v} C] (X : TopCat.{w}) [Abe
     [HasSheafify (Opens.grothendieckTopology X) C]
     (K : CochainComplex (Sheaf C X) ℤ) :
     CochainComplex C ℤ :=
-  ((globalSectionsFunctor C X).mapHomologicalComplex ℤᵘᵖ).obj K
+  ((Γ[C](X)).mapHomologicalComplex ℤᵘᵖ).obj K
 
 end TopCat.Sheaf

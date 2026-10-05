@@ -51,7 +51,7 @@ set_option backward.isDefEq.respectTransparency false in
 set_option maxHeartbeats 1000000 in
 attribute [local implicit_reducible] TopCat.Sheaf TopCat.instCategorySheaf._aux_1
   TopCat.instCategorySheaf._aux_3 TopCat.instCategorySheaf._aux_5
-  TopCat.Sheaf.globalSectionsFunctor in
+  TopCat.Sheaf.globalSections in
 /-- The degree-zero comparison sends the constant class of `q` to the constant-sheaf morphism
 induced by `n ↦ n q`. -/
 @[simp] theorem rationalCohomologyZeroEquivSheafHom_class (q : ℚ) :
@@ -61,7 +61,7 @@ induced by `n ↦ n q`. -/
   let Y := TopCat.of (ComplexPoint X)
   let K := constantFieldSheafComplexIntPlus ℚ X
   let F := ℍ[AddCommGrpCat]^0(Y)
-  let G := (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex ℤᵘᵖ ⋙
+  let G := (TopCat.Sheaf.globalSections AddCommGrpCat Y).mapHomologicalComplex ℤᵘᵖ ⋙
     HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0
   let s := TopCat.Sheaf.integerConstantHomAddEquivGlobalSections
     𝓒(↧(ComplexPoint X); ℚ)
@@ -87,7 +87,7 @@ induced by `n ↦ n q`. -/
             (CochainComplex.HomComplex.CohomologyClass.mk
               (CochainComplex.HomComplex.Cocycle.ofHom j)))) =
         TopCat.Sheaf.integerConstantHomAddEquivGlobalSections Q u := by
-    let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
+    let Γ := TopCat.Sheaf.globalSections AddCommGrpCat Y
     let e := ComplexShape.embeddingUpNat
     let KN := (CochainComplex.single₀ (TopCat.Sheaf AddCommGrpCat Y)).obj Q
     let E : (Γ.mapHomologicalComplex ℤᵘᵖ).obj K.obj ≅
@@ -201,7 +201,7 @@ induced by `n ↦ n q`. -/
       rw [Iso.inv_hom_id_assoc]
       rfl
     rw [hju]
-  let Γ := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y
+  let Γ := TopCat.Sheaf.globalSections AddCommGrpCat Y
   let v := fieldScalarSheaf ℚ X q
   let u₁ : Z ⟶ Q := (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
     (AddCommGrpCat.ofHom (zmultiplesAddHom ℚ 1))
@@ -251,7 +251,7 @@ induced by `n ↦ n q`. -/
   let p := CochainComplex.HomComplex.postcompMap A a
   let hciK := TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y K.obj
   let hciI := TopCat.Sheaf.homComplexSingleIntegerIsoGlobalSections Y I
-  let Γa := ((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
+  let Γa := ((TopCat.Sheaf.globalSections AddCommGrpCat Y).mapHomologicalComplex
     ℤᵘᵖ).map a
   have hx :
       (CochainComplex.HomComplex.homologyAddEquiv A I 0).symm
@@ -287,15 +287,20 @@ induced by `n ↦ n q`. -/
   have hderivedI :
       (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective Y I 0).symm
           (HomologicalComplex.homologyMap
-            (((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
+            (((TopCat.Sheaf.globalSections AddCommGrpCat Y).mapHomologicalComplex
               ℤᵘᵖ).map a) 0 (G.map m.hom t)) =
         ShiftedHom.mk₀ 0 rfl (DerivedCategory.Q.map (j ≫ a)) := by
     rw [← hrepI]
     exact derivedHomAddEquivGlobalSectionsKInjective_symm_hom X I (j ≫ a)
+  let e := constantModuleCohomologyToAdditiveEquiv ℚ X 0
   have hclass : fieldCohomologyClass ℚ X q =
-      ((TopCat.Sheaf.toHypercohomology AddCommGrpCat Y 0).app K).hom (G.map m.hom t) := by
-    change F.map m
-        (((TopCat.Sheaf.toHypercohomology AddCommGrpCat Y 0).app K).hom t) = _
+      e.symm (((TopCat.Sheaf.toHypercohomology AddCommGrpCat Y 0).app K).hom
+        (G.map m.hom t)) := by
+    apply e.injective
+    rw [e.apply_symm_apply]
+    change e (q • fieldCohomologyUnit ℚ X) = _
+    rw [constantModuleCohomologyToAdditiveEquiv_map_smul,
+      constantModuleCohomologyToAdditiveEquiv_unit]
     exact (ConcreteCategory.congr_hom
       ((TopCat.Sheaf.toHypercohomology AddCommGrpCat Y 0).naturality m) t).symm
   rw [hclass]
@@ -434,9 +439,7 @@ theorem span_rationalCohomologyUnit_eq_top
   intro α _
   obtain ⟨q, rfl⟩ := rationalCohomologyClass_surjective X α
   have hq : fieldCohomologyClass ℚ X q =
-      q • fieldCohomologyUnit ℚ X := by
-    rw [field_smul_eq]
-    rfl
+      q • fieldCohomologyUnit ℚ X := rfl
   rw [hq]
   exact Submodule.smul_mem _ q (Submodule.subset_span (Set.mem_singleton _))
 
@@ -447,11 +450,7 @@ theorem rationalCohomologyUnit_ne_zero
     fieldCohomologyUnit ℚ X ≠ 0 := by
   intro h
   have h1 : fieldCohomologyClass ℚ X 1 = fieldCohomologyUnit ℚ X := by
-    unfold fieldCohomologyClass
-    rw [fieldScalarComplex_one]
-    exact ConcreteCategory.congr_hom
-      ((TopCat.Sheaf.hypercohomologyFunctor AddCommGrpCat
-        (TopCat.of (ComplexPoint X)) 0).map_id _) _
+    simp [fieldCohomologyClass]
   have h10 : fieldCohomologyClass ℚ X 1 =
       fieldCohomologyClass ℚ X 0 := by
     rw [h1, fieldCohomologyClass_zero]

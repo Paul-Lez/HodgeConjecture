@@ -45,6 +45,15 @@ local instance singularComparisonAddCommGrpHasDerivedCategory :
     HasDerivedCategory AddCommGrpCat :=
   HasDerivedCategory.standard _
 
+local instance singularComparisonRatModuleHasDerivedCategory :
+    HasDerivedCategory (ModuleCat ℚ) :=
+  HasDerivedCategory.standard _
+
+local instance singularComparisonRatModuleSheafHasDerivedCategory :
+    HasDerivedCategory
+      (TopCat.Sheaf (ModuleCat ℚ) (TopCat.of (ComplexPoint X))) :=
+  HasDerivedCategory.standard _
+
 /-- The rational constant-sheaf comparison with the integer-indexed singular-cochain
 resolution. -/
 def rationalToSingularCochainComplexInt :
@@ -71,12 +80,13 @@ def rationalCohomologySingularCochainAddEquiv
     H^n(X; ℚ) ≃+
       ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
         (rationalSingularCochainComplexIntPlus X)) :=
-  letI f : constantFieldSheafComplexIntPlus ℚ X ⟶
-      rationalSingularCochainComplexIntPlus X :=
-    ⟨rationalToSingularCochainComplexInt X⟩
-  letI : QuasiIso f.hom := rationalToSingularCochainComplexInt_quasiIso X
-  (asIso
-    ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map f)).addCommGroupIsoToAddEquiv
+  (constantModuleCohomologyToAdditiveEquiv ℚ X n).trans <|
+    letI f : constantFieldSheafComplexIntPlus ℚ X ⟶
+        rationalSingularCochainComplexIntPlus X :=
+      ⟨rationalToSingularCochainComplexInt X⟩
+    letI : QuasiIso f.hom := rationalToSingularCochainComplexInt_quasiIso X
+    (asIso
+      ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map f)).addCommGroupIsoToAddEquiv
 
 @[simp]
 lemma rationalCohomologySingularCochainAddEquiv_apply
@@ -86,7 +96,8 @@ lemma rationalCohomologySingularCochainAddEquiv_apply
       (ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
         (⟨rationalToSingularCochainComplexInt X⟩ :
           constantFieldSheafComplexIntPlus ℚ X ⟶
-            rationalSingularCochainComplexIntPlus X) α := by
+            rationalSingularCochainComplexIntPlus X)
+        (constantModuleCohomologyToAdditiveEquiv ℚ X n α) := by
   change ((rationalCohomologySingularCochainAddEquiv X n).toAddMonoidHom α) = _
   rfl
 

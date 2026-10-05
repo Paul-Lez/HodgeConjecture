@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.Filtration
 
+import HodgeConjecture.Mathlib.Algebra.Ring.Basic
 import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
@@ -52,14 +53,5 @@ omit [Algebra K ℂ] in
 @[simp] lemma fieldScalarComplex_zero : fieldScalarComplex K X 0 = 0 := by
   unfold fieldScalarComplex
   rw [fieldScalarSheaf_zero, Functor.map_zero]
-
-@[simp] lemma deRhamConjSemilinear_apply [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : DeRhamHypercohomology X n) :
-    deRhamConjSemilinear X n α = deRhamConj X n α := rfl
-
-/-! #### Real coefficient fields
-
-The hypothesis `hK` below says conjugation fixes the image of `K` in `ℂ`, equivalently that
-`K → ℂ` lands in `ℝ`. It holds for `ℚ` and fails for `ℚ(i) ⊆ ℂ`. -/
 
 end AlgebraicGeometry.ComplexPoint

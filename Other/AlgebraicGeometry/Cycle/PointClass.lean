@@ -142,6 +142,7 @@ def rationalPointCycleClassOnCycles :
     rationalPointCycleClassOnCycles V d (q ⊗ₜ[ℤ] c) = q • pointCycleClassOnCycles V d c :=
   rfl
 
+set_option maxHeartbeats 2000000 in
 /-- Exact evaluation of a point with arbitrary rational multiplicity. -/
 @[simp] lemma rationalPointCycleClassOnCycles_tmul_single
     (q : ℚ) (x : V.scheme) (hx : coheight x = d) :

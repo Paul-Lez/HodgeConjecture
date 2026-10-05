@@ -90,8 +90,7 @@ zero differentials. -/
 abbrev integerConstantSingleComplex (Y : TopCat.{0}) :
     CochainComplex (TopCat.Sheaf AddCommGrpCat Y) ℤ :=
   (CochainComplex.singleFunctor (TopCat.Sheaf AddCommGrpCat Y) 0).obj
-    ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
-      (AddCommGrpCat.of ℤ))
+    (𝓒(Y; ℤ))
 
 set_option backward.isDefEq.respectTransparency.types false in
 set_option backward.isDefEq.respectTransparency false in
@@ -102,7 +101,7 @@ def integerConstantHomIsoGlobalSectionsFunctor (Y : TopCat.{0}) :
     preadditiveCoyoneda.obj
         (.op ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj
           (AddCommGrpCat.of ℤ))) ≅
-      TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y :=
+      TopCat.Sheaf.globalSections AddCommGrpCat Y :=
   NatIso.ofComponents
     (fun F ↦ (integerConstantHomAddEquivGlobalSections F).toAddCommGrpIso)
     (fun {F G} f ↦ by
@@ -123,7 +122,7 @@ def homComplexSingleIntegerIsoGlobalSections
       globalSectionsComplex Y K :=
   letI pre := (inferInstance : Preadditive (TopCat.Sheaf AddCommGrpCat Y))
   letI : Preadditive (TopCat.Sheaf AddCommGrpCat Y) := pre
-  letI : (TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).PreservesZeroMorphisms :=
+  letI : (TopCat.Sheaf.globalSections AddCommGrpCat Y).PreservesZeroMorphisms :=
     Functor.preservesZeroMorphisms_of_additive _
   CochainComplex.HomComplex.fromSingleZeroIsoPreadditiveCoyoneda
       ((constantSheaf (Opens.grothendieckTopology Y) AddCommGrpCat).obj

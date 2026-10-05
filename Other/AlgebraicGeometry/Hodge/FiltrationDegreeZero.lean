@@ -37,6 +37,14 @@ local instance filtrationDegreeZeroHasDerivedCategoryAnalytic :
 local instance filtrationDegreeZeroHasDerivedCategoryAddCommGrpCat :
     HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard _
 
+local instance filtrationDegreeZeroHasDerivedCategoryModuleCat :
+    HasDerivedCategory (ModuleCat ℂ) := HasDerivedCategory.standard _
+
+local instance filtrationDegreeZeroHasDerivedCategoryModuleSheaf :
+    HasDerivedCategory
+      (TopCat.Sheaf (ModuleCat ℂ) (TopCat.of (ComplexPoint X))) :=
+  HasDerivedCategory.standard _
+
 /-- In degree filtration `F⁰`, the filtered and full de Rham hypercohomology groups are
 canonically equivalent. -/
 def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
@@ -45,13 +53,14 @@ def hodgeFiltrationZeroEquiv [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
   letI : IsIso (hodgeFilteredDeRhamInclusion X 0) := by
     unfold hodgeFilteredDeRhamInclusion hodgeFilteredDeRhamComplex
     infer_instance
-  letI f : hodgeFilteredDeRhamComplexPlus X 0 ⟶ holomorphicDeRhamComplexIntPlus X :=
+  letI f : hodgeFilteredDeRhamComplexPlus X 0 ⟶ holomorphicDeRhamModuleComplexPlus X :=
     ⟨hodgeFilteredDeRhamInclusion X 0⟩
   letI : QuasiIso f.hom := by
     change QuasiIso (hodgeFilteredDeRhamInclusion X 0)
     infer_instance
   (asIso
-    ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map f)).addCommGroupIsoToAddEquiv.toEquiv
+    ((TopCat.Sheaf.hypercohomologyFunctor (ModuleCat ℂ)
+      (TopCat.of (ComplexPoint X)) n).map f)).toLinearEquiv.toEquiv
 
 
 lemma filteredToDeRhamCohomology_zero_apply
@@ -64,7 +73,7 @@ lemma filteredToDeRhamCohomology_zero_apply
 lemma hodgeFiltration_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
     hodgeFiltration X 0 n = ⊤ := by
   ext α
-  simp only [hodgeFiltration, AddMonoidHom.mem_range, AddSubgroup.mem_top, iff_true]
+  simp only [hodgeFiltration, LinearMap.mem_range, Submodule.mem_top, iff_true]
   exact ⟨(hodgeFiltrationZeroEquiv X n).symm α,
     filteredToDeRhamCohomology_zero_apply X n _ |>.trans
       ((hodgeFiltrationZeroEquiv X n).apply_symm_apply α)⟩
@@ -77,18 +86,9 @@ lemma hodgePiece_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
   · show α ∈ hodgeFiltration X 0 n
     rw [hodgeFiltration_zero_eq_top X n]
     trivial
-  · show deRhamConj X n α ∈ hodgeFiltration X 0 n
+  · show deRhamConjSemilinear X n α ∈ hodgeFiltration X 0 n
     rw [hodgeFiltration_zero_eq_top X n]
     trivial
-
-/-- The complex subspace underlying `F⁰` is the whole de Rham hypercohomology group. -/
-lemma hodgeFiltrationComplexSubmodule_zero_eq_top [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    hodgeFiltrationComplexSubmodule X 0 n = ⊤ := by
-  refine SetLike.ext fun α ↦ ?_
-  change α ∈ hodgeFiltration X 0 n ↔ α ∈ (⊤ :
-    Submodule ℂ (DeRhamHypercohomology X n))
-  rw [hodgeFiltration_zero_eq_top X n]
-  simp
 
 /-- Every rational degree-zero cohomology class belongs to the rational Hodge subgroup. -/
 lemma hodgeClasses_zero_eq_top [IsIntegral X.left] [Smooth X.hom] :

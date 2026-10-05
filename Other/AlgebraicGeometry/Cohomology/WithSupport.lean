@@ -51,6 +51,14 @@ local instance analyticSupportHasDerivedCategory :
 local instance analyticSupportAddCommGrpHasDerivedCategory :
     HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard _
 
+local instance analyticSupportRatModuleHasDerivedCategory :
+    HasDerivedCategory (ModuleCat ℚ) := HasDerivedCategory.standard _
+
+local instance analyticSupportRatModuleSheafHasDerivedCategory :
+    HasDerivedCategory
+      (TopCat.Sheaf (ModuleCat ℚ) (TopCat.of (ComplexPoint X))) :=
+  HasDerivedCategory.standard _
+
 /-- The inclusion of the complement of a subset into the complex-point space. -/
 def analyticComplementInclusion (Z : Set (ComplexPoint X)) :
     TopCat.of ↥Zᶜ ⟶
@@ -236,9 +244,10 @@ abbrev rationalCohomologyWithSupportComplexPlus
     (Z : Set (ComplexPoint X)) : CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
   ⟨(shiftFunctor _ (-1 : ℤ)).obj (rationalCohomologyWithSupportComplex X Z),
     ⟨0, by
-      letI _ : (rationalCohomologyWithSupportComplex X Z).IsStrictlyGE (-1) :=
+      let h : (rationalCohomologyWithSupportComplex X Z).IsStrictlyGE (-1) :=
         CochainComplex.isStrictlyGE_mappingCone _ 0 0 (-1)
-      exact CochainComplex.isStrictlyGE_shift _ (-1) (-1) 0 (by norm_num)⟩⟩
+      exact @CochainComplex.isStrictlyGE_shift _ _ _
+        (rationalCohomologyWithSupportComplex X Z) (-1) h (-1) 0 (by norm_num)⟩⟩
 
 /-- Rational constant-sheaf cohomology with support in `Z`. -/
 abbrev RationalCohomologyWithSupport
@@ -258,9 +267,10 @@ def forgetSupportComplex (Z : Set (ComplexPoint X)) :
 def rationalForgetSupport (Z : Set (ComplexPoint X)) (n : ℤ) :
     RationalCohomologyWithSupport X Z n →+
       H^n(X; ℚ) :=
-  ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
-    (⟨forgetSupportComplex X Z⟩ : rationalCohomologyWithSupportComplexPlus X Z ⟶
-      constantFieldSheafComplexIntPlus ℚ X)).hom
+  (constantModuleCohomologyToAdditiveEquiv ℚ X n).symm.toAddMonoidHom.comp
+    (((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
+      (⟨forgetSupportComplex X Z⟩ : rationalCohomologyWithSupportComplexPlus X Z ⟶
+        constantFieldSheafComplexIntPlus ℚ X)).hom)
 
 section
 
@@ -304,7 +314,8 @@ noncomputable def forgetSupportEquivUniv (n : ℤ) :
     ⟨forgetSupportComplex X Set.univ⟩
   letI : QuasiIso f.hom := forgetSupportComplex_univ_quasiIso X
   (asIso
-    ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map f)).addCommGroupIsoToAddEquiv.toEquiv
+    ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map f)).addCommGroupIsoToAddEquiv.toEquiv.trans
+    (constantModuleCohomologyToAdditiveEquiv ℚ X n).symm.toEquiv
 
 end AlgebraicGeometry.ComplexPoint
 
@@ -321,6 +332,14 @@ open Point
 variable (X : Over (Spec ↧ℂ))
 
 attribute [local instance] analyticSupportHasDerivedCategory
+
+local instance analyticSupportRatModuleHasDerivedCategory' :
+    HasDerivedCategory (ModuleCat ℚ) := HasDerivedCategory.standard _
+
+local instance analyticSupportRatModuleSheafHasDerivedCategory' :
+    HasDerivedCategory
+      (TopCat.Sheaf (ModuleCat ℚ) (TopCat.of (ComplexPoint X))) :=
+  HasDerivedCategory.standard _
 
 @[simp] lemma forgetSupportEquivUniv_apply (n : ℤ)
     (α : RationalCohomologyWithSupport X

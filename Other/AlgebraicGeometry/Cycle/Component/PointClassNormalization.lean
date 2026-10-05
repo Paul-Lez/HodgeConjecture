@@ -235,13 +235,26 @@ theorem cycleComponentSheafClass_point_normalization
       analyticComponentPointPositiveKernelClass X x d z := by
   rw [cycleComponentSheafClass_eq_forgetSupport,
     cycleComponentSupportedInjectiveClass_point_normalization X x d z hx]
-  dsimp [forgetSupport]
-  rw [forgetSupportToGlobalSectionsHomology_supportedInjective]
-  dsimp [forgetSupport, rationalCohomologyAddEquivAmbientInjectiveHomology,
-    analyticComponentPointPositiveKernelClass]
-  simp [constantFieldInjectiveResolutionAugmentation_eq_ambient,
-    ambientRationalInjectiveAugmentationPlus]
-  rfl
+  let a := (rationalSupportAddEquivSupportedInjectiveHomology X
+    (cycleComponentAnalyticClosedSupport X x) (2 * d)).symm
+    (analyticComponentPointSupportedInjectiveCoclass X x d z)
+  set_option maxHeartbeats 1000000 in
+    apply (rationalCohomologyAddEquivAmbientInjectiveHomology
+      X ((2 * d : ℕ) : ℤ)).injective
+  change (rationalCohomologyAddEquivAmbientInjectiveHomology X ((2 * d : ℕ) : ℤ))
+      (forgetSupport ℚ X (cycleComponentAnalyticClosedSupport X x) (2 * d) a) = _
+  set_option maxHeartbeats 1000000 in
+    nth_rewrite 1 [← rationalCohomologyAddEquivAmbientInjectiveHomologyOfModuleResolution_eq
+      X (2 * d)]
+  calc
+    _ = forgetSupportToGlobalSectionsHomology ℚ X
+        (cycleComponentAnalyticClosedSupport X x) (2 * d) a :=
+      rationalCohomologyAddEquivAmbientInjectiveHomologyOfModuleResolution_forgetSupport
+        X (cycleComponentAnalyticClosedSupport X x) (2 * d) a
+    _ = _ := by
+      rw [forgetSupportToGlobalSectionsHomology_supportedInjective]
+      symm
+      exact AddEquiv.apply_symm_apply _ _
 
 end Point
 

@@ -32,6 +32,15 @@ namespace AlgebraicGeometry.ComplexPoint
 variable (X : Over (Spec ↧ℂ))
   [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
 
+local instance fundamentalClassRatModuleHasDerivedCategory :
+    HasDerivedCategory (ModuleCat ℚ) :=
+  HasDerivedCategory.standard _
+
+local instance fundamentalClassRatModuleSheafHasDerivedCategory :
+    HasDerivedCategory
+      (TopCat.Sheaf (ModuleCat ℚ) (TopCat.of (ComplexPoint X))) :=
+  HasDerivedCategory.standard _
+
 section
 
 variable (x : X.left) {p : ℕ} (hx : Order.coheight x = p)

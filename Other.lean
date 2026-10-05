@@ -16,6 +16,7 @@ limitations under the License.
 module  -- shake: keep-all --deprecated_module: ignore
 
 public import HodgeConjecture
+public import Other.Algebra.FieldToComplex
 public import Other.Algebra.DeRham.Complex
 public import Other.Algebra.Homology.DerivedCategory.ConcentratedOrientation
 public import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExact

@@ -161,7 +161,7 @@ theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
     (hK : K.Acyclic) (hflasque : ∀ i, (K.X i).IsFlasque) :
     (TopCat.Sheaf.globalSectionsComplex X K).Acyclic := by
   intro i
-  let F := TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat X
+  let F := TopCat.Sheaf.globalSections AddCommGrpCat X
   let L := TopCat.Sheaf.globalSectionsComplex X K
   let A : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
     ShortComplex.mk (K.iCycles i) (K.d i (i + 1)) (K.iCycles_d i (i + 1))

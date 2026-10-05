@@ -16,7 +16,6 @@ limitations under the License.
 module  -- shake: keep-all --deprecated_module: ignore
 
 public import HodgeConjecture.Definitions.Algebra.DeRham.Basic
-public import HodgeConjecture.Lemmas.Algebra.FieldToComplex
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 public import HodgeConjecture.Definitions.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.LinearDual
@@ -78,7 +77,6 @@ public import HodgeConjecture.Definitions.AlgebraicTopology.Support.SingularSect
 public import HodgeConjecture.Lemmas.LinearAlgebra.HodgeStructure
 public import HodgeConjecture.Definitions.Topology.Dimension.Basic
 public import HodgeConjecture.Lemmas.Algebra.DeRham.Basic
-public import HodgeConjecture.Lemmas.Algebra.FieldToComplex
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingCoconeShortExactNaturality
 public import HodgeConjecture.Lemmas.Algebra.Homology.DerivedCategory.MappingConeMapNaturality

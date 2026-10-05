@@ -34,7 +34,7 @@ def globalSectionsShiftShortComplex :
     (globalSectionsComplex Y (K⟦s⟧)).sc n ⟶
       (globalSectionsComplex Y K).sc n' :=
   (HomologicalComplex.shortComplexFunctor AddCommGrpCat ℤᵘᵖ n).map
-    ((((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
+    ((((TopCat.Sheaf.globalSections AddCommGrpCat Y).mapHomologicalComplex
       ℤᵘᵖ).commShiftIso s).hom.app K) ≫
     (CochainComplex.shiftShortComplexFunctorIso AddCommGrpCat s n n' (by omega)).hom.app
       (globalSectionsComplex Y K)
@@ -44,13 +44,13 @@ set_option backward.isDefEq.respectTransparency false in
 lemma globalSectionsShiftShortComplex_homologyMap :
     ShortComplex.homologyMap (globalSectionsShiftShortComplex Y K s n n' h) =
     HomologicalComplex.homologyMap
-      ((((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
+      ((((TopCat.Sheaf.globalSections AddCommGrpCat Y).mapHomologicalComplex
         ℤᵘᵖ).commShiftIso s).hom.app K) n ≫
       ((HomologicalComplex.homologyFunctor AddCommGrpCat ℤᵘᵖ 0).shiftIso
         s n n' (by omega)).hom.app (globalSectionsComplex Y K) :=
   (ShortComplex.homologyMap_comp _ _).trans
     (congrArg (fun f => HomologicalComplex.homologyMap
-      ((((TopCat.Sheaf.globalSectionsFunctor AddCommGrpCat Y).mapHomologicalComplex
+      ((((TopCat.Sheaf.globalSections AddCommGrpCat Y).mapHomologicalComplex
         ℤᵘᵖ).commShiftIso s).hom.app K) n ≫ f)
       (CochainComplex.ShiftSequence.shiftIso_hom_app s n n' (by omega)
         (globalSectionsComplex Y K)).symm)

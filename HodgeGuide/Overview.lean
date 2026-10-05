@@ -60,7 +60,7 @@ namespace Guide.Overview.D2
 def hodgeClasses (K : Type) [Field K] [Algebra K ℂ] (X : Over (Spec ↧ℂ)) [IsIntegral X.left]
     [Smooth X.hom] (p : ℕ) : Submodule K (H^(2 * p)(X; K)) :=
   ((hodgePiece X p p (2 * p : ℕ)).restrictScalars K).comap
-    (fieldToDeRhamCohomologyLinear K X (2 * p))
+    (fieldToDeRhamCohomology K X (2 * p))
 ```
 ```lean -show
 end Guide.Overview.D2
