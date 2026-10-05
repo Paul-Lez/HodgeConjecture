@@ -4,14 +4,19 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.Filtration
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.GlobalSections
+public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.Hypercohomology
+public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.KInjectiveHom
 public import Other.Algebra.Homology.HomComplexPostcompNaturalityLemmas
-public import Other.AlgebraicGeometry.Cohomology.SupportHypercohomologyLemmas
 
 /-! # Naturality of the hypercohomology/global-sections comparison -/
 
 @[expose] public noncomputable section
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace
+open scoped TopCat.Sheaf
 
 namespace TopCat.Sheaf
 
@@ -21,14 +26,14 @@ local instance derivedGlobalSectionsHasDerivedCategory :
     HasDerivedCategory (Sheaf AddCommGrpCat Y) :=
   HasDerivedCategory.standard (Sheaf AddCommGrpCat Y)
 
-/-- Let `Y` be a topological space, `K` a K-injective complex of sheaves of abelian groups on `Y`,
-and `n` an integer. This is the additive equivalence `Hom_D(ℤ[0], K[n]) ≃ H^n(Γ(Y, K))`. It
-evaluates morphisms from the constant integer sheaf at the section `1`. -/
+/-- On a K-injective sheaf complex, derived morphisms from the integer
+constant sheaf are computed by global sections, with no further
+replacement complex. -/
 def derivedHomAddEquivGlobalSectionsKInjective
     (K : CochainComplex (Sheaf AddCommGrpCat Y) ℤ) [K.IsKInjective] (n : ℤ) :
     ShiftedHom
       (DerivedCategory.Q.obj (integerConstantSingleComplex Y)) (DerivedCategory.Q.obj K) n ≃+
-    (globalSectionsComplexInt Y K).homology n :=
+    (globalSectionsComplex Y K).homology n :=
   (CochainComplex.kInjectiveDerivedHomAddEquivCohomologyClass _ K n).trans
     ((CochainComplex.HomComplex.homologyAddEquiv _ K n).symm.trans
       (HomologicalComplex.homologyMapIso
@@ -44,19 +49,18 @@ local instance hypercohomologyNaturalitySheafDerivedCategory :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
 
-/-- Let `X` be a scheme over `ℂ`, `K` a K-injective complex of sheaves of abelian groups on its
-analytic space, and `n` an integer. This additive equivalence identifies hypercohomology
-`ℍ^n(X(ℂ); K)` with the degree-`n` cohomology of the complex of global sections `Γ(X(ℂ), K)`. -/
+local instance hypercohomologyNaturalityAddCommGrpDerivedCategory :
+    HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard AddCommGrpCat
+
+/-- Hypercohomology of a bounded-below termwise-injective complex is the cohomology of its
+complex of global sections. -/
 def hypercohomologyAddEquivGlobalSectionsKInjective
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) [K.IsKInjective] (n : ℤ) :
-    -- `ℍ^n(X(ℂ); K) ≅ H^n(Γ(X(ℂ), K))`.
-    ℍ^n(X; K) ≃+
-      (TopCat.Sheaf.globalSectionsComplexInt (TopCat.of (ComplexPoint X)) K).homology n :=
-  (hypercohomologyAddEquivDerived X K n).trans
-    ((isoHomCongrAddEquiv
-      (DerivedCategory.Q.mapIso (constantIntegerSheafComplexIntIsoSingle X))
-      (Iso.refl _)).trans
-      (TopCat.Sheaf.derivedHomAddEquivGlobalSectionsKInjective
-        (TopCat.of (ComplexPoint X)) K n))
+    (K : CochainComplex.Plus (AnalyticAdditiveSheaf X))
+    [∀ i, Injective (K.obj.X i)] (n : ℤ) :
+    ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj K) ≃+
+      (TopCat.Sheaf.globalSectionsComplex
+        (TopCat.of (ComplexPoint X)) K.obj).homology n :=
+  (TopCat.Sheaf.hypercohomologyIsoOfInjective AddCommGrpCat
+    (TopCat.of (ComplexPoint X)) K n).addCommGroupIsoToAddEquiv
 
 end AlgebraicGeometry.ComplexPoint

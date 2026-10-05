@@ -29,6 +29,7 @@ canonical comparison equivalence in every cohomological degree.
 @[expose] public noncomputable section
 
 open CategoryTheory TopologicalSpace
+open scoped TopCat.Sheaf
 
 namespace AlgebraicGeometry.ComplexPoint
 
@@ -36,10 +37,27 @@ open Point
 
 variable (X : Over (Spec ↧ℂ))
 
+local instance singularComparisonHasDerivedCategory :
+    HasDerivedCategory (AnalyticAdditiveSheaf X) :=
+  HasDerivedCategory.standard _
+
+local instance singularComparisonAddCommGrpHasDerivedCategory :
+    HasDerivedCategory AddCommGrpCat :=
+  HasDerivedCategory.standard _
+
+local instance singularComparisonRatModuleHasDerivedCategory :
+    HasDerivedCategory (ModuleCat ℚ) :=
+  HasDerivedCategory.standard _
+
+local instance singularComparisonRatModuleSheafHasDerivedCategory :
+    HasDerivedCategory
+      (TopCat.Sheaf (ModuleCat ℚ) (TopCat.of (ComplexPoint X))) :=
+  HasDerivedCategory.standard _
+
 /-- The rational constant-sheaf comparison with the integer-indexed singular-cochain
 resolution. -/
 def rationalToSingularCochainComplexInt :
-    constantFieldSheafComplexInt ℚ X ⟶
+    (constantFieldSheafComplexIntPlus ℚ X).obj ⟶
       singularCochainSheafComplexInt X ℚ :=
   constantsToSingularCochainComplexInt X ℚ
 
@@ -50,46 +68,37 @@ lemma rationalToSingularCochainComplexInt_quasiIso
     QuasiIso (rationalToSingularCochainComplexInt X) := by
   exact constantsToSingularCochainComplexInt_quasiIso X ℚ
 
-/-- Hypercohomology of the integer-indexed rational singular-cochain sheaf complex. -/
-abbrev RationalSingularCochainHypercohomology (n : ℤ) : Type 1 :=
-  Hypercohomology X (singularCochainSheafComplexInt X ℚ) n
-
-/-- Hypercohomology of the rational constant sheaf complex is canonically additively equivalent
-to the hypercohomology of its singular-cochain resolution. -/
-def rationalHypercohomologySingularCochainAddEquiv
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
-    Hypercohomology X (constantFieldSheafComplexInt ℚ X) n ≃+
-      RationalSingularCochainHypercohomology X n where
-  toEquiv := Localization.SmallShiftedHom.postcompEquiv
-    (rationalToSingularCochainComplexInt X)
-    (rationalToSingularCochainComplexInt_quasiIso X)
-  map_add' α β :=
-    (hypercohomologyMap X
-      (rationalToSingularCochainComplexInt X) n).map_add α β
-
-@[simp]
-lemma rationalHypercohomologySingularCochainAddEquiv_apply
-    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
-    (α : Hypercohomology X (constantFieldSheafComplexInt ℚ X) n) :
-    rationalHypercohomologySingularCochainAddEquiv X n α =
-      hypercohomologyMap X
-        (rationalToSingularCochainComplexInt X) n α :=
-  rfl
+/-- The rational singular-cochain resolution as a bounded-below complex. -/
+abbrev rationalSingularCochainComplexIntPlus :
+    CochainComplex.Plus (AnalyticAdditiveSheaf X) :=
+  ⟨singularCochainSheafComplexInt X ℚ, ⟨0, inferInstance⟩⟩
 
 /-- Rational constant-sheaf cohomology is canonically additively equivalent to the
 hypercohomology of its singular-cochain resolution. -/
 def rationalCohomologySingularCochainAddEquiv
-    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) :
-    H^n(X; ℚ) ≃+ RationalSingularCochainHypercohomology X n :=
-  (hypercohomologyAddEquivConstantCohomology ℚ X n).symm.trans
-    (rationalHypercohomologySingularCochainAddEquiv X n)
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ) :
+    H^n(X; ℚ) ≃+
+      ↥((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).obj
+        (rationalSingularCochainComplexIntPlus X)) :=
+  (constantModuleCohomologyToAdditiveEquiv ℚ X n).trans <|
+    letI f : constantFieldSheafComplexIntPlus ℚ X ⟶
+        rationalSingularCochainComplexIntPlus X :=
+      ⟨rationalToSingularCochainComplexInt X⟩
+    letI : QuasiIso f.hom := rationalToSingularCochainComplexInt_quasiIso X
+    (asIso
+      ((ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map f)).addCommGroupIsoToAddEquiv
 
 @[simp]
 lemma rationalCohomologySingularCochainAddEquiv_apply
-    [IsIntegral X.left] [Smooth X.hom] (n : ℕ) (α : H^n(X; ℚ)) :
+    [IsIntegral X.left] [Smooth X.hom] (n : ℤ)
+    (α : H^n(X; ℚ)) :
     rationalCohomologySingularCochainAddEquiv X n α =
-      hypercohomologyMap X (rationalToSingularCochainComplexInt X) n
-        ((hypercohomologyAddEquivConstantCohomology ℚ X n).symm α) :=
+      (ℍ[AddCommGrpCat]^n(TopCat.of (ComplexPoint X))).map
+        (⟨rationalToSingularCochainComplexInt X⟩ :
+          constantFieldSheafComplexIntPlus ℚ X ⟶
+            rationalSingularCochainComplexIntPlus X)
+        (constantModuleCohomologyToAdditiveEquiv ℚ X n α) := by
+  change ((rationalCohomologySingularCochainAddEquiv X n).toAddMonoidHom α) = _
   rfl
 
 end AlgebraicGeometry.ComplexPoint

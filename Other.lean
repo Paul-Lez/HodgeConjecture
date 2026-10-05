@@ -16,6 +16,7 @@ limitations under the License.
 module  -- shake: keep-all --deprecated_module: ignore
 
 public import HodgeConjecture
+public import Other.Algebra.FieldToComplex
 public import Other.Algebra.DeRham.Complex
 public import Other.Algebra.Homology.DerivedCategory.ConcentratedOrientation
 public import Other.Algebra.Homology.DerivedCategory.MappingCoconeShortExact
@@ -30,6 +31,7 @@ public import Other.AlgebraicGeometry.Cohomology.GlobalSections
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyNaturality
 public import Other.AlgebraicGeometry.Cohomology.HypercohomologyShift
 public import Other.AlgebraicGeometry.Cohomology.RationalDegreeZero
+public import Other.AlgebraicGeometry.Cohomology.RationalDegreeZeroProperties
 public import Other.AlgebraicGeometry.Cohomology.SingularCochainVanishing
 public import Other.AlgebraicGeometry.Cohomology.SingularComparison
 public import Other.AlgebraicGeometry.Cohomology.SupportConeForget
@@ -100,7 +102,6 @@ public import Other.AlgebraicGeometry.Cycle.SmoothPair.CoclassSection
 public import Other.AlgebraicGeometry.Cycle.SmoothPair.PointCoclassSection
 public import Other.AlgebraicGeometry.Cycle.SmoothPair.PointPurity
 public import Other.AlgebraicGeometry.Cycle.Support
-public import Other.AlgebraicGeometry.Hodge.CodimensionZero
 public import Other.AlgebraicGeometry.Hodge.CodimensionZeroComparison
 public import Other.AlgebraicGeometry.Hodge.CodimensionZeroNonvanishing
 public import Other.AlgebraicGeometry.Hodge.DeRhamAugmentation

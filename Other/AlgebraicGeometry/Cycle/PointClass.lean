@@ -87,7 +87,7 @@ forgetting support. This equality fixes its scale and sign. -/
 lemma pointCycleClassOnCycles_single_eq_forgetSupport_pointCoclass
     (x : V.scheme) (hx : coheight x = d) (n : ℤ) :
     pointCycleClassOnCycles V d (codimensionCycleSubgroup.single x hx n) =
-      n • coneForgetSupport V.over
+      n • rationalForgetSupport V.over
         (cycleComponentSupport V.over x) (2 * d)
         ((auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension
           V d x hx).supportedComparison.symm
@@ -142,6 +142,7 @@ def rationalPointCycleClassOnCycles :
     rationalPointCycleClassOnCycles V d (q ⊗ₜ[ℤ] c) = q • pointCycleClassOnCycles V d c :=
   rfl
 
+set_option maxHeartbeats 2000000 in
 /-- Exact evaluation of a point with arbitrary rational multiplicity. -/
 @[simp] lemma rationalPointCycleClassOnCycles_tmul_single
     (q : ℚ) (x : V.scheme) (hx : coheight x = d) :

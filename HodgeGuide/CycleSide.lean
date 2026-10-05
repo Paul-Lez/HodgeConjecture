@@ -18,6 +18,7 @@ tag := "cycles"
 
 ```lean -show
 open AlgebraicGeometry CategoryTheory ComplexPoint Order TopologicalSpace
+open scoped TopCat.Sheaf
 noncomputable section
 universe u
 variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjective X.hom]
@@ -26,6 +27,10 @@ variable (X : Over (Spec ↧ℂ)) [IsIntegral X.left] [Smooth X.hom] [IsProjecti
 local instance analyticSupportHasDerivedCategory (X : Over (Spec ↧ℂ)) :
     HasDerivedCategory (AnalyticAdditiveSheaf X) :=
   HasDerivedCategory.standard (AnalyticAdditiveSheaf X)
+
+local instance guideCyclesAddCommGrpHasDerivedCategory :
+    HasDerivedCategory AddCommGrpCat :=
+  HasDerivedCategory.standard AddCommGrpCat
 ```
 
 # Cycles are indexed by generic points
@@ -120,7 +125,7 @@ example : @Guide.Cycles.D7.cycleComponentSupport = @AlgebraicGeometry.cycleCompo
 ```
 
 ```lean
-#check isClosed_cycleComponentSupport
+#check AlgebraicGeometry.isClosed_cycleComponentSupport
 ```
 
 Only the ambient variety is assumed smooth. A subvariety may be singular, and the construction of
@@ -128,74 +133,20 @@ its class in the next section handles that case from the start.
 
 # Cohomology with support
 
-Let $`Z\subseteq X(\mathbb C)` be closed, with open complement $`U`. Mathlib defines sheaf
-cohomology as an `Ext` group: $`H^n(X;F)=\operatorname{Ext}^n(\mathbb Z_X,F)`, and the
-cohomology of an open $`U` as $`\operatorname{Ext}^n(\mathbb Z[U],F)`, where $`\mathbb Z[U]` is
-the free abelian sheaf on the presheaf represented by $`U`. The formalization follows this
-pattern. For opens $`W\le V`, the sheaf $`\mathbb Z[V,W]` is the cokernel of
-$`\mathbb Z[W]\to\mathbb Z[V]`, and the cohomology of the pair $`(V,W)` is
-$`\operatorname{Ext}^n(\mathbb Z[V,W],F)`. Cohomology with support in $`Z` is the case of the pair
-$`(X,U)`. The short exact sequence $`0\to\mathbb Z[U]\to\mathbb Z[X]\to\mathbb Z[X,U]\to0`
-gives the long exact sequence
+Let $`Z\subseteq X(\mathbb C)` be closed, with open complement $`j:U\hookrightarrow X(\mathbb C)`.
+Cohomology with support in $`Z` is exposed by the public supported-cohomology API. Its
+implementation uses injective resolutions of the constant sheaf and the canonical comparison with
+hypercohomology. It sits in the distinguished triangle
 
-$$`\cdots\to H^n_Z(X;F)\to H^n(X;F)\to H^n(U;F)\to H^{n+1}_Z(X;F)\to\cdots`
+$$`R\Gamma_Z(X,\mathbb Q_X)\longrightarrow R\Gamma(X,\mathbb Q_X)
+  \longrightarrow R\Gamma(U,\mathbb Q_U)\xrightarrow{+1}.`
 
-as the contravariant `Ext` sequence, {name}`CategoryTheory.Sheaf.relH.sequence_exact`. Forgetting
-support is its first map: precomposition with $`\mathbb Z[X]\to\mathbb Z[X,U]`, followed by the
-identification of $`\mathbb Z[X]` with the constant sheaf $`\mathbb Z_X`. The group has its own
-notation, `H_[Z]^n(X; K)`.
+The supported group is written directly as `H_[Z]^n(X; ℚ)`, and {name}`forgetSupport` is the
+canonical additive map to ordinary hypercohomology:
 
-```lean -show
-universe v w
-namespace Guide.Cycles.D8
-```
 ```lean
-abbrev pairSheaf {C : Type u} [Category.{v} C] {J : GrothendieckTopology C}
-    [HasSheafify J AddCommGrpCat.{v}] {U V : C} (f : U ⟶ V) : Sheaf J AddCommGrpCat.{v} :=
-  Limits.cokernel ((Sheaf.freeAbelianSheaf J).map f)
-```
-```lean -show
-end Guide.Cycles.D8
-example : @Guide.Cycles.D8.pairSheaf = @CategoryTheory.Sheaf.pairSheaf := rfl
-```
-```lean -show
-namespace Guide.Cycles.D9
-```
-```lean
-abbrev relH {C : Type u} [Category.{v} C] {J : GrothendieckTopology C}
-    [HasSheafify J AddCommGrpCat.{v}] [HasExt.{w} (Sheaf J AddCommGrpCat.{v})]
-    (F : Sheaf J AddCommGrpCat.{v}) (n : ℕ) {U V : C} (f : U ⟶ V) : Type w :=
-  Abelian.Ext (Sheaf.pairSheaf (J := J) f) F n
-```
-```lean -show
-end Guide.Cycles.D9
-example : @Guide.Cycles.D9.relH = @CategoryTheory.Sheaf.relH := rfl
-```
-```lean -show
-namespace Guide.Cycles.D10
-```
-```lean
-abbrev supportH (X : TopCat.{u})
-    [HasExt.{w} (Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u})] (Z : Closeds X)
-    (F : Sheaf (Opens.grothendieckTopology X) AddCommGrpCat.{u}) (n : ℕ) : Type w :=
-  Sheaf.relH F n (homOfLE (le_top : Z.compl ≤ ⊤))
-```
-```lean -show
-end Guide.Cycles.D10
-example : @Guide.Cycles.D10.supportH = @TopCat.Sheaf.supportH := rfl
-```
-```lean -show
-namespace Guide.Cycles.D11
-```
-```lean
-def forgetSupport (K : Type) [Field K] (X : Over (Spec ↧ℂ)) (Z : Closeds (ComplexPoint X))
-    (n : ℕ) : H_[Z]^n(X; K) →+ H^n(X; K) :=
-  (Sheaf.H'.addEquivTerminal Limits.isTerminalTop _ n).toAddMonoidHom.comp
-    (Sheaf.relH.forget _ (homOfLE (le_top : Z.compl ≤ ⊤)) n)
-```
-```lean -show
-end Guide.Cycles.D11
-example : @Guide.Cycles.D11.forgetSupport = @AlgebraicGeometry.ComplexPoint.forgetSupport := rfl
+#check AlgebraicGeometry.ComplexPoint.forgetSupport
+#check AlgebraicGeometry.ComplexPoint.forgetSupport_injective_of_eq_top
 ```
 
 For the triangle and the exact sequence of a pair see Goresky,

@@ -91,16 +91,19 @@ instance rationalSingularAugmentation_quasiIso : QuasiIso (rationalSingularAugme
   have h := HomologicalComplex.quasiIso_extendMap_iff
     (constantsToSingularCochainSheafComplex ℚ (TopCat.of (ComplexPoint X)))
     ComplexShape.embeddingUpNat
-  let : QuasiIso (HomologicalComplex.extendMap
+  have hExtend : QuasiIso (HomologicalComplex.extendMap
       (constantsToSingularCochainSheafComplex ℚ (TopCat.of (ComplexPoint X)))
       ComplexShape.embeddingUpNat) :=
     h.mpr (constantsToSingularCochainSheafComplex_quasiIso_of_contractibleOpenBasis ℚ
       (exists_contractibleOpen_le X))
-  let : QuasiIso ((constantFieldSheafComplexIntIsoSingle ℚ X).inv) := quasiIso_of_isIso _
-  exact quasiIso_comp ((constantFieldSheafComplexIntIsoSingle ℚ X).inv)
+  have hSingle : QuasiIso ((constantFieldSheafComplexIntIsoSingle ℚ X).inv) :=
+    quasiIso_of_isIso _
+  exact @quasiIso_comp _ _ _ _ _ _ _ _
+    ((constantFieldSheafComplexIntIsoSingle ℚ X).inv)
     (HomologicalComplex.extendMap
       (constantsToSingularCochainSheafComplex ℚ (TopCat.of (ComplexPoint X)))
       ComplexShape.embeddingUpNat)
+    _ _ _ hSingle hExtend
 
 /-- For the supported injective resolution, the degree-`n` cohomology sheaf is canonically the
 local relative singular cohomology sheaf `𝓗_[S]^n(X(ℂ);ℚ)`. -/

@@ -27,6 +27,80 @@ cohomology classes, and it is the homology map of a sign-normalized three-term c
 -/
 
 @[expose] public noncomputable section
+
+open CategoryTheory CategoryTheory.Limits
+
+namespace CategoryTheory.Functor
+
+universe u₁ u₂ v₁ v₂
+
+variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
+  [HasShift C ℤ] [HasShift D ℤ] (F : C ⥤ D) [F.CommShift ℤ]
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- A functor commuting with shifts carries the canonical unshift of a degree-one morphism to
+the canonical unshift of its image. -/
+lemma map_rightUnshift {X Y : C} (f : X ⟶ Y⟦(1 : ℤ)⟧) :
+    F.map (f⟦(-1 : ℤ)⟧' ≫
+        (shiftFunctorCompIsoId C (1 : ℤ) (-1) (by simp)).hom.app Y) =
+      (F.commShiftIso (-1)).hom.app X ≫
+        ((ShiftedHom.map f F)⟦(-1 : ℤ)⟧' ≫
+          (shiftFunctorCompIsoId D (1 : ℤ) (-1) (by simp)).hom.app (F.obj Y)) := by
+  rw [Functor.map_comp, Functor.map_shiftFunctorCompIsoId_hom_app,
+    ← Category.assoc, Functor.commShiftIso_hom_naturality]
+  simp only [ShiftedHom.map, Category.assoc]
+  rw [Functor.map_comp, Category.assoc]
+
+end CategoryTheory.Functor
+
+namespace HomologicalComplex.HomologyFunctor
+
+universe u₁ u₂ v₁ v₂
+
+variable {C : Type u₁} [Category.{v₁} C] [HasShift C ℤ]
+  {D : Type u₂} [Category.{v₂} D] [Abelian D]
+  (F : C ⥤ HomologicalComplex D ℤᵘᵖ) [F.CommShift ℤ]
+
+set_option backward.defeqAttrib.useBackward true in
+set_option backward.isDefEq.respectTransparency false in
+/-- The map on homology induced by the canonical unshift of a degree-one morphism. -/
+lemma map_rightUnshift {X Y : C} (f : X ⟶ Y⟦(1 : ℤ)⟧) (n : ℤ) :
+    letI e₁ : (F.obj ((shiftFunctor C (-1)).obj X)).homology n ≅
+        ((shiftFunctor _ (-1)).obj (F.obj X)).homology n :=
+      HomologicalComplex.homologyMapIso ((F.commShiftIso (-1)).app X) n
+    letI e₂ : ((shiftFunctor _ (-1)).obj (F.obj X)).homology n ≅
+        (F.obj X).homology (n - 1) := by
+      simpa only [Functor.comp_obj, CochainComplex.homologyFunctor_shift,
+        HomologicalComplex.homologyFunctor_obj] using
+        ((HomologicalComplex.homologyFunctor D ℤᵘᵖ 0).shiftIso
+          (-1) n (n - 1) (by omega)).app (F.obj X)
+    HomologicalComplex.homologyMap
+        (F.map (f⟦(-1 : ℤ)⟧' ≫
+          (shiftFunctorCompIsoId _ (1 : ℤ) (-1) (by simp)).hom.app Y)) n =
+      (e₁ ≪≫ e₂).hom ≫
+        (HomologicalComplex.homologyFunctor D ℤᵘᵖ 0).shiftMap
+          (ShiftedHom.map f F) (n - 1) n (by omega) := by
+  rw [CategoryTheory.Functor.map_rightUnshift,
+    HomologicalComplex.homologyMap_comp, HomologicalComplex.homologyMap_comp, Iso.trans_hom]
+  dsimp only [HomologicalComplex.homologyMapIso]
+  simp only [Category.assoc]
+  change HomologicalComplex.homologyMap
+      ((F.commShiftIso (-1)).hom.app X) n ≫ _ =
+    HomologicalComplex.homologyMap
+      ((F.commShiftIso (-1)).hom.app X) n ≫ _
+  apply (cancel_epi (HomologicalComplex.homologyMap
+    ((F.commShiftIso (-1)).hom.app X) n)).2
+  rw [← HomologicalComplex.homologyMap_comp]
+  exact ((HomologicalComplex.homologyFunctor D ℤᵘᵖ 0
+    ).shiftIso_hom_app_comp_shiftMap_of_add_eq_zero
+      (ShiftedHom.map f F) (-1) (by omega) (n - 1) n (by omega)).symm
+
+end HomologicalComplex.HomologyFunctor
+
+end
+
+@[expose] public noncomputable section
 open CategoryTheory CategoryTheory.Limits
 namespace CategoryTheory.ShortComplex
 variable {C : Type*} [Category* C] [Abelian C]
@@ -49,6 +123,25 @@ namespace CochainComplex.HomComplex
 variable {C : Type*} [Category* C] [Abelian C]
   (A K : CochainComplex C ℤ) (s n n' : ℤ) (h : n + s = n')
 
+namespace Cocycle
+
+/-- A degree-zero cocycle coming from a chain map represents that chain map as a degree-zero
+shifted morphism. -/
+lemma equivHomShift_symm_ofHom {D : Type*} [Category* D] [Preadditive D]
+    {L M : CochainComplex D ℤ} (f : L ⟶ M) :
+    equivHomShift.symm (ofHom f) = ShiftedHom.mk₀ 0 rfl f := by
+  ext p
+  simp only [equivHomShift_symm_apply, homOf_f, rightShift_coe,
+    Cochain.rightShift_v _ 0 0 (zero_add 0) p p (add_zero p) p (add_zero p),
+    ofHom_coe, Cochain.ofHom_v, ShiftedHom.mk₀, HomologicalComplex.comp_f]
+  simp [CategoryTheory.shiftFunctorZero',
+    CochainComplex.shiftFunctorZero_inv_app_f,
+    CochainComplex.shiftFunctorObjXIso,
+    HomologicalComplex.XIsoOfEq_hom_naturality]
+  exact HomologicalComplex.XIsoOfEq_inv_naturality f (add_zero p)
+
+end Cocycle
+
 /-- Unshift the target on cochains, with its grading displayed. -/
 def rightUnshiftCochain : Cochain A (K⟦s⟧) n →+ Cochain A K n' where
   toFun z := z.rightUnshift n' h
@@ -61,7 +154,7 @@ def rightUnshiftCocycle : Cocycle A (K⟦s⟧) n →+ Cocycle A K n' where
   map_zero' := by ext; simp [Cocycle.rightUnshift]
   map_add' _ _ := by ext; simp [Cocycle.rightUnshift, Cochain.rightUnshift_add]
 
-/-- Target unshifting descends through actual coboundaries. The factor
+/-- Target unshifting descends through coboundaries. The factor
 `(-1)^s` is included in the witnessing primitive. -/
 def rightUnshiftClass : CohomologyClass A (K⟦s⟧) n →+ CohomologyClass A K n' :=
   CohomologyClass.descAddMonoidHom
@@ -83,7 +176,7 @@ lemma rightUnshiftClass_mk (z : Cocycle A (K⟦s⟧) n) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- The actual three-term map for unshifting a target. The outer components
+/-- The three-term map for unshifting a target. The outer components
 have the standard `(-1)^s` factors; its middle component has no sign. -/
 def rightUnshiftShortComplex :
     (HomComplex A (K⟦s⟧)).sc n ⟶ (HomComplex A K).sc n' where
@@ -138,7 +231,7 @@ lemma homologyAddEquiv_rightUnshift (x : (HomComplex A (K⟦s⟧)).homology n) :
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
-/-- Unshifting cocycles corresponds to the actual shift-composition
+/-- Unshifting cocycles corresponds to the shift-composition
 isomorphism on their representing chain maps. -/
 lemma equivHomShift_symm_rightUnshift (z : Cocycle A (K⟦s⟧) n) :
     Cocycle.equivHomShift.symm (z.rightUnshift n' h) =

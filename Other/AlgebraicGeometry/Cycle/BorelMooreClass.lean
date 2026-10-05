@@ -129,7 +129,7 @@ def auxiliarySupportedClass
 def auxiliaryOrdinaryClass
     (D : AuxiliaryRationalCycleComponentBorelMooreComparisonData V d p x hx) :
     H^(2 * p)(V.over; ℚ) :=
-  coneForgetSupport V.over
+  rationalForgetSupport V.over
     (cycleComponentSupport V.over x) (2 * p)
     D.auxiliarySupportedClass
 
@@ -276,7 +276,7 @@ def constantSheafSupportedFundamentalClass
 def ordinaryFundamentalClass
     (D : ComplexOrientedRationalCycleComponentClassData V d p x hx) :
     H^(2 * p)(V.over; ℚ) :=
-  coneForgetSupport V.over
+  rationalForgetSupport V.over
     (cycleComponentSupport V.over x) (2 * p)
       D.constantSheafSupportedFundamentalClass
 
@@ -653,7 +653,7 @@ lemma maximalCodimensionComponentClass_eq_forgetSupport_pointCoclass
     [SmoothOfRelativeDimension d V.structureMap]
     (x : V.scheme) (hx : coheight x = d) :
     maximalCodimensionComponentClass V d x hx =
-      coneForgetSupport V.over
+      rationalForgetSupport V.over
         (cycleComponentSupport V.over x)
         (2 * d)
         ((auxiliaryRationalCycleComponentBorelMooreComparisonDataOfCoheightEqDimension V d x hx).supportedComparison.symm

@@ -51,17 +51,4 @@ local instance bettiSupportHypercohomologyComparisonHasDerivedCategory :
 local instance bettiSupportHypercohomologyAddCommGrpHasDerivedCategory :
     HasDerivedCategory AddCommGrpCat := HasDerivedCategory.standard AddCommGrpCat
 
-/-- Let `X` be a scheme over `ℂ`, `K` an integer-indexed complex of sheaves of abelian groups on its
-analytic space, and `n` an integer. This additive equivalence identifies hypercohomology
-`ℍ^n(X(ℂ); K)` with `Hom_D(ℤ[0], K[n])`, morphisms in the derived category of sheaves on `X(ℂ)`. -/
-def hypercohomologyAddEquivDerived
-    (K : CochainComplex (AnalyticAdditiveSheaf X) ℤ) (n : ℤ) :
-    ℍ^n(X; K) ≃+
-      ShiftedHom
-        (DerivedCategory.Q.obj (constantIntegerSheafComplexInt X))
-        (DerivedCategory.Q.obj K) n where
-  toEquiv := Localization.SmallShiftedHom.equiv
-    (analyticQuasiIsomorphisms X) DerivedCategory.Q
-  map_add' := hypercohomologyEquiv_add X K n
-
 end AlgebraicGeometry.ComplexPoint

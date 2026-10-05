@@ -15,15 +15,16 @@ limitations under the License.
 -/
 module
 
-import HodgeConjecture.Mathlib.Algebra.Homology.Notation
-
-public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.FlasqueBoundedBelow
+public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.GlobalSections
+public import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+public import Mathlib.Algebra.Homology.Embedding.CochainComplex
+public import Mathlib.Topology.Sheaves.Flasque
 
 /-!
 # Global sections of bounded-below exact flasque complexes
 
 Lemmas about the definitions in
-`HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.FlasqueBoundedBelow`.
+`HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.GlobalSections`.
 -/
 
 /-! ### Constructions used only in proofs -/
@@ -158,10 +159,10 @@ lemma cycles_isFlasque (N : ℤ) [K.IsStrictlyGE N]
 /-- Global sections preserve exactness of an acyclic bounded-below complex of flasque sheaves. -/
 theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
     (hK : K.Acyclic) (hflasque : ∀ i, (K.X i).IsFlasque) :
-    (globalSectionsComplex K).Acyclic := by
+    (TopCat.Sheaf.globalSectionsComplex X K).Acyclic := by
   intro i
-  let F := globalSectionsFunctor X
-  let L := globalSectionsComplex K
+  let F := TopCat.Sheaf.globalSections AddCommGrpCat X
+  let L := TopCat.Sheaf.globalSectionsComplex X K
   let A : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X) :=
     ShortComplex.mk (K.iCycles i) (K.d i (i + 1)) (K.iCycles_d i (i + 1))
   have hA : A.Exact ∧ Mono A.f := by
