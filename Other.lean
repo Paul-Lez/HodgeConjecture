@@ -23,6 +23,7 @@ public import Other.Algebra.Homology.DerivedCategory.MappingConeConnectingNatura
 public import Other.Algebra.Homology.HomComplexPostcompNaturality
 public import Other.Algebra.Homology.HomComplexShiftNaturality
 public import Other.Algebra.Homology.LinearDual
+public import Other.AlgebraicGeometry.CMAbelianVarieties
 public import Other.AlgebraicGeometry.ClosedImmersion.HolomorphicCharts
 public import Other.AlgebraicGeometry.ClosedImmersion.NormalTransitionDerivative
 public import Other.AlgebraicGeometry.ClosedImmersion.PointNormalCoordinates
