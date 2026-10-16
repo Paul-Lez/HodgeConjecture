@@ -347,8 +347,7 @@ lemma span_maximalCodimensionSupportedGenerator_eq_top
     (@TopCat.of V.analyticPoint Point.analyticTopology) Z (2 * d))
   let e := LinearEquiv.cast (R := ℚ) (M := F)
     (maximalCodimensionCycleComponentSupport_eq_singleton V d x hx).symm
-  change Submodule.span ℚ {e
-    (analyticPointLocalCoclass V.over d y)} = ⊤
+  change Submodule.span ℚ {(e (analyticPointLocalCoclass V.over d y))} = ⊤
   rw [Submodule.span_singleton_eq_top_iff]
   intro w
   obtain ⟨a, ha⟩ :=

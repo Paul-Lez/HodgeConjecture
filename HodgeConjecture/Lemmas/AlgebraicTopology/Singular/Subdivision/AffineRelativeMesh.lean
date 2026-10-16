@@ -15,8 +15,12 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.AffineMesh
 public import Mathlib.Analysis.Normed.Module.Basic
+public import Mathlib.LinearAlgebra.AffineSpace.Centroid
+public import Mathlib.Analysis.Convex.Hull
 
 import Mathlib.Analysis.Normed.Module.Convex
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.Lebesgue
@@ -40,6 +44,8 @@ affine self-maps used by iterated singular subdivision.
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits PartialOrder Set Simplicial
+
+open Convexity
 
 namespace AlgebraicTopology.Singular
 
@@ -193,8 +199,8 @@ public theorem dist_affineParentFaceCentroid_le
 /-- The affine combination of a family in a real normed vector space. -/
 public noncomputable def normedAffineCombination
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    {I : Type*} [Fintype I] (p : I → E) (w : stdSimplex ℝ I) : E :=
-  ∑ i, w i • p i
+    {I : Type*} [Fintype I] (p : I → E) (w : StdSimplex ℝ I) : E :=
+  ∑ i, w.weights i • p i
 
 /-- Evaluating an affine parent on a face barycenter gives the centroid of the corresponding
 parent vertices. -/
@@ -233,14 +239,14 @@ public theorem normedAffineCombination_affineFlagContinuousMap
     (n k : ℕ) (p : Fin (n + 1) → E)
     (F : (SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)).obj
       (Opposite.op (SimplexCategory.mk k)))
-    (w : stdSimplex ℝ (Fin (k + 1))) :
+    (w : StdSimplex ℝ (Fin (k + 1))) :
     normedAffineCombination p (affineFlagContinuousMap n k F w) =
       normedAffineCombination
         (fun j ↦ affineParentFaceCentroid p (F.obj j)) w := by
   classical
   unfold normedAffineCombination affineFlagContinuousMap
-  change (∑ i, (∑ j, w j * nonemptyFiniteChainBarycenter (F.obj j) i) • p i) =
-    ∑ j, w j • affineParentFaceCentroid p (F.obj j)
+  change (∑ i, (∑ j, w.weights j * (nonemptyFiniteChainBarycenter (F.obj j)).weights i) • p i) =
+    ∑ j, w.weights j • affineParentFaceCentroid p (F.obj j)
   simp_rw [← normedAffineCombination_nonemptyFiniteChainBarycenter p (F.obj _)]
   unfold normedAffineCombination
   simp only [Finset.sum_smul, Finset.smul_sum, mul_smul]
@@ -278,15 +284,15 @@ public theorem normedAffineCombination_affineFlag_mem_convexHull_vertices
     (n k : ℕ) (p : Fin (n + 1) → E)
     (F : (SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)).obj
       (Opposite.op (SimplexCategory.mk k)))
-    (w : stdSimplex ℝ (Fin (k + 1))) :
+    (w : StdSimplex ℝ (Fin (k + 1))) :
     normedAffineCombination p (affineFlagContinuousMap n k F w) ∈
       convexHull ℝ (affineParentFlagVertexSet n k p F) := by
   rw [normedAffineCombination_affineFlagContinuousMap]
   unfold normedAffineCombination
   have hmem := (convex_convexHull ℝ (affineParentFlagVertexSet n k p F)).sum_mem
-    (t := Finset.univ) (w := fun j ↦ w j)
+    (t := Finset.univ) (w := fun j ↦ w.weights j)
     (z := fun j ↦ affineParentFaceCentroid p (F.obj j))
-    (fun j _ ↦ w.2.1 j) w.2.2
+    (fun j _ ↦ w.weights_nonneg j) w.total_of_fintype
     (fun j _ ↦ subset_convexHull ℝ
       (affineParentFlagVertexSet n k p F) ⟨j, rfl⟩)
   simpa only [smul_eq_mul] using hmem
@@ -318,19 +324,19 @@ public theorem diam_range_normedAffineCombination_affineFlag_le
 @[simp]
 public theorem stdSimplexAffineCombination_vertex
     {X Y : Type*} [Fintype X] [Fintype Y] [DecidableEq X]
-    (p : X → stdSimplex ℝ Y) (i : X) :
-    stdSimplexAffineCombination p (stdSimplex.vertex i) = p i := by
+    (p : X → StdSimplex ℝ Y) (i : X) :
+    stdSimplexAffineCombination p (StdSimplex.single i) = p i := by
   classical
   ext y
-  simp [stdSimplexAffineCombination_apply, Pi.single_apply]
+  simp [stdSimplexAffineCombination_apply, Finsupp.single_apply]
 
 /-- Coercing a standard-simplex affine combination to its ambient vector space gives the
 corresponding normed-space affine combination. -/
 public theorem coe_stdSimplexAffineCombination_eq_normedAffineCombination
     {X Y : Type*} [Fintype X] [Fintype Y]
-    (p : X → stdSimplex ℝ Y) (w : stdSimplex ℝ X) :
-    (stdSimplexAffineCombination p w : Y → ℝ) =
-      normedAffineCombination (fun i ↦ (p i : Y → ℝ)) w := by
+    (p : X → StdSimplex ℝ Y) (w : StdSimplex ℝ X) :
+    ((stdSimplexAffineCombination p w).weights : Y → ℝ) =
+      normedAffineCombination (fun i ↦ ((p i).weights : Y → ℝ)) w := by
   ext y
   simp only [stdSimplexAffineCombination_apply, normedAffineCombination,
     Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
@@ -338,14 +344,14 @@ public theorem coe_stdSimplexAffineCombination_eq_normedAffineCombination
 /-- The affine map determined by vertices in a standard simplex. -/
 public noncomputable def affineParentContinuousMap
     {X Y : Type*} [Fintype X] [Fintype Y]
-    (p : X → stdSimplex ℝ Y) :
-    C(stdSimplex ℝ X, stdSimplex ℝ Y) :=
+    (p : X → StdSimplex ℝ Y) :
+    C(StdSimplex ℝ X, StdSimplex ℝ Y) :=
   ⟨stdSimplexAffineCombination p, continuous_stdSimplexAffineCombination p⟩
 
 /-- Subdividing an arbitrary affine parent simplex contracts its image diameter by at most the
 standard barycentric factor. -/
 public theorem diam_range_affineParentContinuousMap_comp_affineFlag_le
-    (n k : ℕ) (p : Fin (n + 1) → stdSimplex ℝ (Fin (n + 1)))
+    (n k : ℕ) (p : Fin (n + 1) → StdSimplex ℝ (Fin (n + 1)))
     (F : (SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)).obj
       (Opposite.op (SimplexCategory.mk k))) :
     Metric.diam (Set.range
@@ -354,7 +360,7 @@ public theorem diam_range_affineParentContinuousMap_comp_affineFlag_le
         Metric.diam (Set.range (affineParentContinuousMap p)) := by
   classical
   let p' : Fin (n + 1) → (Fin (n + 1) → ℝ) :=
-    fun i ↦ (p i : Fin (n + 1) → ℝ)
+    fun i ↦ ((p i).weights : Fin (n + 1) → ℝ)
   let s : Set (Fin (n + 1) → ℝ) := Set.range fun w ↦
     normedAffineCombination p' (affineFlagContinuousMap n k F w)
   have hsbounded : Bornology.IsBounded s := by
@@ -365,7 +371,7 @@ public theorem diam_range_affineParentContinuousMap_comp_affineFlag_le
           affineParentFaceCentroid p' (F.obj j)).isBounded).subset
     rintro _ ⟨w, rfl⟩
     exact normedAffineCombination_affineFlag_mem_convexHull_vertices n k p' F w
-  have hpoint (w w' : stdSimplex ℝ (Fin (k + 1))) :
+  have hpoint (w w' : StdSimplex ℝ (Fin (k + 1))) :
       dist (normedAffineCombination p' (affineFlagContinuousMap n k F w))
           (normedAffineCombination p' (affineFlagContinuousMap n k F w')) ≤
         barycentricContractionFactor n * Metric.diam (Set.range p') :=
@@ -373,13 +379,13 @@ public theorem diam_range_affineParentContinuousMap_comp_affineFlag_le
       (diam_range_normedAffineCombination_affineFlag_le n k p' F)
   have hpdiam : Metric.diam (Set.range p') = Metric.diam (Set.range p) := by
     have himage :
-        (Subtype.val : stdSimplex ℝ (Fin (n + 1)) → Fin (n + 1) → ℝ) ''
+        (fun t ↦ (t.weights : Fin (n + 1) → ℝ) : StdSimplex ℝ (Fin (n + 1)) → Fin (n + 1) → ℝ) ''
             Set.range p = Set.range p' :=
       (Set.range_comp _ p).symm
-    rw [← himage, isometry_subtype_coe.diam_image]
+    rw [← himage, StdSimplex.isometry_weights.diam_image]
   have hvertices : Set.range p ⊆ Set.range (affineParentContinuousMap p) := by
     rintro _ ⟨i, rfl⟩
-    exact ⟨stdSimplex.vertex i, stdSimplexAffineCombination_vertex p i⟩
+    exact ⟨StdSimplex.single i, stdSimplexAffineCombination_vertex p i⟩
   have hparentdiam : Metric.diam (Set.range p) ≤
       Metric.diam (Set.range (affineParentContinuousMap p)) := by
     apply Metric.diam_mono hvertices
@@ -388,9 +394,9 @@ public theorem diam_range_affineParentContinuousMap_comp_affineFlag_le
     (mul_nonneg (barycentricContractionFactor_nonneg n) Metric.diam_nonneg)
   rintro _ ⟨w, rfl⟩ _ ⟨w', rfl⟩
   change dist
-      (stdSimplexAffineCombination p (affineFlagContinuousMap n k F w) :
+      ((stdSimplexAffineCombination p (affineFlagContinuousMap n k F w)).weights :
         Fin (n + 1) → ℝ)
-      (stdSimplexAffineCombination p (affineFlagContinuousMap n k F w') :
+      ((stdSimplexAffineCombination p (affineFlagContinuousMap n k F w')).weights :
         Fin (n + 1) → ℝ) ≤ _
   rw [coe_stdSimplexAffineCombination_eq_normedAffineCombination,
     coe_stdSimplexAffineCombination_eq_normedAffineCombination]
@@ -405,8 +411,8 @@ public theorem diam_range_affineParentContinuousMap_comp_affineFlag_le
 /-- Associativity of standard-simplex affine combinations. -/
 public theorem stdSimplexAffineCombination_assoc
     {I J K : Type*} [Fintype I] [Fintype J] [Fintype K]
-    (p : I → stdSimplex ℝ K) (q : J → stdSimplex ℝ I)
-    (w : stdSimplex ℝ J) :
+    (p : I → StdSimplex ℝ K) (q : J → StdSimplex ℝ I)
+    (w : StdSimplex ℝ J) :
     stdSimplexAffineCombination p (stdSimplexAffineCombination q w) =
       stdSimplexAffineCombination
         (fun j ↦ stdSimplexAffineCombination p (q j)) w := by
@@ -420,7 +426,7 @@ public theorem stdSimplexAffineCombination_assoc
 /-- Composition of two explicitly affine standard-simplex maps is explicitly affine. -/
 public theorem affineParentContinuousMap_comp
     {I J K : Type*} [Fintype I] [Fintype J] [Fintype K]
-    (p : I → stdSimplex ℝ K) (q : J → stdSimplex ℝ I) :
+    (p : I → StdSimplex ℝ K) (q : J → StdSimplex ℝ I) :
     (affineParentContinuousMap p).comp (affineParentContinuousMap q) =
       affineParentContinuousMap
         (fun j ↦ affineParentContinuousMap p (q j)) :=
@@ -442,7 +448,7 @@ public theorem iteratedAffineCellMap_eq_affineParentContinuousMap_vertices
     (n : ℕ) (ancestry : List (TopAffineFlag n)) :
     iteratedAffineCellMap n ancestry =
       affineParentContinuousMap
-        (fun i ↦ iteratedAffineCellMap n ancestry (stdSimplex.vertex i)) := by
+        (fun i ↦ iteratedAffineCellMap n ancestry (StdSimplex.single i)) := by
   classical
   induction ancestry with
   | nil =>
@@ -450,7 +456,7 @@ public theorem iteratedAffineCellMap_eq_affineParentContinuousMap_vertices
       intro w
       ext y
       simp [affineParentContinuousMap, stdSimplexAffineCombination_apply,
-        Pi.single_apply]
+        Finsupp.single_apply]
   | cons F ancestry ih =>
       rw [iteratedAffineCellMap_cons, ih,
         affineFlagContinuousMap_eq_affineParentContinuousMap,
@@ -471,7 +477,7 @@ public theorem affineFlagRelativeMeshContraction
         Metric.diam (Set.range (iteratedAffineCellMap n ancestry)) := by
   rw [iteratedAffineCellMap_eq_affineParentContinuousMap_vertices n ancestry]
   exact diam_range_affineParentContinuousMap_comp_affineFlag_le n n
-    (fun i ↦ iteratedAffineCellMap n ancestry (stdSimplex.vertex i)) F
+    (fun i ↦ iteratedAffineCellMap n ancestry (StdSimplex.single i)) F
 
 /-- An affine cell at ancestry depth `m` has diameter at most the `m`th power of the barycentric
 factor. -/
@@ -512,9 +518,9 @@ public theorem exists_iteratedAffineCell_depth_subordinate
     singularSimplex_openCover_lebesgueNumber X U hUopen hUcover n x
   obtain ⟨m, hm⟩ := exists_barycentricContractionFactor_pow_lt n hδ
   refine ⟨m, fun ancestry hlength ↦ ?_⟩
-  let s : Set (stdSimplex ℝ (Fin (n + 1))) :=
+  let s : Set (StdSimplex ℝ (Fin (n + 1))) :=
     Set.range (iteratedAffineCellMap n ancestry)
-  let w₀ : stdSimplex ℝ (Fin (n + 1)) := Classical.arbitrary _
+  let w₀ : StdSimplex ℝ (Fin (n + 1)) := Classical.arbitrary _
   obtain ⟨i, hi⟩ := hLeb (iteratedAffineCellMap n ancestry w₀)
   refine ⟨i, ?_⟩
   rintro _ ⟨y, ⟨w, rfl⟩, rfl⟩

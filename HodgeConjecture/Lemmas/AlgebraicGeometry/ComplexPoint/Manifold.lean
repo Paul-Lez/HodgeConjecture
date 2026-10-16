@@ -16,7 +16,7 @@ limitations under the License.
 module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
-public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+public import Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.Geometry.Manifold.IsManifold.Basic
 public import Mathlib.Topology.Homotopy.Contractible

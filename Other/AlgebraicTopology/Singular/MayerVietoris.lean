@@ -6,6 +6,9 @@ You may obtain a copy of the License at
 https://www.apache.org/licenses/LICENSE-2.0
 -/
 module
+
+import Mathlib.CategoryTheory.Limits.MonoCoprod
+import Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono
 public import Other.AlgebraicTopology.Singular.Excision.Field
 
 public import Other.AlgebraicTopology.Singular.Excision.Triad
@@ -85,9 +88,6 @@ theorem subcomplexMayerVietorisShortComplex_shortExact :
         (ModuleCat.of ℚ ℚ)) := by
       dsimp [SSet.chainComplexMap, SSet.chainComplexFunctor]
       apply +allowSynthFailures Functor.map_mono
-      apply +allowSynthFailures Functor.map_mono
-      dsimp [SSet, SimplicialObject.whiskering, SimplicialObject]
-      infer_instance
     exact mono_of_mono_fac (biprod.lift_fst _ _)
 
 section Subsets
@@ -232,9 +232,6 @@ theorem singularMayerVietorisShortComplex_shortExact :
     have : Mono (SSet.chainComplexMap f (ModuleCat.of ℚ ℚ)) := by
       dsimp [SSet.chainComplexMap, SSet.chainComplexFunctor]
       apply +allowSynthFailures Functor.map_mono
-      apply +allowSynthFailures Functor.map_mono
-      dsimp [SSet, SimplicialObject.whiskering, SimplicialObject]
-      infer_instance
     exact mono_of_mono_fac (biprod.lift_fst _ _)
 
 /-- Inclusion of the two-subset small-chain model into all ambient singular chains. -/

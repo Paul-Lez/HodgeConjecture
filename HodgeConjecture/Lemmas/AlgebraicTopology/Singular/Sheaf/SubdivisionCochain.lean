@@ -892,11 +892,12 @@ lemma coverMemberToSmallRationalSingularChains_comp_inclusion (j : κ) :
       SSet.chainComplexMap
         (TopCat.toSSet.map (topologicalSubsetInclusion Y (U j)))
         (ModuleCat.of ℚ ℚ) := by
-  change ((SSet.chainComplexFunctor (ModuleCat ℚ)).obj
-      (ModuleCat.of ℚ ℚ)).map (coverMemberToSmallSingularSet Y U j) ≫
-    ((SSet.chainComplexFunctor (ModuleCat ℚ)).obj
-      (ModuleCat.of ℚ ℚ)).map (coverSmallSingularSubcomplex Y U).ι = _
-  rw [← Functor.map_comp, coverMemberToSmallSingularSet_comp_inclusion]
+  have h := congrArg
+    (fun f : TopCat.toSSet.obj (TopCat.of (U j)) ⟶ TopCat.toSSet.obj Y ↦
+      SSet.chainComplexMap f (ModuleCat.of ℚ ℚ))
+    (coverMemberToSmallSingularSet_comp_inclusion Y U j)
+  simpa only [coverMemberToSmallRationalSingularChains,
+    coverSmallRationalSingularChainInclusion, SSet.chainComplexMap, Functor.map_comp] using h
 
 set_option backward.isDefEq.respectTransparency false in
 /-- Vanishing on every member of a covering sieve implies vanishing on all chains subordinate

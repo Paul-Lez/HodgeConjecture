@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.RelativeCohomologySheaf
+public import Mathlib.Algebra.Category.ModuleCat.Colimits
 
 /-!
 # The local relative-cohomology presheaf and its sheafification
@@ -70,7 +71,8 @@ theorem neighborhoodSupportRelativeChains_isZero (V : Set X) (hV : ∀ x ∈ V, 
   have hPi : IsIso P.map :=
     (TopCat.isIso_iff_isHomeomorph P.map).mpr (Homeomorph.Set.univ V).isHomeomorph
   have hchain : IsIso ((chainPairFunctor ℚ).obj P).hom := by
-    change IsIso (((singularChainComplexFunctor (ModuleCat ℚ)).obj (ModuleCat.of ℚ ℚ)).map P.map)
+    change IsIso (((singularChainComplexFunctor.{0} (ModuleCat.{0} ℚ)).obj
+      (ModuleCat.of ℚ ℚ)).map P.map)
     infer_instance
   exact isZero_cokernel_of_epi ((chainPairFunctor ℚ).obj P).hom
 

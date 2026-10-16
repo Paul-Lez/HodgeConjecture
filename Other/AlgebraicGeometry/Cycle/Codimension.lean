@@ -6,7 +6,7 @@ module
 
 public import Mathlib.AlgebraicGeometry.AlgebraicCycle.Basic
 public import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
-public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+public import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-! # Codimension cycles
 

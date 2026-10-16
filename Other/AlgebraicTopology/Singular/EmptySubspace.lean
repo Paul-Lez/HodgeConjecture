@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import Mathlib.Geometry.Convex.ConvexSpace.Barycenter
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
 public import Mathlib.LinearAlgebra.Dual.Lemmas
 
@@ -39,6 +41,8 @@ open scoped Simplicial
 
 universe u
 
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 variable (R : Type u) [CommRing R] (X : TopCat.{u})
@@ -55,7 +59,7 @@ lemma isEmpty_emptySubspacePair_simplices (n : ℕ) :
   intro σ
   let f := ((emptySubspacePair X).snd.toSSetObjEquiv
     (Opposite.op (SimplexCategory.mk n))) σ
-  exact (f stdSimplex.barycenter).2
+  exact (f StdSimplex.barycenter).2
 
 /-- The chain map induced by the inclusion `∅ ⊆ X` is zero. -/
 lemma emptySubspacePair_chainMap_eq_zero :

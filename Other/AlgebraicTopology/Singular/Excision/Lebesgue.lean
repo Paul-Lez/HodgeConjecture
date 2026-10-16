@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import Mathlib.AlgebraicTopology.SingularSet
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.Lebesgue
 
@@ -30,6 +32,8 @@ nothing in the statement's dependency chain uses these results, only material in
 @[expose] public section
 noncomputable section
 open Set
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 /-- Any nonempty subset of the standard simplex whose diameter is smaller than a pulled-back
@@ -40,7 +44,7 @@ public theorem singularSimplex_image_subset_cover_of_diam_lt
     (n : ℕ)
     (x : (TopCat.toSSet.obj X).obj
       (Opposite.op (SimplexCategory.mk n)))
-    {s : Set (stdSimplex ℝ (Fin (n + 1)))}
+    {s : Set (StdSimplex ℝ (Fin (n + 1)))}
     (hsne : s.Nonempty) (hsbounded : Bornology.IsBounded s) :
     ∃ δ > 0, Metric.diam s < δ →
       ∃ i, X.toSSetObjEquiv _ x '' s ⊆ U i := by

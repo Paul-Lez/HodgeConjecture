@@ -17,7 +17,7 @@ module
 
 public import Other.AlgebraicTopology.Support.ClosedSupportSheaf
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 import Mathlib.Topology.Sheaves.Abelian
 public import Other.LinearAlgebra.HodgeStructure

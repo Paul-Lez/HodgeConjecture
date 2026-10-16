@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.AffineMesh
 
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.AffineRelativeMesh
@@ -36,6 +38,8 @@ noncomputable section
 
 open AlgebraicTopology CategoryTheory CategoryTheory.Limits Set Simplicial
 
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 /-- The singular simplex obtained by restricting `x` to one iterated affine ancestry cell. -/
@@ -55,7 +59,7 @@ public theorem toSSetObjEquiv_iteratedAffineCellSingularSimplex_apply
     (x : (TopCat.toSSet.obj X).obj
       (Opposite.op (SimplexCategory.mk n)))
     (ancestry : List (TopAffineFlag n))
-    (w : stdSimplex ℝ (Fin (n + 1))) :
+    (w : StdSimplex ℝ (Fin (n + 1))) :
     X.toSSetObjEquiv _
         (iteratedAffineCellSingularSimplex X n x ancestry) w =
       X.toSSetObjEquiv _ x (iteratedAffineCellMap n ancestry w) := by
@@ -244,7 +248,7 @@ public theorem iteratedAffineCellSingularSimplex_mem_coverSmall
         (Opposite.op (SimplexCategory.mk n)) := by
   rw [mem_coverSmallSingularSubcomplex_iff_exists_preimage]
   obtain ⟨i, hi⟩ := hsmall
-  let f : C(stdSimplex ℝ (Fin (n + 1)), U i) :=
+  let f : C(StdSimplex ℝ (Fin (n + 1)), U i) :=
     ⟨fun w ↦
       ⟨X.toSSetObjEquiv _ x (iteratedAffineCellMap n ancestry w),
         hi ⟨iteratedAffineCellMap n ancestry w, ⟨w, rfl⟩, rfl⟩⟩,
@@ -498,7 +502,7 @@ public theorem exists_zero_dimensional_ancestry_depth_subordinate
   cases ancestry with
   | cons F ancestry => simp at hlength
   | nil =>
-  let w₀ : stdSimplex ℝ (Fin (0 + 1)) := Classical.arbitrary _
+  let w₀ : StdSimplex ℝ (Fin (0 + 1)) := Classical.arbitrary _
   have hwcover : X.toSSetObjEquiv _ x w₀ ∈ ⋃ i, U i := by
     rw [hUcover]
     trivial
@@ -507,13 +511,10 @@ public theorem exists_zero_dimensional_ancestry_depth_subordinate
   refine ⟨i, ?_⟩
   rintro y ⟨z, ⟨w, rfl⟩, rfl⟩
   have hw : w = w₀ := by
-    apply Subtype.ext
-    funext j
+    ext j
     have hj : j = 0 := Fin.eq_zero j
     subst j
-    have hwone : w 0 = 1 := by simpa using w.property.2
-    have hw₀one : w₀ 0 = 1 := by simpa using w₀.property.2
-    exact hwone.trans hw₀one.symm
+    simpa using w.total_of_fintype.trans w₀.total_of_fintype.symm
   simpa [hw] using hi
 
 /-- Every finite singular chain becomes subordinate to an open cover after enough affine

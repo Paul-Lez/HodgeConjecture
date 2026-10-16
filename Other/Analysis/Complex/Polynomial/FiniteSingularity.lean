@@ -5,6 +5,8 @@ Authors: Bhavik Mehta
 -/
 module
 
+import Mathlib.Analysis.Asymptotics.SpecificAsymptotics
+
 public import Other.Analysis.Complex.Polynomial.Growth
 public import Other.Analysis.Complex.Polynomial.Complement
 public import Mathlib.Analysis.Complex.RemovableSingularity
@@ -50,7 +52,11 @@ theorem exists_entire_extension_of_finite_compl {E : Set ℂ} (hE : E.Finite)
     let g := update f c (limUnder (𝓝[≠] c) f)
     have hg : DifferentiableOn ℂ g Eᶜ :=
       differentiableOn_update_limUnder_of_isLittleO hEc
-        (hf.mono (by intro z hz; simp only [mem_compl_iff, mem_insert_iff, Set.mem_sdiff, mem_singleton_iff] at hz ⊢; exact fun h => h.elim hz.2 hz.1)) hbounded.isLittleO_sub_self_inv
+        (hf.mono (by
+          intro z hz
+          simp only [mem_compl_iff, mem_insert_iff, Set.mem_sdiff, mem_singleton_iff] at hz ⊢
+          exact fun h => h.elim hz.2 hz.1))
+        (Filter.IsBoundedUnder.isLittleO_sub_self_inv hbounded)
     have hgbound : ∀ z ∉ E, ‖g z‖ ≤ B z := by
       intro z hz
       by_cases hzc : z = c

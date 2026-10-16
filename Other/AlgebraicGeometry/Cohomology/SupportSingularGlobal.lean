@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
+public import Mathlib.Algebra.Category.ModuleCat.Colimits
 
 public import HodgeConjecture.Lemmas.Algebra.Homology.MapExtendNaturality
 public import Other.AlgebraicGeometry.Cohomology.GlobalSections
@@ -67,9 +68,9 @@ lemma topOpenPreimageChainMap_transport {U : TopCat.{0}} (j : U ⟶ X) :
     (topOpenSingularChainComplexIso R U).inv ≫
         preimageOpenChainMap R j (⊤ : Opens X) ≫
       (topOpenSingularChainComplexIso R X).hom =
-    ((singularChainComplexFunctor (ModuleCat R)).obj
+    ((singularChainComplexFunctor.{0} (ModuleCat.{0} R)).obj
       (ModuleCat.of R R)).map j := by
-  let F := (singularChainComplexFunctor (ModuleCat R)).obj (ModuleCat.of R R)
+  let F := (singularChainComplexFunctor.{0} (ModuleCat.{0} R)).obj (ModuleCat.of R R)
   change F.map (Opens.inclusionTopIso U).inv ≫
       F.map (preimageOpenToOpen j (⊤ : Opens X)) ≫
         F.map (Opens.inclusionTopIso X).hom = F.map j
@@ -86,7 +87,7 @@ lemma topOpenSubsetChainMap_transport (A : Set X) :
         (topOpenSingularChainComplexIso R X).inv := by
   change (topOpenSingularChainComplexIso R (TopCat.of A)).inv ≫
         preimageOpenChainMap R (topologicalSubsetInclusion X A) (⊤ : Opens X) =
-      ((singularChainComplexFunctor (ModuleCat R)).obj
+      ((singularChainComplexFunctor.{0} (ModuleCat.{0} R)).obj
           (ModuleCat.of R R)).map (topologicalSubsetInclusion X A) ≫
         (topOpenSingularChainComplexIso R X).inv
   apply (cancel_mono (topOpenSingularChainComplexIso R X).hom).1

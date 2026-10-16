@@ -442,9 +442,7 @@ lemma analyticOnNhd_chartGeneratorEvaluation_apply
   have hterm (e : Equiv.Perm (Fin p)) : AnalyticOnNhd ℂ
       (fun y ↦ (((e.sign : ℤ) : ℂ) * ∏ j : Fin p,
         chartSectionDifferential X d U z (w (e j)) y (v j))) s := by
-    convert (hprod e).const_smul (c := ((e.sign : ℤ) : ℂ)) using 1
-    funext y
-    simp [Pi.smul_apply, smul_eq_mul]
+    exact (hprod e).const_smul (c := ((e.sign : ℤ) : ℂ))
   have hdet : AnalyticOnNhd ℂ
       (fun y ↦ ∑ e : Equiv.Perm (Fin p), (((e.sign : ℤ) : ℂ) * ∏ j : Fin p,
         chartSectionDifferential X d U z (w (e j)) y (v j))) s :=
@@ -476,14 +474,10 @@ lemma analyticOnNhd_chartEvaluation_apply
       exact analyticOnNhd_const
   | add a b ha hb =>
       rw [chartEvaluation_add]
-      convert ha.add hb using 1
-      funext y
-      simp
+      exact ha.add hb
   | smul c a ha =>
       rw [chartEvaluation_smul]
-      convert ha.const_smul (c := c) using 1
-      funext y
-      simp
+      exact ha.const_smul (c := c)
 
 /-- A holomorphic form has an analytic fixed-chart evaluation. -/
 lemma analyticOnNhd_chartEvaluation [SmoothOfRelativeDimension d X.hom]
@@ -499,10 +493,7 @@ lemma analyticOnNhd_chartEvaluation [SmoothOfRelativeDimension d X.hom]
   let c : ℂ := ((Fintype.card (Fin p)).factorial : ℂ)⁻¹
   have hc (I : Fin p → Fin d) : AnalyticOnNhd ℂ
       (fun y ↦ c * chartEvaluation X d U z p θ y (e I)) s := by
-    convert (analyticOnNhd_chartEvaluation_apply X d U z p θ (e I)).const_smul
-      (c := c) using 1
-    funext y
-    simp [Pi.smul_apply, smul_eq_mul]
+    exact (analyticOnNhd_chartEvaluation_apply X d U z p θ (e I)).const_smul (c := c)
   have hterm (I : Fin p → Fin d) : AnalyticOnNhd ℂ
       (fun y ↦ (c * chartEvaluation X d U z p θ y (e I)) • W I) s :=
     (hc I).smul analyticOnNhd_const

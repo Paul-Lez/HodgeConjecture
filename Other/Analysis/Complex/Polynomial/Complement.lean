@@ -100,7 +100,8 @@ theorem isPathConnected_complex_nonzero {ι : Type*} (p : MvPolynomial ι ℂ) (
     simpa [Polynomial.IsRoot, he, f] using hx
   have h1 : (1 : ℂ) ∈ {t | ¬ q.IsRoot t} := by
     simpa [Polynomial.IsRoot, he, f] using hy
-  have hj := (hc.joinedIn 0 h0 1 h1).map (show Continuous f by fun_prop)
+  have hj := (hc.joinedIn 0 h0 1 h1).map
+    (show ContinuousOn f _ from (by fun_prop : Continuous f).continuousOn)
   have hm : f '' {t | ¬ q.IsRoot t} ⊆ {z | p.eval z ≠ 0} := by
     rintro _ ⟨t, ht, rfl⟩
     simpa [Polynomial.IsRoot, he] using ht

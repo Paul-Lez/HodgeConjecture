@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
 public import Mathlib.Analysis.Normed.Module.Convex
@@ -38,16 +40,18 @@ generator, orientation, or local representability theorem is supplied as data.
 open CategoryTheory Limits
 open scoped Simplicial
 
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 /-- The image of the boundary of the standard affine simplex. -/
 def standardAffineBoundarySupport (d : ℕ) : Set (Fin d → ℝ) :=
   ⋃ i : Fin (d + 1), standardAffineSimplex d ''
-    (fun t : stdSimplex ℝ (Fin (d + 1)) => t i) ⁻¹' {0}
+    (fun t : StdSimplex ℝ (Fin (d + 1)) => t.weights i) ⁻¹' {0}
 
 lemma isCompact_standardAffineBoundarySupport (d : ℕ) :
     IsCompact (standardAffineBoundarySupport d) :=
-  isCompact_iUnion fun i => (isClosed_eq ((continuous_apply i).comp continuous_subtype_val)
+  isCompact_iUnion fun i => (isClosed_eq (StdSimplex.continuous_weights_apply ℝ i)
     continuous_const).isCompact.image (continuous_standardAffineSimplex d)
 
 lemma zero_not_mem_standardAffineBoundarySupport (d : ℕ) :
@@ -90,13 +94,13 @@ abbrev standardOrientationBallPair (d : ℕ) : TopPair :=
 
 /-- A boundary face as a simplex in the complement of the entire orientation ball. -/
 def standardOrientationBallFaceMap (n : ℕ) (i : Fin (n + 2)) :
-    C(stdSimplex ℝ (Fin (n + 1)),
+    C(StdSimplex ℝ (Fin (n + 1)),
       ((standardOrientationBall (n + 1) : Set (Fin (n + 1) → ℝ))ᶜ :
         Set (Fin (n + 1) → ℝ))) where
-  toFun t := ⟨standardAffineSimplex (n + 1) (stdSimplex.map i.succAbove t), by
+  toFun t := ⟨standardAffineSimplex (n + 1) (StdSimplex.map i.succAbove t), by
     intro hball
     apply ball_standardOrientationRadius_subset (n + 1) hball
-    exact Set.mem_iUnion.mpr ⟨i, ⟨stdSimplex.map i.succAbove t,
+    exact Set.mem_iUnion.mpr ⟨i, ⟨StdSimplex.map i.succAbove t,
       stdSimplex_map_succAbove_self_zero n i t, rfl⟩⟩⟩
   continuous_toFun := by fun_prop
 

@@ -12,7 +12,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Stratification.Analytific
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.AffineRelativeDimension
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Open
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Ambient closed supports for singular-component localization induction

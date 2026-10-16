@@ -256,7 +256,6 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainRes
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.Cohomology
 public import HodgeConjecture.Definitions.AlgebraicTopology.Support.CohomologyInjectiveModel
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cohomology.WithSupport
-public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import HodgeConjecture.Mathlib.RingTheory.SmoothKrullDimension
 public import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 public import HodgeConjecture.Mathlib.Topology.Category.TopPair

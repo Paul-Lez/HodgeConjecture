@@ -108,18 +108,18 @@ def rightDerivedFunctorPlusOnInjectivesUnit :
     F.rightDerivedFunctorPlusOnInjectives ⟶
       HomotopyCategory.Plus.injectiveToDerived C ⋙ F.rightDerivedFunctorPlus :=
   whiskerLeft (InjectiveObject.ι C).mapHomotopyCategoryPlus
-      F.rightDerivedFunctorPlusUnit ≫
+      F.rightDerivedFunctorPlusUnith ≫
     (Functor.associator _ _ _).inv
 
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 instance : IsIso F.rightDerivedFunctorPlusOnInjectivesUnit := by
   have h (K : HomotopyCategory.Plus (InjectiveObject C)) :
-      IsIso (F.rightDerivedFunctorPlusUnit.app
+      IsIso (F.rightDerivedFunctorPlusUnith.app
         ((InjectiveObject.ι C).mapHomotopyCategoryPlus.obj K)) :=
     (HomotopyCategory.Plus.localizerMorphism_derives
       (F.mapHomotopyCategoryPlus ⋙ DerivedCategory.Plus.Qh)).isIso_of_isRightDerivedFunctor
-        F.rightDerivedFunctorPlusUnit K
+        F.rightDerivedFunctorPlusUnith K
   let _ : ∀ K, IsIso (F.rightDerivedFunctorPlusOnInjectivesUnit.app K) := fun K => by
     simpa only [rightDerivedFunctorPlusOnInjectivesUnit, NatTrans.comp_app,
       whiskerLeft_app, Functor.associator_inv_app, Category.comp_id] using h K
@@ -159,12 +159,12 @@ set_option backward.isDefEq.respectTransparency false in
 /-- Compatibility with the derived unit after restriction to injective complexes. -/
 instance rightDerivedFunctorPlusUnit_whiskerLeft_injectives_commShift :
     NatTrans.CommShift (whiskerLeft (InjectiveObject.ι C).mapHomotopyCategoryPlus
-      F.rightDerivedFunctorPlusUnit) ℤ := by
+      F.rightDerivedFunctorPlusUnith) ℤ := by
   have : NatTrans.CommShift F.rightDerivedFunctorPlusOnInjectivesUnit ℤ :=
     inferInstanceAs (NatTrans.CommShift F.rightDerivedFunctorPlusOnInjectivesIso.inv ℤ)
   have h : F.rightDerivedFunctorPlusOnInjectivesUnit ≫ (Functor.associator _ _ _).hom =
       whiskerLeft (InjectiveObject.ι C).mapHomotopyCategoryPlus
-        F.rightDerivedFunctorPlusUnit := by
+        F.rightDerivedFunctorPlusUnith := by
     simp [rightDerivedFunctorPlusOnInjectivesUnit]
   rw [← h]
   infer_instance
@@ -174,7 +174,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- The full right-derived unit commutes with the coherent shifts,
 including on complexes which are not termwise injective. -/
 instance rightDerivedFunctorPlusUnitCommShift :
-    NatTrans.CommShift F.rightDerivedFunctorPlusUnit ℤ where
+    NatTrans.CommShift F.rightDerivedFunctorPlusUnith ℤ where
   shift_comm a := by
     apply HomotopyCategory.Plus.natTrans_ext_on_injectives C
     · intro K L f hf
@@ -187,9 +187,9 @@ instance rightDerivedFunctorPlusUnitCommShift :
     · intro K
       let incl := (InjectiveObject.ι C).mapHomotopyCategoryPlus
       have h := NatTrans.shift_app_comm
-        (whiskerLeft incl F.rightDerivedFunctorPlusUnit) a K
+        (whiskerLeft incl F.rightDerivedFunctorPlusUnith) a K
       simp only [Functor.commShiftIso_comp_hom_app, whiskerLeft_app, Category.assoc] at h
-      rw [← F.rightDerivedFunctorPlusUnit.naturality_assoc] at h
+      rw [← F.rightDerivedFunctorPlusUnith.naturality_assoc] at h
       apply (cancel_epi ((F.mapHomotopyCategoryPlus ⋙ DerivedCategory.Plus.Qh).map
         ((incl.commShiftIso a).hom.app K))).1
       simpa only [NatTrans.comp_app, whiskerRight_app, whiskerLeft_app,

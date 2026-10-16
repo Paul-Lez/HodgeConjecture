@@ -146,7 +146,7 @@ def derivedSheafSectionsWithClosedSupportUnit (Z : Closeds X) :
     (sheafSectionsWithClosedSupport X Z).mapHomotopyCategoryPlus ⋙
         DerivedCategory.Plus.Qh ⟶
       DerivedCategory.Plus.Qh ⋙ derivedSheafSectionsWithClosedSupport X Z :=
-  (sheafSectionsWithClosedSupport X Z).rightDerivedFunctorPlusUnit
+  (sheafSectionsWithClosedSupport X Z).rightDerivedFunctorPlusUnith
 
 /-- The construction satisfies Mathlib's universal property of a right derived functor. -/
 instance derivedSheafSectionsWithClosedSupport_isRightDerivedFunctor (Z : Closeds X) :
@@ -174,7 +174,7 @@ def derivedClosedSupportSectionsUnit (Z : Closeds X) :
     (closedSupportSections X Z).mapHomotopyCategoryPlus ⋙
         DerivedCategory.Plus.Qh ⟶
       DerivedCategory.Plus.Qh ⋙ derivedClosedSupportSections X Z :=
-  (closedSupportSections X Z).rightDerivedFunctorPlusUnit
+  (closedSupportSections X Z).rightDerivedFunctorPlusUnith
 
 /-- Group-valued supported sections satisfy the universal property of their
 right derived functor. -/

@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ComplexPoint.Basic
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 
 /-!

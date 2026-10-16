@@ -10,7 +10,7 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.DerivedSectionsLo
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Support.SheafCohomology
 public import Mathlib.CategoryTheory.Sites.GlobalSections
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Exact open restriction with its adjunction
@@ -107,15 +107,13 @@ def openSheafRestrictionAdjunction :
         change F.obj.map _ ≫ F.obj.map _ = 𝟙 _
         rw [← F.obj.map_comp]
         convert F.obj.map_id _ using 1
-        congr 1
       right_triangle := by
         ext F : 2
         apply CategoryTheory.Sheaf.hom_ext_iff.mpr
         ext V : 2
         change F.obj.map _ ≫ F.obj.map _ = 𝟙 _
         rw [← F.obj.map_comp]
-        convert F.obj.map_id _ using 1
-        congr 1 }
+        convert F.obj.map_id _ using 1 }
 
 /-- Constant sections on an open subspace map to the restriction of the ambient
 constant sheaf, by the sheafification unit itself. -/

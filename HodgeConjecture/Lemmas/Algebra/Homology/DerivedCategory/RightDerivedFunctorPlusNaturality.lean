@@ -26,69 +26,27 @@ namespace CategoryTheory.NatTrans
 variable {C D : Type*} [Category* C] [Category* D] [Abelian C] [Abelian D]
   {F G H : C ⥤ D} [F.Additive] [G.Additive] [H.Additive]
 
-set_option backward.isDefEq.respectTransparency false in
-/-- Let `F,G : C → D` be additive functors between abelian categories and `α : F → G` a natural
-transformation. Applying `α` in each degree of a bounded-below cochain complex gives this
-transformation between the induced functors on bounded-below homotopy categories. -/
-def mapHomotopyCategoryPlus (α : F ⟶ G) :
-    F.mapHomotopyCategoryPlus ⟶ G.mapHomotopyCategoryPlus where
-  app K := ObjectProperty.homMk ((α.mapHomotopyCategory ℤᵘᵖ).app K.obj)
-  naturality K L f := by
-    ext
-    exact (α.mapHomotopyCategory ℤᵘᵖ).naturality f.hom
-
-@[simp]
-theorem mapHomotopyCategoryPlus_id (F : C ⥤ D) [F.Additive] :
-    mapHomotopyCategoryPlus (𝟙 F) = 𝟙 F.mapHomotopyCategoryPlus := rfl
-
-@[simp]
-theorem mapHomotopyCategoryPlus_comp (α : F ⟶ G) (β : G ⟶ H) :
-    mapHomotopyCategoryPlus (α ≫ β) =
-      mapHomotopyCategoryPlus α ≫ mapHomotopyCategoryPlus β := rfl
-
 variable [HasDerivedCategory C] [HasDerivedCategory D] [EnoughInjectives C]
-
-/-- Let `F,G : C → D` be additive functors between abelian categories with derived categories, and
-assume `C` has enough injectives. A natural transformation `α : F → G` induces this
-transformation `RF → RG` on bounded-below derived categories. It is computed by applying `α`
-degreewise to an injective resolution. -/
-def rightDerivedFunctorPlus (α : F ⟶ G) :
-    F.rightDerivedFunctorPlus ⟶ G.rightDerivedFunctorPlus :=
-  Functor.rightDerivedNatTrans F.rightDerivedFunctorPlus G.rightDerivedFunctorPlus
-    F.rightDerivedFunctorPlusUnit G.rightDerivedFunctorPlusUnit
-      (HomotopyCategory.Plus.quasiIso C)
-        (Functor.whiskerRight α.mapHomotopyCategoryPlus DerivedCategory.Plus.Qh)
 
 /-- Compatibility with the derived units on every bounded-below homotopy complex. -/
 @[reassoc (attr := simp)]
 theorem rightDerivedFunctorPlus_unit (α : F ⟶ G) :
-    F.rightDerivedFunctorPlusUnit ≫
+    F.rightDerivedFunctorPlusUnith ≫
         Functor.whiskerLeft DerivedCategory.Plus.Qh α.rightDerivedFunctorPlus =
       Functor.whiskerRight α.mapHomotopyCategoryPlus DerivedCategory.Plus.Qh ≫
-        G.rightDerivedFunctorPlusUnit :=
-  Functor.rightDerivedNatTrans_fac _ _ _ _ _ _
+        G.rightDerivedFunctorPlusUnith :=
+  α.rightDerivedFunctorPlus_fach
 
 /-- The pointwise form pins the derived transformation to the coefficient transformation
 when computing on an injective resolution. -/
 @[reassoc (attr := simp)]
 theorem rightDerivedFunctorPlus_unit_app (α : F ⟶ G)
     (K : HomotopyCategory.Plus C) :
-    F.rightDerivedFunctorPlusUnit.app K ≫
+    F.rightDerivedFunctorPlusUnith.app K ≫
         α.rightDerivedFunctorPlus.app (DerivedCategory.Plus.Qh.obj K) =
       DerivedCategory.Plus.Qh.map (α.mapHomotopyCategoryPlus.app K) ≫
-        G.rightDerivedFunctorPlusUnit.app K :=
-  Functor.rightDerivedNatTrans_app _ _ _ _ _ _ _
-
-@[simp]
-theorem rightDerivedFunctorPlus_id (F : C ⥤ D) [F.Additive] :
-    rightDerivedFunctorPlus (𝟙 F) = 𝟙 F.rightDerivedFunctorPlus := by
-  simp [rightDerivedFunctorPlus]
-
-@[simp]
-theorem rightDerivedFunctorPlus_comp (α : F ⟶ G) (β : G ⟶ H) :
-    rightDerivedFunctorPlus (α ≫ β) =
-      rightDerivedFunctorPlus α ≫ rightDerivedFunctorPlus β := by
-  simp [rightDerivedFunctorPlus]
+        G.rightDerivedFunctorPlusUnith.app K :=
+  α.rightDerivedFunctorPlus_fach_app K
 
 end CategoryTheory.NatTrans
 

@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ClosedImmersion.ResidueField
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AffineSpace
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ClosedImmersion

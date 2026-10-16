@@ -88,8 +88,8 @@ public theorem dist_nonemptyFiniteChainBarycenter_le
     dist (nonemptyFiniteChainBarycenter A)
       (nonemptyFiniteChainBarycenter B) ≤ barycentricContractionFactor n := by
   classical
-  change dist (nonemptyFiniteChainBarycenter A : Fin (n + 1) → ℝ)
-      (nonemptyFiniteChainBarycenter B : Fin (n + 1) → ℝ) ≤ _
+  change dist ((nonemptyFiniteChainBarycenter A).weights : Fin (n + 1) → ℝ)
+      ((nonemptyFiniteChainBarycenter B).weights : Fin (n + 1) → ℝ) ≤ _
   rw [dist_pi_le_iff (barycentricContractionFactor_nonneg n)]
   intro i
   rw [Real.dist_eq, nonemptyFiniteChainBarycenter_apply,

@@ -17,4 +17,4 @@ degree by one.
 
 /-- `ℤᵘᵖ` is `ComplexShape.up ℤ`, the cohomological complex shape on integer degrees: its
 potentially nonzero differentials have type `K.X n ⟶ K.X (n + 1)`. -/
-notation "ℤᵘᵖ" => ComplexShape.up ℤ
+notation "ℤᵘᵖ" => ComplexShape.up Int

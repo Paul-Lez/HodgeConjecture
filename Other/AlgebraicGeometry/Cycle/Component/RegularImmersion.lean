@@ -22,6 +22,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.NormalGeometry
 import Other.AlgebraicGeometry.Smooth.RegularLocal
+import Mathlib.RingTheory.Ideal.KrullsHeightTheorem
 public import Other.AlgebraicGeometry.Cycle.Component.ClosedPointDimension
 public import Other.AlgebraicGeometry.Cycle.Component.NormalGeometry
 

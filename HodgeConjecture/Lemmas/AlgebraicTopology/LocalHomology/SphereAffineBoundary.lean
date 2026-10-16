@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.SphereSimplicialHomology
 
@@ -33,15 +35,17 @@ constructs that map in every dimension.
 open CategoryTheory Limits Simplicial Opposite
 open scoped Simplicial
 
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 lemma stdSimplex_map_apply_eq_zero_of_notMem_range
     {X Y : Type*} [Fintype X] [Fintype Y]
-    (f : X → Y) (w : stdSimplex ℝ X) (y : Y)
+    (f : X → Y) (w : StdSimplex ℝ X) (y : Y)
     (hy : y ∉ Set.range f) :
-    stdSimplex.map f w y = 0 := by
+    (StdSimplex.map f w).weights y = 0 := by
   classical
-  simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  simp only [StdSimplex.weights_map_apply]
   apply Finset.sum_eq_zero
   intro x hx
   exact (hy ⟨x, (Finset.mem_filter.mp hx).2⟩).elim
@@ -49,8 +53,8 @@ lemma stdSimplex_map_apply_eq_zero_of_notMem_range
 /-- A simplex in the simplicial boundary, realized affinely in punctured coordinate space. -/
 def standardAffineBoundarySimplex (d k : ℕ)
     (x : (∂Δ[d] : SSet.{0}).obj (op (SimplexCategory.mk k))) :
-    C(stdSimplex ℝ (Fin (k + 1)), ({0}ᶜ : Set (Fin d → ℝ))) where
-  toFun t := ⟨standardAffineSimplex d (stdSimplex.map x.1 t), by
+    C(StdSimplex ℝ (Fin (k + 1)), ({0}ᶜ : Set (Fin d → ℝ))) where
+  toFun t := ⟨standardAffineSimplex d (StdSimplex.map x.1 t), by
     obtain ⟨j, hj⟩ := (SSet.mem_boundary_iff_notMem_range x.1).mp x.2
     exact standardAffineSimplex_ne_zero_of_coord_zero d _ j
       (stdSimplex_map_apply_eq_zero_of_notMem_range x.1 t j hj)⟩
@@ -70,12 +74,12 @@ def standardAffineBoundarySimplicialMap (d : ℕ) :
     calc
       _ = ((puncturedPair ℝ d).snd.toSSetObjEquiv m).symm
           ((standardAffineBoundarySimplex d n.unop.len x).comp
-            ⟨stdSimplex.map f.unop, stdSimplex.continuous_map f.unop⟩) := by
+            ⟨StdSimplex.map f.unop, StdSimplex.continuous_map ℝ f.unop⟩) := by
         congr 1
         ext t
         simp only [standardAffineBoundarySimplex, ContinuousMap.coe_mk,
           ContinuousMap.comp_apply]
-        rw [stdSimplex.map_comp_apply]
+        rw [← StdSimplex.map_comp]
         rfl
       _ = _ := (TopCat.toSSetObjEquiv_symm_naturality
         (X := (puncturedPair ℝ d).snd) (f := f.unop)
@@ -152,7 +156,6 @@ lemma standardSphereBoundaryChainInclusion_comp_retraction (d k : ℕ) :
       (ModuleCat.of ℚ ℚ) k).inj x.1 ≫
       standardSphereBoundaryChainRetractionComponent d k = _
   simp [standardSphereBoundaryChainRetractionComponent, x.2]
-  congr
 
 lemma standardSphereBoundaryChainInclusionComponent_mono (d k : ℕ) :
     Mono ((SSet.chainComplexMap

@@ -17,7 +17,7 @@ module
 
 public import Other.AlgebraicGeometry.Cohomology.SupportComparisonLemmas
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainRestriction
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Naturality of the supported singular comparison

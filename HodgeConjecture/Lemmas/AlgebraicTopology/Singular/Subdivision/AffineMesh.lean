@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.CoverSmallQuasiIso
 
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.Lebesgue
@@ -44,6 +46,8 @@ noncomputable section
 
 open CategoryTheory CategoryTheory.Limits PartialOrder Set Simplicial
 
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 /-- The classical mesh-contraction factor for barycentric subdivision of an `n`-simplex. -/
@@ -63,19 +67,11 @@ public theorem barycentricContractionFactor_lt_one (n : ℕ) :
 
 /-- The intrinsic diameter of a nonempty standard simplex is one in the sup metric. -/
 public theorem diam_univ_stdSimplex (n : ℕ) (hn : 1 ≤ n) :
-    Metric.diam (Set.univ : Set (stdSimplex ℝ (Fin (n + 1)))) = 1 := by
+    Metric.diam (Set.univ : Set (StdSimplex ℝ (Fin (n + 1)))) = 1 := by
   let : Nontrivial (Fin (n + 1)) :=
     Fin.nontrivial_iff_two_le.mpr (Nat.add_le_add_right hn 1)
-  calc
-    Metric.diam (Set.univ : Set (stdSimplex ℝ (Fin (n + 1)))) =
-        Metric.diam (Set.range
-          (Subtype.val : stdSimplex ℝ (Fin (n + 1)) → Fin (n + 1) → ℝ)) :=
-      isometry_subtype_coe.diam_range.symm
-    _ = Metric.diam (stdSimplex ℝ (Fin (n + 1))) := by
-      congr 1
-      ext w
-      simp
-    _ = 1 := diam_stdSimplex
+  exact StdSimplex.isometry_weights.diam_range.symm.trans
+    (StdSimplex.diam_range_toFun_comp_weights_subset_closedBall_eq_one _)
 
 /-- Powers of the barycentric mesh factor eventually fall below every positive tolerance. -/
 public theorem exists_barycentricContractionFactor_pow_lt
@@ -94,7 +90,7 @@ public abbrev TopAffineFlag (n : ℕ) :=
 the list is the newest (innermost) subdivision cell and the tail records its parent ancestry. -/
 public noncomputable def iteratedAffineCellMap (n : ℕ)
     (ancestry : List (TopAffineFlag n)) :
-    C(stdSimplex ℝ (Fin (n + 1)), stdSimplex ℝ (Fin (n + 1))) :=
+    C(StdSimplex ℝ (Fin (n + 1)), StdSimplex ℝ (Fin (n + 1))) :=
   match ancestry with
   | [] => ContinuousMap.id _
   | F :: ancestry =>

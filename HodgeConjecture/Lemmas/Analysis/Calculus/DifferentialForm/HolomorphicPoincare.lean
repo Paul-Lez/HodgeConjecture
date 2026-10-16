@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import Mathlib.Analysis.Calculus.Deriv.Pow
+
 public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincare
 
 import Mathlib.LinearAlgebra.ExteriorAlgebra.OfAlternating

@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.FundamentalClass
 public import Mathlib.Algebra.Homology.HomologySequence
 public import Mathlib.AlgebraicTopology.SimplicialSet.Homology.HomologyZero
@@ -38,6 +40,8 @@ prerequisites for proving that the standard class generates local homology.
 
 open CategoryTheory Limits ContinuousMap
 open scoped Simplicial
+
+open Convexity
 
 namespace AlgebraicTopology.Singular
 
@@ -241,21 +245,21 @@ lemma standardFaceSimplex_zero_point :
     TopCat.toSSetObj₀Equiv (standardFaceSimplex 0 (0 : Fin 2)) =
       standardNegativePoint := by
   change standardFaceMap 0 (0 : Fin 2)
-    (default : stdSimplex ℝ (Fin 1)) = standardNegativePoint
-  rw [Subsingleton.elim (default : stdSimplex ℝ (Fin 1)) (stdSimplex.vertex 0)]
+    (default : StdSimplex ℝ (Fin 1)) = standardNegativePoint
+  rw [Subsingleton.elim (default : StdSimplex ℝ (Fin 1)) (StdSimplex.single 0)]
   ext j
   fin_cases j
-  simp [standardFaceMap, standardAffineSimplex, stdSimplex.map, standardNegativePoint]
+  simp [standardFaceMap, standardAffineSimplex, StdSimplex.map, standardNegativePoint]
 
 lemma standardFaceSimplex_one_point :
     TopCat.toSSetObj₀Equiv (standardFaceSimplex 0 (1 : Fin 2)) =
       standardPositivePoint := by
   change standardFaceMap 0 (1 : Fin 2)
-    (default : stdSimplex ℝ (Fin 1)) = standardPositivePoint
-  rw [Subsingleton.elim (default : stdSimplex ℝ (Fin 1)) (stdSimplex.vertex 0)]
+    (default : StdSimplex ℝ (Fin 1)) = standardPositivePoint
+  rw [Subsingleton.elim (default : StdSimplex ℝ (Fin 1)) (StdSimplex.single 0)]
   ext j
   fin_cases j
-  simp [standardFaceMap, standardAffineSimplex, stdSimplex.map, standardPositivePoint]
+  simp [standardFaceMap, standardAffineSimplex, StdSimplex.map, standardPositivePoint]
 
 /-- The two vertices of the standard one-simplex represent different components of the
 punctured line. -/

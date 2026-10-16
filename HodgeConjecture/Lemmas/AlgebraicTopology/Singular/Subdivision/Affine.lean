@@ -15,10 +15,13 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.BarycentricAllDegrees
 
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Subdivision.BarycentricOuterFaces
 import Mathlib.Logic.Equiv.PartialEquiv
+public import Mathlib.Geometry.Convex.ConvexSpace.Barycenter
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in
@@ -39,68 +42,72 @@ noncomputable section
 
 open CategoryTheory CategoryTheory.Limits PartialOrder Simplicial
 
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 /-- The affine combination of a finite family of points in a standard simplex. -/
 public noncomputable def stdSimplexAffineCombination
     {X Y : Type*} [Fintype X] [Fintype Y]
-    (p : X → stdSimplex ℝ Y) (w : stdSimplex ℝ X) :
-    stdSimplex ℝ Y :=
-  ⟨fun y ↦ ∑ x, w x * p x y,
-    ⟨fun y ↦ Finset.sum_nonneg (fun x _ ↦ mul_nonneg (w.2.1 x) ((p x).2.1 y)),
-      by
-        rw [Finset.sum_comm]
-        simp only [← Finset.mul_sum, stdSimplex.sum_eq_one, mul_one]⟩⟩
+    (p : X → StdSimplex ℝ Y) (w : StdSimplex ℝ X) :
+    StdSimplex ℝ Y :=
+  { weights := Finsupp.equivFunOnFinite.symm (fun y ↦ ∑ x, w.weights x * (p x).weights y)
+    nonneg y := by
+      exact Finset.sum_nonneg (fun x _ ↦ mul_nonneg (w.weights_nonneg x) ((p x).weights_nonneg y))
+    total := by
+      rw [Finsupp.sum_fintype _ _ (by simp)]
+      change (∑ y, ∑ x, w.weights x * (p x).weights y) = 1
+      rw [Finset.sum_comm]
+      simp only [← Finset.mul_sum, StdSimplex.total_of_fintype, mul_one] }
 
 @[simp]
 public theorem stdSimplexAffineCombination_apply
     {X Y : Type*} [Fintype X] [Fintype Y]
-    (p : X → stdSimplex ℝ Y) (w : stdSimplex ℝ X) (y : Y) :
-    stdSimplexAffineCombination p w y = ∑ x, w x * p x y :=
+    (p : X → StdSimplex ℝ Y) (w : StdSimplex ℝ X) (y : Y) :
+    (stdSimplexAffineCombination p w).weights y = ∑ x, w.weights x * (p x).weights y :=
   rfl
 
 /-- Affine combination varies continuously with its simplex of coefficients. -/
 public theorem continuous_stdSimplexAffineCombination
     {X Y : Type*} [Fintype X] [Fintype Y]
-    (p : X → stdSimplex ℝ Y) :
+    (p : X → StdSimplex ℝ Y) :
     Continuous (stdSimplexAffineCombination p) := by
-  unfold stdSimplexAffineCombination
-  apply Continuous.subtype_mk
+  rw [(StdSimplex.isEmbedding_toFun_comp_weights ℝ Y).continuous_iff]
   apply continuous_pi
   intro y
   exact continuous_finsetSum _ fun x _ ↦
-    ((continuous_apply x).comp continuous_subtype_val).mul continuous_const
+    (StdSimplex.continuous_weights_apply ℝ x).mul continuous_const
 
 /-- Reindexing the coefficients reindexes the vertices of an affine simplex. -/
 public theorem stdSimplexAffineCombination_map
     {X Y Z : Type*} [Fintype X] [Fintype Y] [Fintype Z]
-    (f : X → Y) (p : Y → stdSimplex ℝ Z) (w : stdSimplex ℝ X) :
-    stdSimplexAffineCombination p (stdSimplex.map f w) =
+    (f : X → Y) (p : Y → StdSimplex ℝ Z) (w : StdSimplex ℝ X) :
+    stdSimplexAffineCombination p (StdSimplex.map f w) =
       stdSimplexAffineCombination (p ∘ f) w := by
   classical
   ext z
-  simp only [stdSimplexAffineCombination_apply, stdSimplex.map_coe,
-    FunOnFinite.linearMap_apply_apply, Function.comp_apply, Finset.sum_mul]
+  simp only [stdSimplexAffineCombination_apply, StdSimplex.weights_map_apply,
+    Function.comp_apply, Finset.sum_mul]
   calc
-    ∑ y, ∑ x with f x = y, w x * p y z =
-        ∑ y, ∑ x with f x = y, w x * p (f x) z := by
+    ∑ y, ∑ x with f x = y, w.weights x * (p y).weights z =
+        ∑ y, ∑ x with f x = y, w.weights x * (p (f x)).weights z := by
       apply Finset.sum_congr rfl
       intro y _
       apply Finset.sum_congr rfl
       intro x hx
       rw [(Finset.mem_filter.mp hx).2]
-    _ = ∑ x, w x * p (f x) z :=
-      Finset.sum_fiberwise Finset.univ f (fun x ↦ w x * p (f x) z)
+    _ = ∑ x, w.weights x * (p (f x)).weights z :=
+      Finset.sum_fiberwise Finset.univ f (fun x ↦ w.weights x * (p (f x)).weights z)
 
 /-- An injective reindexing preserves the coefficient over every point of its image. -/
 @[simp]
 public theorem stdSimplex_map_apply_injective
     {X Y : Type*} [Fintype X] [Fintype Y]
     (f : X → Y) (hf : Function.Injective f)
-    (w : stdSimplex ℝ X) (x : X) :
-    stdSimplex.map f w (f x) = w x := by
+    (w : StdSimplex ℝ X) (x : X) :
+    (StdSimplex.map f w).weights (f x) = w.weights x := by
   classical
-  simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply, hf.eq_iff]
+  simp only [StdSimplex.weights_map_apply, hf.eq_iff]
   have hfilter : Finset.univ.filter (fun a : X ↦ a = x) = {x} := by
     ext a
     simp [eq_comm]
@@ -110,11 +117,11 @@ public theorem stdSimplex_map_apply_injective
 /-- An injective reindexing has zero coefficient away from its image. -/
 public theorem stdSimplex_map_apply_eq_zero_of_not_mem_range
     {X Y : Type*} [Fintype X] [Fintype Y]
-    (f : X → Y) (w : stdSimplex ℝ X) (y : Y)
+    (f : X → Y) (w : StdSimplex ℝ X) (y : Y)
     (hy : y ∉ Set.range f) :
-    stdSimplex.map f w y = 0 := by
+    (StdSimplex.map f w).weights y = 0 := by
   classical
-  simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  simp only [StdSimplex.weights_map_apply]
   apply Finset.sum_eq_zero
   intro x hx
   exact (hy ⟨x, (Finset.mem_filter.mp hx).2⟩).elim
@@ -122,16 +129,16 @@ public theorem stdSimplex_map_apply_eq_zero_of_not_mem_range
 /-- Mapping a standard simplex commutes with taking a finite affine combination. -/
 public theorem stdSimplex_map_affineCombination
     {X Y Z : Type*} [Fintype X] [Fintype Y] [Fintype Z]
-    (f : Y → Z) (p : X → stdSimplex ℝ Y) (w : stdSimplex ℝ X) :
-    stdSimplex.map f (stdSimplexAffineCombination p w) =
-      stdSimplexAffineCombination (fun x ↦ stdSimplex.map f (p x)) w := by
+    (f : Y → Z) (p : X → StdSimplex ℝ Y) (w : StdSimplex ℝ X) :
+    StdSimplex.map f (stdSimplexAffineCombination p w) =
+      stdSimplexAffineCombination (fun x ↦ StdSimplex.map f (p x)) w := by
   classical
   ext z
-  simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply,
+  simp only [StdSimplex.weights_map_apply,
     stdSimplexAffineCombination_apply]
   change (Finset.univ.filter (fun y ↦ f y = z)).sum
-      (fun y ↦ ∑ x, w x * p x y) =
-    ∑ x, w x * (Finset.univ.filter (fun y ↦ f y = z)).sum (fun y ↦ p x y)
+      (fun y ↦ ∑ x, w.weights x * (p x).weights y) =
+    ∑ x, w.weights x * (Finset.univ.filter (fun y ↦ f y = z)).sum (fun y ↦ (p x).weights y)
   simp_rw [Finset.mul_sum]
   rw [Finset.sum_comm]
 
@@ -139,10 +146,10 @@ public theorem stdSimplex_map_affineCombination
 standard simplex. -/
 public noncomputable def nonemptyFiniteChainBarycenter {n : ℕ}
     (A : NonemptyFiniteChains (ULift.{0} (Fin (n + 1)))) :
-    stdSimplex ℝ (Fin (n + 1)) := by
+    StdSimplex ℝ (Fin (n + 1)) := by
   haveI : Nonempty A.finset := A.nonempty.to_subtype
-  exact stdSimplex.map (fun a : A.finset ↦ a.1.down)
-    (stdSimplex.barycenter : stdSimplex ℝ A.finset)
+  exact StdSimplex.map (fun a : A.finset ↦ a.1.down)
+    (StdSimplex.barycenter : StdSimplex ℝ A.finset)
 
 set_option linter.style.haveILetI false in
 /-- Coordinate formula for the barycenter of a face. -/
@@ -150,12 +157,12 @@ set_option linter.style.haveILetI false in
 public theorem nonemptyFiniteChainBarycenter_apply {n : ℕ}
     (A : NonemptyFiniteChains (ULift.{0} (Fin (n + 1))))
     (i : Fin (n + 1)) :
-    nonemptyFiniteChainBarycenter A i =
+    (nonemptyFiniteChainBarycenter A).weights i =
       if ULift.up i ∈ A.finset then (A.finset.card : ℝ)⁻¹ else 0 := by
   classical
   letI : Nonempty A.finset := A.nonempty.to_subtype
   unfold nonemptyFiniteChainBarycenter
-  simp only [stdSimplex.map_coe, FunOnFinite.linearMap_apply_apply]
+  simp only [StdSimplex.weights_map_apply]
   by_cases hi : ULift.up i ∈ A.finset
   · rw [if_pos hi]
     have hfilter :
@@ -165,20 +172,20 @@ public theorem nonemptyFiniteChainBarycenter_apply {n : ℕ}
       simp only [Finset.mem_filter, Finset.mem_univ, true_and,
         Finset.mem_singleton]
       constructor
-      · exact fun ha ↦ Subtype.ext (ULift.ext _ _ ha)
+      · exact fun ha ↦ Subtype.ext (ULift.ext ha)
       · rintro rfl
         rfl
     rw [hfilter]
     simp only [Finset.sum_singleton]
-    change (stdSimplex.barycenter : stdSimplex ℝ A.finset).val _ = _
-    rw [stdSimplex.barycenter_apply, Fintype.card_coe]
+    change (StdSimplex.barycenter : StdSimplex ℝ A.finset).weights _ = _
+    rw [StdSimplex.weights_barycenter_apply, Fintype.card_coe]
   · rw [if_neg hi]
     have hfilter :
         Finset.univ.filter (fun a : A.finset ↦ a.1.down = i) = ∅ := by
       apply Finset.filter_eq_empty_iff.mpr
       intro a _ ha
       apply hi
-      have haup : a.1 = ULift.up i := ULift.ext _ _ ha
+      have haup : a.1 = ULift.up i := ULift.ext ha
       simpa [haup] using a.2
     rw [hfilter]
     simp
@@ -206,11 +213,11 @@ public theorem nonemptyFiniteChainBarycenter_face
     (A : NonemptyFiniteChains (ULift.{0} (Fin (n + 1)))) :
     nonemptyFiniteChainBarycenter
         (A.map (standardSimplexFaceVertexOrderHom n p)) =
-      stdSimplex.map p.succAbove (nonemptyFiniteChainBarycenter A) := by
+      StdSimplex.map p.succAbove (nonemptyFiniteChainBarycenter A) := by
   classical
   let g := standardSimplexFaceVertexOrderHom n p
   change nonemptyFiniteChainBarycenter (A.map g) =
-    stdSimplex.map p.succAbove (nonemptyFiniteChainBarycenter A)
+    StdSimplex.map p.succAbove (nonemptyFiniteChainBarycenter A)
   have hg (a : ULift.{0} (Fin (n + 1))) :
       g a = ULift.up (p.succAbove a.down) := by
     induction a
@@ -233,7 +240,7 @@ public theorem nonemptyFiniteChainBarycenter_face
       constructor
       · rintro ⟨a, ha, hga⟩
         rw [hg a] at hga
-        have haeq : a = ULift.up x := ULift.ext _ _
+        have haeq : a = ULift.up x := ULift.ext
           (Fin.succAbove_right_injective (ULift.up_injective hga))
         simpa [haeq] using ha
       · intro hx
@@ -257,7 +264,7 @@ public theorem nonemptyFiniteChainBarycenter_face
 public noncomputable def affineFlagContinuousMap (n k : ℕ)
     (F : ComposableArrows
       (NonemptyFiniteChains (ULift.{0} (Fin (n + 1)))) k) :
-    C(stdSimplex ℝ (Fin (k + 1)), stdSimplex ℝ (Fin (n + 1))) :=
+    C(StdSimplex ℝ (Fin (k + 1)), StdSimplex ℝ (Fin (n + 1))) :=
   ⟨stdSimplexAffineCombination
       (fun j ↦ nonemptyFiniteChainBarycenter (F.obj j)),
     continuous_stdSimplexAffineCombination _⟩
@@ -265,8 +272,8 @@ public noncomputable def affineFlagContinuousMap (n k : ℕ)
 /-- The continuous affine inclusion of a codimension-one face of a standard simplex. -/
 public noncomputable def standardSimplexFaceContinuousMap
     (n : ℕ) (p : Fin (n + 2)) :
-    C(stdSimplex ℝ (Fin (n + 1)), stdSimplex ℝ (Fin (n + 2))) :=
-  ⟨stdSimplex.map p.succAbove, stdSimplex.continuous_map p.succAbove⟩
+    C(StdSimplex ℝ (Fin (n + 1)), StdSimplex ℝ (Fin (n + 2))) :=
+  ⟨StdSimplex.map p.succAbove, StdSimplex.continuous_map ℝ p.succAbove⟩
 
 /-- Affine realization of flags is natural under ambient coface inclusions. -/
 public theorem affineFlagContinuousMap_face
@@ -282,7 +289,7 @@ public theorem affineFlagContinuousMap_face
   change stdSimplexAffineCombination
       (fun j ↦ nonemptyFiniteChainBarycenter
         (((SimplexCategory.sd.{0}.map (SimplexCategory.δ p)).app _ F).obj j)) w =
-    stdSimplex.map p.succAbove
+    StdSimplex.map p.succAbove
       (stdSimplexAffineCombination
         (fun j ↦ nonemptyFiniteChainBarycenter (F.obj j)) w)
   rw [stdSimplex_map_affineCombination]
@@ -297,8 +304,8 @@ public theorem affineFlagContinuousMap_face
 /-- The face inclusion as a morphism of topological spaces. -/
 public noncomputable def standardSimplexFaceTopCatMap
     (n : ℕ) (p : Fin (n + 2)) :
-    TopCat.of (stdSimplex ℝ (Fin (n + 1))) ⟶
-      TopCat.of (stdSimplex ℝ (Fin (n + 2))) :=
+    TopCat.of (StdSimplex ℝ (Fin (n + 1))) ⟶
+      TopCat.of (StdSimplex ℝ (Fin (n + 2))) :=
   TopCat.ofHom (standardSimplexFaceContinuousMap n p)
 
 /-- A flag in the barycentric subdivision nerve, regarded as an ordinary singular simplex of
@@ -306,7 +313,7 @@ the ambient topological standard simplex. -/
 public noncomputable def affineFlagSingularSimplex (n k : ℕ)
     (F : (SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)).obj
       (Opposite.op (SimplexCategory.mk k))) :
-    (TopCat.toSSet.obj (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).obj
+    (TopCat.toSSet.obj (TopCat.of (StdSimplex ℝ (Fin (n + 1))))).obj
       (Opposite.op (SimplexCategory.mk k)) :=
   (TopCat.toSSetObjEquiv _ _).symm (affineFlagContinuousMap n k F)
 
@@ -317,7 +324,7 @@ public theorem toSSetObjEquiv_map_apply
     {X Y : TopCat.{0}} (f : X ⟶ Y) {k : ℕ}
     (x : (TopCat.toSSet.obj X).obj
       (Opposite.op (SimplexCategory.mk k)))
-    (w : stdSimplex ℝ (Fin (k + 1))) :
+    (w : StdSimplex ℝ (Fin (k + 1))) :
     Y.toSSetObjEquiv _ ((TopCat.toSSet.map f).app _ x) w =
       f (X.toSSetObjEquiv _ x w) :=
   rfl
@@ -349,7 +356,7 @@ public theorem affineFlagSingularSimplex_delta
     (n k : ℕ) (i : Fin (k + 2))
     (F : (SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)).obj
       (Opposite.op (SimplexCategory.mk (k + 1)))) :
-    (TopCat.toSSet.obj (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).δ i
+    (TopCat.toSSet.obj (TopCat.of (StdSimplex ℝ (Fin (n + 1))))).δ i
         (affineFlagSingularSimplex n (k + 1) F) =
       affineFlagSingularSimplex n k
         ((SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)).δ i F) := by
@@ -358,7 +365,7 @@ public theorem affineFlagSingularSimplex_delta
   intro w
   change stdSimplexAffineCombination
       (fun j ↦ nonemptyFiniteChainBarycenter (F.obj j))
-        (stdSimplex.map i.succAbove w) =
+        (StdSimplex.map i.succAbove w) =
     stdSimplexAffineCombination
       (fun j ↦ nonemptyFiniteChainBarycenter
         (((SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)).δ i F).obj j)) w
@@ -369,10 +376,10 @@ public theorem affineFlagSingularSimplex_delta
 public noncomputable def affineFlagChainComponent (n k : ℕ) :
     ((SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)).chainComplex
         (AddCommGrpCat.of ℤ)).X k ⟶
-      ((TopCat.toSSet.obj (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).chainComplex
+      ((TopCat.toSSet.obj (TopCat.of (StdSimplex ℝ (Fin (n + 1))))).chainComplex
         (AddCommGrpCat.of ℤ)).X k :=
   Sigma.desc (fun F ↦
-    (TopCat.toSSet.obj (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).ιChainComplex
+    (TopCat.toSSet.obj (TopCat.of (StdSimplex ℝ (Fin (n + 1))))).ιChainComplex
       (affineFlagSingularSimplex n k F))
 
 @[reassoc (attr := simp)]
@@ -382,7 +389,7 @@ public theorem iota_affineFlagChainComponent
       (Opposite.op (SimplexCategory.mk k))) :
     (SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)).ιChainComplex F ≫
         affineFlagChainComponent n k =
-      (TopCat.toSSet.obj (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).ιChainComplex
+      (TopCat.toSSet.obj (TopCat.of (StdSimplex ℝ (Fin (n + 1))))).ιChainComplex
         (affineFlagSingularSimplex n k F) := by
   apply Sigma.ι_desc
 
@@ -390,7 +397,7 @@ public theorem iota_affineFlagChainComponent
 public theorem affineFlagChainComponents_commute (n k : ℕ) :
     affineFlagChainComponent n (k + 1) ≫
         ((TopCat.toSSet.obj
-          (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).chainComplex
+          (TopCat.of (StdSimplex ℝ (Fin (n + 1))))).chainComplex
             (AddCommGrpCat.of ℤ)).d (k + 1) k =
       ((SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)).chainComplex
           (AddCommGrpCat.of ℤ)).d (k + 1) k ≫
@@ -408,7 +415,7 @@ chain complex of the topological standard simplex. -/
 public noncomputable def affineFlagChainMap (n : ℕ) :
     (SimplexCategory.sd.{0}.obj (SimplexCategory.mk n)).chainComplex
         (AddCommGrpCat.of ℤ) ⟶
-      (TopCat.toSSet.obj (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).chainComplex
+      (TopCat.toSSet.obj (TopCat.of (StdSimplex ℝ (Fin (n + 1))))).chainComplex
         (AddCommGrpCat.of ℤ) :=
   ChainComplex.ofHom (affineFlagChainComponent n)
     (affineFlagChainComponents_commute n)
@@ -455,7 +462,7 @@ public theorem affineFlagChainMap_face
 an integral singular chain. -/
 public noncomputable def affineSubdividedSimplexFundamentalChain (n : ℕ) :
     AddCommGrpCat.of ℤ ⟶
-      ((TopCat.toSSet.obj (TopCat.of (stdSimplex ℝ (Fin (n + 1))))).chainComplex
+      ((TopCat.toSSet.obj (TopCat.of (StdSimplex ℝ (Fin (n + 1))))).chainComplex
         (AddCommGrpCat.of ℤ)).X n :=
   subdividedSimplexFundamentalChain n ≫ (affineFlagChainMap n).f n
 
@@ -487,7 +494,7 @@ public theorem affineSubdividedSimplexFundamentalChain_face
 the ambient topological `(n+1)`-simplex. -/
 public noncomputable def affineSubdividedSimplexAlternatingFaceChain (n : ℕ) :
     AddCommGrpCat.of ℤ ⟶
-      ((TopCat.toSSet.obj (TopCat.of (stdSimplex ℝ (Fin (n + 2))))).chainComplex
+      ((TopCat.toSSet.obj (TopCat.of (StdSimplex ℝ (Fin (n + 2))))).chainComplex
         (AddCommGrpCat.of ℤ)).X n :=
   subdividedSimplexAlternatingFaceChain n ≫ (affineFlagChainMap (n + 1)).f n
 
@@ -495,7 +502,7 @@ public noncomputable def affineSubdividedSimplexAlternatingFaceChain (n : ℕ) :
 topological standard simplex. -/
 public noncomputable def affineSubdividedSimplexExpectedBoundaryChain (n : ℕ) :
     AddCommGrpCat.of ℤ ⟶
-      ((TopCat.toSSet.obj (TopCat.of (stdSimplex ℝ (Fin (n + 2))))).chainComplex
+      ((TopCat.toSSet.obj (TopCat.of (StdSimplex ℝ (Fin (n + 2))))).chainComplex
         (AddCommGrpCat.of ℤ)).X n :=
   ∑ p : Fin (n + 2), (-1 : ℤ) ^ p.val •
     (affineSubdividedSimplexFundamentalChain n ≫
@@ -521,7 +528,7 @@ ordinary singular chains. -/
 public theorem affineSubdividedSimplexFundamentalChain_boundary (n : ℕ) :
     affineSubdividedSimplexFundamentalChain (n + 1) ≫
         ((TopCat.toSSet.obj
-          (TopCat.of (stdSimplex ℝ (Fin (n + 2))))).chainComplex
+          (TopCat.of (StdSimplex ℝ (Fin (n + 2))))).chainComplex
             (AddCommGrpCat.of ℤ)).d (n + 1) n =
       affineSubdividedSimplexAlternatingFaceChain n := by
   let F := affineFlagChainMap (n + 1)
@@ -544,7 +551,7 @@ public theorem affineSubdividedSimplexFundamentalChain_boundary_expected
     (n : ℕ) :
     affineSubdividedSimplexFundamentalChain (n + 1) ≫
         ((TopCat.toSSet.obj
-          (TopCat.of (stdSimplex ℝ (Fin (n + 2))))).chainComplex
+          (TopCat.of (StdSimplex ℝ (Fin (n + 2))))).chainComplex
             (AddCommGrpCat.of ℤ)).d (n + 1) n =
       affineSubdividedSimplexExpectedBoundaryChain n := by
   rw [affineSubdividedSimplexFundamentalChain_boundary,
@@ -555,7 +562,7 @@ public noncomputable def singularSimplexTopCatMap
     (X : TopCat.{0}) (n : ℕ)
     (x : (TopCat.toSSet.obj X).obj
       (Opposite.op (SimplexCategory.mk n))) :
-    TopCat.of (stdSimplex ℝ (Fin (n + 1))) ⟶ X :=
+    TopCat.of (StdSimplex ℝ (Fin (n + 1))) ⟶ X :=
   TopCat.ofHom (X.toSSetObjEquiv _ x)
 
 /-- The map represented by a face of a singular simplex is obtained by precomposing with the
@@ -668,7 +675,7 @@ public theorem affineSubdivisionSingularSimplexChain_boundary
         (_ ≫ F.f n) := by rw [F.comm]
     _ = (affineSubdividedSimplexFundamentalChain (n + 1) ≫
         ((TopCat.toSSet.obj
-          (TopCat.of (stdSimplex ℝ (Fin (n + 2))))).chainComplex
+          (TopCat.of (StdSimplex ℝ (Fin (n + 2))))).chainComplex
             (AddCommGrpCat.of ℤ)).d (n + 1) n) ≫ F.f n :=
       (Category.assoc _ _ _).symm
     _ = affineSubdividedSimplexExpectedBoundaryChain n ≫ F.f n := by

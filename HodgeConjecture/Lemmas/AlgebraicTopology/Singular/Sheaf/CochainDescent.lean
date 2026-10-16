@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.Cochain
 public import Mathlib.AlgebraicTopology.SimplicialSet.TopAdj
 public import Mathlib.Topology.Sheaves.Flasque
@@ -42,6 +44,8 @@ open CategoryTheory Limits TopologicalSpace
 open scoped Simplicial
 
 universe u
+
+open Convexity
 
 namespace AlgebraicTopology.Singular
 
@@ -193,7 +197,7 @@ lemma exists_openSimplex_inf_of_eq {U A B : Opens X} (i : A ⟶ U) (j : B ⟶ U)
   let ft := (TopCat.of B).toSSetObjEquiv m t
   have hst : ∀ z, (fs z).1 = (ft z).1 := fun z ↦
     congrArg Subtype.val (congrArg (fun q ↦ (TopCat.of U).toSSetObjEquiv m q z) h)
-  let f : C(stdSimplex ℝ (Fin (n + 1)), TopCat.of ↑(A ⊓ B)) :=
+  let f : C(StdSimplex ℝ (Fin (n + 1)), TopCat.of ↑(A ⊓ B)) :=
     ⟨fun z ↦ ⟨(fs z).1, (fs z).2, by rw [hst z]; exact (ft z).2⟩,
       Continuous.subtype_mk
         (continuous_subtype_val.comp fs.continuous) _⟩
