@@ -21,7 +21,7 @@ import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Component.Dimension
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
 import HodgeConjecture.Mathlib.AlgebraicGeometry.GenericPoint
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.RingTheory.Unramified.LocalStructure
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.PointwiseDimension
 

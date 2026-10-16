@@ -13,7 +13,7 @@ public import Mathlib.Topology.Sets.Closeds
 public import Mathlib.CategoryTheory.Abelian.GrothendieckCategory.EnoughInjectives
 public import Mathlib.Topology.Sheaves.Abelian
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Cohomology with support in a closed set, via the pushforward of the constant sheaf

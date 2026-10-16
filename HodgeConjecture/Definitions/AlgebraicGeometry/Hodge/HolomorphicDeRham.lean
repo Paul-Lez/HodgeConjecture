@@ -23,7 +23,7 @@ public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.Algebra.Homology.SingleHomology
 public import Mathlib.Topology.Sheaves.Abelian
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.HolomorphicPoincare
 import HodgeConjecture.Mathlib.Topology.Sheaves.StalkExact
 import Mathlib.Algebra.Category.Grp.Zero

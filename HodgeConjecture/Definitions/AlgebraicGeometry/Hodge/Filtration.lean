@@ -31,7 +31,7 @@ public import Mathlib.Topology.Sheaves.Abelian
 public import Mathlib.CategoryTheory.Sites.SheafCohomology.Basic
 public import Mathlib.Data.Int.Cast.Lemmas
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # The Hodge filtration
@@ -177,7 +177,8 @@ private lemma ofHom_algebraMap_comp_complexScalarSMul (q : K) :
                 Complex.instSemiring.toNonAssocSemiring.toAddCommMonoidWithOne.toAddZeroClass.toAddZero RingHom.instFunLike _
         (algebraMap K ℂ)) := by
   ext r
-  simp [map_mul]
+  change algebraMap K ℂ q * algebraMap K ℂ r = algebraMap K ℂ (q * r)
+  exact (map_mul (algebraMap K ℂ) q r).symm
 
 /-- The constant-presheaf map induced by the inclusion `K → ℂ`, followed by scalar multiplication
 by `algebraMap K ℂ q` on the constant complex presheaf, is the constant-presheaf map induced by the
@@ -194,10 +195,18 @@ private lemma fieldToComplexConstantSheaf_scalar (q : K) :
       complexScalarSheaf X (algebraMap K ℂ q) =
     fieldScalarSheaf K X q ≫
       fieldToComplexConstantSheaf K X := by
-  simp [fieldToComplexConstantSheaf, fieldScalarSheaf, complexScalarSheaf, constantSheaf,
-    TopCat.Sheaf.const, TopCat.Sheaf.constantFunctor, ← Functor.map_comp,
-    ← ofHom_algebraMap_comp_complexScalarSMul,
-    const_map_algebraMap_comp_complexScalarPresheaf]
+  change (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+      (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom) ≫
+        (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+          (AddCommGrpCat.ofHom (DistribSMul.toAddMonoidHom ℂ (algebraMap K ℂ q))) =
+    (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+      (AddCommGrpCat.ofHom (AddMonoidHom.mulLeft q)) ≫
+        (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+          (AddCommGrpCat.ofHom (algebraMap K ℂ).toAddMonoidHom)
+  rw [← Functor.map_comp, ← Functor.map_comp, ofHom_algebraMap_comp_complexScalarSMul]
+  apply congrArg (TopCat.Sheaf.constantFunctor ↧(ComplexPoint X)).map
+  ext r
+  rfl
 
 /-- Let `K` be a field, `X` a scheme over `ℂ`, and `q ∈ K`. This endomorphism of the integer-indexed
 complex `K[0]` on the analytic space `X(ℂ)` multiplies its degree-zero constant sheaf by `q`. -/

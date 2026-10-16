@@ -34,6 +34,8 @@ the explicit real affine cycle generates the corresponding real relative homolog
 open CategoryTheory Limits
 open scoped Simplicial
 
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 def standardComplexLocalClassMul (p : ℕ) :
@@ -106,7 +108,7 @@ lemma isEmpty_puncturedPair_zero_simplices (n : ℕ) :
   constructor
   intro σ
   let f := ((puncturedPair ℝ 0).snd.toSSetObjEquiv _ ) σ
-  let y := f stdSimplex.barycenter
+  let y := f StdSimplex.barycenter
   apply y.2
   funext j
   exact Fin.elim0 j

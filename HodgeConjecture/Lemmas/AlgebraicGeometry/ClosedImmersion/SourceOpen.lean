@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.ClosedImmersion.SourceOpen
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Restricting the source of a closed immersion without losing closedness

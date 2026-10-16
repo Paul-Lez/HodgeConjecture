@@ -16,6 +16,7 @@ limitations under the License.
 module
 
 public import Mathlib.AlgebraicTopology.SingularSet
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in
@@ -34,6 +35,8 @@ noncomputable section
 
 open Set
 
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 /-- The pullback of an open cover along one singular simplex has a positive Lebesgue number. -/
@@ -43,7 +46,7 @@ public theorem singularSimplex_openCover_lebesgueNumber
     (n : ℕ)
     (x : (TopCat.toSSet.obj X).obj
       (Opposite.op (SimplexCategory.mk n))) :
-    ∃ δ > 0, ∀ w : stdSimplex ℝ (Fin (n + 1)),
+    ∃ δ > 0, ∀ w : StdSimplex ℝ (Fin (n + 1)),
       ∃ i, Metric.ball w δ ⊆ (X.toSSetObjEquiv _ x) ⁻¹' U i := by
   let f := X.toSSetObjEquiv (Opposite.op (SimplexCategory.mk n)) x
   obtain ⟨δ, hδ, hLeb⟩ := lebesgue_number_lemma_of_metric

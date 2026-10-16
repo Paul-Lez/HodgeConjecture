@@ -33,7 +33,7 @@ lemma shortExact_map_forget {S : ShortComplex (TopCat.Sheaf AddCommGrpCat.{u} X)
     (hS : S.ShortExact) [S.X₁.IsFlasque] :
     (S.map (TopCat.Sheaf.forget AddCommGrpCat.{u} X)).ShortExact := by
   let F := TopCat.Sheaf.forget AddCommGrpCat.{u} X
-  have hleft := ((Functor.preservesFiniteLimits_tfae F).out 3 1).mp
+  have hleft := ((Functor.preservesFiniteLimits_tfae F).out 4 2).mp
     (inferInstance : PreservesFiniteLimits F)
   have he : (S.map F).Exact ∧ Mono (S.map F).f := hleft S ⟨hS.exact, hS.mono_f⟩
   have hg : Epi (F.map S.g) := by

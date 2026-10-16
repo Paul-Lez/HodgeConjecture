@@ -15,6 +15,7 @@ limitations under the License.
 -/
 module
 
+public import Mathlib.CategoryTheory.Abelian.Exact
 public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
 public import Mathlib.Algebra.Homology.HomologySequenceLemmas
 

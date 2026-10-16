@@ -19,7 +19,7 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Proper
 public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Scheme
 public import Mathlib.RingTheory.MvPolynomial.Homogeneous
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Proper
 
 /-!
@@ -63,7 +63,7 @@ one. The degree-zero homogeneous subring of `R[x_i | i ∈ n]` is isomorphic to 
 equivalence takes the constant coefficient, with inverse the inclusion of constant polynomials. -/
 noncomputable def degreeZeroEquiv (R : Type*) [CommRing R] :
     homogeneousSubmodule n R 0 ≃+* R where
-  toFun f := coeff 0 f.1
+  toFun f := f.1.coeff 0
   invFun r := ⟨C r, isHomogeneous_C n r⟩
   left_inv f := Subtype.ext (totalDegree_eq_zero_iff_eq_C.mp
     ((totalDegree_zero_iff_isHomogeneous n).mpr f.2)).symm
@@ -73,7 +73,7 @@ noncomputable def degreeZeroEquiv (R : Type*) [CommRing R] :
       ((totalDegree_zero_iff_isHomogeneous n).mpr x.2)
     have hy := totalDegree_eq_zero_iff_eq_C.mp
       ((totalDegree_zero_iff_isHomogeneous n).mpr y.2)
-    change coeff 0 (x.1 * y.1) = coeff 0 x.1 * coeff 0 y.1
+    change (x.1 * y.1).coeff 0 = x.1.coeff 0 * y.1.coeff 0
     rw [hx, hy, ← map_mul, coeff_zero_C, coeff_zero_C, coeff_zero_C]
   map_add' _ _ := rfl
 

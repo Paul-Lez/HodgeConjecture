@@ -58,7 +58,7 @@ lemma FiniteType.exists_ringKrullDim_eq_and_trdeg_eq :
   refine ⟨n, ?_, ?_⟩
   · rw [PolynomialCatenary.ringKrullDim_eq_of_isIntegral_of_injective hg,
       MvPolynomial.ringKrullDim_of_isNoetherianRing,
-      ringKrullDim_eq_zero_of_field, Nat.card_fin]
+      ringKrullDim_eq_zero_of_field, ENat.card_eq_coe_fintype_card, Fintype.card_fin]
     simp
   · have h := trdeg_add_eq k (MvPolynomial (Fin n) k) (A := A)
     have hzero : Algebra.trdeg (MvPolynomial (Fin n) k) A = 0 := trdeg_eq_zero

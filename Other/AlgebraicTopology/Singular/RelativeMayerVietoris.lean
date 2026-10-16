@@ -7,6 +7,9 @@ https://www.apache.org/licenses/LICENSE-2.0
 -/
 module
 
+import Mathlib.CategoryTheory.Limits.MonoCoprod
+import Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono
+
 public import Other.AlgebraicTopology.Singular.MayerVietoris
 public import Mathlib.Algebra.Homology.ShortComplex.SnakeLemma
 
@@ -211,9 +214,6 @@ theorem subsetMayerVietorisToAmbient_mono_third :
       (ModuleCat.of ℚ ℚ))
   dsimp [SSet.chainComplexMap, SSet.chainComplexFunctor]
   apply +allowSynthFailures Functor.map_mono
-  apply +allowSynthFailures Functor.map_mono
-  dsimp [SSet, SimplicialObject.whiskering, SimplicialObject]
-  infer_instance
 
 /-- The quotient Mayer--Vietoris chain sequence, constructed as the componentwise cokernel
 of the actual subset-inclusion diagram. -/

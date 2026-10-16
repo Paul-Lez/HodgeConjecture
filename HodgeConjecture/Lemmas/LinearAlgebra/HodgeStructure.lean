@@ -100,8 +100,7 @@ lemma conjugate_ofBase (v : V) : conjugate V (ofBase ℚ V v) = ofBase ℚ V v :
 
 @[simp]
 lemma conjugate_conjugate (x : ℂ ⊗[ℚ] V) : conjugate V (conjugate V x) = x := by
-  refine TensorProduct.induction_on x ?_ ?_ ?_
-  · simp
+  refine TensorProduct.inductionOn (motive := fun x => conjugate V (conjugate V x) = x) x ?_ ?_
   · intro z v
     simp
   · intro x y hx hy

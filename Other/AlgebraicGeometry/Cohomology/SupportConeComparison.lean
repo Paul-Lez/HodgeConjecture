@@ -17,7 +17,7 @@ module
 
 public import Other.AlgebraicGeometry.Cohomology.SupportSingularNaturality
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Other.AlgebraicGeometry.Cohomology.SupportSingularComparison
 
 /-!

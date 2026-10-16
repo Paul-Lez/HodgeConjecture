@@ -15,6 +15,9 @@ limitations under the License.
 -/
 module
 
+import Mathlib.CategoryTheory.Limits.MonoCoprod
+import Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.ChartFundamentalClass
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.Field
 public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
@@ -770,9 +773,6 @@ instance pointComplementAmbientChainMap_mono (x : X) :
   dsimp [pointComplementAmbientChainMap, SSet.chainComplexMap,
     SSet.chainComplexFunctor]
   apply +allowSynthFailures Functor.map_mono
-  apply +allowSynthFailures Functor.map_mono
-  dsimp [SSet, SimplicialObject.whiskering, SimplicialObject]
-  infer_instance
 
 instance ambientPointComplementSubspaceChainMap_mono (x : X) :
     Mono (ambientPointComplementSubspaceChainMap x) := by

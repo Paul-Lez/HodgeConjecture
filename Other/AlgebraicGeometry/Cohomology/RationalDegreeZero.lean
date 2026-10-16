@@ -20,7 +20,7 @@ import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Hodge.Filtration
 public import Mathlib.Algebra.Homology.DerivedCategory.Ext.Basic
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Other.AlgebraicTopology.Sheaf.ConstantDegreeZero
 public import Other.AlgebraicGeometry.Hodge.Filtration
 

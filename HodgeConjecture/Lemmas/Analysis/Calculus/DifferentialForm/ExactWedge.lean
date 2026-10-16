@@ -17,6 +17,7 @@ module
 
 public import HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors
 public import Mathlib.Analysis.Calculus.DifferentialForm.Basic
+import Mathlib.Analysis.Calculus.FDeriv.ContinuousAlternatingMap
 
 /-!
 # Wedges of exact one-forms

@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.CoverSmall
 
 /-!
@@ -35,6 +37,8 @@ inclusion is a split monomorphism in every degree and is therefore cancellable o
 open CategoryTheory CategoryTheory.Limits
 open scoped Simplicial
 
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 /-- A singular simplex factors through a subspace exactly when its topological image is
@@ -49,7 +53,7 @@ lemma singularSimplex_mem_range_subset
   · rintro ⟨y, rfl⟩ _ ⟨t, rfl⟩
     exact (TopCat.of s).toSSetObjEquiv n y t |>.2
   · intro h
-    let f : C(stdSimplex ℝ (Fin (n.unop.len + 1)), TopCat.of s) :=
+    let f : C(StdSimplex ℝ (Fin (n.unop.len + 1)), TopCat.of s) :=
       ⟨fun t ↦ ⟨X.toSSetObjEquiv n x t, h ⟨t, rfl⟩⟩,
         Continuous.subtype_mk (X.toSSetObjEquiv n x).continuous _⟩
     refine ⟨((TopCat.of s).toSSetObjEquiv n).symm f, ?_⟩

@@ -20,6 +20,7 @@ public import Mathlib.RingTheory.Ideal.Height
 import Mathlib.Algebra.MvPolynomial.Monad
 import Mathlib.Data.List.Indexes
 import Mathlib.RingTheory.Ideal.HasGoingUp
+import Mathlib.RingTheory.Localization.Submodule
 import Mathlib.RingTheory.KrullDimension.Field
 import Mathlib.RingTheory.KrullDimension.Polynomial
 
@@ -173,7 +174,7 @@ lemma sum_r_mul_ne (vlt : ∀ i, v i < up) (wlt : ∀ i, w i < up) (ne : v ≠ w
   simpa only [ofDigits_eq_sum_mapIdx, mapIdx_eq_ofFn, get_ofFn, length_ofFn,
     Fin.val_cast, mul_comm, sum_ofFn] using! h
 
-lemma degreeOf_zero_t {a : k} (ha : a ≠ 0) : ((T f) (monomial v a)).degreeOf 0 =
+lemma degreeOf_zero_t {a : k} (ha : a ≠ 0) : ((T f) (MvPolynomial.monomial v a)).degreeOf 0 =
     ∑ i : Fin (n + 1), r i * v i := by
   rw [← natDegree_finSuccEquiv, monomial_eq, Finsupp.prod_pow v fun a ↦ X a]
   simp only [Fin.prod_univ_succ, Fin.sum_univ_succ, map_mul, map_prod, map_pow,
@@ -191,8 +192,8 @@ lemma degreeOf_zero_t {a : k} (ha : a ≠ 0) : ((T f) (monomial v a)).degreeOf 0
 
 /-- Distinct supported monomials acquire distinct degrees in the distinguished variable. -/
 lemma degreeOf_t_ne_of_ne (hv : v ∈ f.support) (hw : w ∈ f.support) (ne : v ≠ w) :
-    (T f <| monomial v <| coeff v f).degreeOf 0 ≠
-    (T f <| monomial w <| coeff w f).degreeOf 0 := by
+    (T f <| MvPolynomial.monomial v <| f.coeff v).degreeOf 0 ≠
+    (T f <| MvPolynomial.monomial w <| f.coeff w).degreeOf 0 := by
   rw [degreeOf_zero_t _ _ <| mem_support_iff.mp hv,
     degreeOf_zero_t _ _ <| mem_support_iff.mp hw]
   refine sum_r_mul_ne f v w (fun i ↦ ?_) (fun i ↦ ?_) ne <;>
@@ -200,15 +201,15 @@ lemma degreeOf_t_ne_of_ne (hv : v ∈ f.support) (hw : w ∈ f.support) (ne : v 
     (by lia)
 
 lemma leadingCoeff_finSuccEquiv_t :
-    (finSuccEquiv k n ((T f) ((monomial v) (coeff v f)))).leadingCoeff =
-    algebraMap k _ (coeff v f) := by
+    (MvPolynomial.finSuccEquiv k n ((T f) ((MvPolynomial.monomial v) (f.coeff v)))).leadingCoeff =
+    algebraMap k _ (f.coeff v) := by
   rw [monomial_eq, Finsupp.prod_fintype]
   · simp only [map_mul, map_prod, leadingCoeff_mul, leadingCoeff_prod]
     rw [AlgEquiv.ofAlgHom_apply, algHom_C, algebraMap_eq, finSuccEquiv_apply,
       eval₂Hom_C, coe_comp]
     simp only [AlgEquiv.ofAlgHom_apply, Function.comp_apply, leadingCoeff_C, map_pow,
       leadingCoeff_pow, algebraMap_eq]
-    have : ∀ j, ((finSuccEquiv k n) ((T1 f) 1 (X j))).leadingCoeff = 1 := fun j ↦ by
+    have : ∀ j, ((MvPolynomial.finSuccEquiv k n) ((T1 f) 1 (X j))).leadingCoeff = 1 := fun j ↦ by
       by_cases h : j = 0
       · simp [h, finSuccEquiv_apply]
       · simp only [aeval_eq_bind₁, bind₁_X_right, if_neg h, one_smul, map_add, map_pow]
@@ -219,26 +220,26 @@ lemma leadingCoeff_finSuccEquiv_t :
 
 /-- The transformed polynomial has unit leading coefficient in the distinguished variable. -/
 lemma T_leadingCoeff_isUnit (fne : f ≠ 0) :
-    IsUnit (finSuccEquiv k n (T f f)).leadingCoeff := by
+    IsUnit (MvPolynomial.finSuccEquiv k n (T f f)).leadingCoeff := by
   obtain ⟨v, vin, vs⟩ := Finset.exists_max_image f.support
-    (fun v ↦ (T f ((monomial v) (coeff v f))).degreeOf 0) (support_nonempty.mpr fne)
-  set h := fun w ↦ (MvPolynomial.monomial w) (coeff w f)
+    (fun v ↦ (T f ((MvPolynomial.monomial v) (f.coeff v))).degreeOf 0) (support_nonempty.mpr fne)
+  set h := fun w ↦ (MvPolynomial.monomial w) (f.coeff w)
   simp only [← natDegree_finSuccEquiv] at vs
-  replace vs : ∀ x ∈ f.support \ {v}, (finSuccEquiv k n ((T f) (h x))).degree <
-      (finSuccEquiv k n ((T f) (h v))).degree := by
+  replace vs : ∀ x ∈ f.support \ {v}, (MvPolynomial.finSuccEquiv k n ((T f) (h x))).degree <
+      (MvPolynomial.finSuccEquiv k n ((T f) (h v))).degree := by
     intro x hx
     obtain ⟨h1, h2⟩ := Finset.mem_sdiff.mp hx
     apply degree_lt_degree <| lt_of_le_of_ne (vs x h1) ?_
     simpa only [natDegree_finSuccEquiv]
       using degreeOf_t_ne_of_ne f _ _ h1 vin <| ne_of_not_mem_cons h2
   have coeff_eq :
-      (finSuccEquiv k n ((T f) (h v + ∑ x ∈ f.support \ {v}, h x))).leadingCoeff =
-        (finSuccEquiv k n ((T f) (h v))).leadingCoeff := by
+      (MvPolynomial.finSuccEquiv k n ((T f) (h v + ∑ x ∈ f.support \ {v}, h x))).leadingCoeff =
+        (MvPolynomial.finSuccEquiv k n ((T f) (h v))).leadingCoeff := by
     simp only [map_add, map_sum]
     rw [add_comm]
     apply leadingCoeff_add_of_degree_lt <| (lt_of_le_of_lt <| degree_sum_le _ _) ?_
     have h2 : h v ≠ 0 := by simpa [h] using mem_support_iff.mp vin
-    replace h2 : (finSuccEquiv k n ((T f) (h v))) ≠ 0 := fun eq ↦ h2 <|
+    replace h2 : (MvPolynomial.finSuccEquiv k n ((T f) (h v))) ≠ 0 := fun eq ↦ h2 <|
       by simpa only [map_eq_zero_iff _ (AlgEquiv.injective _)] using eq
     exact (Finset.sup_lt_iff <| Ne.bot_lt (fun x ↦ h2 <| degree_eq_bot.mp x)).mpr vs
   nth_rw 2 [← f.support_sum_monomial_coeff]

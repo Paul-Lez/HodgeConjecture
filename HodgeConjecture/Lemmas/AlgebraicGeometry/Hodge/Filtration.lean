@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Hodge.Filtration
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # The Hodge filtration

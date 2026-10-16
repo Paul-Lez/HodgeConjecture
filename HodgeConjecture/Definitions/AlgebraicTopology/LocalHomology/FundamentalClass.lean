@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Cohomology
 
 /-!
@@ -33,6 +35,8 @@ fundamental classes.
 
 open CategoryTheory Limits
 open scoped Simplicial
+
+open Convexity
 
 namespace AlgebraicTopology.Singular
 
@@ -53,40 +57,40 @@ abbrev neighborhoodSupportComplementPair {M : Type} [TopologicalSpace M] (W S : 
 /-- For a natural number `d`, this affine map from the standard `d`-simplex to `ℝ^d` has ordered
 vertices `e₀, …, e_{d-1}, (-1, …, -1)`. In barycentric coordinates it sends `t` to the vector
 with coordinates `t_j - t_d`. -/
-def standardAffineSimplex (d : ℕ) (t : stdSimplex ℝ (Fin (d + 1))) : Fin d → ℝ :=
-  fun j => t (Fin.castSucc j) - t (Fin.last d)
-
--- Mathlib proves this but does not tag it, so `fun_prop` cannot see through `stdSimplex.map`.
-attribute [fun_prop] stdSimplex.continuous_map
+def standardAffineSimplex (d : ℕ) (t : StdSimplex ℝ (Fin (d + 1))) : Fin d → ℝ :=
+  fun j => t.weights (Fin.castSucc j) - t.weights (Fin.last d)
 
 @[fun_prop]
 lemma continuous_standardAffineSimplex (d : ℕ) : Continuous (standardAffineSimplex d) :=
   continuous_pi fun j =>
-    ((continuous_apply (Fin.castSucc j)).comp continuous_subtype_val).sub
-      ((continuous_apply (Fin.last d)).comp continuous_subtype_val)
+    (StdSimplex.continuous_weights_apply ℝ (Fin.castSucc j)).sub
+      (StdSimplex.continuous_weights_apply ℝ (Fin.last d))
 
 lemma stdSimplex_map_succAbove_self_zero (n : ℕ) (i : Fin (n + 2))
-    (t : stdSimplex ℝ (Fin (n + 1))) :
-    stdSimplex.map i.succAbove t i = 0 := by simp [FunOnFinite.linearMap_apply_apply]
+    (t : StdSimplex ℝ (Fin (n + 1))) :
+    (StdSimplex.map i.succAbove t).weights i = 0 := by
+  classical
+  rw [StdSimplex.weights_map_apply]
+  simp
 
 lemma standardAffineSimplex_ne_zero_of_coord_zero (d : ℕ)
-    (t : stdSimplex ℝ (Fin (d + 1))) (i : Fin (d + 1)) (hi : t i = 0) :
+    (t : StdSimplex ℝ (Fin (d + 1))) (i : Fin (d + 1)) (hi : t.weights i = 0) :
     standardAffineSimplex d t ≠ 0 := by
   intro h
-  have hcoord (j : Fin d) : t (Fin.castSucc j) = t (Fin.last d) := by
+  have hcoord (j : Fin d) : t.weights (Fin.castSucc j) = t.weights (Fin.last d) := by
     have hj := congr_fun h j
     simpa [standardAffineSimplex] using sub_eq_zero.mp hj
-  have hlast : t (Fin.last d) = 0 := by
+  have hlast : t.weights (Fin.last d) = 0 := by
     rcases Fin.eq_castSucc_or_eq_last i with ⟨j, rfl⟩ | rfl
     · exact (hcoord j).symm.trans hi
     · exact hi
-  have hall (j : Fin (d + 1)) : t j = 0 := by
+  have hall (j : Fin (d + 1)) : t.weights j = 0 := by
     rcases Fin.eq_castSucc_or_eq_last j with ⟨k, rfl⟩ | rfl
     · exact (hcoord k).trans hlast
     · exact hlast
-  have hzero : ∑ j, (t : Fin (d + 1) → ℝ) j = 0 :=
+  have hzero : ∑ j, (t.weights : Fin (d + 1) → ℝ) j = 0 :=
     Finset.sum_eq_zero fun j _ => hall j
-  exact zero_ne_one (hzero.symm.trans t.2.2)
+  exact zero_ne_one (hzero.symm.trans t.total_of_fintype)
 
 /-- For a natural number `d`, this is the singular `d`-simplex of `ℝ^d` given in barycentric
 coordinates by `t ↦ (t_j - t_d)_j`. Its ordered vertices are the standard basis vectors followed
@@ -101,8 +105,8 @@ to `ℝ^{n+1} \ {0}` is the `i`-th face of the affine simplex with vertices the 
 followed by `(-1, …, -1)`. The face avoids the origin because one barycentric coordinate is
 zero. -/
 def standardFaceMap (n : ℕ) (i : Fin (n + 2)) :
-    C(stdSimplex ℝ (Fin (n + 1)), ({0}ᶜ : Set (Fin (n + 1) → ℝ))) where
-  toFun t := ⟨standardAffineSimplex (n + 1) (stdSimplex.map i.succAbove t),
+    C(StdSimplex ℝ (Fin (n + 1)), ({0}ᶜ : Set (Fin (n + 1) → ℝ))) where
+  toFun t := ⟨standardAffineSimplex (n + 1) (StdSimplex.map i.succAbove t),
     standardAffineSimplex_ne_zero_of_coord_zero (n + 1) _ i
       (stdSimplex_map_succAbove_self_zero n i t)⟩
   continuous_toFun := by fun_prop

@@ -22,7 +22,7 @@ public import Mathlib.Analysis.Complex.Basic
 public import Mathlib.RingTheory.Valuation.ValuationRing
 public import Mathlib.Topology.Algebra.IsOpenUnits
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import HodgeConjecture.Mathlib.Topology.Algebra.IsOpenUnits
 
 /-!

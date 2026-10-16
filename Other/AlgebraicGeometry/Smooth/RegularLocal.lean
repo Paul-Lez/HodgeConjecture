@@ -22,7 +22,7 @@ public import Mathlib.RingTheory.RegularLocalRing.Defs
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.DimensionFormula
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.RingTheory.RegularLocalRing.Polynomial
 import Mathlib.RingTheory.Unramified.LocalStructure
 public import Other.AlgebraicGeometry.ComplexPoint.SmoothCoordinates

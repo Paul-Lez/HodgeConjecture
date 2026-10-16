@@ -17,6 +17,8 @@ module
 
 public import Mathlib.Algebra.Category.Grp.Abelian
 public import Mathlib.AlgebraicTopology.SingularHomology.Basic
+import Mathlib.CategoryTheory.Limits.MonoCoprod
+import Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono
 
 /-!
 This module is ported from Paul Lezeau's corresponding file in
@@ -100,9 +102,6 @@ instance coverSmallIntegralSingularChainInclusion_mono :
   dsimp [coverSmallIntegralSingularChainInclusion, SSet.chainComplexMap,
     SSet.chainComplexFunctor]
   apply +allowSynthFailures Functor.map_mono
-  apply +allowSynthFailures Functor.map_mono
-  dsimp [SSet, SimplicialObject.whiskering, SimplicialObject]
-  infer_instance
 
 /-- The singular set of each cover member factors through the small singular subcomplex. -/
 public noncomputable def coverMemberToSmallSingularSet (j : ι) :

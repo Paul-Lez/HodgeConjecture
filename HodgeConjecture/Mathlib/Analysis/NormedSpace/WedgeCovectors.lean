@@ -21,6 +21,7 @@ public import Mathlib.Analysis.Normed.Module.Alternating.Uncurry.Fin
 public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 import Mathlib.Analysis.Calculus.FDeriv.Pi
+import Mathlib.Analysis.Analytic.Constructions
 
 /-!
 # Wedge products of continuous covectors
@@ -217,17 +218,6 @@ lemma alternatization_smul (c : 𝕜)
   simp only [ContinuousMultilinearMap.alternatization_apply_apply, _root_.smul_apply,
     ContinuousAlternatingMap.smul_apply, Finset.smul_sum, smul_comm c]
 
-lemma alternatization_toContinuousMultilinearMap
-    (A : E [⋀^ι]→L[𝕜] 𝕜) :
-    ContinuousMultilinearMap.alternatization A.toContinuousMultilinearMap =
-      ((Fintype.card ι).factorial : 𝕜) • A := by
-  apply ContinuousAlternatingMap.toAlternatingMap_injective
-  rw [ContinuousMultilinearMap.alternatization_apply_toAlternatingMap]
-  change MultilinearMap.alternatization A.toAlternatingMap.toMultilinearMap =
-    ((Fintype.card ι).factorial : 𝕜) • A.toAlternatingMap
-  simpa only [Nat.cast_smul_eq_nsmul] using
-    AlternatingMap.coe_alternatization A.toAlternatingMap
-
 /-- A continuous alternating form on `ι' → 𝕜` is the finite coordinate-wedge expansion
 of its values on the standard coordinate vectors. -/
 lemma alternating_eq_sum_wedgeCovectors [CharZero 𝕜]
@@ -242,6 +232,7 @@ lemma alternating_eq_sum_wedgeCovectors [CharZero 𝕜]
   rw [alternatization_toContinuousMultilinearMap A] at hAlt
   simp only [_root_.map_sum] at hAlt
   simp_rw [alternatization_smul, alternatization_covectorProduct] at hAlt
+  rw [← Nat.cast_smul_eq_nsmul 𝕜] at hAlt
   change ((Fintype.card ι).factorial : 𝕜) • A =
     ∑ I : ι → ι', A (fun j ↦ Pi.single (I j) 1) •
       wedgeCovectors 𝕜 (ι' → 𝕜)

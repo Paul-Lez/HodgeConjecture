@@ -15,10 +15,12 @@ limitations under the License.
 -/
 module
 
+import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
+
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Support
 
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Locus
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
