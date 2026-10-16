@@ -79,7 +79,6 @@ variable {R : Type u} [CommRing R]
 
 attribute [simp] HomologicalComplex.linearDualCochainComplex_X
 
-attribute [local implicit_reducible] shortComplexFunctor' shortComplexFunctor
 
 variable {K L M : ChainComplex (ModuleCat.{u} R) ℕ}
 

@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.Chain
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.RelativeHomotopyInvariance
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.ChainStalk
@@ -33,6 +35,8 @@ nothing in the statement's dependency chain uses these results, only material in
 open CategoryTheory Limits TopologicalSpace
 open scoped Simplicial
 universe u
+open Convexity
+
 namespace AlgebraicTopology.Singular
 variable (R : Type u) [CommRing R] (X : TopCat.{u})
 
@@ -78,7 +82,7 @@ lemma exists_openNhds_complement_simplex [T2Space X] (x : X) {n : ℕ}
       (TopCat.toSSet.map (TopPair.ofSubset (U.1 : Set X)ᶜ).map).app _ τ =
         (TopCat.toSSet.map (TopPair.ofSubset ({x} : Set X)ᶜ).map).app _ σ := by
   let f := (TopPair.ofSubset ({x} : Set X)ᶜ).snd.toSSetObjEquiv _ σ
-  let g : C(stdSimplex ℝ (Fin (n + 1)), X) := ⟨fun t ↦ (f t).1,
+  let g : C(StdSimplex ℝ (Fin (n + 1)), X) := ⟨fun t ↦ (f t).1,
     continuous_subtype_val.comp f.continuous⟩
   have hclosed : IsClosed (Set.range g) := (isCompact_range g.continuous).isClosed
   let U : OpenNhds x := ⟨⟨(Set.range g)ᶜ, hclosed.isOpen_compl⟩, by

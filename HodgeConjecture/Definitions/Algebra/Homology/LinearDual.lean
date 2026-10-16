@@ -185,7 +185,6 @@ lemma linearDualCochainComplex_d_succ (K : ChainComplex (ModuleCat.{u} R) ℕ) (
     (K.linearDualCochainComplex).d n (n + 1) =
       ModuleCat.ofHom (K.d (n + 1) n).hom.dualMap := rfl
 
-attribute [local implicit_reducible] shortComplexFunctor' shortComplexFunctor
 /-- Let `R` be a commutative ring and `K` a nonnegative chain complex of `R`-modules. For each `n`,
 this identifies the three terms around degree `n` in the dual cochain complex with the reversed
 linear duals of the three terms around `n` in `K`, including the adjacent differentials. -/

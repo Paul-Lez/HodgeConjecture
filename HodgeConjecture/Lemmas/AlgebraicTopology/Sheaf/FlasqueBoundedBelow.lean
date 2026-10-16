@@ -171,7 +171,7 @@ theorem globalSectionsComplex_acyclic (N : ℤ) [K.IsStrictlyGE N]
     · dsimp [A]
       infer_instance
   have hFA : (A.map F).Exact := by
-    have hleft := ((Functor.preservesFiniteLimits_tfae F).out 3 1).mp
+    have hleft := ((Functor.preservesFiniteLimits_tfae F).out 4 2).mp
       (inferInstance : PreservesFiniteLimits F)
     exact (hleft A hA).1
   let Sprev := cyclesShortComplex K (i - 1)

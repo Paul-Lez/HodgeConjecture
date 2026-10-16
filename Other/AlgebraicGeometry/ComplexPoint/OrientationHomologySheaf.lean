@@ -22,7 +22,7 @@ public import Other.AlgebraicTopology.LocalHomology.ChartFundamentalClassGenerat
 public import Other.AlgebraicTopology.Sheaf.HomologySection
 public import Other.AlgebraicTopology.Singular.Sheaf.ChainHomology
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # The normalized complex orientation of the singular homology sheaf

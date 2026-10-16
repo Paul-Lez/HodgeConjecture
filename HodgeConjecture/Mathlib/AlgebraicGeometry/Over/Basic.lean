@@ -17,7 +17,7 @@ module
 
 public import Mathlib.AlgebraicGeometry.Scheme
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Algebra structure on section

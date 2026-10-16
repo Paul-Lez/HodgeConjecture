@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Projective
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Other.AlgebraicGeometry.ComplexPoint.Projective
 
 /-!

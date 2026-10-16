@@ -19,6 +19,8 @@ public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.CoverSm
 public import Mathlib.Algebra.Category.ModuleCat.Colimits
 
 import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.OpenCover
+import Mathlib.CategoryTheory.Limits.MonoCoprod
+import Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono
 
 /-!
 # Small singular chains with rational coefficients
@@ -362,9 +364,6 @@ instance coverSmallRationalSingularChainInclusion_mono :
   dsimp [coverSmallRationalSingularChainInclusion, SSet.chainComplexMap,
     SSet.chainComplexFunctor]
   apply +allowSynthFailures Functor.map_mono
-  apply +allowSynthFailures Functor.map_mono
-  dsimp [SSet, SimplicialObject.whiskering, SimplicialObject]
-  infer_instance
 
 /-- The integral subdivision-and-prism homotopy transported to rational coefficients: the
 all-open-cover small-chain theorem over `ℚ`. -/

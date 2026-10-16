@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.CochainResolution
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Restriction of singular cochains through direct image

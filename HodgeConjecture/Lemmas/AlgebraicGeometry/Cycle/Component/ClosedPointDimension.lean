@@ -99,7 +99,7 @@ lemma FiniteType.height_eq_ringKrullDim_of_isMaximal
         exact (PrimeSpectrum.height_eq_orderHeight _).symm
   rw [PolynomialCatenary.ringKrullDim_eq_of_isIntegral_of_injective hg,
     MvPolynomial.ringKrullDim_of_isNoetherianRing,
-    ringKrullDim_eq_zero_of_field, Nat.card_fin, hheight,
+    ringKrullDim_eq_zero_of_field, ENat.card_eq_coe_fintype_card, Fintype.card_fin, hheight,
     MvPolynomial.height_eq_fin_of_isMaximal k n (P.under (MvPolynomial (Fin n) k))]
   norm_num
 

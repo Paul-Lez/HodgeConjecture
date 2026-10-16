@@ -18,7 +18,7 @@ module
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.ClosedImmersion
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Projective
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Analytic compactness of a projective complex scheme

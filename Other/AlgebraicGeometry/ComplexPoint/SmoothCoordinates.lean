@@ -19,7 +19,7 @@ public import HodgeConjecture.Mathlib.AlgebraicGeometry.Over.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Etale
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Open
 public import Mathlib.AlgebraicGeometry.Morphisms.Etale
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.SmoothCoordinates
 
 /-!

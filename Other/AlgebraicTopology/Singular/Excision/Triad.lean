@@ -15,6 +15,9 @@ limitations under the License.
 -/
 module
 
+import Mathlib.CategoryTheory.Limits.MonoCoprod
+import Mathlib.CategoryTheory.Limits.FunctorCategory.EpiMono
+
 public import Mathlib.Algebra.Homology.HomologicalComplexAbelian
 public import Other.AlgebraicTopology.Singular.Cap.Triad
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.Field
@@ -448,9 +451,6 @@ instance triadUnionAmbientChainMap_mono :
   dsimp [triadUnionAmbientChainMap, SSet.chainComplexMap,
     SSet.chainComplexFunctor]
   apply +allowSynthFailures Functor.map_mono
-  apply +allowSynthFailures Functor.map_mono
-  dsimp [SSet, SimplicialObject.whiskering, SimplicialObject]
-  infer_instance
 
 instance triadUnionSubspaceChainMap_mono :
     Mono (((chainPairFunctor ℚ).obj (TopPair.ofSubset (A ∪ B))).hom) := by

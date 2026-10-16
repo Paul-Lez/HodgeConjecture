@@ -10,7 +10,7 @@ public import Other.AlgebraicGeometry.ComplexPoint.AffineConnected
 public import Other.AlgebraicGeometry.ComplexPoint.DenseNonvanishing
 public import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Connectedness of smooth integral complex schemes

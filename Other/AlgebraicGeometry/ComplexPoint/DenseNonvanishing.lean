@@ -10,7 +10,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 public import Other.AlgebraicGeometry.ComplexPoint.EtaleDenseNonvanishing
 public import Mathlib.AlgebraicGeometry.Morphisms.QuasiSeparated
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Local analytic density of nonvanishing loci

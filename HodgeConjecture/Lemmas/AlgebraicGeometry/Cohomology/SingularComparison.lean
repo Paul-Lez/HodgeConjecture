@@ -21,7 +21,7 @@ public import Mathlib.Algebra.Homology.Embedding.CochainComplex
 public import Mathlib.Algebra.Homology.Embedding.Extend
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Manifold
 import Mathlib.Algebra.Homology.Embedding.ExtendHomology
 

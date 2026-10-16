@@ -20,7 +20,7 @@ public import Mathlib.AlgebraicGeometry.ProjectiveSpectrum.Basic
 public import Mathlib.LinearAlgebra.Projectivization.Basic
 public import Mathlib.Tactic.Bound
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 

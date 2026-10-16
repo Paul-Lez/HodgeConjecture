@@ -23,7 +23,7 @@ public import Mathlib.Analysis.Calculus.Deriv.Polynomial -- shake: keep
 public import Mathlib.Analysis.Calculus.ImplicitFunction.ProdDomain
 public import Mathlib.Topology.OpenPartialHomeomorph.Constructions
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.Analysis.Analytic.Polynomial
 import Mathlib.RingTheory.Unramified.LocalStructure
 

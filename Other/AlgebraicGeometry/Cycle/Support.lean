@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Definitions.AlgebraicGeometry.Cycle.Support
 import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Locus
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.AlgebraicGeometry.AlgClosed.Basic
 import Mathlib.Analysis.Complex.Polynomial.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Cycle.Support

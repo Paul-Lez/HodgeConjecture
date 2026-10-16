@@ -17,7 +17,7 @@ module
 
 public import Other.AlgebraicGeometry.ComplexPoint.Basic
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
-public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+public import Mathlib.CategoryTheory.ConcreteCategory.Notation
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 
 /-!

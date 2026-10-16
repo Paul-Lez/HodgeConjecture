@@ -19,6 +19,8 @@ public import Mathlib.Analysis.Calculus.DifferentialForm.Basic
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 
 import Mathlib.Analysis.Calculus.ParametricIntervalIntegral
+import Mathlib.Analysis.Complex.RealDeriv
+import Mathlib.Analysis.Calculus.Deriv.Pow
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
@@ -584,7 +586,8 @@ theorem radialPullback_hasDerivAt (n : ℕ)
       hf.comp_hasDerivAt t hline
   have hpow : HasDerivAt (fun s : ℝ ↦ (s : ℂ) ^ (n + 1))
       (((n + 1 : ℕ) : ℂ) * (t : ℂ) ^ n) t := by
-    simpa only [Pi.pow_apply, Nat.add_sub_cancel, mul_one] using! hi.pow (n + 1)
+    simpa only [Pi.pow_apply, Nat.add_sub_cancel, mul_one] using!
+      (hasDerivAt_pow (n + 1) (t : ℂ)).comp_ofReal
   simpa only [radialPullback, radialPullbackDeriv, Pi.smul_apply, add_comm] using!
     hpow.smul hform
 

@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import HodgeConjecture.Lemmas.AlgebraicTopology.LocalHomology.Euclidean
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Excision.Field
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.SubsetChains
@@ -51,6 +53,8 @@ homology, and the explicit punctured and positive-even-dimensional local classes
 open CategoryTheory CategoryTheory.Limits PartialOrder
 open scoped Simplicial
 
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 /-- The affine barycentric coordinate indexed by the last vertex is normalized to zero; the
@@ -72,19 +76,19 @@ lemma standardExtendedCoordinate_last (d : ℕ) (x : Fin d → ℝ) :
   simp [standardExtendedCoordinate]
 
 lemma standardExtendedCoordinate_standardAffineSimplex
-    (d : ℕ) (i : Fin (d + 1)) (t : stdSimplex ℝ (Fin (d + 1))) :
+    (d : ℕ) (i : Fin (d + 1)) (t : StdSimplex ℝ (Fin (d + 1))) :
     standardExtendedCoordinate d i (standardAffineSimplex d t) =
-      t i - t (Fin.last d) := by
+      t.weights i - t.weights (Fin.last d) := by
   cases i using Fin.lastCases with
   | last => simp
   | cast i => simp [standardAffineSimplex]
 
-lemma stdSimplex_exists_pos {m : ℕ} (t : stdSimplex ℝ (Fin (m + 1))) :
-    ∃ i, 0 < t i := by
-  have hsum : (∑ i, (t : Fin (m + 1) → ℝ) i) ≠ 0 :=
-    t.2.2.symm ▸ one_ne_zero
+lemma stdSimplex_exists_pos {m : ℕ} (t : StdSimplex ℝ (Fin (m + 1))) :
+    ∃ i, 0 < t.weights i := by
+  have hsum : (∑ i, (t.weights : Fin (m + 1) → ℝ) i) ≠ 0 :=
+    t.total_of_fintype.symm ▸ one_ne_zero
   obtain ⟨i, -, hi⟩ := Finset.exists_ne_zero_of_sum_ne_zero hsum
-  exact ⟨i, lt_of_le_of_ne (t.2.1 i) hi.symm⟩
+  exact ⟨i, lt_of_le_of_ne (t.weights_nonneg i) hi.symm⟩
 
 lemma continuous_standardExtendedCoordinate (d : ℕ) (i : Fin (d + 1)) :
     Continuous (fun x : (puncturedPair ℝ d).snd ↦
@@ -416,7 +420,7 @@ lemma standardFacetCarrier_ne_univ (d : ℕ) {n : SimplexCategoryᵒᵖ}
     standardFacetCarrier d x ≠ Finset.univ := by
   classical
   intro hall
-  let t : stdSimplex ℝ (Fin (n.unop.len + 1)) := stdSimplex.barycenter
+  let t : StdSimplex ℝ (Fin (n.unop.len + 1)) := StdSimplex.barycenter
   let p : (puncturedPair ℝ d).snd :=
     ((puncturedPair ℝ d).snd.toSSetObjEquiv n x.1) t
   apply not_forall_mem_standardPuncturedFacetCover d p
@@ -469,7 +473,7 @@ lemma standardFacetCarrierSource_image_subset_intersection
   apply (singularSimplex_mem_range_subset
     (puncturedPair ℝ d).snd (standardPuncturedFacetCover d i) x.1).mp hi.2
   let f : q.unop ⟶ SimplexCategory.mk n := SSet.stdSimplex.objEquiv y
-  refine ⟨stdSimplex.map f t, ?_⟩
+  refine ⟨StdSimplex.map f t, ?_⟩
   have hy : y = SSet.stdSimplex.objEquiv.symm f :=
     (SSet.stdSimplex.objEquiv.symm_apply_apply y).symm
   rw [hy, SSet.yonedaEquiv_symm_app_objEquiv_symm,
@@ -579,7 +583,7 @@ def standardFacetCarrierAtFace (d : ℕ) {n : ℕ}
   Finset.univ.filter fun i ↦
     ∀ a ∈ A.finset,
       ((puncturedPair ℝ d).snd.toSSetObjEquiv _ x.1)
-        (stdSimplex.vertex a.down) ∈
+        (StdSimplex.single a.down) ∈
         standardPuncturedFacetCover d i
 
 lemma standardFacetCarrierAtFace_nonempty (d : ℕ) {n : ℕ}
@@ -593,7 +597,7 @@ lemma standardFacetCarrierAtFace_nonempty (d : ℕ) {n : ℕ}
   refine ⟨i, Finset.mem_filter.mpr ⟨Finset.mem_univ i, fun a _ ↦ ?_⟩⟩
   exact (singularSimplex_mem_range_subset
     (puncturedPair ℝ d).snd (standardPuncturedFacetCover d i) x.1).mp hi.2
-    ⟨stdSimplex.vertex a.down, rfl⟩
+    ⟨StdSimplex.single a.down, rfl⟩
 
 lemma standardFacetCarrier_subset_atFace (d : ℕ) {n : ℕ}
     (x : (coverSmallSingularSubcomplex
@@ -607,7 +611,7 @@ lemma standardFacetCarrier_subset_atFace (d : ℕ) {n : ℕ}
   refine ⟨Finset.mem_univ i, fun a _ ↦ ?_⟩
   exact (singularSimplex_mem_range_subset
     (puncturedPair ℝ d).snd (standardPuncturedFacetCover d i) x.1).mp hi.2
-    ⟨stdSimplex.vertex a.down, rfl⟩
+    ⟨StdSimplex.single a.down, rfl⟩
 
 lemma standardFacetCarrierAtFace_ne_univ (d : ℕ) {n : ℕ}
     (x : (coverSmallSingularSubcomplex
@@ -619,7 +623,7 @@ lemma standardFacetCarrierAtFace_ne_univ (d : ℕ) {n : ℕ}
   obtain ⟨a, ha⟩ := A.nonempty
   let p : (puncturedPair ℝ d).snd :=
     ((puncturedPair ℝ d).snd.toSSetObjEquiv _ x.1)
-      (stdSimplex.vertex a.down)
+      (StdSimplex.single a.down)
   apply not_forall_mem_standardPuncturedFacetCover d p
   intro i
   have hi : i ∈ standardFacetCarrierAtFace d x A := by rw [hall]; simp
@@ -808,13 +812,13 @@ lemma coverSmallFacet_toSSetObjEquiv_delta_vertex (d n : ℕ) (i : Fin (n + 2))
     ((puncturedPair ℝ d).snd.toSSetObjEquiv _
       (((coverSmallSingularSubcomplex
         (puncturedPair ℝ d).snd (standardPuncturedFacetCover d) : SSet).δ i x).1))
-        (stdSimplex.vertex a) =
+        (StdSimplex.single a) =
       ((puncturedPair ℝ d).snd.toSSetObjEquiv _ x.1)
-        (stdSimplex.vertex (i.succAbove a)) := by
+        (StdSimplex.single (i.succAbove a)) := by
   change ((puncturedPair ℝ d).snd.toSSetObjEquiv _
       ((TopCat.toSSet.obj (puncturedPair ℝ d).snd).δ i x.1))
-        (stdSimplex.vertex a) = _
-  rw [TopCat.toSSetObjEquiv_δ_apply, stdSimplex.map_vertex]
+        (StdSimplex.single a) = _
+  rw [TopCat.toSSetObjEquiv_δ_apply, StdSimplex.map_single]
 
 /-- Vertex carriers commute exactly with taking a codimension-one face. -/
 lemma standardFacetCarrierAtFace_delta (d n : ℕ) (i : Fin (n + 2))
@@ -994,14 +998,14 @@ lemma standardAffineBoundarySimplex_image_subset_facetCover
       ((standardAffineBoundarySimplicialMap d).app _ y)) ⊆
         standardPuncturedFacetCover d i := by
   rintro _ ⟨t, rfl⟩
-  let w := stdSimplex.map y.1 t
+  let w := StdSimplex.map y.1 t
   obtain ⟨j, hj⟩ := stdSimplex_exists_pos w
   refine ⟨j, ?_⟩
   change standardExtendedCoordinate d i (standardAffineSimplex d w) <
     standardExtendedCoordinate d j (standardAffineSimplex d w)
   rw [standardExtendedCoordinate_standardAffineSimplex,
     standardExtendedCoordinate_standardAffineSimplex]
-  have hzero : w i = 0 :=
+  have hzero : w.weights i = 0 :=
     stdSimplex_map_apply_eq_zero_of_notMem_range y.1 t i hi
   linarith
 
@@ -2138,35 +2142,35 @@ lemma standardAffineBoundary_vertex_mem_facetCover_iff
     (a : Fin (n + 1)) (i : Fin (d + 1)) :
     ((puncturedPair ℝ d).snd.toSSetObjEquiv _
       ((standardAffineBoundarySimplicialMap d).app _ y))
-        (stdSimplex.vertex a) ∈ standardPuncturedFacetCover d i ↔
+        (StdSimplex.single a) ∈ standardPuncturedFacetCover d i ↔
       i ≠ y.1 a := by
   change (∃ j : Fin (d + 1),
     standardExtendedCoordinate d i
-        (standardAffineSimplex d (stdSimplex.map y.1 (stdSimplex.vertex a))) <
+        (standardAffineSimplex d (StdSimplex.map y.1 (StdSimplex.single a))) <
       standardExtendedCoordinate d j
-        (standardAffineSimplex d (stdSimplex.map y.1 (stdSimplex.vertex a)))) ↔ _
-  rw [stdSimplex.map_vertex]
+        (standardAffineSimplex d (StdSimplex.map y.1 (StdSimplex.single a)))) ↔ _
+  rw [StdSimplex.map_single]
   simp only [standardExtendedCoordinate_standardAffineSimplex,
     sub_lt_sub_iff_right]
   constructor
   · rintro ⟨j, hj⟩ rfl
-    have hle : (stdSimplex.vertex (y.1 a) :
-        stdSimplex ℝ (Fin (d + 1))) j ≤ 1 :=
-      stdSimplex.le_one _ j
-    have hone : (stdSimplex.vertex (y.1 a) :
-        stdSimplex ℝ (Fin (d + 1))) (y.1 a) = 1 := by simp
+    have hle : (StdSimplex.single (y.1 a) :
+        StdSimplex ℝ (Fin (d + 1))).weights j ≤ 1 :=
+      StdSimplex.weights_apply_le_one _ j
+    have hone : (StdSimplex.single (y.1 a) :
+        StdSimplex ℝ (Fin (d + 1))).weights (y.1 a) = 1 := by simp
     rw [hone] at hj
     exact (not_lt_of_ge hle) hj
   · intro h
     refine ⟨y.1 a, ?_⟩
-    simp [stdSimplex.vertex, h]
+    simp [StdSimplex.single, Finsupp.single_apply, h]
 
 lemma standardAffineBoundarySmall_vertex_mem_facetCover_iff
     (d n : ℕ) (y : (∂Δ[d] : SSet.{0}) _⦋n⦌)
     (a : Fin (n + 1)) (i : Fin (d + 1)) :
     ((puncturedPair ℝ d).snd.toSSetObjEquiv _
       ((standardAffineBoundaryToFacetSmall d).app _ y).1)
-        (stdSimplex.vertex a) ∈ standardPuncturedFacetCover d i ↔
+        (StdSimplex.single a) ∈ standardPuncturedFacetCover d i ↔
       i ≠ y.1 a :=
   standardAffineBoundary_vertex_mem_facetCover_iff d n y a i
 

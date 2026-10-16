@@ -186,8 +186,6 @@ public import Other.Analysis.Complex.Polynomial.HolomorphicFactor
 public import Other.Geometry.Manifold.Orientation
 public import Other.LinearAlgebra.ComplexOrientation
 public import Other.LinearAlgebra.HodgeStructure
-public import Other.Mathlib.Algebra.Category.Grp.Basic
-public import Other.Mathlib.Algebra.Category.ModuleCat.Basic
 public import Other.Mathlib.Algebra.Homology.StupidTruncation
 public import Other.RingTheory.AlgebraicNonvanishing
 public import Other.RingTheory.IntegralPrimitiveElement

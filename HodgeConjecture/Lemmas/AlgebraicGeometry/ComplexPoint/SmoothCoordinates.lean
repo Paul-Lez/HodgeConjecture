@@ -20,7 +20,7 @@ public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Etale
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Open
 public import Mathlib.AlgebraicGeometry.Morphisms.Etale
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Local coordinates on smooth complex schemes

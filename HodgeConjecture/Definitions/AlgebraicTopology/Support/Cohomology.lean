@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+import Mathlib.Algebra.Category.Grp.Zero
+
 import HodgeConjecture.Mathlib.Algebra.Homology.Notation
 
 public import HodgeConjecture.Mathlib.CategoryTheory.Sites.SheafCohomology.Pair

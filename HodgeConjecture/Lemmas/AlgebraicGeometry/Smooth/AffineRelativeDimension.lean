@@ -6,7 +6,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.Smooth.Equidimensional
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Equidimensional smooth affine neighborhoods

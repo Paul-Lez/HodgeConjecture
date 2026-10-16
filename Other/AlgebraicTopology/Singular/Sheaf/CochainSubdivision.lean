@@ -15,6 +15,8 @@ limitations under the License.
 -/
 module
 
+public import HodgeConjecture.Mathlib.Geometry.Convex.StdSimplex
+
 public import Other.Algebra.Homology.LinearDual
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Singular.Sheaf.SubdivisionCochain
 public import Other.AlgebraicTopology.Sheaf.FlasqueGlobalSections
@@ -27,6 +29,8 @@ open scoped Simplicial
 
 universe u
 
+open Convexity
+
 namespace AlgebraicTopology.Singular
 
 /-- Lift a singular simplex through an inclusion of open subsets, provided all of its values lie
@@ -38,7 +42,7 @@ noncomputable def openSimplexLift {X : TopCat.{u}} {U V : Opens X} (n : ℕ)
     OpenSimplex X (.op V) n :=
   let m := Opposite.op (SimplexCategory.mk n)
   let fs := (TopCat.of U).toSSetObjEquiv m s
-  let f : C(stdSimplex ℝ (Fin (n + 1)), TopCat.of V) :=
+  let f : C(StdSimplex ℝ (Fin (n + 1)), TopCat.of V) :=
     ⟨fun z ↦ ⟨((fs z : U) : X), h z⟩,
       Continuous.subtype_mk
         (continuous_subtype_val.comp fs.continuous) _⟩

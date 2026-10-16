@@ -17,7 +17,7 @@ module
 
 public import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.Basic
 import HodgeConjecture.Lemmas.AlgebraicGeometry.ComplexPoint.AffineSpace
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 import Mathlib.Logic.Equiv.PartialEquiv
 
 /-!

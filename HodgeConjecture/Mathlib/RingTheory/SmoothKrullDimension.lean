@@ -130,7 +130,9 @@ lemma IsStandardSmoothOfRelativeDimension.ringKrullDim_le_add {f : R →+* S} {d
     ringKrullDim S ≤ ringKrullDim (MvPolynomial (Fin d) R) :=
       Algebra.QuasiFinite.ringKrullDim_le
     _ = ringKrullDim R + d := by
-      rw [MvPolynomial.ringKrullDim_of_isNoetherianRing, Nat.card_fin]
+      rw [MvPolynomial.ringKrullDim_of_isNoetherianRing, ENat.card_eq_coe_fintype_card,
+        Fintype.card_fin]
+      simp
 
 /-- A standard-smooth complex algebra of relative dimension `d` has Krull dimension at most
 `d`. -/
@@ -153,7 +155,8 @@ lemma height_eq_fin_of_isMaximal (K : Type*) [Field K] (d : ℕ)
           ringKrullDim (MvPolynomial (Fin 0) K) :=
         Ideal.height_le_ringKrullDim_of_ne_top Ideal.IsPrime.ne_top'
       rw [MvPolynomial.ringKrullDim_of_isNoetherianRing,
-        ringKrullDim_eq_zero_of_field, Nat.card_fin, Nat.cast_zero, add_zero] at hle
+        ringKrullDim_eq_zero_of_field, ENat.card_eq_coe_fintype_card, Fintype.card_fin] at hle
+      simp only [Nat.cast_zero, WithBot.coe_zero, add_zero] at hle
       exact le_antisymm (WithBot.coe_le_coe.mp hle) bot_le
   | succ n ih =>
       let e : MvPolynomial (Fin (n + 1)) K ≃+* Polynomial (MvPolynomial (Fin n) K) :=

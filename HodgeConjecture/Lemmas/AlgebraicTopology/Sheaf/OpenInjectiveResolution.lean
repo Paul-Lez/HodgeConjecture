@@ -7,7 +7,7 @@ module
 public import HodgeConjecture.Definitions.AlgebraicTopology.Sheaf.OpenInjectiveResolution
 public import HodgeConjecture.Lemmas.AlgebraicTopology.Sheaf.FlasqueExtendNat
 
-import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+import Mathlib.CategoryTheory.ConcreteCategory.Notation
 
 /-!
 # Comparing an ambient resolution with a resolution on an open subspace
