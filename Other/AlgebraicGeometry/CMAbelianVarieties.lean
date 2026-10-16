@@ -18,7 +18,7 @@ module
 public import Mathlib.AlgebraicGeometry.Group.Abelian
 public import Mathlib.NumberTheory.NumberField.CMField
 import all Mathlib.AlgebraicGeometry.Group.Abelian
-public import HodgeConjecture.Mathlib.CategoryTheory.ConcreteCategory.Notation
+public import HodgeConjecture.Mathlib.CategoryTheory.Monoidal.Cartesian.Endomorphism
 
 /-!
 ## CM Abelian varieties
@@ -31,19 +31,9 @@ as a `ℚ`-vector space, has dimension exactly twice the Krull dimension of the 
 
 @[expose] public section
 
-open CategoryTheory AlgebraicGeometry
+open CategoryTheory AlgebraicGeometry AddGrp End
 
 variable {K : Type*} [Field K]
-
-variable {C : Type*} [Category* C] [CartesianMonoidalCategory C] [BraidedCategory C]
-variable {G : AddGrp C} [IsCommAddMonObj G.X]
-
-/--
-The endomorphism ring of a commutative group object has a natural ring structure.
-This instance is currently an open PR in mathlib (#43539), and should be removed
-once it is merged.
--/
-instance : Ring (End G) := sorry
 
 section Commutativity
 

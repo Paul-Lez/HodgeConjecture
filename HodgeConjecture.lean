@@ -246,6 +246,7 @@ public import HodgeConjecture.Mathlib.Analysis.Calculus.DifferentialForm.Poincar
 public import HodgeConjecture.Mathlib.Analysis.Calculus.SplitDerivativeNormalChart
 public import HodgeConjecture.Mathlib.Analysis.NormedSpace.WedgeCovectors
 public import HodgeConjecture.Mathlib.CategoryTheory.Abelian.KernelCompositionShortExact
+public import HodgeConjecture.Mathlib.CategoryTheory.Monoidal.Cartesian.Endomorphism
 public import HodgeConjecture.Mathlib.CategoryTheory.Sites.SheafCohomology.Pair
 public import HodgeConjecture.Mathlib.Algebra.Homology.DerivedCategory.KInjectiveHom
 public import HodgeConjecture.Mathlib.Algebra.Homology.HomComplexSingle
